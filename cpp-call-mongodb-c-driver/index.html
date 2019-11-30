@@ -1,0 +1,1504 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/favicon.ico?v=7.2.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.2.0',
+    sidebar: {"position":"right","display":"post","offset":12,"onmobile":true},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    copycode: {"enable":true,"show_result":true,"style":"flat"},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="嗯……环境都准备好了，那么现在可以开始用我们敬爱的C++通过接口来间接操控MongoDB数据库。注意，要有一定的MongoDB数据库基础知识哦～">
+<meta name="keywords" content="C++,Linux,C,MongoDB">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++ 调用MongoDB C Driver">
+<meta property="og:url" content="http://www.joxrays.com/cpp-call-mongodb-c-driver/index.html">
+<meta property="og:site_name" content="JoXrays&#39;s Blog">
+<meta property="og:description" content="嗯……环境都准备好了，那么现在可以开始用我们敬爱的C++通过接口来间接操控MongoDB数据库。注意，要有一定的MongoDB数据库基础知识哦～">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-07-20T15:32:12.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C++ 调用MongoDB C Driver">
+<meta name="twitter:description" content="嗯……环境都准备好了，那么现在可以开始用我们敬爱的C++通过接口来间接操控MongoDB数据库。注意，要有一定的MongoDB数据库基础知识哦～">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="JoXrays's Blog" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="http://www.joxrays.com/cpp-call-mongodb-c-driver/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  
+  <title>C++ 调用MongoDB C Driver | JoXrays's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="stylesheet" href="/css/prism-duotone-dark.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JoXrays's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <h1 class="site-subtitle" itemprop="description">All my interesting ...</h1>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.joxrays.com/cpp-call-mongodb-c-driver/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Joseph XRays">
+      <meta itemprop="description" content="Share the knowledge">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JoXrays's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">C++ 调用MongoDB C Driver
+
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-06-12 00:00:00" itemprop="dateCreated datePublished" datetime="2019-06-12T00:00:00+08:00">2019-06-12</time>
+            </span>
+          
+
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-07-20 23:32:12" itemprop="dateModified" datetime="2019-07-20T23:32:12+08:00">2019-07-20</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/MongoDB/" itemprop="url" rel="index"><span itemprop="name">MongoDB</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span title="本文字数">13k</span>
+            </span>
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span title="阅读时长">12 分钟</span>
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>嗯……环境都准备好了，那么现在可以开始用我们敬爱的C++通过接口来间接操控MongoDB数据库。<br>注意，要有一定的MongoDB数据库基础知识哦～</p>
+<a id="more"></a>
+
+<h3 id="启动MongoDB服务器"><a href="#启动MongoDB服务器" class="headerlink" title="启动MongoDB服务器"></a>启动MongoDB服务器</h3><p>首先要做的，就是启动服务器</p>
+<blockquote>
+<p>mongod –config ${MONGODB}/conf.d/mongo.conf</p>
+</blockquote>
+<p>要停止服务器，不建议直接<strong>kill</strong>掉，而是加上一个 <strong>–shutdown</strong> 参数</p>
+<p>我们还要创建一个可读写指定数据库的用户，比如</p>
+<blockquote>
+<p>use admin<br>db.createUser({user:’user_test’,pwd:’12345’,roles:[{role:’readWrite’,db:’db_test’}]}</p>
+</blockquote>
+<p>这里创建了用户 user_test，密码 12345，只能读写数据库 db_test</p>
+<h3 id="mongoc"><a href="#mongoc" class="headerlink" title="mongoc"></a>mongoc</h3><p>我们只需引用头文件 libmongoc-1.0/mongoc.h<br>在 <strong>main</strong> 函数要调用 <strong>mongoc_init()</strong> 来初始化库以及结尾 <strong>mongoc_cleanup()</strong> 来释放</p>
+<p>要连接到MongoDB数据库，就得提供一个连接字符串，类似于</p>
+<p>mongodb://username:password@host:port/db<br>例如： mongodb://localhost:27017表示连接到本地回环地址127.0.0.1，以及端口27017的服务器，这个连接方式无需验证身份(没有开启 <strong>auth</strong>)。<br>然而，这个例子的连接字符串为： <strong>mongodb://user_test:<a href="mailto:12345@127.0.0.1" target="_blank" rel="noopener">12345@127.0.0.1</a>:27017/db_test</strong></p>
+<p>有了连接字符串，那么我们怎么连接到服务器？可以通过 mongoc_client_get_database() 来建立一个client</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">mongoc_client_t</span> * mongoc_client_new (<span class="keyword">const</span> <span class="keyword">char</span> *uri_string);</span><br></pre></td></tr></table></figure>
+
+<p>该函数返回一个 mongoc_client_t* 结构指针，之后的操作就是通过该指针来访问 database、collection……</p>
+<blockquote>
+<p>除了直接通过一个连接字符串来建立client，还可以‘构造’一个 <strong>uri</strong> 建立client。这一步也很简单，可以调用 <strong>mongoc_uri*</strong> 系列函数，再<br> mongoc_client_new_from_uri()，如：<br>mongoc_uri_t <em>uri=mongoc_uri_new(“mongodb://127.0.0.1:27017”);<br>mongoc_uri_set_database(uri,”xxxx”);<br>mongoc_uri_set_username(uri,”xxxx”);<br>mongoc_uri_set_password(uri,”xxxx”);<br>mongoc_client_t</em> client= mongoc_client_new_from_uri(uri);</p>
+</blockquote>
+<p>连接成功后，可以通过来获取 <strong>mongoc_client_get_default_database</strong> 来获取默认的数据库（前提是刚才连接字符串提供了一个数据库），或者 <strong>mongoc_client_get_database</strong> 来获取指定名称的数据库</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">mongoc_database_t</span> * mongoc_client_get_database (<span class="keyword">mongoc_client_t</span> *client, <span class="keyword">const</span> <span class="keyword">char</span> *name);</span><br><span class="line"><span class="keyword">mongoc_database_t</span> * mongoc_client_get_default_database (<span class="keyword">mongoc_client_t</span> *client);</span><br></pre></td></tr></table></figure>
+
+<p>通过 mongoc_database_has_collection() 判断是否存在一个 collection</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">mongoc_database_has_collection</span> <span class="params">(<span class="keyword">mongoc_database_t</span> *database,<span class="keyword">const</span> <span class="keyword">char</span> *name,<span class="keyword">bson_error_t</span> *error)</span></span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">bson_error_t</span> &#123;</span></span><br><span class="line">   <span class="keyword">uint32_t</span> domain;</span><br><span class="line">   <span class="keyword">uint32_t</span> code;</span><br><span class="line">   <span class="keyword">char</span> message[BSON_ERROR_BUFFER_SIZE];</span><br><span class="line">&#125; <span class="keyword">bson_error_t</span>;</span><br></pre></td></tr></table></figure>
+
+<p>有了database，那么就可以获取某个collection，方法有两个</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">mongoc_collection_t</span> * mongoc_client_get_collection (<span class="keyword">mongoc_client_t</span> *client,<span class="keyword">const</span> <span class="keyword">char</span> *db,<span class="keyword">const</span> <span class="keyword">char</span> *collection);</span><br><span class="line"><span class="keyword">mongoc_collection_t</span> *</span><br><span class="line">mongoc_database_get_collection (<span class="keyword">mongoc_database_t</span> *database, <span class="keyword">const</span> <span class="keyword">char</span> *name);</span><br></pre></td></tr></table></figure>
+
+<p>接下来，就是重头戏了</p>
+<h4 id="Creating-BSON-Documents"><a href="#Creating-BSON-Documents" class="headerlink" title="Creating BSON Documents"></a>Creating BSON Documents</h4><p>BSON，类似与JSON，但又有点不同。通过创建BSON Document来实现与MongoDB的交互。如：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&gt; db.test.insert(&#123;'name':'xiaoming','age':10,info:['shy','helpful']&#125;)</span><br><span class="line">&gt; db.test.find().pretty()</span><br><span class="line">&#123;</span><br><span class="line">	<span class="attr">"_id"</span> : ObjectId(<span class="string">"5a8e1dced077dc147db71f81"</span>),</span><br><span class="line">	<span class="attr">"name"</span> : <span class="string">"xiaoming"</span>,</span><br><span class="line">	<span class="attr">"age"</span> : <span class="number">10</span>,</span><br><span class="line">	<span class="attr">"info"</span> : [</span><br><span class="line">		<span class="string">"shy"</span>,</span><br><span class="line">		<span class="string">"helpful"</span></span><br><span class="line">	]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>BSON文档就有点类似与 {‘name’:’xiaoming’,’age’:10,info:[‘shy’,’helpful’]}</p>
+<p>mongoc有几种方式创建BSON文档： <strong>appending key-value pairs, using BCON, or parsing JSON</strong><br>其中，最简单的就是BCON，不过再次之前先了解下使用 bson**，只需引用 bson.h 即可</p>
+<h5 id="bson"><a href="#bson" class="headerlink" title="bson"></a>bson</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建一个BSON文档</span></span><br><span class="line"><span class="keyword">bson_t</span> *doc=bson_new();</span><br><span class="line"><span class="comment">// 添加一个 UTF-8 字符串，-1 表示该字符串长度</span></span><br><span class="line">bson_append_utf8(doc,<span class="string">"name"</span>,<span class="number">-1</span>,<span class="string">"xiaodong"</span>,<span class="number">-1</span>);</span><br><span class="line"><span class="comment">// 添加一个 int32 整数</span></span><br><span class="line">bson_append_int32(doc,<span class="string">"age"</span>,<span class="number">-1</span>,<span class="number">10</span>);</span><br><span class="line">BSON_APPEND_UTF8(doc,<span class="string">"name"</span>,<span class="string">"xiaoqiang"</span>);</span><br><span class="line">BSON_APPEND_INT32(doc,<span class="string">"age"</span>,<span class="number">11</span>);</span><br><span class="line"><span class="comment">// 返回一个 JSON 字符串</span></span><br><span class="line"><span class="keyword">char</span> *jsonstr= bson_as_canonical_extended_json(doc,<span class="literal">NULL</span>);</span><br><span class="line"><span class="built_in">printf</span>(jsonstr)</span><br><span class="line"><span class="comment">// 释放由 bson_as_canonical_extended_json 返回char *</span></span><br><span class="line">bson_free(jsonstr);</span><br><span class="line"><span class="comment">// 释放 bson_new 分配的内存</span></span><br><span class="line">bson_destroy(doc);</span><br></pre></td></tr></table></figure>
+
+<p>结果<br>{ “name” : “xiaodong”, “age” : { “$numberInt” : “10” }, “name” : “xiaoqiang”, “age” : { “$numberInt” : “11” } }</p>
+<p>可通过 bson** 系列函数 或者 BSON**宏 来添加BSON文档<br>通过 bson_t 获取 JSON 字符串，可以调用以下函数</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">char</span> * <span class="title">bson_as_canonical_extended_json</span><span class="params">(<span class="keyword">const</span> <span class="keyword">bson_t</span> *bson, <span class="keyword">size_t</span> *length)</span></span></span><br><span class="line"><span class="function"><span class="keyword">char</span> * <span class="title">bson_as_json</span><span class="params">(<span class="keyword">const</span> <span class="keyword">bson_t</span> *bson, <span class="keyword">size_t</span> *length)</span></span></span><br><span class="line"><span class="function"><span class="keyword">char</span> * <span class="title">bson_as_relaxed_extended_json</span><span class="params">(<span class="keyword">const</span> <span class="keyword">bson_t</span> *bson, <span class="keyword">size_t</span> *length)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>必须要有对应的 <strong>bson_free()</strong> 来释放该分配的内存；<strong>bson_destroy()</strong> 来释放一个BSON文档</p>
+<h5 id="BCON"><a href="#BCON" class="headerlink" title="BCON"></a>BCON</h5><p>用 BCON_* 宏来操控BSON Document我认为更简单些，而且写法也更高级。</p>
+<blockquote>
+<p>BSON C Object Notation, BCON for short, is an alternative way of constructing BSON documents in a manner closer to the intended format. <strong>It has less type-safety than BSON’s append functions but results in less code</strong></p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bson_t</span> *bson=BCON_NEW(</span><br><span class="line">            <span class="string">"name"</span>,BCON_UTF8(<span class="string">"xiaoHong"</span>),</span><br><span class="line">            <span class="string">"age"</span>,BCON_INT32(<span class="number">15</span>),</span><br><span class="line">            <span class="string">"info"</span>,</span><br><span class="line">            <span class="string">"["</span>,</span><br><span class="line">               <span class="string">"&#123;"</span>,<span class="string">"country"</span>,BCON_UTF8(<span class="string">"China"</span>), <span class="string">"&#125;"</span>,</span><br><span class="line">               <span class="string">"&#123;"</span>,<span class="string">"phone"</span>,BCON_UTF8(<span class="string">"110"</span>), <span class="string">"&#125;"</span>,</span><br><span class="line">            <span class="string">"]"</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>{ “name” : “xiaoHong”, “age” : { “$numberInt” : “15” }, “info” : [ { “country” : “China” }, { “phone” : “110” } ] }</p>
+<p>通过使用 BCON_* 函数更直观、方便简单的创建BSON文档。</p>
+<h4 id="Creating-BSON-from-JSON"><a href="#Creating-BSON-from-JSON" class="headerlink" title="Creating BSON from JSON"></a>Creating BSON from JSON</h4><p>上面介绍了创建一个BSON文档以及从BSON文档获取一个JSON字符串。<br>那么，我们是否可以通过JSON字符串反向解析一个BSON文档呢？答案是肯定的。不过，这好像是对于单文档而言，</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bson_t</span> * bson_new_from_json (<span class="keyword">const</span> <span class="keyword">uint8_t</span> *data, <span class="keyword">ssize_t</span> len, <span class="keyword">bson_error_t</span> *error);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">char</span> *json = <span class="string">"&#123;\"name\":\"xiaoJun\",\"age\":15&#125;"</span>;</span><br><span class="line"><span class="keyword">bson_t</span> *newbs= bson_new_from_json((<span class="keyword">const</span> <span class="keyword">uint8_t</span>*)json,<span class="number">-1</span>,<span class="literal">NULL</span>);</span><br><span class="line">jsonstr=bson_as_canonical_extended_json(newbs,<span class="literal">NULL</span>);</span><br><span class="line"><span class="built_in">printf</span>(json);</span><br><span class="line">bson_free(jsonstr);</span><br><span class="line">bson_destroy(newbs);</span><br></pre></td></tr></table></figure>
+
+<p>有了这些基础后，那么接下来就不会那么吃力了</p>
+<h4 id="遍历-collections"><a href="#遍历-collections" class="headerlink" title="遍历 collections"></a>遍历 collections</h4><p>在MongoDB交互shell中，我们可以直接通过 <code>db.test.find().pretty()</code> 来列出所有的数据。注意 find() 是可以提供参数的</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> db.test.find</span></span><br><span class="line">function (query, fields, limit, skip, batchSize, options) &#123;</span><br><span class="line">    var cursor = new DBQuery(this._mongo,</span><br><span class="line">                             this._db,</span><br><span class="line">                             this,</span><br><span class="line">                             this._fullName,</span><br><span class="line">                             this._massageObject(query),</span><br><span class="line">                             fields,</span><br><span class="line">                             limit,</span><br><span class="line">                             skip,</span><br><span class="line">                             batchSize,</span><br><span class="line">                             options || this.getQueryOptions());</span><br><span class="line">    &#123;</span><br><span class="line">        const session = this.getDB().getSession();</span><br><span class="line">        const readPreference = session._serverSession.client.getReadPreference(session);</span><br><span class="line">        if (readPreference !== null) &#123;</span><br><span class="line">            cursor.readPref(readPreference.mode, readPreference.tags);</span><br><span class="line">        &#125;</span><br><span class="line">        const readConcern = session._serverSession.client.getReadConcern(session);</span><br><span class="line">        if (readConcern !== null) &#123;</span><br><span class="line">            cursor.readConcern(readConcern.level);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return cursor;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>mongoc提供了 <strong>mongoc_collection_find_with_opts</strong> 函数来获取一个 游标(<strong>Cursor</strong>) ，注意 <strong>mongoc_collection_find</strong> 被弃用了。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">mongoc_cursor_t</span> * mongoc_collection_find_with_opts (<span class="keyword">mongoc_collection_t</span> *collection,<span class="keyword">const</span> <span class="keyword">bson_t</span> *filter,<span class="keyword">const</span> <span class="keyword">bson_t</span> *opts,<span class="keyword">const</span> <span class="keyword">mongoc_read_prefs_t</span> *read_prefs)</span><br></pre></td></tr></table></figure>
+
+<p><strong>mongoc_collection_find_with_opts</strong> 要求4个参数，参数我们只关注前两个参数，其中 <strong>bson_t *filter</strong> 至关重要，类似于 MYSQL select <em>from tb_xxx *where id = 5</em></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 空BSON文档 &#123;&#125;</span></span><br><span class="line"><span class="keyword">bson_t</span> *bson=BCON_NEW(<span class="literal">NULL</span>);</span><br><span class="line"><span class="keyword">mongoc_cursor_t</span> *cursor= mongoc_collection_find_with_opts(coll,bson,<span class="literal">NULL</span>,<span class="literal">NULL</span>);</span><br><span class="line"><span class="comment">// 获取当前文档，注意是一个 const bson_t *，并传入 mongoc_cursor_next 第二个参数</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">bson_t</span> *ps=mongoc_cursor_current(cursor);</span><br><span class="line"><span class="keyword">while</span> (mongoc_cursor_next(cursor,&amp;ps))</span><br><span class="line">&#123;</span><br><span class="line">       <span class="keyword">char</span> *json=bson_as_canonical_extended_json(ps,&amp;size);</span><br><span class="line">       <span class="built_in">printf</span>(json);</span><br><span class="line">       bson_free(json);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 释放 cursor</span></span><br><span class="line">mongoc_cursor_destroy(cursor);</span><br></pre></td></tr></table></figure>
+
+<p>bson_t <em>bson=BCON_NEW(NULL); 等价于 db.test.find({}) 或者 db.test.find()当然，也可以这么来写bson_t</em> bson=BCON_NEW(“age”,”{“,”$gt”,BCON_INT32(13),”}”);<br>这就类似于 db.test.find({‘age’:{‘$gt’:13}})</p>
+<h4 id="增删查改"><a href="#增删查改" class="headerlink" title="增删查改"></a>增删查改</h4><p>像大多数数据库一样，增删查改是必不可少的基本步骤。</p>
+<h5 id="insert"><a href="#insert" class="headerlink" title="insert"></a>insert</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">MONGOC_EXPORT (<span class="keyword">bool</span>)</span><br><span class="line">mongoc_collection_insert (<span class="keyword">mongoc_collection_t</span> *collection,</span><br><span class="line">                          <span class="keyword">mongoc_insert_flags_t</span> flags,</span><br><span class="line">                          <span class="keyword">const</span> <span class="keyword">bson_t</span> *document,</span><br><span class="line">                          <span class="keyword">const</span> <span class="keyword">mongoc_write_concern_t</span> *write_concern,</span><br><span class="line">                          <span class="keyword">bson_error_t</span> *error);</span><br><span class="line">MONGOC_EXPORT (<span class="keyword">bool</span>)</span><br><span class="line">mongoc_collection_insert_one (<span class="keyword">mongoc_collection_t</span> *collection,</span><br><span class="line">                              <span class="keyword">const</span> <span class="keyword">bson_t</span> *document,</span><br><span class="line">                              <span class="keyword">const</span> <span class="keyword">bson_t</span> *opts,</span><br><span class="line">                              <span class="keyword">bson_t</span> *reply,</span><br><span class="line">                              <span class="keyword">bson_error_t</span> *error);</span><br><span class="line">MONGOC_EXPORT (<span class="keyword">bool</span>)</span><br><span class="line">mongoc_collection_insert_many (<span class="keyword">mongoc_collection_t</span> *collection,</span><br><span class="line">                               <span class="keyword">const</span> <span class="keyword">bson_t</span> **documents,</span><br><span class="line">                               <span class="keyword">size_t</span> n_documents,</span><br><span class="line">                               <span class="keyword">const</span> <span class="keyword">bson_t</span> *opts,</span><br><span class="line">                               <span class="keyword">bson_t</span> *reply,</span><br><span class="line">                               <span class="keyword">bson_error_t</span> *error);</span><br></pre></td></tr></table></figure>
+
+<p>千万别被这么多参数给吓倒了。这里我们只需关注</p>
+<blockquote>
+<p>mongoc_collection_t <em>collectionconst bson_t \</em>document<br>bson_error_t *error(可选，表示错误信息)</p>
+</blockquote>
+<p>下面是一个简单的例子，省略了大部分代码</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bson_t</span> *bson=BCON_NEW(</span><br><span class="line">            <span class="string">"name"</span>,BCON_UTF8(<span class="string">"xiaoDong"</span>),</span><br><span class="line">            <span class="string">"age"</span>,BCON_INT32(<span class="number">18</span>),</span><br><span class="line">            <span class="string">"info"</span>,</span><br><span class="line">            <span class="string">"["</span>,</span><br><span class="line">               <span class="string">"&#123;"</span>,<span class="string">"country"</span>,BCON_UTF8(<span class="string">"China"</span>), <span class="string">"&#125;"</span>,</span><br><span class="line">               <span class="string">"&#123;"</span>,<span class="string">"phone"</span>,BCON_UTF8(<span class="string">"150"</span>), <span class="string">"&#125;"</span>,</span><br><span class="line">            <span class="string">"]"</span></span><br><span class="line">        );</span><br><span class="line"><span class="comment">// 插入数据</span></span><br><span class="line">retr=mongoc_collection_insert_one(coll,,<span class="literal">NULL</span>,<span class="literal">NULL</span>,&amp;error);</span><br><span class="line"><span class="keyword">if</span>(!retr)&#123;</span><br><span class="line">     <span class="built_in">printf</span>(error.message);</span><br><span class="line">&#125;</span><br><span class="line">bson_destroy(bson);</span><br></pre></td></tr></table></figure>
+
+<h5 id="delete"><a href="#delete" class="headerlink" title="delete"></a>delete</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">MONGOC_EXPORT (<span class="keyword">bool</span>)</span><br><span class="line">mongoc_collection_delete_one (<span class="keyword">mongoc_collection_t</span> *collection,</span><br><span class="line">                              <span class="keyword">const</span> <span class="keyword">bson_t</span> *selector,</span><br><span class="line">                              <span class="keyword">const</span> <span class="keyword">bson_t</span> *opts,</span><br><span class="line">                              <span class="keyword">bson_t</span> *reply,</span><br><span class="line">                              <span class="keyword">bson_error_t</span> *error);</span><br><span class="line">MONGOC_EXPORT (<span class="keyword">bool</span>)</span><br><span class="line">mongoc_collection_delete_many (<span class="keyword">mongoc_collection_t</span> *collection,</span><br><span class="line">                               <span class="keyword">const</span> <span class="keyword">bson_t</span> *selector,</span><br><span class="line">                               <span class="keyword">const</span> <span class="keyword">bson_t</span> *opts,</span><br><span class="line">                               <span class="keyword">bson_t</span> *reply,</span><br><span class="line">                               <span class="keyword">bson_error_t</span> *error);</span><br></pre></td></tr></table></figure>
+
+<p><strong>mongoc_collection_delete</strong> 已被弃用，这里没有列出<br>这个类似Insert，例子就没有了哈 :)</p>
+<h5 id="find"><a href="#find" class="headerlink" title="find"></a>find</h5><p>这个前面就是前面的 <strong>遍历collections</strong> ……</p>
+<h5 id="update"><a href="#update" class="headerlink" title="update"></a>update</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">MONGOC_EXPORT (<span class="keyword">bool</span>)</span><br><span class="line">mongoc_collection_update (<span class="keyword">mongoc_collection_t</span> *collection,</span><br><span class="line">                          <span class="keyword">mongoc_update_flags_t</span> flags,</span><br><span class="line">                          <span class="keyword">const</span> <span class="keyword">bson_t</span> *selector,</span><br><span class="line">                          <span class="keyword">const</span> <span class="keyword">bson_t</span> *update,</span><br><span class="line">                          <span class="keyword">const</span> <span class="keyword">mongoc_write_concern_t</span> *write_concern,</span><br><span class="line">                          <span class="keyword">bson_error_t</span> *error);</span><br><span class="line">MONGOC_EXPORT (<span class="keyword">bool</span>)</span><br><span class="line">mongoc_collection_update_one (<span class="keyword">mongoc_collection_t</span> *collection,</span><br><span class="line">                              <span class="keyword">const</span> <span class="keyword">bson_t</span> *selector,</span><br><span class="line">                              <span class="keyword">const</span> <span class="keyword">bson_t</span> *update,</span><br><span class="line">                              <span class="keyword">const</span> <span class="keyword">bson_t</span> *opts,</span><br><span class="line">                              <span class="keyword">bson_t</span> *reply,</span><br><span class="line">                              <span class="keyword">bson_error_t</span> *error);</span><br><span class="line">MONGOC_EXPORT (<span class="keyword">bool</span>)</span><br><span class="line">mongoc_collection_update_many (<span class="keyword">mongoc_collection_t</span> *collection,</span><br><span class="line">                               <span class="keyword">const</span> <span class="keyword">bson_t</span> *selector,</span><br><span class="line">                               <span class="keyword">const</span> <span class="keyword">bson_t</span> *update,</span><br><span class="line">                               <span class="keyword">const</span> <span class="keyword">bson_t</span> *opts,</span><br><span class="line">                               <span class="keyword">bson_t</span> *reply,</span><br><span class="line">                               <span class="keyword">bson_error_t</span> *error);</span><br></pre></td></tr></table></figure>
+
+<p>注意那个 <strong>mongoc_update_flags_t</strong>，这个经常用到。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">enum</span> &#123;</span><br><span class="line">   MONGOC_UPDATE_NONE = <span class="number">0</span>,</span><br><span class="line">   MONGOC_UPDATE_UPSERT = <span class="number">1</span> &lt;&lt; <span class="number">0</span>,</span><br><span class="line">   MONGOC_UPDATE_MULTI_UPDATE = <span class="number">1</span> &lt;&lt; <span class="number">1</span>,</span><br><span class="line">&#125; <span class="keyword">mongoc_update_flags_t</span>;</span><br></pre></td></tr></table></figure>
+
+<p>现在就 <strong>mongoc_collection_update</strong> 这个函数为例，除了那个 const mongoc_write_concern_t *write_concern 参数以外，其他的似乎都挺常用。。。不过再次之前，先来看看Mongo下update数据。</p>
+<p>当前 db_test 存在如下数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">db.test.find()</span><br><span class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5a8e30c0d077dc147db71f83&quot;), &quot;name&quot; : &quot;xiaolong&quot;, &quot;age&quot; : 14 &#125;</span><br><span class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5a8e3102d077dc147db71f84&quot;), &quot;name&quot; : &quot;xiaoqiang&quot;, &quot;age&quot; : 10 &#125;</span><br><span class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5a8e3108d077dc147db71f85&quot;), &quot;name&quot; : &quot;xiaofeng&quot;, &quot;age&quot; : 12 &#125;</span><br><span class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5a8e38ba53d6700f027556c2&quot;), &quot;name&quot; : &quot;xiaoHong&quot;, &quot;age&quot; : 15, &quot;info&quot; : [ &#123; &quot;country&quot; : &quot;China&quot; &#125;, &#123; &quot;phone&quot; : &quot;110&quot;</span><br></pre></td></tr></table></figure>
+
+<p>我要查看 age 大或等于 12 的记录，那么我可以这样做</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">db.test.find(&#123;&apos;age&apos;:&#123;&apos;$gte&apos;:12&#125;&#125;)</span><br><span class="line">&gt;&#123; &quot;_id&quot; : ObjectId(&quot;5a8e30c0d077dc147db71f83&quot;), &quot;name&quot; : &quot;xiaolong&quot;, &quot;age&quot; : 14 &#125;</span><br><span class="line">&quot;xiaofeng&quot;, &quot;age&quot; : 12 &#125;</span><br><span class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5a8e38ba53d6700f027556c2&quot;), &quot;name&quot; : &quot;xiaoHong&quot;, &quot;age&quot; : 15, &quot;info&quot; : [ &#123; &quot;country&quot; : &quot;China&quot; &#125;, &#123; &quot;phone&quot; : &quot;110&quot; &#125; ] &#125;</span><br></pre></td></tr></table></figure>
+
+<p>要修改 age 大或等于 12 的 name 的<strong>所有</strong>记录，那么我么可以这样做<br>db.test.update({‘age’:{‘$gte’:12}},{‘$set’:{‘name’:’XXXXX’}},false,<strong>true</strong>)</p>
+<p>类似与MySQL：update tb_xxx set name=’xxxxx’ where age &gt;=12</p>
+<p>这时候回过头来看看</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">const bson_t *selector =&gt; &#123;&apos;age&apos;:&#123;&apos;$gte&apos;:12&#125; &#125;</span><br><span class="line">const bson_t *update =&gt; &#123;&apos;$set&apos;:&#123;&apos;name&apos;:&apos;XXXXX&apos;&#125;&#125;</span><br><span class="line">mongoc_update_flags_t flags =&gt; MONGOC_UPDATE_MULTI_UPDATE</span><br></pre></td></tr></table></figure>
+
+<p>于是可以这样写</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bson_t</span> *query=BCON_NEW(<span class="string">"age"</span>,<span class="string">"&#123;"</span>,</span><br><span class="line">                      <span class="string">"$gte"</span>,BCON_INT32(<span class="number">12</span>),</span><br><span class="line">                             <span class="string">"&#125;"</span>);</span><br><span class="line"><span class="keyword">bson_t</span> *update=BCON_NEW(<span class="string">"$set"</span>,<span class="string">"&#123;"</span>,</span><br><span class="line">                       <span class="string">"age"</span>,BCON_INT32(<span class="number">888</span>),</span><br><span class="line">                              <span class="string">"&#125;"</span>);</span><br><span class="line"><span class="keyword">bool</span> retr= mongoc_collection_update(coll,MONGOC_UPDATE_MULTI_UPDATE,query,update,<span class="literal">NULL</span>,&amp;error);</span><br><span class="line"><span class="keyword">if</span>(!retr)&#123;</span><br><span class="line">     	<span class="built_in">cout</span>&lt;&lt;error.message&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line">bson_destroy(query);</span><br><span class="line">bson_destroy(update);</span><br></pre></td></tr></table></figure>
+
+<p>注意，<strong>“age”,”{“</strong> 要单独写，不能写成 <strong>“age{“</strong>，否则 <strong>src/bson/bcon.c:784 bcon_append_ctx_va(): precondition failed: type == BCON_TYPE_UTF8</strong> 这是最坑爹的地方</p>
+<h4 id="内存释放"><a href="#内存释放" class="headerlink" title="内存释放"></a>内存释放</h4><p>别以为这样就结束了哦，还要记得要释放所有的内存</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 释放char*指针</span></span><br><span class="line">bson_free(<span class="keyword">void</span> *mem);</span><br><span class="line"><span class="comment">// 释放 bson_t *bson文档</span></span><br><span class="line">bson_destroy(<span class="keyword">bson_t</span> *bson);</span><br><span class="line">mongoc_cursor_destroy(cursor);</span><br><span class="line">mongoc_collection_destroy(coll);</span><br><span class="line">mongoc_database_destroy(database);</span><br><span class="line">mongoc_client_destroy(client);</span><br><span class="line">mongoc_cleanup();</span><br></pre></td></tr></table></figure>
+
+<h3 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h3><p>编译方法也很简单</p>
+<blockquote>
+<p>g++ main.cpp -o main <code>pkg-config –libs –cflags libmongoc-1.0</code></p>
+</blockquote>
+<p>或者</p>
+<blockquote>
+<p>g++ main.cpp -o main -lbson-1.0 -lmongoc-1.0</p>
+</blockquote>
+<h3 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h3><p>不得不说，用mongoc来操控mongoDB数据库还挺复杂的。因此建议自己把这些函数封装成类对象。其实，关于mongoc封装成类，<strong>Mongoc</strong>目前已经发展到了<strong>MongoCXX</strong>，以Mongoc为基础，所有操作都被封装到类里面。引入了几个特殊的对象 <strong>view、value、view_or_value</strong>。同时，构建(<strong>Build</strong>)一个BSON文档有两种方法：<strong>basic、stream</strong>。可 <a href="https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/installation/" target="_blank" rel="noopener">参阅这里</a></p>
+<p>以后有空再介绍<strong><em>mongocxx</em></strong>吧～</p>
+<p>参考 <a href="http://mongoc.org/libmongoc/current/tutorial.html" target="_blank" rel="noopener">http://mongoc.org/libmongoc/current/tutorial.html</a></p>
+
+      
+    </div>
+
+    
+
+    
+      
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div id="reward-container">
+  <div>Give a rose, leave a handful of fragrance; life is not easy, I use the arch</div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/wechatpay.png" alt="Joseph XRays 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C/" rel="tag"> <i class="fa fa-tag"></i> C++</a>
+          
+            <a href="/tags/Linux/" rel="tag"> <i class="fa fa-tag"></i> Linux</a>
+          
+            <a href="/tags/C/" rel="tag"> <i class="fa fa-tag"></i> C</a>
+          
+            <a href="/tags/MongoDB/" rel="tag"> <i class="fa fa-tag"></i> MongoDB</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/chrome-dark/" rel="next" title="Chrome浏览器网页变成黑色(Dark Reader)">
+                <i class="fa fa-chevron-left"></i> Chrome浏览器网页变成黑色(Dark Reader)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/linux-libxml2/" rel="prev" title="Libxml2解析XML文件">
+                Libxml2解析XML文件 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTkwNC84NDY4"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+    <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="Joseph XRays">
+  
+  <p class="site-author-name" itemprop="name">Joseph XRays</p>
+  <div class="site-description motion-element" itemprop="description">Share the knowledge</div>
+</div>
+
+
+  <nav class="site-state motion-element">
+    
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">56</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+
+
+
+
+
+  <div class="links-of-author motion-element">
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="https://github.com/josexy" title="GitHub &rarr; https://github.com/josexy" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+    
+  </div>
+
+
+
+
+
+
+  <div class="links-of-blogroll motion-element links-of-blogroll-block">
+    <div class="links-of-blogroll-title">
+      <i class="fa  fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://github.com/josexy" title="https://github.com/josexy" rel="noopener" target="_blank">Github</a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#启动MongoDB服务器"><span class="nav-number">1.</span> <span class="nav-text">启动MongoDB服务器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mongoc"><span class="nav-number">2.</span> <span class="nav-text">mongoc</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Creating-BSON-Documents"><span class="nav-number">2.1.</span> <span class="nav-text">Creating BSON Documents</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#bson"><span class="nav-number">2.1.1.</span> <span class="nav-text">bson</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#BCON"><span class="nav-number">2.1.2.</span> <span class="nav-text">BCON</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Creating-BSON-from-JSON"><span class="nav-number">2.2.</span> <span class="nav-text">Creating BSON from JSON</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#遍历-collections"><span class="nav-number">2.3.</span> <span class="nav-text">遍历 collections</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#增删查改"><span class="nav-number">2.4.</span> <span class="nav-text">增删查改</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#insert"><span class="nav-number">2.4.1.</span> <span class="nav-text">insert</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#delete"><span class="nav-number">2.4.2.</span> <span class="nav-text">delete</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#find"><span class="nav-number">2.4.3.</span> <span class="nav-text">find</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#update"><span class="nav-number">2.4.4.</span> <span class="nav-text">update</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#内存释放"><span class="nav-number">2.5.</span> <span class="nav-text">内存释放</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编译"><span class="nav-number">3.</span> <span class="nav-text">编译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结尾"><span class="nav-number">4.</span> <span class="nav-text">结尾</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Joseph XRays</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+    <span title="站点总字数">252k</span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    
+    <span title="站点阅读时长">3:49</span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+    
+
+
+<script>
+  window.livereOptions = {
+    refer: 'cpp-call-mongodb-c-driver/'
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+
+<script type="text/javascript" src="/js/float_wenzi.js"></script>
+</body>
+</html>
+
+
+

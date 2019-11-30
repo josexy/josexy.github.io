@@ -1,0 +1,1546 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/favicon.ico?v=7.2.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.2.0',
+    sidebar: {"position":"right","display":"post","offset":12,"onmobile":true},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    copycode: {"enable":true,"show_result":true,"style":"flat"},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="大家都应该熟悉ping这个网络诊断工具，它用来检测网络是否连通以及目的主机是否在线。然而唯一缺点是它只支持ICMP协议。因此，大多数主机都会防火墙过滤ICMP数据包，不过，Linux下也有跟他类似的ping工具，本文将会介绍一些常见的工具。">
+<meta name="keywords" content="Linux,Ping">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux Ping工具汇总">
+<meta property="og:url" content="http://www.joxrays.com/linux-ping-tools/index.html">
+<meta property="og:site_name" content="JoXrays&#39;s Blog">
+<meta property="og:description" content="大家都应该熟悉ping这个网络诊断工具，它用来检测网络是否连通以及目的主机是否在线。然而唯一缺点是它只支持ICMP协议。因此，大多数主机都会防火墙过滤ICMP数据包，不过，Linux下也有跟他类似的ping工具，本文将会介绍一些常见的工具。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://www.joxrays.com/uploads/images/imgs/command-87198_640.jpg">
+<meta property="og:updated_time" content="2019-08-20T10:41:44.669Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux Ping工具汇总">
+<meta name="twitter:description" content="大家都应该熟悉ping这个网络诊断工具，它用来检测网络是否连通以及目的主机是否在线。然而唯一缺点是它只支持ICMP协议。因此，大多数主机都会防火墙过滤ICMP数据包，不过，Linux下也有跟他类似的ping工具，本文将会介绍一些常见的工具。">
+<meta name="twitter:image" content="http://www.joxrays.com/uploads/images/imgs/command-87198_640.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="JoXrays's Blog" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="http://www.joxrays.com/linux-ping-tools/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  
+  <title>Linux Ping工具汇总 | JoXrays's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="stylesheet" href="/css/prism-duotone-dark.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JoXrays's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <h1 class="site-subtitle" itemprop="description">All my interesting ...</h1>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.joxrays.com/linux-ping-tools/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Joseph XRays">
+      <meta itemprop="description" content="Share the knowledge">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JoXrays's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Linux Ping工具汇总
+
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-07-01 00:00:00" itemprop="dateCreated datePublished" datetime="2019-07-01T00:00:00+08:00">2019-07-01</time>
+            </span>
+          
+
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-08-20 18:41:44" itemprop="dateModified" datetime="2019-08-20T18:41:44+08:00">2019-08-20</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span title="本文字数">23k</span>
+            </span>
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span title="阅读时长">21 分钟</span>
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>大家都应该熟悉ping这个网络诊断工具，它用来检测网络是否连通以及目的主机是否在线。然而唯一缺点是它只支持ICMP协议。因此，大多数主机都会防火墙过滤ICMP数据包，不过，Linux下也有跟他类似的ping工具，本文将会介绍一些常见的工具。</p>
+<p><img src="/uploads/images/imgs/command-87198_640.jpg" alt></p>
+<a id="more"></a>
+
+<h3 id="ping"><a href="#ping" class="headerlink" title="ping"></a>ping</h3><p>一般作为所有系统默认自带的 <code>ping</code> ，它同样也很重要。通过 <code>man ping</code> 来查看ping的帮助手册</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ping  [-aAbBdDfhLnOqrRUvV46] [-c count] [-F flowlabel] [-i interval] [-I interface]</span><br><span class="line">       [-l preload] [-m mark] [-M pmtudisc_option] [-N nodeinfo_option] [-w deadline]  [-W</span><br><span class="line">       timeout]  [-p  pattern] [-Q tos] [-s packetsize] [-S sndbuf] [-t ttl] [-T timestamp</span><br><span class="line">       option] [hop ...] destination</span><br></pre></td></tr></table></figure>
+
+<p>常用的也就是 -c(发送数据包的数量)，-s(发送数据的字节大小)，-I(网络接口)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt; ping baidu.com -c 2 -s 64</span><br><span class="line">PING baidu.com (111.13.101.208) 64(92) bytes of data.</span><br><span class="line">72 bytes from 111.13.101.208 (111.13.101.208): icmp_seq=1 ttl=55 time=44.2 ms</span><br><span class="line">72 bytes from 111.13.101.208 (111.13.101.208): icmp_seq=2 ttl=55 time=43.4 ms</span><br><span class="line">--- baidu.com ping statistics ---</span><br><span class="line">2 packets transmitted, 2 received, 0% packet loss, time 1017ms</span><br><span class="line">rtt min/avg/max/mdev = 43.490/43.873/44.257/0.436 ms</span><br></pre></td></tr></table></figure>
+
+<p>假如我要ping一个主机的IPv6地址，那么可以这样做(必须指定 -I eth0)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt; ping -I eth0 fe80::2605:fff:fe41:e387 -c 2</span><br><span class="line">PING fe80::2605:fff:fe41:e387(fe80::2605:fff:fe41:e387) from fe80::2cca:ff77:78dc:1025%eth0 eth0: 56 data bytes</span><br><span class="line">64 bytes from fe80::2605:fff:fe41:e387%eth0: icmp_seq=1 ttl=255 time=1.67 ms</span><br><span class="line">64 bytes from fe80::2605:fff:fe41:e387%eth0: icmp_seq=2 ttl=255 time=4.43 ms</span><br><span class="line">--- fe80::2605:fff:fe41:e387 ping statistics ---</span><br><span class="line">2 packets transmitted, 2 received, 0% packet loss, time 1001ms</span><br><span class="line">rtt min/avg/max/mdev = 1.671/3.054/4.438/1.384 ms</span><br></pre></td></tr></table></figure>
+
+<p>或者 <strong>ping6 -I eth0 fe80::2605:fff:fe41:e387 -c 2</strong></p>
+<h3 id="fping"><a href="#fping" class="headerlink" title="fping"></a>fping</h3><p>相对来说fping比ping要高级点(<strong>也是通过ICMP协议来发送数据包的</strong>)，他可以向多个目标主机发送ping，也可以指定一个主机列表文件。其中，fping的 <strong>-g</strong> 选项比较重要</p>
+<blockquote>
+<p><strong>-g, –generate</strong> generate target list (only if no -f specified)<br>(give start and end IP in the target list, or a <strong>CIDR address</strong>)<br>(ex. fping -g 192.168.1.0 192.168.1.255 or fping -g 192.168.1.0/24)</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">fping --help</span><br><span class="line">Usage: fping [options] [targets...]</span><br><span class="line">Probing options:</span><br><span class="line">   -4, --ipv4         only ping IPv4 addresses</span><br><span class="line">   -6, --ipv6         only ping IPv6 addresses</span><br><span class="line">   -b, --size=BYTES   amount of ping data to send, in bytes (default: 56)</span><br><span class="line">   -B, --backoff=N    set exponential backoff factor to N (default: 1.5)</span><br><span class="line">   -c, --count=N      count mode: send N pings to each target</span><br><span class="line">   -f, --file=FILE    read list of targets from a file ( - means stdin)</span><br><span class="line">   -g, --generate     generate target list (only if no -f specified)</span><br><span class="line">                      (give start and end IP in the target list, or a CIDR address)</span><br><span class="line">                      (ex. fping -g 192.168.1.0 192.168.1.255 or fping -g 192.168.1.0/24)</span><br><span class="line">   -H, --ttl=N        set the IP TTL value (Time To Live hops)</span><br><span class="line">   -I, --iface=IFACE  bind to a particular interface</span><br><span class="line">   -l, --loop         loop mode: send pings forever</span><br><span class="line">   -m, --all          use all IPs of provided hostnames (e.g. IPv4 and IPv6), use with -A</span><br><span class="line">   -M, --dontfrag     set the Don&apos;t Fragment flag</span><br><span class="line">   -O, --tos=N        set the type of service (tos) flag on the ICMP packets</span><br><span class="line">   -p, --period=MSEC  interval between ping packets to one target (in ms)</span><br><span class="line">                      (in loop and count modes, default: 1000 ms)</span><br><span class="line">   -r, --retry=N      number of retries (default: 3)</span><br><span class="line">   -R, --random       random packet data (to foil link data compression)</span><br><span class="line">   -S, --src=IP       set source address</span><br><span class="line">   -t, --timeout=MSEC individual target initial timeout (default: 500 ms,</span><br><span class="line">                      except with -l/-c/-C, where it&apos;s the -p period up to 2000 ms)</span><br><span class="line">Output options:</span><br><span class="line">   -a, --alive        show targets that are alive</span><br><span class="line">   -A, --addr         show targets by address</span><br><span class="line">   -C, --vcount=N     same as -c, report results in verbose format</span><br><span class="line">   -D, --timestamp    print timestamp before each output line</span><br><span class="line">   -e, --elapsed      show elapsed time on return packets</span><br><span class="line">   -i, --interval=MSEC  interval between sending ping packets (default: 10 ms)</span><br><span class="line">   -n, --name         show targets by name (-d is equivalent)</span><br><span class="line">   -N, --netdata      output compatible for netdata (-l -Q are required)</span><br><span class="line">   -o, --outage       show the accumulated outage time (lost packets * packet interval)</span><br><span class="line">   -q, --quiet        quiet (don&apos;t show per-target/per-ping results)</span><br><span class="line">   -Q, --squiet=SECS  same as -q, but show summary every n seconds</span><br><span class="line">   -s, --stats        print final stats</span><br><span class="line">   -u, --unreach      show targets that are unreachable</span><br><span class="line">   -v, --version      show version</span><br></pre></td></tr></table></figure>
+
+<p>用法如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&gt; fping -I eth0 -b 64 -f list_targets -a -q -s</span><br><span class="line">192.168.1.16  : xmt/rcv/%loss = 2/2/0%, min/avg/max = 58.0/74.1/90.1</span><br><span class="line">192.168.1.15  : xmt/rcv/%loss = 2/0/100%</span><br><span class="line">192.168.1.110 : xmt/rcv/%loss = 2/2/0%, min/avg/max = 1.48/3.39/5.31</span><br><span class="line">       3 targets</span><br><span class="line">       2 alive</span><br><span class="line">       1 unreachable</span><br><span class="line">       0 unknown addresses</span><br><span class="line">       1 timeouts (waiting for response)</span><br><span class="line">       6 ICMP Echos sent</span><br><span class="line">       4 ICMP Echo Replies received</span><br><span class="line">       0 other ICMP received</span><br><span class="line"> 1.48 ms (min round trip time)</span><br><span class="line"> 38.7 ms (avg round trip time)</span><br><span class="line"> 90.1 ms (max round trip time)</span><br><span class="line">        2.022 sec (elapsed real time)</span><br></pre></td></tr></table></figure>
+
+<p>-b 指定发送数据字节大小<br>-f 指定一个目标主机列表文件，每行一个地址<br>-a 只显示可以ping通的目标主机<br>-q 安静模式，不显示在ping时的每个主机的结果<br>-s 最后显示总计结果<br>-r 重试次数，默认:3<br>还可以指定 -g 来扫描局域网下所有主机</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&gt; fping -asgq 192.168.1.0/24</span><br><span class="line">192.168.1.1</span><br><span class="line">192.168.1.11</span><br><span class="line">192.168.1.6</span><br><span class="line">192.168.1.16</span><br><span class="line">192.168.1.3</span><br><span class="line">192.168.1.5</span><br><span class="line">192.168.1.12</span><br><span class="line">192.168.1.9</span><br><span class="line">192.168.1.105</span><br><span class="line">192.168.1.108</span><br><span class="line">192.168.1.110</span><br><span class="line">     254 targets</span><br><span class="line">      11 alive</span><br><span class="line">     243 unreachable</span><br><span class="line">       0 unknown addresses</span><br><span class="line">     243 timeouts (waiting for response)</span><br><span class="line">     983 ICMP Echos sent</span><br><span class="line">      11 ICMP Echo Replies received</span><br><span class="line">     964 other ICMP received</span><br><span class="line"> 0.04 ms (min round trip time)</span><br><span class="line"> 88.2 ms (avg round trip time)</span><br><span class="line"> 268 ms (max round trip time)</span><br><span class="line">       11.633 sec (elapsed real time)</span><br></pre></td></tr></table></figure>
+
+<p>通过 -u 可以显示主机不可达的地址，如: <code>fping -usgq 192.168.1.0/24</code></p>
+<h3 id="hping3"><a href="#hping3" class="headerlink" title="hping3"></a>hping3</h3><p>这个hping3就比较强大的，它支持的协议有TCP，UDP，ICMP，支持使用tcl脚本。<br>主要用途：</p>
+<ul>
+<li><strong>测试防火墙规则</strong></li>
+<li>测试入侵检测系统(IDS)</li>
+<li>测试TCP/IP模式的安全漏洞</li>
+</ul>
+<p>对于一些主机的防火墙过滤了ICMP数据包，那么我们可以使用hping3发送TCP数据包来判断主机是否存活</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line">&gt; hping3 -h</span><br><span class="line">usage: hping3 host [options]</span><br><span class="line">  -h  --help      show this help</span><br><span class="line">  -v  --version   show version</span><br><span class="line">  -c  --count     packet count</span><br><span class="line">  -i  --interval  wait (uX for X microseconds, for example -i u1000)</span><br><span class="line">      --fast      alias for -i u10000 (10 packets for second)</span><br><span class="line">      --faster    alias for -i u1000 (100 packets for second)</span><br><span class="line">      --flood	   sent packets as fast as possible. Don&apos;t show replies.</span><br><span class="line">  -n  --numeric   numeric output</span><br><span class="line">  -q  --quiet     quiet</span><br><span class="line">  -I  --interface interface name (otherwise default routing interface)</span><br><span class="line">  -V  --verbose   verbose mode</span><br><span class="line">  -D  --debug     debugging info</span><br><span class="line">  -z  --bind      bind ctrl+z to ttl           (default to dst port)</span><br><span class="line">  -Z  --unbind    unbind ctrl+z</span><br><span class="line">      --beep      beep for every matching packet received</span><br><span class="line">Mode</span><br><span class="line">  default mode     TCP</span><br><span class="line">  -0  --rawip      RAW IP mode</span><br><span class="line">  -1  --icmp       ICMP mode</span><br><span class="line">  -2  --udp        UDP mode</span><br><span class="line">  -8  --scan       SCAN mode.</span><br><span class="line">                   Example: hping --scan 1-30,70-90 -S www.target.host</span><br><span class="line">  -9  --listen     listen mode</span><br><span class="line">IP</span><br><span class="line">  -a  --spoof      spoof source address</span><br><span class="line">  --rand-dest      random destionation address mode. see the man.</span><br><span class="line">  --rand-source    random source address mode. see the man.</span><br><span class="line">  -t  --ttl        ttl (default 64)</span><br><span class="line">  -N  --id         id (default random)</span><br><span class="line">  -W  --winid      use win* id byte ordering</span><br><span class="line">  -r  --rel        relativize id field          (to estimate host traffic)</span><br><span class="line">  -f  --frag       split packets in more frag.  (may pass weak acl)</span><br><span class="line">  -x  --morefrag   set more fragments flag</span><br><span class="line">  -y  --dontfrag   set don&apos;t fragment flag</span><br><span class="line">  -g  --fragoff    set the fragment offset</span><br><span class="line">  -m  --mtu        set virtual mtu, implies --frag if packet size &gt; mtu</span><br><span class="line">  -o  --tos        type of service (default 0x00), try --tos help</span><br><span class="line">  -G  --rroute     includes RECORD_ROUTE option and display the route buffer</span><br><span class="line">  --lsrr           loose source routing and record route</span><br><span class="line">  --ssrr           strict source routing and record route</span><br><span class="line">  -H  --ipproto    set the IP protocol field, only in RAW IP mode</span><br><span class="line">ICMP</span><br><span class="line">  -C  --icmptype   icmp type (default echo request)</span><br><span class="line">  -K  --icmpcode   icmp code (default 0)</span><br><span class="line">      --force-icmp send all icmp types (default send only supported types)</span><br><span class="line">      --icmp-gw    set gateway address for ICMP redirect (default 0.0.0.0)</span><br><span class="line">      --icmp-ts    Alias for --icmp --icmptype 13 (ICMP timestamp)</span><br><span class="line">      --icmp-addr  Alias for --icmp --icmptype 17 (ICMP address subnet mask)</span><br><span class="line">      --icmp-help  display help for others icmp options</span><br><span class="line">UDP/TCP</span><br><span class="line">  -s  --baseport   base source port             (default random)</span><br><span class="line">  -p  --destport   [+][+]&lt;port&gt; destination port(default 0) ctrl+z inc/dec</span><br><span class="line">  -k  --keep       keep still source port</span><br><span class="line">  -w  --win        winsize (default 64)</span><br><span class="line">  -O  --tcpoff     set fake tcp data offset     (instead of tcphdrlen / 4)</span><br><span class="line">  -Q  --seqnum     shows only tcp sequence number</span><br><span class="line">  -b  --badcksum   (try to) send packets with a bad IP checksum</span><br><span class="line">                   many systems will fix the IP checksum sending the packet</span><br><span class="line">                   so you&apos;ll get bad UDP/TCP checksum instead.</span><br><span class="line">  -M  --setseq     set TCP sequence number</span><br><span class="line">  -L  --setack     set TCP ack</span><br><span class="line">  -F  --fin        set FIN flag</span><br><span class="line">  -S  --syn        set SYN flag</span><br><span class="line">  -R  --rst        set RST flag</span><br><span class="line">  -P  --push       set PUSH flag</span><br><span class="line">  -A  --ack        set ACK flag</span><br><span class="line">  -U  --urg        set URG flag</span><br><span class="line">  -X  --xmas       set X unused flag (0x40)</span><br><span class="line">  -Y  --ymas       set Y unused flag (0x80)</span><br><span class="line">  --tcpexitcode    use last tcp-&gt;th_flags as exit code</span><br><span class="line">  --tcp-mss        enable the TCP MSS option with the given value</span><br><span class="line">  --tcp-timestamp  enable the TCP timestamp option to guess the HZ/uptime</span><br><span class="line">Common</span><br><span class="line">  -d  --data       data size                    (default is 0)</span><br><span class="line">  -E  --file       data from file</span><br><span class="line">  -e  --sign       add &apos;signature&apos;</span><br><span class="line">  -j  --dump       dump packets in hex</span><br><span class="line">  -J  --print      dump printable characters</span><br><span class="line">  -B  --safe       enable &apos;safe&apos; protocol</span><br><span class="line">  -u  --end        tell you when --file reached EOF and prevent rewind</span><br><span class="line">  -T  --traceroute traceroute mode              (implies --bind and --ttl 1)</span><br><span class="line">  --tr-stop        Exit when receive the first not ICMP in traceroute mode</span><br><span class="line">  --tr-keep-ttl    Keep the source TTL fixed, useful to monitor just one hop</span><br><span class="line">  --tr-no-rtt	    Don&apos;t calculate/show RTT information in traceroute mode</span><br><span class="line">ARS packet description (new, unstable)</span><br><span class="line">  --apd-send       Send the packet described with APD (see docs/APD.txt)</span><br></pre></td></tr></table></figure>
+
+<p>可以通过一下选项指定发送数据包的协议</p>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>选项全称</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-0</td>
+<td>–rawip</td>
+<td>发送原始IP数据包</td>
+</tr>
+<tr>
+<td>-1</td>
+<td>–icmp</td>
+<td>发送ICMP数据包</td>
+</tr>
+<tr>
+<td>-2</td>
+<td>–udp</td>
+<td>发送UDP数据包</td>
+</tr>
+<tr>
+<td>-8</td>
+<td>–scan</td>
+<td>扫描模式</td>
+</tr>
+<tr>
+<td>-9</td>
+<td>–listen</td>
+<td>监听模式</td>
+</tr>
+</tbody></table>
+<p>注意，默认是发送TCP数据包</p>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-S</td>
+<td>SYN</td>
+</tr>
+<tr>
+<td>-F</td>
+<td>FIN</td>
+</tr>
+<tr>
+<td>-R</td>
+<td>RST</td>
+</tr>
+<tr>
+<td>-P</td>
+<td>PUSH</td>
+</tr>
+<tr>
+<td>-A</td>
+<td>ACK</td>
+</tr>
+<tr>
+<td>-U</td>
+<td>URG</td>
+</tr>
+<tr>
+<td>-X</td>
+<td>XMAS</td>
+</tr>
+<tr>
+<td>-Y</td>
+<td>YMAS</td>
+</tr>
+</tbody></table>
+<h4 id="发送TCP数据包"><a href="#发送TCP数据包" class="headerlink" title="发送TCP数据包"></a>发送TCP数据包</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&gt; hping3 -I eth0 -V --syn 192.168.1.110 -c 2</span><br><span class="line">using eth0, addr: 192.168.1.108, MTU: 1500</span><br><span class="line">HPING 192.168.1.110 (eth0 192.168.1.110): S set, 40 headers + 0 data bytes</span><br><span class="line">len=46 ip=192.168.1.110 ttl=64 DF id=10106 tos=0 iplen=40</span><br><span class="line">sport=0 flags=RA seq=0 win=0 rtt=7.7 ms</span><br><span class="line">seq=0 ack=1839333390 sum=88b4 urp=0</span><br><span class="line">len=46 ip=192.168.1.110 ttl=64 DF id=10157 tos=0 iplen=40</span><br><span class="line">sport=0 flags=RA seq=1 win=0 rtt=7.6 ms</span><br><span class="line">seq=0 ack=439379179 sum=1ca3 urp=0</span><br><span class="line">--- 192.168.1.110 hping statistic ---</span><br><span class="line">2 packets transmitted, 2 packets received, 0% packet loss</span><br><span class="line">round-trip min/avg/max = 7.6/7.7/7.7 ms</span><br></pre></td></tr></table></figure>
+
+<h4 id="端口检测"><a href="#端口检测" class="headerlink" title="端口检测"></a>端口检测</h4><p>-p 指定目的端口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt; hping3  -I eth0 -S -p 3306 192.168.1.110 -c 2</span><br><span class="line">HPING 192.168.1.110 (eth0 192.168.1.110): S set, 40 headers + 0 data bytes</span><br><span class="line">len=46 ip=192.168.1.110 ttl=64 DF id=0 sport=3306 flags=SA seq=0 win=29200 rtt=31.8 ms</span><br><span class="line">len=46 ip=192.168.1.110 ttl=64 DF id=0 sport=3306 flags=SA seq=1 win=29200 rtt=7.7 ms</span><br><span class="line">--- 192.168.1.110 hping statistic ---</span><br><span class="line">2 packets transmitted, 2 packets received, 0% packet loss</span><br><span class="line">round-trip min/avg/max = 7.7/19.7/31.8 ms</span><br></pre></td></tr></table></figure>
+
+<p>注意其中的 <strong>win=29200</strong> 表示开放该端口</p>
+<h4 id="Scan模式"><a href="#Scan模式" class="headerlink" title="Scan模式"></a>Scan模式</h4><p>通过 -8/–scan 来开启扫描模式。<br>所谓扫描模式，通过一个端口组，对主机进行端口扫描。<br>hping3 给出了两个关键字代表多个端口。</p>
+<table>
+<thead>
+<tr>
+<th>关键字</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>all</td>
+<td>表示 0-65535 的端口</td>
+</tr>
+<tr>
+<td>known</td>
+<td>表示已知本地端口，这些端口位于/etc/services文件</td>
+</tr>
+</tbody></table>
+<p>例1，扫描 0-65535 的端口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&gt; hping3 --scan &apos;all&apos; -S 192.168.1.110</span><br><span class="line">Scanning 192.168.1.110 (192.168.1.110), port all</span><br><span class="line">65536 ports to scan, use -V to see all the replies</span><br><span class="line">+----+-----------+---------+---+-----+-----+-----+</span><br><span class="line">|port| serv name |  flags  |ttl| id  | win | len |</span><br><span class="line">+----+-----------+---------+---+-----+-----+-----+</span><br><span class="line"> 3306 mysql      : .S..A...  64     0 29200    46</span><br><span class="line">   80 http       : .S..A...  64     0 29200    46</span><br><span class="line">All replies received. Done.</span><br><span class="line">Not responding ports: (1 tcpmux) (2 nbp) (3 ) (4 echo) (6 zip) (8 ) (9 discard) (10 ) (11 systat) (13 daytime) (14 ) </span><br><span class="line">......</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+
+<p>例2，扫描 1-5555的端口和已知端口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">&gt; hping3 -8 &apos;1-5555,known&apos; -S 192.168.1.17</span><br><span class="line">Scanning 192.168.1.17 (192.168.1.17), port 1-5555,known</span><br><span class="line">5641 ports to scan, use -V to see all the replies</span><br><span class="line">+----+-----------+---------+---+-----+-----+-----+</span><br><span class="line">|port| serv name |  flags  |ttl| id  | win | len |</span><br><span class="line">+----+-----------+---------+---+-----+-----+-----+</span><br><span class="line">   21 ftp        : .S..A...  64     0  5840    44</span><br><span class="line">   22 ssh        : .S..A...  64     0  5840    44</span><br><span class="line">   23 telnet     : .S..A...  64     0  5840    44</span><br><span class="line">   25 smtp       : .S..A...  64     0  5840    44</span><br><span class="line">   53 domain     : .S..A...  64     0  5840    44</span><br><span class="line">   80 http       : .S..A...  64     0  5840    44</span><br><span class="line">  111 sunrpc     : .S..A...  64     0  5840    44</span><br><span class="line">  139 netbios-ssn: .S..A...  64     0  5840    44</span><br><span class="line">  445 microsoft-d: .S..A...  64     0  5840    44</span><br><span class="line">  512 exec       : .S..A...  64     0  5840    44</span><br><span class="line">  513 login      : .S..A...  64     0  5840    44</span><br><span class="line">  514 shell      : .S..A...  64     0  5840    44</span><br><span class="line"> 1099 rmiregistry: .S..A...  64     0  5840    44</span><br><span class="line"> 1524 ingreslock : .S..A...  64     0  5840    44</span><br><span class="line"> 2049 nfs        : .S..A...  64     0  5840    44</span><br><span class="line"> 2121 iprop      : .S..A...  64     0  5840    44</span><br><span class="line"> 3306 mysql      : .S..A...  64     0  5840    44</span><br><span class="line"> 3632 distcc     : .S..A...  64     0  5840    44</span><br><span class="line"> 5432 postgresql : .S..A...  64     0  5840    44</span><br><span class="line"> 6000 x11        : .S..A...  64     0  5840    44</span><br><span class="line"> 6667 ircd       : .S..A...  64     0  5840    44</span><br><span class="line"> 6697 ircs-u     : .S..A...  64     0  5840    44</span><br><span class="line">All replies received. Done.</span><br><span class="line">Not responding ports:</span><br></pre></td></tr></table></figure>
+
+<h4 id="发送随机原IP地址的数据包"><a href="#发送随机原IP地址的数据包" class="headerlink" title="发送随机原IP地址的数据包"></a>发送随机原IP地址的数据包</h4><p>–rand-source/–rand-dest 用于伪造原/目的IP地址，这可以在很大程度上不让我们自己的IP地址被对方检测到</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&gt; hping3 --udp -S 192.168.1.17 -c 5 --rand-source</span><br><span class="line">HPING 192.168.1.17 (eth0 192.168.1.17): udp mode set, 28 headers + 0 data bytes</span><br><span class="line">ICMP Port Unreachable from ip=192.168.1.17 name=192.168.1.17</span><br><span class="line">status=0 port=2475 seq=0</span><br><span class="line">ICMP Port Unreachable from ip=192.168.1.17 name=192.168.1.17</span><br><span class="line">status=0 port=2476 seq=1</span><br><span class="line">ICMP Port Unreachable from ip=192.168.1.17 name=192.168.1.17</span><br><span class="line">status=0 port=2477 seq=2</span><br><span class="line">ICMP Port Unreachable from ip=192.168.1.17 name=192.168.1.17</span><br><span class="line">status=0 port=2478 seq=3</span><br><span class="line">--- 192.168.1.17 hping statistic ---</span><br><span class="line">5 packets transmitted, 4 packets received, 20% packet loss</span><br><span class="line">round-trip min/avg/max = 3.5/4.1/5.8 ms</span><br></pre></td></tr></table></figure>
+
+<p>然而这个的问题是丢包率增大。</p>
+<p>可以在目主机上执行 <code>tcpdump -nn -v -t udp</code> 来查看收发包情况。</p>
+<h3 id="nping"><a href="#nping" class="headerlink" title="nping"></a>nping</h3><p>nping是 <a href="https://nmap.org" target="_blank" rel="noopener">Nmap</a> 的一个 网络数据包生成工具。支持 <strong>TCP、UDP、ICMP、ARP</strong> 协议，多个主机的多个端口。功能类似与hping3</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br></pre></td><td class="code"><pre><span class="line">Nping 0.7.60 ( https://nmap.org/nping )</span><br><span class="line">Usage: nping [Probe mode] [Options] &#123;target specification&#125;</span><br><span class="line">TARGET SPECIFICATION:</span><br><span class="line">  Targets may be specified as hostnames, IP addresses, networks, etc.</span><br><span class="line">  Ex: scanme.nmap.org, microsoft.com/24, 192.168.0.1; 10.0.*.1-24</span><br><span class="line">PROBE MODES:</span><br><span class="line">  --tcp-connect                    : Unprivileged TCP connect probe mode.</span><br><span class="line">  --tcp                            : TCP probe mode.</span><br><span class="line">  --udp                            : UDP probe mode.</span><br><span class="line">  --icmp                           : ICMP probe mode.</span><br><span class="line">  --arp                            : ARP/RARP probe mode.</span><br><span class="line">  --tr, --traceroute               : Traceroute mode (can only be used with </span><br><span class="line">                                     TCP/UDP/ICMP modes).</span><br><span class="line">TCP CONNECT MODE:</span><br><span class="line">   -p, --dest-port &lt;port spec&gt;     : Set destination port(s).</span><br><span class="line">   -g, --source-port &lt;portnumber&gt;  : Try to use a custom source port.</span><br><span class="line">TCP PROBE MODE:</span><br><span class="line">   -g, --source-port &lt;portnumber&gt;  : Set source port.</span><br><span class="line">   -p, --dest-port &lt;port spec&gt;     : Set destination port(s).</span><br><span class="line">   --seq &lt;seqnumber&gt;               : Set sequence number.</span><br><span class="line">   --flags &lt;flag list&gt;             : Set TCP flags (ACK,PSH,RST,SYN,FIN...)</span><br><span class="line">   --ack &lt;acknumber&gt;               : Set ACK number.</span><br><span class="line">   --win &lt;size&gt;                    : Set window size.</span><br><span class="line">   --badsum                        : Use a random invalid checksum. </span><br><span class="line">UDP PROBE MODE:</span><br><span class="line">   -g, --source-port &lt;portnumber&gt;  : Set source port.</span><br><span class="line">   -p, --dest-port &lt;port spec&gt;     : Set destination port(s).</span><br><span class="line">   --badsum                        : Use a random invalid checksum. </span><br><span class="line">ICMP PROBE MODE:</span><br><span class="line">  --icmp-type &lt;type&gt;               : ICMP type.</span><br><span class="line">  --icmp-code &lt;code&gt;               : ICMP code.</span><br><span class="line">  --icmp-id &lt;id&gt;                   : Set identifier.</span><br><span class="line">  --icmp-seq &lt;n&gt;                   : Set sequence number.</span><br><span class="line">  --icmp-redirect-addr &lt;addr&gt;      : Set redirect address.</span><br><span class="line">  --icmp-param-pointer &lt;pnt&gt;       : Set parameter problem pointer.</span><br><span class="line">  --icmp-advert-lifetime &lt;time&gt;    : Set router advertisement lifetime.</span><br><span class="line">  --icmp-advert-entry &lt;IP,pref&gt;    : Add router advertisement entry.</span><br><span class="line">  --icmp-orig-time  &lt;timestamp&gt;    : Set originate timestamp.</span><br><span class="line">  --icmp-recv-time  &lt;timestamp&gt;    : Set receive timestamp.</span><br><span class="line">  --icmp-trans-time &lt;timestamp&gt;    : Set transmit timestamp.</span><br><span class="line">ARP/RARP PROBE MODE:</span><br><span class="line">  --arp-type &lt;type&gt;                : Type: ARP, ARP-reply, RARP, RARP-reply.</span><br><span class="line">  --arp-sender-mac &lt;mac&gt;           : Set sender MAC address.</span><br><span class="line">  --arp-sender-ip  &lt;addr&gt;          : Set sender IP address.</span><br><span class="line">  --arp-target-mac &lt;mac&gt;           : Set target MAC address.</span><br><span class="line">  --arp-target-ip  &lt;addr&gt;          : Set target IP address.</span><br><span class="line">IPv4 OPTIONS:</span><br><span class="line">  -S, --source-ip                  : Set source IP address.</span><br><span class="line">  --dest-ip &lt;addr&gt;                 : Set destination IP address (used as an </span><br><span class="line">                                     alternative to &#123;target specification&#125; ). </span><br><span class="line">  --tos &lt;tos&gt;                      : Set type of service field (8bits).</span><br><span class="line">  --id  &lt;id&gt;                       : Set identification field (16 bits).</span><br><span class="line">  --df                             : Set Don&apos;t Fragment flag.</span><br><span class="line">  --mf                             : Set More Fragments flag.</span><br><span class="line">  --ttl &lt;hops&gt;                     : Set time to live [0-255].</span><br><span class="line">  --badsum-ip                      : Use a random invalid checksum. </span><br><span class="line">  --ip-options &lt;S|R [route]|L [route]|T|U ...&gt; : Set IP options</span><br><span class="line">  --ip-options &lt;hex string&gt;                    : Set IP options</span><br><span class="line">  --mtu &lt;size&gt;                     : Set MTU. Packets get fragmented if MTU is</span><br><span class="line">                                     small enough.</span><br><span class="line">IPv6 OPTIONS:</span><br><span class="line">  -6, --IPv6                       : Use IP version 6.</span><br><span class="line">  --dest-ip                        : Set destination IP address (used as an</span><br><span class="line">                                     alternative to &#123;target specification&#125;).</span><br><span class="line">  --hop-limit                      : Set hop limit (same as IPv4 TTL).</span><br><span class="line">  --traffic-class &lt;class&gt; :        : Set traffic class.</span><br><span class="line">  --flow &lt;label&gt;                   : Set flow label.</span><br><span class="line">ETHERNET OPTIONS:</span><br><span class="line">  --dest-mac &lt;mac&gt;                 : Set destination mac address. (Disables</span><br><span class="line">                                     ARP resolution)</span><br><span class="line">  --source-mac &lt;mac&gt;               : Set source MAC address.</span><br><span class="line">  --ether-type &lt;type&gt;              : Set EtherType value.</span><br><span class="line">PAYLOAD OPTIONS:</span><br><span class="line">  --data &lt;hex string&gt;              : Include a custom payload.</span><br><span class="line">  --data-string &lt;text&gt;             : Include a custom ASCII text.</span><br><span class="line">  --data-length &lt;len&gt;              : Include len random bytes as payload.</span><br><span class="line">ECHO CLIENT/SERVER:</span><br><span class="line">  --echo-client &lt;passphrase&gt;       : Run Nping in client mode.</span><br><span class="line">  --echo-server &lt;passphrase&gt;       : Run Nping in server mode.</span><br><span class="line">  --echo-port &lt;port&gt;               : Use custom &lt;port&gt; to listen or connect.</span><br><span class="line">  --no-crypto                      : Disable encryption and authentication.</span><br><span class="line">  --once                           : Stop the server after one connection.</span><br><span class="line">  --safe-payloads                  : Erase application data in echoed packets.</span><br><span class="line">TIMING AND PERFORMANCE:</span><br><span class="line">  Options which take &lt;time&gt; are in seconds, or append &apos;ms&apos; (milliseconds),</span><br><span class="line">  &apos;s&apos; (seconds), &apos;m&apos; (minutes), or &apos;h&apos; (hours) to the value (e.g. 30m, 0.25h).</span><br><span class="line">  --delay &lt;time&gt;                   : Adjust delay between probes.</span><br><span class="line">  --rate  &lt;rate&gt;                   : Send num packets per second.</span><br><span class="line">MISC:</span><br><span class="line">  -h, --help                       : Display help information.</span><br><span class="line">  -V, --version                    : Display current version number. </span><br><span class="line">  -c, --count &lt;n&gt;                  : Stop after &lt;n&gt; rounds.</span><br><span class="line">  -e, --interface &lt;name&gt;           : Use supplied network interface.</span><br><span class="line">  -H, --hide-sent                  : Do not display sent packets.</span><br><span class="line">  -N, --no-capture                 : Do not try to capture replies.</span><br><span class="line">  --privileged                     : Assume user is fully privileged.</span><br><span class="line">  --unprivileged                   : Assume user lacks raw socket privileges.</span><br><span class="line">  --send-eth                       : Send packets at the raw Ethernet layer.</span><br><span class="line">  --send-ip                        : Send packets using raw IP sockets.</span><br><span class="line">  --bpf-filter &lt;filter spec&gt;       : Specify custom BPF filter.</span><br><span class="line">OUTPUT:</span><br><span class="line">  -v                               : Increment verbosity level by one.</span><br><span class="line">  -v[level]                        : Set verbosity level. E.g: -v4</span><br><span class="line">  -d                               : Increment debugging level by one.</span><br><span class="line">  -d[level]                        : Set debugging level. E.g: -d3</span><br><span class="line">  -q                               : Decrease verbosity level by one.</span><br><span class="line">  -q[N]                            : Decrease verbosity level N times</span><br><span class="line">  --quiet                          : Set verbosity and debug level to minimum.</span><br><span class="line">  --debug                          : Set verbosity and debug to the max level.</span><br><span class="line">EXAMPLES:</span><br><span class="line">  nping scanme.nmap.org</span><br><span class="line">  nping --tcp -p 80 --flags rst --ttl 2 192.168.1.1</span><br><span class="line">  nping --icmp --icmp-type time --delay 500ms 192.168.254.254</span><br><span class="line">  nping --echo-server &quot;public&quot; -e wlan0 -vvv </span><br><span class="line">  nping --echo-client &quot;public&quot; echo.nmap.org --tcp -p1-1024 --flags ack</span><br><span class="line">SEE THE MAN PAGE FOR MANY MORE OPTIONS, DESCRIPTIONS, AND EXAMPLES</span><br></pre></td></tr></table></figure>
+
+<h4 id="TCP扫描"><a href="#TCP扫描" class="headerlink" title="TCP扫描"></a>TCP扫描</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&gt; nping  --tcp -c 1 192.168.1.110 192.168.1.108 -p 22,3306 --flags=syn</span><br><span class="line">Starting Nping 0.7.60 ( https://nmap.org/nping ) at 2018-04-05 11:08 CST</span><br><span class="line">SENT (0.0428s) TCP 192.168.1.108:39046 &gt; 192.168.1.110:22 S ttl=64 id=19287 iplen=40  seq=1799430370 win=1480 </span><br><span class="line">RCVD (0.0465s) TCP 192.168.1.110:22 &gt; 192.168.1.108:39046 SA ttl=64 id=0 iplen=44  seq=2225990095 win=29200 &lt;mss 1460&gt;</span><br><span class="line">SENT (1.0437s) TCP 192.168.1.108:39046 &gt; 192.168.1.108:22 S ttl=64 id=19287 iplen=40  seq=1799430370 win=1480 </span><br><span class="line">SENT (2.0449s) TCP 192.168.1.108:39046 &gt; 192.168.1.110:3306 S ttl=64 id=19287 iplen=40  seq=1799430370 win=1480 </span><br><span class="line">RCVD (2.0897s) TCP 192.168.1.110:3306 &gt; 192.168.1.108:39046 SA ttl=64 id=0 iplen=44  seq=3017639874 win=29200 &lt;mss 1460&gt;</span><br><span class="line">SENT (3.0468s) TCP 192.168.1.108:39046 &gt; 192.168.1.108:3306 S ttl=64 id=19287 iplen=40  seq=1799430370 win=1480 </span><br><span class="line"> </span><br><span class="line">Statistics for host 192.168.1.110:</span><br><span class="line"> |  Probes Sent: 2 | Rcvd: 2 | Lost: 0  (0.00%)</span><br><span class="line"> |_ Max rtt: 44.817ms | Min rtt: 3.653ms | Avg rtt: 24.235ms</span><br><span class="line">Statistics for host 192.168.1.108:</span><br><span class="line"> |  Probes Sent: 2 | Rcvd: 0 | Lost: 2  (100.00%)</span><br><span class="line"> |_ Max rtt: N/A | Min rtt: N/A | Avg rtt: N/A</span><br><span class="line">Raw packets sent: 4 (160B) | Rcvd: 2 (92B) | Lost: 2 (50.00%)</span><br><span class="line">Nping done: 2 IP addresses pinged in 4.09 seconds</span><br></pre></td></tr></table></figure>
+
+<h3 id="arping"><a href="#arping" class="headerlink" title="arping"></a>arping</h3><p>arping用在本地局域网中，判断目标主机是否在线</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Usage: arping [-fqbDUAV] [-c count] [-w timeout] [-I device] [-s source] destination</span><br><span class="line">  -f : quit on first reply</span><br><span class="line">  -q : be quiet</span><br><span class="line">  -b : keep broadcasting, don&apos;t go unicast</span><br><span class="line">  -D : duplicate address detection mode</span><br><span class="line">  -U : Unsolicited ARP mode, update your neighbours</span><br><span class="line">  -A : ARP answer mode, update your neighbours</span><br><span class="line">  -V : print version and exit</span><br><span class="line">  -c count : how many packets to send</span><br><span class="line">  -w timeout : how long to wait for a reply</span><br><span class="line">  -I device : which ethernet device to use</span><br><span class="line">  -s source : source ip address</span><br><span class="line">  destination : ask for what ip address</span><br></pre></td></tr></table></figure>
+
+<p>如下判断 192.168.1.110 主机是否在线</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt; arping -c 2 192.168.1.110  -w 1</span><br><span class="line">ARPING 192.168.1.110 from 192.168.1.108 eth0</span><br><span class="line">Unicast reply from 192.168.1.110 [24:05:0F:41:E3:87]  61.513ms</span><br><span class="line">Unicast reply from 192.168.1.110 [24:05:0F:41:E3:87]  1.864ms</span><br><span class="line">Sent 2 probes (1 broadcast(s))</span><br><span class="line">Received 2 response(s)</span><br></pre></td></tr></table></figure>
+
+<h3 id="netcat"><a href="#netcat" class="headerlink" title="netcat"></a>netcat</h3><p>对于netcat(nc)，我只想介绍其中一个功能——扫描主机端口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt; nc -zvn -w 1 192.168.1.110  1-5555</span><br><span class="line">(UNKNOWN) [192.168.1.110] 3306 (mysql) open</span><br><span class="line">(UNKNOWN) [192.168.1.110] 80 (http) open</span><br><span class="line">(UNKNOWN) [192.168.1.110] 22 (ssh) open</span><br></pre></td></tr></table></figure>
+
+<h3 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h3><p>以上是一些比较常用ping工具了，当然还有更强的的如nmap :)</p>
+<p>bye</p>
+
+      
+    </div>
+
+    
+
+    
+      
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div id="reward-container">
+  <div>Give a rose, leave a handful of fragrance; life is not easy, I use the arch</div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/wechatpay.png" alt="Joseph XRays 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag"> <i class="fa fa-tag"></i> Linux</a>
+          
+            <a href="/tags/Ping/" rel="tag"> <i class="fa fa-tag"></i> Ping</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/linux-tinyxml2/" rel="next" title="TinyXML2解析XML文件">
+                <i class="fa fa-chevron-left"></i> TinyXML2解析XML文件
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/raspberry-wifi-router/" rel="prev" title="树莓派搭建简略WiFi无线路由器">
+                树莓派搭建简略WiFi无线路由器 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTkwNC84NDY4"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+    <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="Joseph XRays">
+  
+  <p class="site-author-name" itemprop="name">Joseph XRays</p>
+  <div class="site-description motion-element" itemprop="description">Share the knowledge</div>
+</div>
+
+
+  <nav class="site-state motion-element">
+    
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">56</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+
+
+
+
+
+  <div class="links-of-author motion-element">
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="https://github.com/josexy" title="GitHub &rarr; https://github.com/josexy" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+    
+  </div>
+
+
+
+
+
+
+  <div class="links-of-blogroll motion-element links-of-blogroll-block">
+    <div class="links-of-blogroll-title">
+      <i class="fa  fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://github.com/josexy" title="https://github.com/josexy" rel="noopener" target="_blank">Github</a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#ping"><span class="nav-number">1.</span> <span class="nav-text">ping</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fping"><span class="nav-number">2.</span> <span class="nav-text">fping</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hping3"><span class="nav-number">3.</span> <span class="nav-text">hping3</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#发送TCP数据包"><span class="nav-number">3.1.</span> <span class="nav-text">发送TCP数据包</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#端口检测"><span class="nav-number">3.2.</span> <span class="nav-text">端口检测</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Scan模式"><span class="nav-number">3.3.</span> <span class="nav-text">Scan模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#发送随机原IP地址的数据包"><span class="nav-number">3.4.</span> <span class="nav-text">发送随机原IP地址的数据包</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nping"><span class="nav-number">4.</span> <span class="nav-text">nping</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#TCP扫描"><span class="nav-number">4.1.</span> <span class="nav-text">TCP扫描</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#arping"><span class="nav-number">5.</span> <span class="nav-text">arping</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#netcat"><span class="nav-number">6.</span> <span class="nav-text">netcat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结尾"><span class="nav-number">7.</span> <span class="nav-text">结尾</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Joseph XRays</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+    <span title="站点总字数">252k</span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    
+    <span title="站点阅读时长">3:49</span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+    
+
+
+<script>
+  window.livereOptions = {
+    refer: 'linux-ping-tools/'
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+
+<script type="text/javascript" src="/js/float_wenzi.js"></script>
+</body>
+</html>
+
+
+

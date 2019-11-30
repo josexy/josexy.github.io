@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>JoXrays&#39;s Blog</title>
+  
+  <subtitle>All my interesting ...</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://www.joxrays.com/"/>
+  <updated>2019-11-30T02:11:52.712Z</updated>
+  <id>http://www.joxrays.com/</id>
+  
+  <author>
+    <name>Joseph XRays</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>C++简单实现MySQL表格输出功能</title>
+    <link href="http://www.joxrays.com/cpp-printtable/"/>
+    <id>http://www.joxrays.com/cpp-printtable/</id>
+    <published>2019-11-29T16:00:00.000Z</published>
+    <updated>2019-11-30T02:11:52.712Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;其实在很早之前，我就对MySQL的表格输出很感兴趣并想用C++实现，主要是因为它支持中文输出。因此前一段时间我实现了第一版的MyPrettyTable(简化版的Python的库PrettyTable?)，然而令人失望的是它在含有中文汉字的情况下会发生混乱而无法对齐，于是我放弃了。不过昨天在写代码时偶然看到之前那个被搁置的project，于是不甘心的我再次重新实现了这个功能…其实就是利用的setw和left&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Programming" scheme="http://www.joxrays.com/categories/Programming/"/>
+    
+    
+      <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>位运算实现加减乘除</title>
+    <link href="http://www.joxrays.com/add-subtract-multiply-divide/"/>
+    <id>http://www.joxrays.com/add-subtract-multiply-divide/</id>
+    <published>2019-11-20T16:00:00.000Z</published>
+    <updated>2019-11-21T15:28:25.976Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;计算机内部实现数据的加减乘除运算是通过对二进制位运算来实现的，基本运算” + - × ÷ “ 均可转换为位运算。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Programming" scheme="http://www.joxrays.com/categories/Programming/"/>
+    
+    
+      <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Linux Vim YCM配置</title>
+    <link href="http://www.joxrays.com/linux-ycm-vim/"/>
+    <id>http://www.joxrays.com/linux-ycm-vim/</id>
+    <published>2019-09-08T16:00:00.000Z</published>
+    <updated>2019-09-12T04:56:59.306Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;由于之前不小心把vim的配置删了，致使之前的那篇文章无法访问，但为了回应有关网友的回复，特此重新编辑了vim的ycm配置。:)&lt;/p&gt;
+&lt;p&gt;YCM全称 YouCompleteMe，是一个vim插件，但是却是一个能够使代码自动补全的工具。虽然如此，但也还是无法与专用IDE相媲美，不过对于vim党来说却是一个十分有趣的插件。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Linux" scheme="http://www.joxrays.com/categories/Linux/"/>
+    
+    
+      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
+    
+      <category term="Vim" scheme="http://www.joxrays.com/tags/Vim/"/>
+    
+      <category term="YCM" scheme="http://www.joxrays.com/tags/YCM/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>CentOS服务器Shadowsocks</title>
+    <link href="http://www.joxrays.com/centos-shadowsocks/"/>
+    <id>http://www.joxrays.com/centos-shadowsocks/</id>
+    <published>2019-08-20T16:00:00.000Z</published>
+    <updated>2019-08-21T04:23:09.301Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在很久之前我用Windows时一直使用 &lt;strong&gt;SoftEther VPN&lt;/strong&gt; 来访问外网，但现在已经转向了SS，而且仅是通过转发流量来科学上网的话，无疑SS是最合适的，因此在 hostwinds 上也买了一台centos7服务器准备搭建shadowsocks。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Linux" scheme="http://www.joxrays.com/categories/Linux/"/>
+    
+    
+      <category term="CentOS" scheme="http://www.joxrays.com/tags/CentOS/"/>
+    
+      <category term="Shadowsocks" scheme="http://www.joxrays.com/tags/Shadowsocks/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>VirtualBox添加raw disk时出现VERR_ACCESS_DENIED</title>
+    <link href="http://www.joxrays.com/virtualbox-addrawdisk-err/"/>
+    <id>http://www.joxrays.com/virtualbox-addrawdisk-err/</id>
+    <published>2019-08-19T16:00:00.000Z</published>
+    <updated>2019-08-20T14:32:40.410Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;本来想在virtualbox里U盘启动，用 vboxmanage 创建就可以完成的然而却在启动时发生了错误，这里把错误过程记录下来&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Linux" scheme="http://www.joxrays.com/categories/Linux/"/>
+    
+    
+      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
+    
+      <category term="VirtualBox" scheme="http://www.joxrays.com/tags/VirtualBox/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Linux Terminal 显示图像</title>
+    <link href="http://www.joxrays.com/linux-tiv/"/>
+    <id>http://www.joxrays.com/linux-tiv/</id>
+    <published>2019-08-11T16:00:00.000Z</published>
+    <updated>2019-08-12T03:50:11.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;其实很久之前我就在想linux终端里能否显示图像呢？然而这个问题一直拖延至今，直到google过程中发现了Tiv(&lt;strong&gt;TerminalImageViewer&lt;/strong&gt;)&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Linux" scheme="http://www.joxrays.com/categories/Linux/"/>
+    
+    
+      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>VirtualBox安装manjaro后安装增强功能</title>
+    <link href="http://www.joxrays.com/virtual-manjaro-guest-iso/"/>
+    <id>http://www.joxrays.com/virtual-manjaro-guest-iso/</id>
+    <published>2019-08-06T16:00:00.000Z</published>
+    <updated>2019-08-07T04:43:13.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;一般来说，VirtualBox成功安装manjaro后可以在 [设备] -&amp;gt; [安装增强功能]。然而有时却事与愿违的怎么也无法安装，那么这时我们就可以在manjaro里自行安装 VBoxGuestAdditions，let’s go! &lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Linux" scheme="http://www.joxrays.com/categories/Linux/"/>
+    
+    
+      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
+    
+      <category term="Archlinux" scheme="http://www.joxrays.com/tags/Archlinux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Archlinux从安装到基本配置</title>
+    <link href="http://www.joxrays.com/archlinux-configure/"/>
+    <id>http://www.joxrays.com/archlinux-configure/</id>
+    <published>2019-07-29T16:00:00.000Z</published>
+    <updated>2019-09-22T12:58:36.391Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;这里介绍从安装archlinux系统到基本配置过程，基本搜集了网上和官方wiki整理而来的，把错误最低化。当然，本文也是作为我的一份手册吧…&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Linux" scheme="http://www.joxrays.com/categories/Linux/"/>
+    
+    
+      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
+    
+      <category term="Archlinux" scheme="http://www.joxrays.com/tags/Archlinux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>配置Vsftpd遇到的问题</title>
+    <link href="http://www.joxrays.com/vsftp-configure/"/>
+    <id>http://www.joxrays.com/vsftp-configure/</id>
+    <published>2019-07-29T16:00:00.000Z</published>
+    <updated>2019-08-17T06:58:28.757Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;目前我用的系统是archlinux，所以在配置vsftpd是不是一帆风顺的，这里将安装配置过程记录下来，也无法确保是否还有其他错误。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Linux" scheme="http://www.joxrays.com/categories/Linux/"/>
+    
+    
+      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
+    
+      <category term="vsftpd" scheme="http://www.joxrays.com/tags/vsftpd/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>树莓派搭建简略WiFi无线路由器</title>
+    <link href="http://www.joxrays.com/raspberry-wifi-router/"/>
+    <id>http://www.joxrays.com/raspberry-wifi-router/</id>
+    <published>2019-07-04T16:00:00.000Z</published>
+    <updated>2019-08-13T15:02:51.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;目前我家有装有倆路由器，所以在搞一个觉得有点……&lt;br&gt;然而本文介绍用树莓派来搭建一个简略的WiFi无线路由器，来体验树莓派的强大功能。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="RaspberryPi" scheme="http://www.joxrays.com/categories/RaspberryPi/"/>
+    
+    
+      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
+    
+      <category term="树莓派" scheme="http://www.joxrays.com/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Linux Ping工具汇总</title>
+    <link href="http://www.joxrays.com/linux-ping-tools/"/>
+    <id>http://www.joxrays.com/linux-ping-tools/</id>
+    <published>2019-06-30T16:00:00.000Z</published>
+    <updated>2019-08-20T10:41:44.669Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;大家都应该熟悉ping这个网络诊断工具，它用来检测网络是否连通以及目的主机是否在线。然而唯一缺点是它只支持ICMP协议。因此，大多数主机都会防火墙过滤ICMP数据包，不过，Linux下也有跟他类似的ping工具，本文将会介绍一些常见的工具。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/uploads/images/imgs/command-87198_640.jpg&quot; alt&gt;&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Linux" scheme="http://www.joxrays.com/categories/Linux/"/>
+    
+    
+      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
+    
+      <category term="Ping" scheme="http://www.joxrays.com/tags/Ping/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>TinyXML2解析XML文件</title>
+    <link href="http://www.joxrays.com/linux-tinyxml2/"/>
+    <id>http://www.joxrays.com/linux-tinyxml2/</id>
+    <published>2019-06-19T16:00:00.000Z</published>
+    <updated>2019-07-20T15:14:49.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;上次介绍了用 &lt;strong&gt;libxml2&lt;/strong&gt; 解析XML文档，用起来也挺“痛苦”的，不过这次即将介绍的同为开源 &lt;strong&gt;tinyxml2&lt;/strong&gt; 可再简单不够了。。。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Programming" scheme="http://www.joxrays.com/categories/Programming/"/>
+    
+    
+      <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
+    
+      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Libxml2解析XML文件</title>
+    <link href="http://www.joxrays.com/linux-libxml2/"/>
+    <id>http://www.joxrays.com/linux-libxml2/</id>
+    <published>2019-06-18T16:00:00.000Z</published>
+    <updated>2019-07-20T15:10:01.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Libxml2是由C语言开发的一个库，除了解析XML文档外，还可以解析HTML文档（不过这我没有研究）。同时，libxml2库可移植于多个平台&lt;br&gt;大致可与运行在如下平台： Linux, Unix, Windows, CygWin, MacOS, MacOS X, RISC Os, OS/2, VMS, QNX, MVS, VxWorks&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Programming" scheme="http://www.joxrays.com/categories/Programming/"/>
+    
+    
+      <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
+    
+      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>C++ 调用MongoDB C Driver</title>
+    <link href="http://www.joxrays.com/cpp-call-mongodb-c-driver/"/>
+    <id>http://www.joxrays.com/cpp-call-mongodb-c-driver/</id>
+    <published>2019-06-11T16:00:00.000Z</published>
+    <updated>2019-07-20T15:32:12.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;嗯……环境都准备好了，那么现在可以开始用我们敬爱的C++通过接口来间接操控MongoDB数据库。&lt;br&gt;注意，要有一定的MongoDB数据库基础知识哦～&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="MongoDB" scheme="http://www.joxrays.com/categories/MongoDB/"/>
+    
+    
+      <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
+    
+      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
+    
+      <category term="C" scheme="http://www.joxrays.com/tags/C/"/>
+    
+      <category term="MongoDB" scheme="http://www.joxrays.com/tags/MongoDB/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Chrome浏览器网页变成黑色(Dark Reader)</title>
+    <link href="http://www.joxrays.com/chrome-dark/"/>
+    <id>http://www.joxrays.com/chrome-dark/</id>
+    <published>2019-06-10T16:00:00.000Z</published>
+    <updated>2019-08-12T03:26:22.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Dark Reader 就是一个开源chrome浏览器的扩展程序，它可以让大部分网页在夜间和日间浏览。对于使用Chrome的用户来说，这是一个很好的护眼插件。目前Dark Reader支持的浏览器有Chrome，Firefox，Safari&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Others" scheme="http://www.joxrays.com/categories/Others/"/>
+    
+    
+      <category term="Chrome" scheme="http://www.joxrays.com/tags/Chrome/"/>
+    
+      <category term="Google" scheme="http://www.joxrays.com/tags/Google/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Fork bomb命令</title>
+    <link href="http://www.joxrays.com/fork-bomb-commands/"/>
+    <id>http://www.joxrays.com/fork-bomb-commands/</id>
+    <published>2019-06-04T16:00:00.000Z</published>
+    <updated>2019-07-21T03:52:34.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;strong&gt;Fork bomb&lt;/strong&gt; 是一种拒绝服务攻击，无限 &lt;strong&gt;fork&lt;/strong&gt; 子进程以耗尽可用系统资源(CPU占用率高达100%)，由于资源匮乏而导致系统速度放慢或崩溃。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Others" scheme="http://www.joxrays.com/categories/Others/"/>
+    
+    
+      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>MongoDB C Driver安装</title>
+    <link href="http://www.joxrays.com/mongodb-driver-install/"/>
+    <id>http://www.joxrays.com/mongodb-driver-install/</id>
+    <published>2019-06-04T16:00:00.000Z</published>
+    <updated>2019-07-20T15:33:55.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;这次就MongoDB来记录下安装C Driver过程。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="MongoDB" scheme="http://www.joxrays.com/categories/MongoDB/"/>
+    
+    
+      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
+    
+      <category term="C" scheme="http://www.joxrays.com/tags/C/"/>
+    
+      <category term="MongoDB" scheme="http://www.joxrays.com/tags/MongoDB/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>强大的Crunch字典生成工具</title>
+    <link href="http://www.joxrays.com/linux-crunch/"/>
+    <id>http://www.joxrays.com/linux-crunch/</id>
+    <published>2019-06-01T16:00:00.000Z</published>
+    <updated>2019-07-20T15:03:31.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;计算机里的字典这东西,说白了就是保存着大量的可知数据,一般是用来&lt;strong&gt;暴力破解&lt;/strong&gt;的……而要想要爆破成功,就得有一个强大而又有用的字典.&lt;br&gt;而Linux下的一个开源程序 &lt;strong&gt;crunch&lt;/strong&gt; 就是为了对字典的生成而被创造出来的.&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Others" scheme="http://www.joxrays.com/categories/Others/"/>
+    
+    
+      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Linux libxls和xlslib读写Excel文档</title>
+    <link href="http://www.joxrays.com/linux-xls/"/>
+    <id>http://www.joxrays.com/linux-xls/</id>
+    <published>2019-05-27T16:00:00.000Z</published>
+    <updated>2019-07-20T14:25:02.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;这里要讨论的是两款开源库 &lt;strong&gt;libxls&lt;/strong&gt; 和 &lt;strong&gt;xlslib&lt;/strong&gt;,前者用与 &lt;strong&gt;读&lt;/strong&gt; Excel,后者用于 &lt;strong&gt;写&lt;/strong&gt; .所以可以在Linux或Windows上使用&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Programming" scheme="http://www.joxrays.com/categories/Programming/"/>
+    
+    
+      <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
+    
+      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Linux Shell窗口化</title>
+    <link href="http://www.joxrays.com/linux-shell-window/"/>
+    <id>http://www.joxrays.com/linux-shell-window/</id>
+    <published>2019-05-11T16:00:00.000Z</published>
+    <updated>2019-07-20T15:19:20.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;前段时间在学习Linux shell编程时,发现了几个比较好玩的工具,这里给大家分享一下…(Just for fun!)&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Linux" scheme="http://www.joxrays.com/categories/Linux/"/>
+    
+    
+      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
+    
+  </entry>
+  
+</feed>
