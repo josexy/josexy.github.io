@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.joxrays.com/"/>
-  <updated>2019-11-30T02:11:52.712Z</updated>
+  <updated>2020-01-11T13:31:33.099Z</updated>
   <id>http://www.joxrays.com/</id>
   
   <author>
@@ -15,6 +15,26 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>数据结构-C++链表实现</title>
+    <link href="http://www.joxrays.com/linkedlist-cpp/"/>
+    <id>http://www.joxrays.com/linkedlist-cpp/</id>
+    <published>2020-01-10T16:00:00.000Z</published>
+    <updated>2020-01-11T13:31:33.099Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;最近在研究《数据结构、算法与应用C++语言描述》，把一些自己的看法和代码实现写在这里，算是个记录吧，以免以后忘记。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="数据结构与算法" scheme="http://www.joxrays.com/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
+    
+    
+      <category term="DataStructures" scheme="http://www.joxrays.com/tags/DataStructures/"/>
+    
+  </entry>
   
   <entry>
     <title>C++简单实现MySQL表格输出功能</title>
@@ -429,26 +449,6 @@
     
     
       <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
-    
-      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Linux Shell窗口化</title>
-    <link href="http://www.joxrays.com/linux-shell-window/"/>
-    <id>http://www.joxrays.com/linux-shell-window/</id>
-    <published>2019-05-11T16:00:00.000Z</published>
-    <updated>2019-07-20T15:19:20.000Z</updated>
-    
-    <summary type="html">
-    
-      &lt;p&gt;前段时间在学习Linux shell编程时,发现了几个比较好玩的工具,这里给大家分享一下…(Just for fun!)&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Linux" scheme="http://www.joxrays.com/categories/Linux/"/>
-    
     
       <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
     
