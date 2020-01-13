@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>http://www.joxrays.com/windows-hook/</loc>
+    <loc>http://www.joxrays.com/queue-cpp/</loc>
     <lastmod>2020-01-13</lastmod>
   </url>  <url>
     <loc>http://www.joxrays.com/linkedlist-cpp/</loc>
+    <lastmod>2020-01-13</lastmod>
+  </url>  <url>
+    <loc>http://www.joxrays.com/linux-cpp-connect-mysql/</loc>
+    <lastmod>2020-01-13</lastmod>
+  </url>  <url>
+    <loc>http://www.joxrays.com/windows-hook/</loc>
     <lastmod>2020-01-13</lastmod>
   </url>  <url>
     <loc>http://www.joxrays.com/linux-ycm-vim/</loc>
@@ -146,9 +152,6 @@
     <lastmod>2019-07-20</lastmod>
   </url>  <url>
     <loc>http://www.joxrays.com/cpp-call-dll/</loc>
-    <lastmod>2019-07-20</lastmod>
-  </url>  <url>
-    <loc>http://www.joxrays.com/linux-cpp-connect-mysql/</loc>
     <lastmod>2019-07-20</lastmod>
   </url>  <url>
     <loc>http://www.joxrays.com/linux-qt-network-ssl/</loc>
