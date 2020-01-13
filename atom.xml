@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.joxrays.com/"/>
-  <updated>2020-01-11T13:31:33.099Z</updated>
+  <updated>2020-01-13T02:25:09.817Z</updated>
   <id>http://www.joxrays.com/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="http://www.joxrays.com/linkedlist-cpp/"/>
     <id>http://www.joxrays.com/linkedlist-cpp/</id>
     <published>2020-01-10T16:00:00.000Z</published>
-    <updated>2020-01-11T13:31:33.099Z</updated>
+    <updated>2020-01-13T02:25:09.817Z</updated>
     
     <summary type="html">
     
@@ -292,9 +292,9 @@
       <category term="Programming" scheme="http://www.joxrays.com/categories/Programming/"/>
     
     
-      <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
-    
       <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
+    
+      <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
     
   </entry>
   
@@ -314,9 +314,9 @@
       <category term="Programming" scheme="http://www.joxrays.com/categories/Programming/"/>
     
     
-      <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
-    
       <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
+    
+      <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
     
   </entry>
   
@@ -336,9 +336,9 @@
       <category term="MongoDB" scheme="http://www.joxrays.com/categories/MongoDB/"/>
     
     
-      <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
-    
       <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
+    
+      <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
     
       <category term="C" scheme="http://www.joxrays.com/tags/C/"/>
     
@@ -448,9 +448,9 @@
       <category term="Programming" scheme="http://www.joxrays.com/categories/Programming/"/>
     
     
-      <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
-    
       <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
+    
+      <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
     
   </entry>
   
