@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.joxrays.com/"/>
-  <updated>2020-01-15T05:27:11.327Z</updated>
+  <updated>2020-01-15T05:49:11.835Z</updated>
   <id>http://www.joxrays.com/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="http://www.joxrays.com/skiplist-cpp/"/>
     <id>http://www.joxrays.com/skiplist-cpp/</id>
     <published>2020-01-14T16:00:00.000Z</published>
-    <updated>2020-01-15T05:27:11.327Z</updated>
+    <updated>2020-01-15T05:49:11.835Z</updated>
     
     <summary type="html">
     
@@ -344,9 +344,9 @@
       <category term="Programming" scheme="http://www.joxrays.com/categories/Programming/"/>
     
     
-      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
-    
       <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
+    
+      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
     
   </entry>
   
@@ -366,9 +366,9 @@
       <category term="Programming" scheme="http://www.joxrays.com/categories/Programming/"/>
     
     
-      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
-    
       <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
+    
+      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
     
   </entry>
   
@@ -388,9 +388,9 @@
       <category term="MongoDB" scheme="http://www.joxrays.com/categories/MongoDB/"/>
     
     
-      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
-    
       <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
+    
+      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
     
       <category term="C" scheme="http://www.joxrays.com/tags/C/"/>
     
