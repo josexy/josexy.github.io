@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[数据结构-跳跃表C++实现]]></title>
+    <url>%2Fskiplist-cpp%2F</url>
+    <content type="text"><![CDATA[跳跃表/跳表(SkipList)In computer science, a skip list is a data structure that allows $O(\log n)$ search complexity as well as $O(\log n)$ insertion complexity within an ordered sequence of $n$ elements. —— 维基百科 概述由于本人知识有限，对于跳跃表的认识可能不够深入，不过还是想把自己的看法写下来……初学跳跃表时也许无法理解，不过当深入理解了跳跃表的原理时，一切都变得easy。比起手写一个红黑树代码跳跃表要简单得多，而且跳跃表也有很多实现例子的，如 Qt中的 QMap ,MemSQL ,Redis… 虽然我都没有接触过… 跳跃表一个简单的跳跃表结构 我们都知道，对一个 有序链表 执行查找的复杂度为 $O(n)$ ,而对数组使用二分查找的复杂度则是 $O(\log n)$，而跳跃表的出现就是为了解决有序链表的查找问题(当然还要其他更重要的作用)，使其复杂度将为 $O(\log n)$ ，不过最坏情况下却仍是$O(n)$注意: 跳跃表适用于有序链表。 利用跳跃表之后的查找、插入、删除复杂度如下 方法 查找 插入 删除 平均情况 $O(\log n)$ $O(\log n)$ $O(\log n)$ 最坏情况 $O(n)$ $O(n)$ $O(n)$ 跳跃表是一个空间换时间的数据结构。 那么跳跃表是如何实现快速查找的呢？跳跃表通过建立 索引节点 ，每次查找时，先通过最顶层索引节点一层层的向下寻找满足条件的节点，每次查找都有可能跨越到其他不相邻的节点，直到抵达最底层也就是原始层链表某处节点位置。 这里的 索引节点 其实就是一组节点地址，在new一个新节点时就分配好，然后在对每一层索引节点进行重组，使其前后串联起来，这样就形成了一个 $i$级链表且 $i\in(0,M-1)$ M为跳跃表的最高层级数MaxLevel，这样每一层级均可形成一条链。 要查找key为5的节点，那么从head开始一层层的查找，此次过程跳过了节点1和节点3，最后找到了节点5。 这里我们设置一个有序链表为带有head和tail节点，其中head节点的next指针就是有序链表的起始，而tail节点一般为nullptr，不过这里我们将tail作为哨兵节点，这样就无需处理nullptr问题了。 插入/删除在一个规则跳表结构中，$i$级链表有 $\frac{n}{2^i}$ 个节点，$n$为最底层链表的总节点数。如:$0 \rightarrow i$ 层有 $n,\frac{n}{2},\frac{n}{4},\cdots,\frac{n}{2^{i}}$ 也就是说，我们希望在插入时符合这种结构，而插入的节点属于$i$级链表的概率为 $\frac{1}{2^i}$ (不难想出，插入节点属于0级链表概率永远为1，而属于1级链表的概率为$\frac{1}{2}$，$\cdots$，属于$i$级链表的为$\frac{1}{2^i}$) 这时来看看这段话，摘自William Pugh(就是他搞出了跳表)写的论文里的一段话。文末参考中有他关于跳表的论文 原文Skip lists are a data structure that can be used in place of balanced trees.Skip lists use probabilistic balancing rather than strictly enforced balancingand as a result the algorithms for insertion and deletion in skip lists aremuch simpler and significantly faster than equivalent algorithms forbalanced trees.翻译:跳跃表是一种可以用来代替平衡树的数据结构。跳跃表使用概率平衡而不是严格执行的平衡。因此，在跳跃表中插入和删除的算法是要比等效算法简单得多，也快得多平衡树。 注意 跳跃表使用概率平衡而不是严格执行的平衡 这告诉我们，插入操作是动态的插入到不同层级的位置。因此，把一个新节点插入到$i$级链表的概率为$p^i$ (在一个规则跳表结构中，$p=0.5$ )。 而这个动态插入法就利用到 随机数生成函数 来完成，一个好的随机数生成函数，能够使跳表结构达到最优的效果使其复杂度不会太高。 除此之外每一次插入/删除操作，都必须要维护跳表结构，也就是处理好链表节点的指向关系，避免混乱。 级的分配不说那么多，级的分配可以利用一个随机数生成函数来完成。伪码: 123456randomLevel() lvl := 1 -- random() that returns a random value in [0...1) while random() &lt; p and lvl &lt; MaxLevel do lvl := lvl + 1 return lvl 转化成C++代码 12345678int random_level()&#123; int level= 1; while (((double)(rand()%101)/101) &lt; (m_prob) &amp;&amp; level &lt; m_maxLevel) &#123; level++; &#125; return level;&#125; 这里还要一个糟糕的随机数生成函数仅供参考 1234int random_level()&#123; int level = rand() % m_maxLevel + 1; return level;&#125; C++实现跳跃表OK，现在开始用C++实现跳跃表首先我们定义两个结构体，用于保存节点数据 1234567891011121314151617181920template&lt;class KeyType,class ValueType&gt;struct Element&#123; KeyType key; ValueType value; Element()&#123;&#125; Element(KeyType key,const ValueType&amp; value)&#123; this-&gt;key=key; this-&gt;value=value; &#125;&#125;;template&lt;class KeyType,class ValueType&gt;struct skipNode&#123; Element&lt;KeyType,ValueType&gt; element; skipNode**next; skipNode(const Element&lt;KeyType,ValueType&gt;&amp;theElement,int size)&#123; this-&gt;element=theElement; this-&gt;next=new skipNode&lt;KeyType,ValueType&gt;*[size]; &#125;&#125;; 确定MaxLevelMaxLevel太大，造成空间的浪费，太小又会导致退化成一个冗杂的 ‘单链表’ 结构，两者均会影响跳跃表的性能。因此合适的MaxLevel十分重要。 从《Skip Lists: A Probabilistic Alternative toBalanced Trees》 中我们可以这样定义一个MaxLevel，即$L(n)=\lceil log_\frac{1}{p}n \rceil$$MaxLevel=L(N),N$为待插入元素节点总数 利用换底公式 $\log_ab=\frac{\log_cb}{\log_ca}$ 转化为C++代码 123int MaxLevel(int numberOfnode,float prob)&#123; return (int)(ceil(logf((float)numberOfnode)/logf((float)1/prob)));&#125; skiplist初始化我们只需在构造函数进行初始化即可。这里我们既可以自定义跳跃表的MaxLevel，也可以通过numberOfnode来计算一个MaxLevel 1234567891011121314151617181920212223242526template&lt;class KeyType,class ValueType&gt;skiplist&lt;KeyType,ValueType&gt;::skiplist(float prob,KeyType tailLargeKey,int max_level,int numberOfnode) &#123; srand(time(nullptr)); m_prob=prob; m_size=0; // 计算最大链表层数 if(numberOfnode!=-1) m_maxLevel=MaxLevel(numberOfnode,prob); else m_maxLevel=max_level; m_curMaxLevel=0; // 初始化尾节点 m_tailKey=tailLargeKey; Element&lt;KeyType,ValueType&gt;tailPair&#123;m_tailKey,0&#125;; m_tailNode=new skipNode&lt;KeyType,ValueType&gt;(tailPair,0); // 初始化头结点 m_headNode=new skipNode&lt;KeyType,ValueType&gt;(tailPair,m_maxLevel); for (int i = 0; i &lt; m_maxLevel; i++)&#123; m_headNode-&gt;next[i]=m_tailNode; &#125; m_forwardNodes=new skipNode&lt;KeyType,ValueType&gt;*[m_maxLevel];&#125; 尾节点内存分配类似malloc(0)形式 skiplist查找 find和search1234567891011121314151617181920212223242526272829303132template&lt;class KeyType,class ValueType&gt;skipNode&lt;KeyType,ValueType&gt;* skiplist&lt;KeyType,ValueType&gt;::search(const KeyType&amp;key)&#123; skipNode&lt;KeyType,ValueType&gt;*forwardNode=m_headNode; // 外层循环: 不断的指向下一层级链表 for (int i = m_curMaxLevel-1; i &gt;= 0; --i)&#123; // 内层循环: 指向当前层级链表的邻接节点 while (forwardNode-&gt;next[i]!=m_tailNode&amp;&amp;forwardNode-&gt;next[i]-&gt;element.key&lt;key)&#123; forwardNode=forwardNode-&gt;next[i]; &#125; // 保存前驱节点指针 this-&gt;m_forwardNodes[i]=forwardNode; &#125; return forwardNode-&gt;next[0];&#125;template&lt;class KeyType,class ValueType&gt;Element&lt;KeyType,ValueType&gt;* skiplist&lt;KeyType,ValueType&gt;::find(const KeyType&amp;key)&#123; if(key &gt; this-&gt;m_tailKey) return nullptr; skipNode&lt;KeyType,ValueType&gt;*forwardNode=m_headNode; for (int i = m_curMaxLevel-1; i &gt;=0 ; --i)&#123; while (forwardNode-&gt;next[i]!=m_tailNode &amp;&amp; forwardNode-&gt;next[i]-&gt;element.key &lt; key)&#123; forwardNode=forwardNode-&gt;next[i]; &#125; &#125; // 最终会遍历到第0层-&gt;原始层，只需要在第0层判断即可 if(forwardNode-&gt;next[0]-&gt;element.key==key)&#123; return &amp;forwardNode-&gt;next[0]-&gt;element; &#125;else&#123; return nullptr; &#125;&#125; 其中find和search都是从当前最大层级依次向下遍历，不同的是，search在遍历的同时将每次遍历到每一层的前驱节点保存在m_forwardNodes中，目的是为了衔接后面的插入/删除节点 其中的 forwardNode-&gt;next[0] 就是下一个要查找的节点(如果存在的话) skiplist插入每一次插入，需要通过search保存 前驱节点m_forwardNodes 从而将待插入节点连接起来。如下图红色箭头表示前后需要链接的节点 123456789101112131415161718192021222324template&lt;class KeyType,class ValueType&gt;void skiplist&lt;KeyType,ValueType&gt;::insert(const Element&lt;KeyType,ValueType&gt;&amp;element)&#123; // 随机生成索引节点层数 1&lt;=level&lt;=m_maxLevel int level=random_level(); if(level &gt; this-&gt;m_curMaxLevel)&#123; this-&gt;m_curMaxLevel=level; &#125; skipNode&lt;KeyType,ValueType&gt;*pNode=search(element.key); // 已经存在 if(pNode-&gt;element.key==element.key)&#123; pNode-&gt;element.value=element.value; return; &#125; // 此时已经保存了合适的前驱节点m_forwardNodes // 创建一个具有level层的节点 skipNode&lt;KeyType,ValueType&gt;*pNewNode = new skipNode&lt;KeyType,ValueType&gt;(element,level); // 建立索引节点 for (int i = level-1; i &gt;=0; --i)&#123; pNewNode-&gt;next[i]=m_forwardNodes[i]-&gt;next[i]; m_forwardNodes[i]-&gt;next[i]=pNewNode; &#125; m_size++;&#125; skiplist删除删除操作类似插入操作，也需要通过search保存 前驱节点m_forwardNodes 12345678910111213141516171819202122232425template&lt;class KeyType,class ValueType&gt;bool skiplist&lt;KeyType,ValueType&gt;::erase(const KeyType&amp;key)&#123; // 不符合的key if(key&gt;m_tailKey) return false; skipNode&lt;KeyType,ValueType&gt;*pNode=search(key); // 不存在 if(pNode-&gt;element.key!=key) return false; // 更新跳表链表结构 for (int i = m_curMaxLevel-1; i &gt;= 0; --i)&#123; // 此处 m_forwardNodes[i]-&gt;next[i] 可能不是 pNode if(m_forwardNodes[i]-&gt;next[i]==pNode) m_forwardNodes[i]-&gt;next[i]=pNode-&gt;next[i]; &#125; // 维护当前最大层级数 // 当删除一个具有最大层级的节点时，可能会导致 m_headNode-&gt;next[m_maxLevel-1]=m_tailNode，那么此时需要降低层级 while (m_curMaxLevel-1 &gt; 0&amp;&amp;m_headNode-&gt;next[m_curMaxLevel-1]==m_tailNode)&#123; m_curMaxLevel--; &#125; delete pNode; m_size--; return true;&#125; 需要注意的是，删除节点后还要维护m_curMaxLevel使其不能太高 释放跳跃表在析构函数中释放所有内存 12345678910template&lt;class KeyType,class ValueType&gt;skiplist&lt;KeyType,ValueType&gt;::~skiplist()&#123; while (m_headNode!=m_tailNode)&#123; auto x=m_headNode-&gt;next[0]; delete m_headNode; m_headNode=x; &#125; delete m_tailNode; delete []m_forwardNodes;&#125; 测试用skiplist和STL map测试插入操作，仅供参考 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475#include &lt;map&gt;#include &lt;iostream&gt;#include "skiplist.h"#include "ClockTest.h"using namespace std;// 一个无穷数#define TAIL_INFINITY_KEY 0xffffffint main(int argc, char const *argv[])&#123; int n=1000000; srand(time(nullptr)); // 测试skiplist insert CClock::start_timeclock(); skiplist&lt;int,int&gt; sk(0.5,TAIL_INFINITY_KEY,0,n); for (int i = n; i &gt;= 0; --i)&#123; sk.insert(Element&lt;int,int&gt;&#123;rand()%n,i&#125;); &#125; CClock::stop_timeclock(); auto skiplist_insert_time=CClock::time_duration(); // 测试map insert CClock::start_timeclock(); map&lt;int,int&gt; mp; for (int i = n; i &gt;=0; --i)&#123; mp.insert(pair&lt;int,int&gt;(rand()%n,i)); &#125; CClock::stop_timeclock(); auto map_insert_time=CClock::time_duration(); // 测试skiplist find CClock::start_timeclock(); for (int i = n; i &gt;=0; --i)&#123; sk.find(rand()%n); &#125; CClock::stop_timeclock(); auto skip_find_time=CClock::time_duration(); // 测试map find CClock::start_timeclock(); for (int i = n; i &gt;=0; --i)&#123; mp.find(rand()%n); &#125; CClock::stop_timeclock(); auto map_find_time=CClock::time_duration(); // 测试skiplist erase CClock::start_timeclock(); for (int i = n; i &gt;=0; --i)&#123; sk.erase(rand()%n); &#125; CClock::stop_timeclock(); auto skip_erase_time=CClock::time_duration(); // 测试map erase CClock::start_timeclock(); for (int i = n; i &gt;=0; --i)&#123; mp.erase(rand()%n); &#125; CClock::stop_timeclock(); auto map_erase_time=CClock::time_duration(); cout&lt;&lt;"SkipList insert time: "&lt;&lt;skiplist_insert_time&lt;&lt;endl; cout&lt;&lt;"SkipList find time: "&lt;&lt;skip_find_time&lt;&lt;endl; cout&lt;&lt;"SkipList erase time: "&lt;&lt;skip_erase_time&lt;&lt;endl; cout&lt;&lt;endl; cout&lt;&lt;"Map insert time: "&lt;&lt;map_insert_time&lt;&lt;endl; cout&lt;&lt;"Map find time: "&lt;&lt;map_find_time&lt;&lt;endl; cout&lt;&lt;"Map erase time: "&lt;&lt;map_erase_time&lt;&lt;endl; cout&lt;&lt;"SkipList size: "&lt;&lt;sk.size()&lt;&lt;endl; cout&lt;&lt;"Map size: "&lt;&lt;mp.size()&lt;&lt;endl; return 0;&#125; 我机器上测试 随机插入/查找/删除，结果仅供参考。单位秒 insert find erase skiplist1 1.44737 2.03802 2.158 skiplist2 1.34377 1.61364 1.52145 skiplist3 1.35671 2.31105 1.57659 map1 1.48519 1.28156 1.93228 map2 1.00754 1.099 1.29245 map3 1.23837 1.28021 1.35214 由此可见，跳跃表也是很高效的一种数据结构 参考维基百科-skiplistSkip Lists: A Probabilistic Alternative toBalanced Trees浅析SkipList跳跃表原理及代码实现]]></content>
+      <categories>
+        <category>数据结构与算法</category>
+      </categories>
+      <tags>
+        <tag>C++</tag>
+        <tag>C</tag>
+        <tag>DataStructures</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[数据结构-队列]]></title>
     <url>%2Fqueue-cpp%2F</url>
     <content type="text"><![CDATA[队列是一种先进先出(FIFO)的数据结构，与栈(后进先出LIFO)不同，但两者都是线性结构，因此可以用线性表去描述队列，本文主要是用数组去实现一个简单的队列 队列对一个队列操作，只能从队首删除元素，队尾插入元素，因此我们可以定义两个队列元素指针front,back，用于跟踪队列首尾元素。C++ STL实现了队列数据结构，我们用时不可能立即手写一个队列，因而只需include头文件即可，不过对于队列这一数据结构原理还是要理解的 我们知道，队列可以用数组或链表实现，不过本文是以数组来讲述的因此较为简单 插入队列插入一个元素时，先将队尾指针back+1，使其指向下一个空闲区域，然后在插入元素。复杂度为O(1) 删除删除队首元素有两种策略 直接整个数组左移一位，front不变，back向前移动一位。复杂度O(n) 数组不移动，front移动到下一位，back不变。复杂度O(1) 显然删除操作情况1不能接受，然而对于删除操作情况2，会导致数组空间浪费，这是因为front指针之前的区域未能被利用，而back指针之后的区域显然不够(这里在没有考虑数组变增的情况下)。 如果将数组“串”起来怎样？事实上确实可以，这种数组叫环形数组，用此类型数组实现的队列称为循环队列 且其插入删除复杂度均为O(1) 环形数组表示队列通过下面公式实现: location(i)=(location(front)+i)%arrayLength 如下图一个空队列，此时 front=back 当插入一个元素时，也有两种策略 1.先移动back，后插入元素。那么front指向元素为”空”2.先插入元素，后移动back。那么back指向元素为”空” 每次插入都需要判断 (back+1)%size == front ，为什么？我们知道，初始时front=back表示空队列，那么当插入元素数量达到数组长度此时front=back！这表示这个队列满的还是空的？因此我们预留一个位置，也就是队列不能插满。即 front=back 空队列(back+1)%size = front 满队列 如何获取队列中第n个元素在数组中的下标？假设front=10，back=4。 因此我们用C++实现该循环队列 队列实现队列抽象数据类型 1234567891011template&lt;class T&gt;class QueueBase&#123;public: virtual ~QueueBase()&#123;&#125; virtual void push_back(const T &amp;)=0; virtual void pop_front()=0; virtual T &amp; front()=0; virtual T &amp; back()=0; virtual bool empty()=0; virtual int size()=0;&#125;; 之后在另外定义一个派生类继承QueueBase接口。我是按照策略2来插入元素的，代码如下 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091template&lt;class T&gt;class arrayQueue&#123;private: T *m_array; int m_capacity; int front; int back;public: arrayQueue(int initCapacity=10)&#123; m_capacity=initCapacity; m_array=new T[m_capacity]; front=0; back=0; &#125; ~arrayQueue()&#123;delete []m_array;&#125; void push_back(const T &amp;); void pop_front(); T &amp; Front()&#123; return m_array[front]; &#125; T &amp; Back()&#123; return m_array[back-1]; &#125; bool empty()&#123;return front==back;&#125; int size()&#123; if(front&lt;back) return back-front; else return back+m_capacity-front; &#125; void changeLength(T* &amp;,int,int); void output()&#123; if(empty())return; // 情况1 if(front&lt;back)&#123; for (int i = front; i &lt; back; i++)&#123; cout&lt;&lt;"["&lt;&lt;i&lt;&lt;"] "&lt;&lt;m_array[i]&lt;&lt;"\n"; &#125; // 情况2 &#125;else&#123; for (int i = front; i &lt; m_capacity; i++)&#123; cout&lt;&lt;"["&lt;&lt;i&lt;&lt;"] "&lt;&lt;m_array[i]&lt;&lt;"\n"; &#125; for (int i = 0; i &lt; back; i++)&#123; cout&lt;&lt;"["&lt;&lt;i&lt;&lt;"] "&lt;&lt;m_array[i]&lt;&lt;"\n"; &#125; &#125; &#125;&#125;;template&lt;class T&gt;void arrayQueue&lt;T&gt;::push_back(const T &amp;element)&#123; // 满队列 if((back+1)%m_capacity==front)&#123; // 数组倍增 changeLength(m_array,m_capacity,m_capacity*2); m_capacity*=2; &#125; // 按照策略2插入: 先插入元素，后移动back m_array[back]=element; // 注意，此处不能直接 back++，这样做会使back超出数组长度从而导致数组访问越界 // 相反，(back+1)%m_capacity 会使back指针回到数组起始处继续插入 back=(back+1)%m_capacity;&#125;template&lt;class T&gt;void arrayQueue&lt;T&gt;::pop_front()&#123; // 判空 if(back==front)return; m_array[front].~T(); // 同样这里也是控制front只能处于数组之间 front=(front+1)%this-&gt;m_capacity;&#125;template&lt;class T&gt;void arrayQueue&lt;T&gt;::changeLength(T* &amp;array,int oldLength,int newLength)&#123; if(newLength&lt;0)return; T* temp=new T[newLength]; // 从有效元素开始复制 if(front&lt;back) // 没有形成环 std::copy(array+front,array+back,temp); else&#123; // 形成环 std::copy(array+front,array+oldLength,temp); std::copy(array,array+back,temp+oldLength-front); // 重新设置front,back front=0; back=oldLength-1; &#125; delete []array; array=temp;&#125; 我认为比较难理解的是changeLength改变数组长度函数，其实用一张图表示就很简单了 测试1234567891011121314151617181920212223242526272829303132#include&lt;iostream&gt;using namespace std;int main()&#123; arrayQueue&lt;int&gt;q(5); q.push_back(1); q.push_back(2); q.push_back(3); q.push_back(4); q.push_back(40); q.push_back(400); q.push_back(4000); q.push_back(40000); q.pop_front(); q.pop_front(); q.pop_front(); q.pop_front(); q.pop_front(); q.pop_front(); q.push_back(5); q.push_back(6); q.push_back(7); q.push_back(8); q.push_back(9); q.output(); cout&lt;&lt;"size: "&lt;&lt;q.size()&lt;&lt;endl; cout&lt;&lt;"front: "&lt;&lt;q.Front()&lt;&lt;endl; cout&lt;&lt;"back: "&lt;&lt;q.Back()&lt;&lt;endl; return 0;&#125; 输出 12345678910[6] 4000[7] 40000[8] 5[9] 6[0] 7[1] 8[2] 9size: 7front: 4000back: 9 STL queue将自己写的arrayQueue和STL queue分别测试，看看谁快些，这里我仅仅测试了先插入完成后再删除。 12345678910111213141516171819202122232425262728int main()&#123; arrayQueue&lt;int&gt;q2; int n=100000000; CClock::start_timeclock(); for (int i = 0; i &lt; n; i++)&#123; q2.push_back(i); &#125; for (int i = 0; i &lt; n; i++)&#123; q2.pop_front(); &#125; q2.output(); CClock::stop_timeclock(); auto t1=CClock::time_duration(); CClock::start_timeclock(); queue&lt;int&gt;q3; for (int i = 0; i &lt; n; i++)&#123; q3.push(i); &#125; for (int i = 0; i &lt; n; i++)&#123; q3.pop(); &#125; CClock::stop_timeclock(); auto t2=CClock::time_duration(); cout&lt;&lt;"arrayQueue: "&lt;&lt;t1&lt;&lt;endl; cout&lt;&lt;"queue: "&lt;&lt;t2&lt;&lt;endl;&#125; 输出结果，单位秒 12arrayQueue: 2.32446queue: 2.63278 不知道该如何表达……(⊙o⊙)… 结尾bye~]]></content>
@@ -164,8 +177,8 @@
         <category>Programming</category>
       </categories>
       <tags>
-        <tag>C++</tag>
         <tag>Linux</tag>
+        <tag>C++</tag>
       </tags>
   </entry>
   <entry>
@@ -176,8 +189,8 @@
         <category>Programming</category>
       </categories>
       <tags>
-        <tag>C++</tag>
         <tag>Linux</tag>
+        <tag>C++</tag>
       </tags>
   </entry>
   <entry>
@@ -188,10 +201,10 @@
         <category>MongoDB</category>
       </categories>
       <tags>
-        <tag>C++</tag>
         <tag>Linux</tag>
-        <tag>MongoDB</tag>
+        <tag>C++</tag>
         <tag>C</tag>
+        <tag>MongoDB</tag>
       </tags>
   </entry>
   <entry>
@@ -226,8 +239,8 @@
       </categories>
       <tags>
         <tag>Linux</tag>
-        <tag>MongoDB</tag>
         <tag>C</tag>
+        <tag>MongoDB</tag>
       </tags>
   </entry>
   <entry>
@@ -249,8 +262,8 @@
         <category>Programming</category>
       </categories>
       <tags>
-        <tag>C++</tag>
         <tag>Linux</tag>
+        <tag>C++</tag>
       </tags>
   </entry>
   <entry>
@@ -284,8 +297,8 @@
         <category>Programming</category>
       </categories>
       <tags>
-        <tag>C++</tag>
         <tag>Linux</tag>
+        <tag>C++</tag>
         <tag>C</tag>
       </tags>
   </entry>
@@ -366,8 +379,8 @@
         <category>Programming</category>
       </categories>
       <tags>
-        <tag>C++</tag>
         <tag>Linux</tag>
+        <tag>C++</tag>
         <tag>Qt</tag>
       </tags>
   </entry>
@@ -379,8 +392,8 @@
         <category>Programming</category>
       </categories>
       <tags>
-        <tag>C++</tag>
         <tag>Linux</tag>
+        <tag>C++</tag>
         <tag>Qt</tag>
       </tags>
   </entry>
@@ -556,8 +569,8 @@
         <category>Programming</category>
       </categories>
       <tags>
-        <tag>C++</tag>
         <tag>Linux</tag>
+        <tag>C++</tag>
         <tag>C</tag>
         <tag>SDL2</tag>
       </tags>
@@ -570,8 +583,8 @@
         <category>Others</category>
       </categories>
       <tags>
-        <tag>Google</tag>
         <tag>Linux</tag>
+        <tag>Google</tag>
       </tags>
   </entry>
   <entry>
@@ -642,8 +655,8 @@
         <category>Programming</category>
       </categories>
       <tags>
-        <tag>C++</tag>
         <tag>Linux</tag>
+        <tag>C++</tag>
         <tag>C</tag>
       </tags>
   </entry>
@@ -677,8 +690,8 @@
         <category>Programming</category>
       </categories>
       <tags>
-        <tag>C++</tag>
         <tag>Linux</tag>
+        <tag>C++</tag>
         <tag>C</tag>
       </tags>
   </entry>

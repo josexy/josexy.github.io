@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.joxrays.com/"/>
-  <updated>2020-01-13T11:48:08.381Z</updated>
+  <updated>2020-01-15T05:27:11.327Z</updated>
   <id>http://www.joxrays.com/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>数据结构-跳跃表C++实现</title>
+    <link href="http://www.joxrays.com/skiplist-cpp/"/>
+    <id>http://www.joxrays.com/skiplist-cpp/</id>
+    <published>2020-01-14T16:00:00.000Z</published>
+    <updated>2020-01-15T05:27:11.327Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;跳跃表/跳表(SkipList)&lt;br&gt;In computer science, a skip list is a data structure that allows $O(\log n)$ search complexity as well as $O(\log n)$ insertion complexity within an ordered sequence of $n$ elements.  —— 维基百科&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="数据结构与算法" scheme="http://www.joxrays.com/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
+    
+    
+      <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
+    
+      <category term="C" scheme="http://www.joxrays.com/tags/C/"/>
+    
+      <category term="DataStructures" scheme="http://www.joxrays.com/tags/DataStructures/"/>
+    
+  </entry>
   
   <entry>
     <title>数据结构-队列</title>
@@ -320,9 +344,9 @@
       <category term="Programming" scheme="http://www.joxrays.com/categories/Programming/"/>
     
     
-      <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
-    
       <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
+    
+      <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
     
   </entry>
   
@@ -342,9 +366,9 @@
       <category term="Programming" scheme="http://www.joxrays.com/categories/Programming/"/>
     
     
-      <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
-    
       <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
+    
+      <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
     
   </entry>
   
@@ -364,13 +388,13 @@
       <category term="MongoDB" scheme="http://www.joxrays.com/categories/MongoDB/"/>
     
     
-      <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
-    
       <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
     
-      <category term="MongoDB" scheme="http://www.joxrays.com/tags/MongoDB/"/>
+      <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
     
       <category term="C" scheme="http://www.joxrays.com/tags/C/"/>
+    
+      <category term="MongoDB" scheme="http://www.joxrays.com/tags/MongoDB/"/>
     
   </entry>
   
@@ -434,29 +458,9 @@
     
       <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
     
-      <category term="MongoDB" scheme="http://www.joxrays.com/tags/MongoDB/"/>
-    
       <category term="C" scheme="http://www.joxrays.com/tags/C/"/>
     
-  </entry>
-  
-  <entry>
-    <title>强大的Crunch字典生成工具</title>
-    <link href="http://www.joxrays.com/linux-crunch/"/>
-    <id>http://www.joxrays.com/linux-crunch/</id>
-    <published>2019-06-01T16:00:00.000Z</published>
-    <updated>2019-07-20T15:03:31.000Z</updated>
-    
-    <summary type="html">
-    
-      &lt;p&gt;计算机里的字典这东西,说白了就是保存着大量的可知数据,一般是用来&lt;strong&gt;暴力破解&lt;/strong&gt;的……而要想要爆破成功,就得有一个强大而又有用的字典.&lt;br&gt;而Linux下的一个开源程序 &lt;strong&gt;crunch&lt;/strong&gt; 就是为了对字典的生成而被创造出来的.&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Others" scheme="http://www.joxrays.com/categories/Others/"/>
-    
-    
-      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
+      <category term="MongoDB" scheme="http://www.joxrays.com/tags/MongoDB/"/>
     
   </entry>
   

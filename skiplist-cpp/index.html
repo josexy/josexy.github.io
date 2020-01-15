@@ -1,0 +1,1564 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/favicon.ico?v=7.2.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.2.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    copycode: {"enable":true,"show_result":true,"style":"flat"},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="跳跃表/跳表(SkipList)In computer science, a skip list is a data structure that allows $O(\log n)$ search complexity as well as $O(\log n)$ insertion complexity within an ordered sequence of $n$ elements.">
+<meta name="keywords" content="C++,C,DataStructures">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构-跳跃表C++实现">
+<meta property="og:url" content="http://www.joxrays.com/skiplist-cpp/index.html">
+<meta property="og:site_name" content="JoXrays&#39;s Blog">
+<meta property="og:description" content="跳跃表/跳表(SkipList)In computer science, a skip list is a data structure that allows $O(\log n)$ search complexity as well as $O(\log n)$ insertion complexity within an ordered sequence of $n$ elements.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://www.joxrays.com/uploads/images/data_structure/skiplist_cpp/01.png">
+<meta property="og:image" content="http://www.joxrays.com/uploads/images/data_structure/skiplist_cpp/03.png">
+<meta property="og:image" content="http://www.joxrays.com/uploads/images/data_structure/skiplist_cpp/02.png">
+<meta property="og:image" content="http://www.joxrays.com/uploads/images/data_structure/skiplist_cpp/04.png">
+<meta property="og:image" content="http://www.joxrays.com/uploads/images/data_structure/skiplist_cpp/05.png">
+<meta property="og:image" content="http://www.joxrays.com/uploads/images/data_structure/skiplist_cpp/06.png">
+<meta property="og:image" content="http://www.joxrays.com/uploads/images/data_structure/skiplist_cpp/07.png">
+<meta property="og:updated_time" content="2020-01-15T05:27:11.327Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数据结构-跳跃表C++实现">
+<meta name="twitter:description" content="跳跃表/跳表(SkipList)In computer science, a skip list is a data structure that allows $O(\log n)$ search complexity as well as $O(\log n)$ insertion complexity within an ordered sequence of $n$ elements.">
+<meta name="twitter:image" content="http://www.joxrays.com/uploads/images/data_structure/skiplist_cpp/01.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="JoXrays's Blog" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="http://www.joxrays.com/skiplist-cpp/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  
+  <title>数据结构-跳跃表C++实现 | JoXrays's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="stylesheet" href="/css/prism-duotone-dark.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JoXrays's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <h1 class="site-subtitle" itemprop="description">All my interesting ...</h1>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.joxrays.com/skiplist-cpp/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Joseph XRays">
+      <meta itemprop="description" content="Share the knowledge">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JoXrays's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">数据结构-跳跃表C++实现
+
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-01-15 00:00:00 / 修改时间：13:27:11" itemprop="dateCreated datePublished" datetime="2020-01-15T00:00:00+08:00">2020-01-15</time>
+            </span>
+          
+
+          
+            
+
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/数据结构与算法/" itemprop="url" rel="index"><span itemprop="name">数据结构与算法</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span title="本文字数">11k</span>
+            </span>
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span title="阅读时长">10 分钟</span>
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>跳跃表/跳表(SkipList)<br>In computer science, a skip list is a data structure that allows $O(\log n)$ search complexity as well as $O(\log n)$ insertion complexity within an ordered sequence of $n$ elements.  —— 维基百科</p>
+<a id="more"></a>
+
+<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>由于本人知识有限，对于跳跃表的认识可能不够深入，不过还是想把自己的看法写下来……初学跳跃表时也许无法理解，不过当深入理解了跳跃表的原理时，一切都变得easy。比起手写一个红黑树代码跳跃表要简单得多，而且跳跃表也有很多实现例子的，如 Qt中的 <a href="https://doc.qt.io/archives/qt-4.8/qmap.html#details" target="_blank" rel="noopener">QMap</a> ,MemSQL ,Redis… 虽然我都没有接触过…</p>
+<h3 id="跳跃表"><a href="#跳跃表" class="headerlink" title="跳跃表"></a>跳跃表</h3><p>一个简单的跳跃表结构<br><img src="/uploads/images/data_structure/skiplist_cpp/01.png" alt></p>
+<p><img src="/uploads/images/data_structure/skiplist_cpp/03.png" alt></p>
+<p>我们都知道，对一个 <code>有序链表</code> 执行查找的复杂度为 $O(n)$ ,而对数组使用<strong>二分查找</strong>的复杂度则是 $O(\log n)$，而跳跃表的出现就是为了解决<code>有序链表</code>的查找问题(当然还要其他更重要的作用)，使其复杂度将为 $O(\log n)$ ，不过最坏情况下却仍是$O(n)$<br>注意: 跳跃表适用于有序链表。</p>
+<p>利用跳跃表之后的查找、插入、删除复杂度如下</p>
+<table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">查找</th>
+<th align="center">插入</th>
+<th align="center">删除</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">平均情况</td>
+<td align="center">$O(\log n)$</td>
+<td align="center">$O(\log n)$</td>
+<td align="center">$O(\log n)$</td>
+</tr>
+<tr>
+<td align="center">最坏情况</td>
+<td align="center">$O(n)$</td>
+<td align="center">$O(n)$</td>
+<td align="center">$O(n)$</td>
+</tr>
+</tbody></table>
+<p>跳跃表是一个空间换时间的数据结构。</p>
+<p>那么跳跃表是如何实现快速查找的呢？跳跃表通过建立 <code>索引节点</code> ，每次查找时，先通过最顶层索引节点一层层的向下寻找满足条件的节点，每次查找都有可能跨越到其他不相邻的节点，直到抵达最底层也就是原始层链表某处节点位置。</p>
+<p>这里的 <strong>索引节点</strong> 其实就是一组节点地址，在new一个新节点时就分配好，然后在对每一层索引节点进行重组，使其前后串联起来，这样就形成了一个 $i$级链表且 $i\in(0,M-1)$ M为跳跃表的最高层级数MaxLevel，这样每一层级均可形成一条链。</p>
+<p>要查找key为5的节点，那么从head开始一层层的查找，此次过程跳过了节点1和节点3，最后找到了节点5。<br><img src="/uploads/images/data_structure/skiplist_cpp/02.png" alt></p>
+<p>这里我们设置一个有序链表为带有head和tail节点，其中head节点的next指针就是有序链表的起始，而tail节点一般为<code>nullptr</code>，不过这里我们将tail作为<code>哨兵节点</code>，这样就无需处理<code>nullptr</code>问题了。</p>
+<h4 id="插入-删除"><a href="#插入-删除" class="headerlink" title="插入/删除"></a>插入/删除</h4><p>在一个<code>规则跳表结构</code>中，$i$级链表有 $\frac{n}{2^i}$ 个节点，$n$为最底层链表的总节点数。如:<br>$0 \rightarrow i$ 层有 $n,\frac{n}{2},\frac{n}{4},\cdots,\frac{n}{2^{i}}$</p>
+<p>也就是说，我们希望在插入时符合这种结构，而插入的节点属于$i$级链表的概率为 $\frac{1}{2^i}$ (不难想出，插入节点属于0级链表概率永远为1，而属于1级链表的概率为$\frac{1}{2}$，$\cdots$，属于$i$级链表的为$\frac{1}{2^i}$)</p>
+<p>这时来看看这段话，摘自William Pugh(就是他搞出了跳表)写的论文里的一段话。<br>文末参考中有他关于跳表的论文</p>
+<blockquote>
+<p>原文<br>Skip lists are a data structure that can be used in place of balanced trees.<br>Skip lists use probabilistic balancing rather than strictly enforced balancing<br>and as a result the algorithms for insertion and deletion in skip lists are<br>much simpler and significantly faster than equivalent algorithms for<br>balanced trees.<br>翻译:<br>跳跃表是一种可以用来代替平衡树的数据结构。<strong>跳跃表使用概率平衡而不是严格执行的平衡</strong>。因此，在跳跃表中插入和删除的算法是要比等效算法简单得多，也快得多平衡树。</p>
+</blockquote>
+<p>注意 <code>跳跃表使用概率平衡而不是严格执行的平衡</code> 这告诉我们，插入操作是动态的插入到不同层级的位置。因此，把一个新节点插入到$i$级链表的概率为$p^i$ (在一个规则跳表结构中，$p=0.5$ )。</p>
+<p>而这个动态插入法就利用到 随机数生成函数 来完成，一个好的随机数生成函数，能够使跳表结构达到最优的效果使其复杂度不会太高。  </p>
+<p>除此之外每一次插入/删除操作，都必须要维护跳表结构，也就是处理好链表节点的指向关系，避免混乱。</p>
+<h4 id="级的分配"><a href="#级的分配" class="headerlink" title="级的分配"></a>级的分配</h4><p>不说那么多，级的分配可以利用一个随机数生成函数来完成。<br>伪码:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">randomLevel()</span><br><span class="line">    lvl := <span class="number">1</span></span><br><span class="line">    -- random() that returns a random value in [<span class="number">0.</span>.<span class="number">.1</span>)</span><br><span class="line">    <span class="keyword">while</span> random() &lt; p <span class="keyword">and</span> lvl &lt; MaxLevel <span class="keyword">do</span></span><br><span class="line">        lvl := lvl + <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> lvl</span><br></pre></td></tr></table></figure>
+
+<p>转化成C++代码</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">random_level</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> level= <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (((<span class="keyword">double</span>)(rand()%<span class="number">101</span>)/<span class="number">101</span>) &lt; (m_prob) </span><br><span class="line">    &amp;&amp; level &lt; m_maxLevel) &#123;</span><br><span class="line">        level++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> level;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里还要一个糟糕的随机数生成函数仅供参考</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">random_level</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> level = rand() % m_maxLevel + <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">return</span> level;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="C-实现跳跃表"><a href="#C-实现跳跃表" class="headerlink" title="C++实现跳跃表"></a>C++实现跳跃表</h3><p>OK，现在开始用C++实现跳跃表<br>首先我们定义两个结构体，用于保存节点数据</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">KeyType</span>,<span class="title">class</span> <span class="title">ValueType</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">struct</span> <span class="title">Element</span>&#123;</span></span><br><span class="line">    KeyType key;</span><br><span class="line">    ValueType value;</span><br><span class="line">    Element()&#123;&#125;</span><br><span class="line">    Element(KeyType key,<span class="keyword">const</span> ValueType&amp; value)&#123;</span><br><span class="line">        <span class="keyword">this</span>-&gt;key=key;</span><br><span class="line">        <span class="keyword">this</span>-&gt;value=value;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">KeyType</span>,<span class="title">class</span> <span class="title">ValueType</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">struct</span> <span class="title">skipNode</span>&#123;</span></span><br><span class="line">    Element&lt;KeyType,ValueType&gt; element;</span><br><span class="line">    skipNode**next;</span><br><span class="line">    skipNode(<span class="keyword">const</span> Element&lt;KeyType,ValueType&gt;&amp;theElement,<span class="keyword">int</span> size)&#123;</span><br><span class="line">        <span class="keyword">this</span>-&gt;element=theElement;</span><br><span class="line">        <span class="keyword">this</span>-&gt;next=<span class="keyword">new</span> skipNode&lt;KeyType,ValueType&gt;*[size];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h4 id="确定MaxLevel"><a href="#确定MaxLevel" class="headerlink" title="确定MaxLevel"></a>确定MaxLevel</h4><p>MaxLevel太大，造成空间的浪费，太小又会导致退化成一个冗杂的 ‘单链表’ 结构，两者均会影响跳跃表的性能。因此合适的MaxLevel十分重要。</p>
+<p>从《Skip Lists: A Probabilistic Alternative to<br>Balanced Trees》 中我们可以这样定义一个MaxLevel，即<br>$L(n)=\lceil log_\frac{1}{p}n \rceil$<br>$MaxLevel=L(N),N$为待插入元素节点总数 </p>
+<p>利用换底公式 $\log_ab=\frac{\log_cb}{\log_ca}$ 转化为C++代码</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">MaxLevel</span><span class="params">(<span class="keyword">int</span> numberOfnode,<span class="keyword">float</span> prob)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (<span class="keyword">int</span>)(<span class="built_in">ceil</span>(logf((<span class="keyword">float</span>)numberOfnode)/logf((<span class="keyword">float</span>)<span class="number">1</span>/prob)));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="skiplist初始化"><a href="#skiplist初始化" class="headerlink" title="skiplist初始化"></a>skiplist初始化</h4><p>我们只需在构造函数进行初始化即可。<br>这里我们既可以自定义跳跃表的<code>MaxLevel</code>，也可以通过<code>numberOfnode</code>来计算一个<code>MaxLevel</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">KeyType</span>,<span class="title">class</span> <span class="title">ValueType</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">skiplist</span>&lt;KeyType,ValueType&gt;:</span>:skiplist(<span class="keyword">float</span> prob,KeyType tailLargeKey,<span class="keyword">int</span> max_level,<span class="keyword">int</span> numberOfnode) &#123;</span><br><span class="line">    srand(time(<span class="literal">nullptr</span>));</span><br><span class="line">    m_prob=prob;</span><br><span class="line">    m_size=<span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 计算最大链表层数</span></span><br><span class="line">    <span class="keyword">if</span>(numberOfnode!=<span class="number">-1</span>)</span><br><span class="line">        m_maxLevel=MaxLevel(numberOfnode,prob);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        m_maxLevel=max_level;</span><br><span class="line">        </span><br><span class="line">    m_curMaxLevel=<span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 初始化尾节点</span></span><br><span class="line">    m_tailKey=tailLargeKey;</span><br><span class="line">    Element&lt;KeyType,ValueType&gt;tailPair&#123;m_tailKey,<span class="number">0</span>&#125;;</span><br><span class="line">    m_tailNode=<span class="keyword">new</span> skipNode&lt;KeyType,ValueType&gt;(tailPair,<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 初始化头结点</span></span><br><span class="line">    m_headNode=<span class="keyword">new</span> skipNode&lt;KeyType,ValueType&gt;(tailPair,m_maxLevel);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; m_maxLevel; i++)&#123;</span><br><span class="line">        m_headNode-&gt;next[i]=m_tailNode;</span><br><span class="line">    &#125;</span><br><span class="line">    m_forwardNodes=<span class="keyword">new</span> skipNode&lt;KeyType,ValueType&gt;*[m_maxLevel];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>尾节点内存分配类似<code>malloc(0)</code>形式</p>
+<h4 id="skiplist查找-find和search"><a href="#skiplist查找-find和search" class="headerlink" title="skiplist查找 find和search"></a>skiplist查找 find和search</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">KeyType</span>,<span class="title">class</span> <span class="title">ValueType</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">skipNode</span>&lt;KeyType,ValueType&gt;* <span class="title">skiplist</span>&lt;KeyType,ValueType&gt;:</span>:search(<span class="keyword">const</span> KeyType&amp;key)&#123;</span><br><span class="line">    skipNode&lt;KeyType,ValueType&gt;*forwardNode=m_headNode;</span><br><span class="line">    <span class="comment">// 外层循环: 不断的指向下一层级链表</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = m_curMaxLevel<span class="number">-1</span>; i &gt;= <span class="number">0</span>; --i)&#123;</span><br><span class="line">        <span class="comment">// 内层循环: 指向当前层级链表的邻接节点</span></span><br><span class="line">        <span class="keyword">while</span> (forwardNode-&gt;next[i]!=m_tailNode&amp;&amp;forwardNode-&gt;next[i]-&gt;element.key&lt;key)&#123;</span><br><span class="line">            forwardNode=forwardNode-&gt;next[i];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 保存前驱节点指针</span></span><br><span class="line">        <span class="keyword">this</span>-&gt;m_forwardNodes[i]=forwardNode;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> forwardNode-&gt;next[<span class="number">0</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">KeyType</span>,<span class="title">class</span> <span class="title">ValueType</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">Element</span>&lt;KeyType,ValueType&gt;* <span class="title">skiplist</span>&lt;KeyType,ValueType&gt;:</span>:find(<span class="keyword">const</span> KeyType&amp;key)&#123;</span><br><span class="line">    <span class="keyword">if</span>(key &gt; <span class="keyword">this</span>-&gt;m_tailKey)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">    skipNode&lt;KeyType,ValueType&gt;*forwardNode=m_headNode;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = m_curMaxLevel<span class="number">-1</span>; i &gt;=<span class="number">0</span> ; --i)&#123;</span><br><span class="line">        <span class="keyword">while</span> (forwardNode-&gt;next[i]!=m_tailNode &amp;&amp; forwardNode-&gt;next[i]-&gt;element.key &lt; key)&#123;</span><br><span class="line">            forwardNode=forwardNode-&gt;next[i];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 最终会遍历到第0层-&gt;原始层，只需要在第0层判断即可</span></span><br><span class="line">    <span class="keyword">if</span>(forwardNode-&gt;next[<span class="number">0</span>]-&gt;element.key==key)&#123;</span><br><span class="line">        <span class="keyword">return</span> &amp;forwardNode-&gt;next[<span class="number">0</span>]-&gt;element;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>find</code>和<code>search</code>都是从当前最大层级依次向下遍历，不同的是，<code>search</code>在遍历的同时将每次遍历到每一层的<code>前驱节点</code>保存在<code>m_forwardNodes</code>中，目的是为了衔接后面的插入/删除节点</p>
+<p><img src="/uploads/images/data_structure/skiplist_cpp/04.png" alt></p>
+<p>其中的 <code>forwardNode-&gt;next[0]</code> 就是下一个要查找的节点(如果存在的话)</p>
+<h4 id="skiplist插入"><a href="#skiplist插入" class="headerlink" title="skiplist插入"></a>skiplist插入</h4><p>每一次插入，需要通过<code>search</code>保存 <code>前驱节点m_forwardNodes</code> 从而将待插入节点连接起来。如下图红色箭头表示前后需要链接的节点<br><img src="/uploads/images/data_structure/skiplist_cpp/05.png" alt></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">KeyType</span>,<span class="title">class</span> <span class="title">ValueType</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">void</span> <span class="title">skiplist</span>&lt;KeyType,ValueType&gt;:</span>:insert(<span class="keyword">const</span> Element&lt;KeyType,ValueType&gt;&amp;element)&#123;</span><br><span class="line">    <span class="comment">// 随机生成索引节点层数 1&lt;=level&lt;=m_maxLevel</span></span><br><span class="line">    <span class="keyword">int</span> level=random_level();</span><br><span class="line">    <span class="keyword">if</span>(level &gt; <span class="keyword">this</span>-&gt;m_curMaxLevel)&#123;</span><br><span class="line">        <span class="keyword">this</span>-&gt;m_curMaxLevel=level;</span><br><span class="line">    &#125;</span><br><span class="line">    skipNode&lt;KeyType,ValueType&gt;*pNode=search(element.key);</span><br><span class="line">    <span class="comment">// 已经存在</span></span><br><span class="line">    <span class="keyword">if</span>(pNode-&gt;element.key==element.key)&#123;</span><br><span class="line">        pNode-&gt;element.value=element.value;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 此时已经保存了合适的前驱节点m_forwardNodes</span></span><br><span class="line">    <span class="comment">// 创建一个具有level层的节点</span></span><br><span class="line">    skipNode&lt;KeyType,ValueType&gt;*pNewNode = <span class="keyword">new</span> skipNode&lt;KeyType,ValueType&gt;(element,level);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 建立索引节点</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = level<span class="number">-1</span>; i &gt;=<span class="number">0</span>; --i)&#123;</span><br><span class="line">        pNewNode-&gt;next[i]=m_forwardNodes[i]-&gt;next[i];</span><br><span class="line">        m_forwardNodes[i]-&gt;next[i]=pNewNode;</span><br><span class="line">    &#125;</span><br><span class="line">    m_size++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="skiplist删除"><a href="#skiplist删除" class="headerlink" title="skiplist删除"></a>skiplist删除</h4><p>删除操作类似插入操作，也需要通过<code>search</code>保存 <code>前驱节点m_forwardNodes</code><br><img src="/uploads/images/data_structure/skiplist_cpp/06.png" alt></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">KeyType</span>,<span class="title">class</span> <span class="title">ValueType</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">bool</span> <span class="title">skiplist</span>&lt;KeyType,ValueType&gt;:</span>:erase(<span class="keyword">const</span> KeyType&amp;key)&#123;</span><br><span class="line">    <span class="comment">// 不符合的key</span></span><br><span class="line">    <span class="keyword">if</span>(key&gt;m_tailKey)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    skipNode&lt;KeyType,ValueType&gt;*pNode=search(key);</span><br><span class="line">    <span class="comment">// 不存在 </span></span><br><span class="line">    <span class="keyword">if</span>(pNode-&gt;element.key!=key)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="comment">// 更新跳表链表结构</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = m_curMaxLevel<span class="number">-1</span>; i &gt;= <span class="number">0</span>; --i)&#123;</span><br><span class="line">        <span class="comment">// 此处 m_forwardNodes[i]-&gt;next[i] 可能不是 pNode</span></span><br><span class="line">        <span class="keyword">if</span>(m_forwardNodes[i]-&gt;next[i]==pNode)</span><br><span class="line">            m_forwardNodes[i]-&gt;next[i]=pNode-&gt;next[i];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 维护当前最大层级数</span></span><br><span class="line">    <span class="comment">// 当删除一个具有最大层级的节点时，可能会导致 m_headNode-&gt;next[m_maxLevel-1]=m_tailNode，那么此时需要降低层级</span></span><br><span class="line">    <span class="keyword">while</span> (m_curMaxLevel<span class="number">-1</span> &gt; <span class="number">0</span>&amp;&amp;m_headNode-&gt;next[m_curMaxLevel<span class="number">-1</span>]==m_tailNode)&#123;</span><br><span class="line">        m_curMaxLevel--;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">delete</span> pNode;   </span><br><span class="line">    m_size--;    </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是，删除节点后还要维护<code>m_curMaxLevel</code>使其不能太高<br><img src="/uploads/images/data_structure/skiplist_cpp/07.png" alt></p>
+<h4 id="释放跳跃表"><a href="#释放跳跃表" class="headerlink" title="释放跳跃表"></a>释放跳跃表</h4><p>在析构函数中释放所有内存</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">KeyType</span>,<span class="title">class</span> <span class="title">ValueType</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">skiplist</span>&lt;KeyType,ValueType&gt;:</span>:~skiplist()&#123;</span><br><span class="line">    <span class="keyword">while</span> (m_headNode!=m_tailNode)&#123;</span><br><span class="line">        <span class="keyword">auto</span> x=m_headNode-&gt;next[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">delete</span> m_headNode;</span><br><span class="line">        m_headNode=x;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">delete</span> m_tailNode;</span><br><span class="line">    <span class="keyword">delete</span> []m_forwardNodes;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>用skiplist和STL map测试插入操作，仅供参考</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;map&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"skiplist.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ClockTest.h"</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 一个无穷数</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> TAIL_INFINITY_KEY 0xffffff</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> <span class="keyword">const</span> *argv[])</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n=<span class="number">1000000</span>;</span><br><span class="line">    srand(time(<span class="literal">nullptr</span>));</span><br><span class="line">    <span class="comment">// 测试skiplist insert</span></span><br><span class="line">    CClock::start_timeclock();</span><br><span class="line">    skiplist&lt;<span class="keyword">int</span>,<span class="keyword">int</span>&gt; sk(<span class="number">0.5</span>,TAIL_INFINITY_KEY,<span class="number">0</span>,n);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = n; i &gt;= <span class="number">0</span>; --i)&#123;</span><br><span class="line">        sk.insert(Element&lt;<span class="keyword">int</span>,<span class="keyword">int</span>&gt;&#123;rand()%n,i&#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    CClock::stop_timeclock();</span><br><span class="line">    <span class="keyword">auto</span> skiplist_insert_time=CClock::time_duration();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 测试map insert</span></span><br><span class="line">    CClock::start_timeclock();</span><br><span class="line">    <span class="built_in">map</span>&lt;<span class="keyword">int</span>,<span class="keyword">int</span>&gt; mp;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = n; i &gt;=<span class="number">0</span>; --i)&#123;</span><br><span class="line">        mp.insert(pair&lt;<span class="keyword">int</span>,<span class="keyword">int</span>&gt;(rand()%n,i));</span><br><span class="line">    &#125;</span><br><span class="line">    CClock::stop_timeclock();</span><br><span class="line">    <span class="keyword">auto</span> map_insert_time=CClock::time_duration();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 测试skiplist find</span></span><br><span class="line">    CClock::start_timeclock();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = n; i &gt;=<span class="number">0</span>; --i)&#123;</span><br><span class="line">        sk.find(rand()%n);</span><br><span class="line">    &#125;</span><br><span class="line">    CClock::stop_timeclock();</span><br><span class="line">    <span class="keyword">auto</span> skip_find_time=CClock::time_duration();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 测试map find</span></span><br><span class="line">    CClock::start_timeclock();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = n; i &gt;=<span class="number">0</span>; --i)&#123;</span><br><span class="line">        mp.find(rand()%n);</span><br><span class="line">    &#125;</span><br><span class="line">    CClock::stop_timeclock();</span><br><span class="line">    <span class="keyword">auto</span> map_find_time=CClock::time_duration();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 测试skiplist erase</span></span><br><span class="line">    CClock::start_timeclock();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = n; i &gt;=<span class="number">0</span>; --i)&#123;</span><br><span class="line">        sk.erase(rand()%n);</span><br><span class="line">    &#125;</span><br><span class="line">    CClock::stop_timeclock();</span><br><span class="line">    <span class="keyword">auto</span> skip_erase_time=CClock::time_duration();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 测试map erase</span></span><br><span class="line">    CClock::start_timeclock();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = n; i &gt;=<span class="number">0</span>; --i)&#123;</span><br><span class="line">        mp.erase(rand()%n);</span><br><span class="line">    &#125;</span><br><span class="line">    CClock::stop_timeclock();</span><br><span class="line">    <span class="keyword">auto</span> map_erase_time=CClock::time_duration();</span><br><span class="line"></span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"SkipList insert time: "</span>&lt;&lt;skiplist_insert_time&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"SkipList find time: "</span>&lt;&lt;skip_find_time&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"SkipList erase time: "</span>&lt;&lt;skip_erase_time&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"Map insert time: "</span>&lt;&lt;map_insert_time&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"Map find time: "</span>&lt;&lt;map_find_time&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"Map erase time: "</span>&lt;&lt;map_erase_time&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"SkipList size: "</span>&lt;&lt;sk.size()&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"Map size: "</span>&lt;&lt;mp.size()&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我机器上测试 随机插入/查找/删除，结果仅供参考。单位秒</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>insert</th>
+<th>find</th>
+<th>erase</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>skiplist1</td>
+<td>1.44737</td>
+<td>2.03802</td>
+<td>2.158</td>
+</tr>
+<tr>
+<td>skiplist2</td>
+<td>1.34377</td>
+<td>1.61364</td>
+<td>1.52145</td>
+</tr>
+<tr>
+<td>skiplist3</td>
+<td>1.35671</td>
+<td>2.31105</td>
+<td>1.57659</td>
+</tr>
+<tr>
+<td>map1</td>
+<td>1.48519</td>
+<td>1.28156</td>
+<td>1.93228</td>
+</tr>
+<tr>
+<td>map2</td>
+<td>1.00754</td>
+<td>1.099</td>
+<td>1.29245</td>
+</tr>
+<tr>
+<td>map3</td>
+<td>1.23837</td>
+<td>1.28021</td>
+<td>1.35214</td>
+</tr>
+</tbody></table>
+<p>由此可见，跳跃表也是很高效的一种数据结构</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="https://en.wikipedia.org/wiki/Skip_list" target="_blank" rel="noopener">维基百科-skiplist</a><br><a href="https://www.cl.cam.ac.uk/teaching/0506/Algorithms/skiplists.pdf" target="_blank" rel="noopener">Skip Lists: A Probabilistic Alternative toBalanced Trees</a><br><a href="https://blog.csdn.net/ict2014/article/details/17394259" target="_blank" rel="noopener">浅析SkipList跳跃表原理及代码实现</a></p>
+
+      
+    </div>
+
+    
+
+    
+      
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div id="reward-container">
+  <div>Give a rose, leave a handful of fragrance; life is not easy, I use the arch</div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/wechatpay.png" alt="Joseph XRays 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C/" rel="tag"> <i class="fa fa-tag"></i> C++</a>
+          
+            <a href="/tags/C/" rel="tag"> <i class="fa fa-tag"></i> C</a>
+          
+            <a href="/tags/DataStructures/" rel="tag"> <i class="fa fa-tag"></i> DataStructures</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/queue-cpp/" rel="next" title="数据结构-队列">
+                <i class="fa fa-chevron-left"></i> 数据结构-队列
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTkwNC84NDY4"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+    <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="Joseph XRays">
+  
+  <p class="site-author-name" itemprop="name">Joseph XRays</p>
+  <div class="site-description motion-element" itemprop="description">Share the knowledge</div>
+</div>
+
+
+  <nav class="site-state motion-element">
+    
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+
+
+
+
+
+  <div class="links-of-author motion-element">
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="https://github.com/josexy" title="GitHub &rarr; https://github.com/josexy" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+    
+  </div>
+
+
+
+
+
+
+  <div class="links-of-blogroll motion-element links-of-blogroll-block">
+    <div class="links-of-blogroll-title">
+      <i class="fa  fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://github.com/josexy" title="https://github.com/josexy" rel="noopener" target="_blank">Github</a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#跳跃表"><span class="nav-number">2.</span> <span class="nav-text">跳跃表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#插入-删除"><span class="nav-number">2.1.</span> <span class="nav-text">插入/删除</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#级的分配"><span class="nav-number">2.2.</span> <span class="nav-text">级的分配</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C-实现跳跃表"><span class="nav-number">3.</span> <span class="nav-text">C++实现跳跃表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#确定MaxLevel"><span class="nav-number">3.1.</span> <span class="nav-text">确定MaxLevel</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#skiplist初始化"><span class="nav-number">3.2.</span> <span class="nav-text">skiplist初始化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#skiplist查找-find和search"><span class="nav-number">3.3.</span> <span class="nav-text">skiplist查找 find和search</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#skiplist插入"><span class="nav-number">3.4.</span> <span class="nav-text">skiplist插入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#skiplist删除"><span class="nav-number">3.5.</span> <span class="nav-text">skiplist删除</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#释放跳跃表"><span class="nav-number">3.6.</span> <span class="nav-text">释放跳跃表</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试"><span class="nav-number">4.</span> <span class="nav-text">测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Joseph XRays</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+    <span title="站点总字数">283k</span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    
+    <span title="站点阅读时长">4:17</span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.2.0"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+    
+
+
+<script>
+  window.livereOptions = {
+    refer: 'skiplist-cpp/'
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
+        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
+      }
+    });
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      document.getElementById(all[i].inputID + '-Frame').parentNode.className += ' has-jax';
+    }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+
+<script type="text/javascript" src="/js/float_wenzi.js"></script>
+</body>
+</html>
+
+
+
