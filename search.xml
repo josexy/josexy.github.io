@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[数据结构-二叉查找树(BST)]]></title>
+    <url>%2Fbst-cpp%2F</url>
+    <content type="text"><![CDATA[在计算机科学中，树是一种非线性数据结构，树的种类有大致分为两类:无序树和有序树。有序树又分为二叉查找树、堆、左高树、AVL树、红黑树等。树是一种非常重要的数据结构，如C++ STL中的map底层实现原理是红黑树，Java (jdk1.8) HashMap更是采用了散列表+链表+红黑树。不过在讨论二叉查找树之前，我们需要了解树的一些基本知识。 树一棵树t是一个非空的有限个元素的集合，其中一个元素为根(root)，若其余元素存在，则组成t的子树 如下图图3为仅有一个元素的树，且该元素为树的根(root) 关于树的术语(摘自维基百科)节点的度：一个节点含有的子树的个数称为该节点的度树的度：一棵树中，最大的节点度称为树的度叶节点或终端节点：度为零的节点，也就是没有节点的节点非终端节点或分支节点：度不为零的节点父亲节点或父节点：若一个节点含有子节点，则这个节点称为其子节点的父节点孩子节点或子节点：一个节点含有的子树的根节点称为该节点的子节点兄弟节点：具有相同父节点的节点互称为兄弟节点节点的层次：从根开始定义起，根为第1层，根的子节点为第2层，以此类推深度：对于任意节点n,n的深度为从根到n的唯一路径长，根的深度为0高度：对于任意节点n,n的高度为从n到叶子节点的最长路径长，所有树叶的高度为0堂兄弟节点：父节点在同一层的节点互为堂兄弟节点的祖先：从根到该节点所经分支上的所有节点子孙：以某节点为根的子树中任一节点都称为该节点的子孙森林：由m（m&gt;=0）棵互不相交的树的集合称为森林 高度和深度的区别其实不用太在意，不同的人有不同的定义。若有兴趣可以去stackoverflow What is the difference between tree depth and height? 看看 二叉树定义：一棵二叉树(binary tree) t 是有限个元素的集合(可以为空)。当二叉树非空时，其中一个元素称为根，若存在其余元素，则分为两颗二叉树，分别称为 t 的左子树和右子树 二叉树中每个元素的左子树和右子树是有序的，而树的子树是无序的 性质二叉树的性质有很多，这里仅列举其中的一些。 性质1：一棵二叉树有$n$个元素，$n&gt;0$，它有$n-1$条边性质2：一棵二叉树的高度为$h$，$h\ge0$，它最少有$h$个元素，最多有$2^h-1$个元素性质3：一棵二叉树有$n$个元素，$n&gt;0$，它的高度最大为$n$，最小高度为$\lceil log_2(n+1) \rceil$。性质4：设完全二叉树其中一个元素编号$i，1 \le i \le n$，则: 若$i=1$，则该元素为二叉树的根。若$i&gt;1$，则其父节点的编号为 $\lfloor \frac{i}{2} \rfloor$ 若$2i&gt;n$，则该元素无左孩子。否则，其左孩子编号$2i$ 若$2i+1&gt;n$，则该元素无右孩子。否则，其右孩子编号$2i+1$ 当高度为$h$的二叉树恰好有$2^h-1$个元素时，称为满二叉树。 完全二叉树可以看作是满二叉树删除最底层最右边的元素后形成的一棵树。满二叉树一定是完全二叉树，完全二叉树不一定是满二叉树 二叉树描述二叉树描述既可以数组也可以用链表。其中用数组描述的一般是二叉堆，用链表描述的比较常用，适用范围广。因此本文主要是基于链表描述的二叉查找树来展开 二叉查找树(Binary Search Tree)二叉查找树也可叫做二叉搜索树，其满足以下特征: 每个元素有唯一的一个关键字 左子树的元素的关键字小于 根节点的关键字 右子树的元素的关键字大于 根节点的关键字 根节点的左右子树也是二叉查找树 定义一个bst节点结构 12345678template&lt;typename T&gt;struct NodeEntry&#123; int key; // 关键字 T data; // 数据域 NodeEntry *parent; // 父节点 NodeEntry *left_nodes; // 左子树 NodeEntry *right_nodes; // 右子树&#125;; bst模板类 12345678910111213141516171819202122232425262728293031323334template&lt;typename T&gt;class binaryTree&#123;public: typedef T value_type; typedef T&amp; reference_type; typedef const T&amp; const_reference_type; typedef const int&amp; const_key_type; typedef NodeEntry&lt;T&gt; NODE; typedef NodeEntry&lt;T&gt;&amp; REF_NODE; typedef NodeEntry&lt;T&gt;* PNODE; typedef NodeEntry&lt;T&gt;* &amp; REF_PNODE;private: PNODE m_NodeRoot;public: binaryTree(); binaryTree(const_key_type k,const_reference_type v); ~binaryTree(); int Height(PNODE pNode); bool Insert(REF_PNODE pNode,PNODE pNodeParent,const_key_type key,const_reference_type value); bool Delete(PNODE pNode,const_key_type key); NodeEntry&lt;T&gt;* Search(PNODE pNode,const_key_type key); void ClearAll(REF_PNODE pNode); NodeEntry&lt;T&gt;* predecessor(NODE* pNode); NodeEntry&lt;T&gt;* successor(NODE* pNode); void PreOrder(NODE * pRootNode); void InOrder(NODE * pRootNode); void PostOrder(NODE * pRootNode); void LevelOrder(NODE * pRootNode);&#125;; 遍历bst有三种遍历方式 前序遍历 中序遍历 后序遍历 层级遍历 前序遍历先访问当前节点，然后再遍历左子树，最后遍历右子树 123456789template&lt;typename T&gt;void binaryTree&lt;T&gt;::PreOrder(binaryTree::NODE *pRootNode) &#123; if(pRootNode== nullptr)&#123; return; &#125; cout&lt;&lt;pRootNode-&gt;key&lt;&lt;endl; PreOrder(pRootNode-&gt;left_nodes); PreOrder(pRootNode-&gt;right_nodes);&#125; 中序遍历先遍历左子树，再访问当前节点，最后遍历右子树 123456789template&lt;typename T&gt;void binaryTree&lt;T&gt;::InOrder(binaryTree::NODE *pRootNode) &#123; if(pRootNode == nullptr)&#123; return; &#125; InOrder(pRootNode-&gt;left_nodes); cout&lt;&lt;pRootNode-&gt;key&lt;&lt;endl; InOrder(pRootNode-&gt;right_nodes);&#125; 可见中序遍历能够有序输出节点 后序遍历先遍历左子树，再遍历右子树，最后访问当前节点 12345678void binaryTree&lt;T&gt;::PostOrder(binaryTree::NODE *pRootNode) &#123; if(pRootNode== nullptr)&#123; return; &#125; PostOrder(pRootNode-&gt;left_nodes); PostOrder(pRootNode-&gt;right_nodes); cout&lt;&lt;pRootNode-&gt;key&lt;&lt;endl;&#125; 层级遍历主要是利用广度优先搜索实现的 1234567891011121314151617181920template&lt;typename T&gt;void binaryTree&lt;T&gt;::LevelOrder(binaryTree::NODE *pRootNode) &#123; if(!pRootNode)return; queue&lt;binaryTree::PNODE&gt;q; q.push(pRootNode); while (!q.empty())&#123; binaryTree::PNODE pNode=q.front(); cout&lt;&lt;pNode-&gt;key&lt;&lt;endl; // 左子树存在，先处理左边 if(pNode-&gt;left_nodes)&#123; q.push(pNode-&gt;left_nodes); &#125; // 右子树存在，在处理右边 if(pNode-&gt;right_nodes) &#123; q.push(pNode-&gt;right_nodes); &#125; // 处理下一个节点 q.pop(); &#125;&#125; 高度12345678template&lt;typename T&gt;int binaryTree&lt;T&gt;::Height(binaryTree::PNODE pNode) &#123; if(!pNode)return 0; int h1=Height(pNode-&gt;left_nodes); int h2=Height(pNode-&gt;right_nodes); // 高度从0开始计数，因此高度要加1 return std::max(h1,h2)+1;&#125; 查找bst查找类似二分查找。很简单 1234567891011121314template&lt;typename T&gt;NodeEntry&lt;T&gt; *binaryTree&lt;T&gt;::Search(PNODE pNode,const_key_type key) &#123; if(!pNode)return nullptr; if(pNode-&gt;key==key)&#123; return pNode; &#125;else if(key&lt;pNode-&gt;key)&#123; //left return Search(pNode-&gt;left_nodes,key); &#125;else if(key&gt;pNode-&gt;key)&#123; //right return Search(pNode-&gt;right_nodes,key); &#125; return nullptr;&#125; 前驱/后继节点要完成bst的删除操作，那么就必须要知道前驱/后继节点怎么找。前驱节点： 假设存在一个节点N，那么它的前驱节点就是关键字小于N的且最大的节点。即$key[max(predecessor)]&lt;key[N]$ 后继节点： 假设存在一个节点N，那么它的后继节点就是关键字大于N的且最小的节点。即$key[min(successor)]&gt;key[N]$ 根据前驱节点定义查找： 若节点N有左子树L：且左子树L的右子树存在，则依次遍历L的右子树直到叶子节点，就是前驱节点；否则该左子树L就是前驱节点 若节点N无左子树，但节点N是其父节点P的右孩子，那么父节点P就是该节点N的前驱结点 若节点N无左子树，但该节点N是其父节点P的左孩子，那么需要沿着父亲节点P一直向树的顶端寻找，直到找到一个节点X是其父节点M的右孩子，则节点M为前驱节点 以上三种情况分别对应下图 后继节点查找类似前驱节点 若节点N有右子树R：且右子树R的左子树存在，则依次遍历R的左子树直到叶子节点，就是后继节点；否则该右子树R就是后继节点 若节点N无右子树，但节点N是其父节点P的左孩子，那么父节点P就是该节点N的后继结点 若节点N无右子树，但该节点N是其父节点P的右孩子，那么需要沿着父亲节点P一直向树的顶端寻找，直到找到一个节点X是其父节点M的左孩子，则节点M为后继节点 代码如下 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354template&lt;typename T&gt;NodeEntry&lt;T&gt;* binaryTree&lt;T&gt;::predecessor(NODE* pNode)&#123; if(!pNode)return nullptr; // 如果存在左子树 if (pNode-&gt;left_nodes)&#123; auto x=pNode-&gt;left_nodes; while (x-&gt;right_nodes)&#123; x=x-&gt;right_nodes; &#125; return x; &#125;else if(pNode-&gt;parent)&#123; // 该节点为父节点的右孩子 if (pNode-&gt;parent-&gt;right_nodes==pNode)&#123; return pNode-&gt;parent; &#125;else&#123; // 该节点为父节点的左孩子 NodeEntry&lt;T&gt;* parent=pNode-&gt;parent; // 向父节点方向遍历 while (parent &amp;&amp; parent-&gt;left_nodes==pNode)&#123; pNode=parent; parent=parent-&gt;parent; &#125; return parent; &#125; &#125; return nullptr;&#125;template&lt;typename T&gt;NodeEntry&lt;T&gt;* binaryTree&lt;T&gt;::successor(NODE* pNode)&#123; if(!pNode)return nullptr; // 如果存在右子树 if (pNode-&gt;right_nodes)&#123; auto x=pNode-&gt;right_nodes; while (x-&gt;left_nodes)&#123; x=x-&gt;left_nodes; &#125; return x; // 右子树不存在 &#125;else if(pNode-&gt;parent)&#123; if (pNode-&gt;parent-&gt;left_nodes==pNode)&#123; return pNode-&gt;parent; &#125;else&#123; NodeEntry&lt;T&gt;* parent=pNode-&gt;parent; while (parent &amp;&amp; parent-&gt;right_nodes==pNode)&#123; pNode=parent; parent=parent-&gt;parent; &#125; return parent; &#125; &#125; return nullptr;&#125; 插入讲完前驱后继的查找后，接下来是插入操作，bst的插入比较简单，也就是在空节点nullptr处更新一个新节点，插入方法类似查找方法。插入操作要保证key的唯一性 12345678910111213141516171819202122232425template&lt;typename T&gt;bool binaryTree&lt;T&gt;::Insert(REF_PNODE pNode,PNODE pNodeParent,const_key_type key,const_reference_type value) &#123; // 表示当前为空节点 if(pNode == nullptr)&#123; // 新建一个待插入的节点 pNode=new NODE(); pNode-&gt;key=key; pNode-&gt;left_nodes= nullptr; pNode-&gt;right_nodes= nullptr; pNode-&gt;data=value; pNode-&gt;parent=pNodeParent; return true; &#125; else if(key &lt; pNode-&gt;key)&#123; return Insert(pNode-&gt;left_nodes,pNode,key,value); &#125; else if(key &gt; pNode-&gt;key)&#123; return Insert(pNode-&gt;right_nodes,pNode,key,value); &#125; // 已经存在了 else&#123; cout&lt;&lt;"Already exist!"&lt;&lt;endl; return false; &#125;&#125; 删除删除操作就有点复杂了，不过照着思路也很容易写出来。大致分为三类 删除叶子结点 删除只有一棵子树的节点 删除有两棵子树的节点 注意：删除操作一定要维护二叉查找树的性质！！！ 删除叶子结点，这类情况最为简单，找到待删除节点后直接delete，同时更新父子节点关系；删除有两棵子树的节点的操作可以转化为删除只有一棵子树的节点，转化策略有前驱和后继两种，本文删除节点使用的策略为后继法。 首先来看一下这个例子删除key=8的节点，不一定真的是删除该节点，不然的话还要重新建立父子节点关系以及维护bst的性质。因此，利用前驱/后继节点的方法可以巧妙的避开这些不必要的麻烦：只需要替换待删除节点和前驱/后继节点的数据，然后利用删除只有一棵子树的节点的方法来删除前驱/后继节点即可。 删除只有一棵子树的节点情况如下 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162template&lt;class T&gt;bool binaryTree&lt;T&gt;::Delete(PNODE pNode,const_key_type key) &#123; PNODE pDeletenode = this-&gt;Search(pNode,key); if(!pDeletenode) return false; // 节点的左右子树都存在情况下，此时将其转化为其他两种情况 if(pDeletenode-&gt;left_nodes!=nullptr&amp;&amp;pDeletenode-&gt;right_nodes!=nullptr)&#123; PNODE successor=this-&gt;successor(pDeletenode); // 只需要交换数据 pDeletenode-&gt;key=successor-&gt;key; pDeletenode-&gt;data=successor-&gt;data; // 标记pDeletenode为后继节点， pDeletenode=successor; &#125; // 是否有子节点 PNODE child=nullptr; /* 80 80 / \ 70[delete] 86[delete] \ \ 75 90 */ // 删除只有一棵子树的情况 // 判断待删除节点的子节点左右孩子 if(pDeletenode-&gt;left_nodes!=nullptr)&#123; child=pDeletenode-&gt;left_nodes; &#125;else&#123; child=pDeletenode-&gt;right_nodes; &#125; if(child!=nullptr)&#123; child-&gt;parent=pDeletenode-&gt;parent; &#125; /*情况1 情况2 情况3 情况4 9 9 9 9 / / / / 7 7 7[delete] 7[delete] / \ / \ 6[delete] 8[delete] 6 8情况5 情况6 情况7 情况8 1 1 1 1 \ \ \ \ 7 7 7[delete] 7[delete] / \ / \ 6[delete] 8[delete] 6 8 */ // 删除的是根节点 if(pDeletenode-&gt;parent==nullptr)&#123; m_NodeRoot=child; // 判断待删除节点是其父节点的左右孩子 &#125;else if(pDeletenode-&gt;parent-&gt;left_nodes==pDeletenode)&#123; pDeletenode-&gt;parent-&gt;left_nodes=child; &#125;else&#123; pDeletenode-&gt;parent-&gt;right_nodes=child; &#125; delete pDeletenode; pDeletenode=nullptr; return true;&#125; bst释放递归方式释放所有节点 12345678template&lt;typename T&gt;void binaryTree&lt;T&gt;::ClearAll(binaryTree::REF_PNODE pNode) &#123; if(!pNode)return; ClearAll(pNode-&gt;left_nodes); ClearAll(pNode-&gt;right_nodes); delete pNode; pNode= nullptr;&#125; ok，基本上bst大致讲完了，bye~]]></content>
+      <categories>
+        <category>数据结构与算法</category>
+      </categories>
+      <tags>
+        <tag>DataStructures</tag>
+        <tag>C++</tag>
+        <tag>C</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[数据结构-跳跃表C++实现]]></title>
     <url>%2Fskiplist-cpp%2F</url>
     <content type="text"><![CDATA[跳跃表/跳表(SkipList)In computer science, a skip list is a data structure that allows $O(\log n)$ search complexity as well as $O(\log n)$ insertion complexity within an ordered sequence of $n$ elements. —— 维基百科 概述由于本人知识有限，对于跳跃表的认识可能不够深入，不过还是想把自己的看法写下来……初学跳跃表时也许无法理解，不过当深入理解了跳跃表的原理时，一切都变得easy。比起手写一个红黑树代码跳跃表要简单得多，而且跳跃表也有很多实现例子的，如 Qt中的 QMap ,MemSQL ,Redis… 虽然我都没有接触过… 跳跃表一个简单的跳跃表结构 我们都知道，对一个 有序链表 执行查找的复杂度为 $O(n)$ ,而对数组使用二分查找的复杂度则是 $O(\log n)$，而跳跃表的出现就是为了解决有序链表的查找问题(当然还要其他更重要的作用)，使其复杂度将为 $O(\log n)$ ，不过最坏情况下却仍是$O(n)$注意: 跳跃表适用于有序链表。 利用跳跃表之后的查找、插入、删除复杂度如下 方法 查找 插入 删除 平均情况 $O(\log n)$ $O(\log n)$ $O(\log n)$ 最坏情况 $O(n)$ $O(n)$ $O(n)$ 跳跃表是一个空间换时间的数据结构。 那么跳跃表是如何实现快速查找的呢？跳跃表通过建立 索引节点 ，每次查找时，先通过最顶层索引节点一层层的向下寻找满足条件的节点，每次查找都有可能跨越到其他不相邻的节点，直到抵达最底层也就是原始层链表某处节点位置。 这里的 索引节点 其实就是一组节点地址，在new一个新节点时就分配好，然后在对每一层索引节点进行重组，使其前后串联起来，这样就形成了一个 $i$级链表且 $i\in(0,M-1)$ M为跳跃表的最高层级数MaxLevel，这样每一层级均可形成一条链。 要查找key为5的节点，那么从head开始一层层的查找，此次过程跳过了节点1和节点3，最后找到了节点5。 这里我们设置一个有序链表为带有head和tail节点，其中head节点的next指针就是有序链表的起始，而tail节点一般为nullptr，不过这里我们将tail作为哨兵节点，这样就无需处理nullptr问题了。 插入/删除在一个规则跳表结构中，$i$级链表有 $\frac{n}{2^i}$ 个节点，$n$为最底层链表的总节点数。如:$0 \rightarrow i$ 层有 $n,\frac{n}{2},\frac{n}{4},\cdots,\frac{n}{2^{i}}$ 也就是说，我们希望在插入时符合这种结构，而插入的节点属于$i$级链表的概率为 $\frac{1}{2^i}$ (不难想出，插入节点属于0级链表概率永远为1，而属于1级链表的概率为$\frac{1}{2}$，$\cdots$，属于$i$级链表的为$\frac{1}{2^i}$) 这时来看看这段话，摘自William Pugh(就是他搞出了跳表)写的论文里的一段话。文末参考中有他关于跳表的论文 原文Skip lists are a data structure that can be used in place of balanced trees.Skip lists use probabilistic balancing rather than strictly enforced balancingand as a result the algorithms for insertion and deletion in skip lists aremuch simpler and significantly faster than equivalent algorithms forbalanced trees.翻译:跳跃表是一种可以用来代替平衡树的数据结构。跳跃表使用概率平衡而不是严格执行的平衡。因此，在跳跃表中插入和删除的算法是要比等效算法简单得多，也快得多平衡树。 注意 跳跃表使用概率平衡而不是严格执行的平衡 这告诉我们，插入操作是动态的插入到不同层级的位置。因此，把一个新节点插入到$i$级链表的概率为$p^i$ (在一个规则跳表结构中，$p=0.5$ )。 而这个动态插入法就利用到 随机数生成函数 来完成，一个好的随机数生成函数，能够使跳表结构达到最优的效果使其复杂度不会太高。 除此之外每一次插入/删除操作，都必须要维护跳表结构，也就是处理好链表节点的指向关系，避免混乱。 级的分配不说那么多，级的分配可以利用一个随机数生成函数来完成。伪码: 123456randomLevel() lvl := 1 -- random() that returns a random value in [0...1) while random() &lt; p and lvl &lt; MaxLevel do lvl := lvl + 1 return lvl 转化成C++代码 12345678int random_level()&#123; int level= 1; while (((double)(rand()%101)/101) &lt; (m_prob) &amp;&amp; level &lt; m_maxLevel) &#123; level++; &#125; return level;&#125; 这里还要一个糟糕的随机数生成函数仅供参考 1234int random_level()&#123; int level = rand() % m_maxLevel + 1; return level;&#125; C++实现跳跃表OK，现在开始用C++实现跳跃表首先我们定义两个结构体，用于保存节点数据 1234567891011121314151617181920template&lt;class KeyType,class ValueType&gt;struct Element&#123; KeyType key; ValueType value; Element()&#123;&#125; Element(KeyType key,const ValueType&amp; value)&#123; this-&gt;key=key; this-&gt;value=value; &#125;&#125;;template&lt;class KeyType,class ValueType&gt;struct skipNode&#123; Element&lt;KeyType,ValueType&gt; element; skipNode**next; skipNode(const Element&lt;KeyType,ValueType&gt;&amp;theElement,int size)&#123; this-&gt;element=theElement; this-&gt;next=new skipNode&lt;KeyType,ValueType&gt;*[size]; &#125;&#125;; 确定MaxLevelMaxLevel太大，造成空间的浪费，太小又会导致退化成一个冗杂的 ‘单链表’ 结构，两者均会影响跳跃表的性能。因此合适的MaxLevel十分重要。 从《Skip Lists: A Probabilistic Alternative toBalanced Trees》 中我们可以这样定义一个MaxLevel，即$L(n)=\lceil log_\frac{1}{p}n \rceil$$MaxLevel=L(N),N$为待插入元素节点总数 利用换底公式 $\log_ab=\frac{\log_cb}{\log_ca}$ 转化为C++代码 123int MaxLevel(int numberOfnode,float prob)&#123; return (int)(ceil(logf((float)numberOfnode)/logf((float)1/prob)));&#125; skiplist初始化我们只需在构造函数进行初始化即可。这里我们既可以自定义跳跃表的MaxLevel，也可以通过numberOfnode来计算一个MaxLevel 1234567891011121314151617181920212223242526template&lt;class KeyType,class ValueType&gt;skiplist&lt;KeyType,ValueType&gt;::skiplist(float prob,KeyType tailLargeKey,int max_level,int numberOfnode) &#123; srand(time(nullptr)); m_prob=prob; m_size=0; // 计算最大链表层数 if(numberOfnode!=-1) m_maxLevel=MaxLevel(numberOfnode,prob); else m_maxLevel=max_level; m_curMaxLevel=0; // 初始化尾节点 m_tailKey=tailLargeKey; Element&lt;KeyType,ValueType&gt;tailPair&#123;m_tailKey,0&#125;; m_tailNode=new skipNode&lt;KeyType,ValueType&gt;(tailPair,0); // 初始化头结点 m_headNode=new skipNode&lt;KeyType,ValueType&gt;(tailPair,m_maxLevel); for (int i = 0; i &lt; m_maxLevel; i++)&#123; m_headNode-&gt;next[i]=m_tailNode; &#125; m_forwardNodes=new skipNode&lt;KeyType,ValueType&gt;*[m_maxLevel];&#125; 尾节点内存分配类似malloc(0)形式 skiplist查找 find和search1234567891011121314151617181920212223242526272829303132template&lt;class KeyType,class ValueType&gt;skipNode&lt;KeyType,ValueType&gt;* skiplist&lt;KeyType,ValueType&gt;::search(const KeyType&amp;key)&#123; skipNode&lt;KeyType,ValueType&gt;*forwardNode=m_headNode; // 外层循环: 不断的指向下一层级链表 for (int i = m_curMaxLevel-1; i &gt;= 0; --i)&#123; // 内层循环: 指向当前层级链表的邻接节点 while (forwardNode-&gt;next[i]!=m_tailNode&amp;&amp;forwardNode-&gt;next[i]-&gt;element.key&lt;key)&#123; forwardNode=forwardNode-&gt;next[i]; &#125; // 保存前驱节点指针 this-&gt;m_forwardNodes[i]=forwardNode; &#125; return forwardNode-&gt;next[0];&#125;template&lt;class KeyType,class ValueType&gt;Element&lt;KeyType,ValueType&gt;* skiplist&lt;KeyType,ValueType&gt;::find(const KeyType&amp;key)&#123; if(key &gt; this-&gt;m_tailKey) return nullptr; skipNode&lt;KeyType,ValueType&gt;*forwardNode=m_headNode; for (int i = m_curMaxLevel-1; i &gt;=0 ; --i)&#123; while (forwardNode-&gt;next[i]!=m_tailNode &amp;&amp; forwardNode-&gt;next[i]-&gt;element.key &lt; key)&#123; forwardNode=forwardNode-&gt;next[i]; &#125; &#125; // 最终会遍历到第0层-&gt;原始层，只需要在第0层判断即可 if(forwardNode-&gt;next[0]-&gt;element.key==key)&#123; return &amp;forwardNode-&gt;next[0]-&gt;element; &#125;else&#123; return nullptr; &#125;&#125; 其中find和search都是从当前最大层级依次向下遍历，不同的是，search在遍历的同时将每次遍历到每一层的前驱节点保存在m_forwardNodes中，目的是为了衔接后面的插入/删除节点 其中的 forwardNode-&gt;next[0] 就是下一个要查找的节点(如果存在的话) skiplist插入每一次插入，需要通过search保存 前驱节点m_forwardNodes 从而将待插入节点连接起来。如下图红色箭头表示前后需要链接的节点 123456789101112131415161718192021222324template&lt;class KeyType,class ValueType&gt;void skiplist&lt;KeyType,ValueType&gt;::insert(const Element&lt;KeyType,ValueType&gt;&amp;element)&#123; // 随机生成索引节点层数 1&lt;=level&lt;=m_maxLevel int level=random_level(); if(level &gt; this-&gt;m_curMaxLevel)&#123; this-&gt;m_curMaxLevel=level; &#125; skipNode&lt;KeyType,ValueType&gt;*pNode=search(element.key); // 已经存在 if(pNode-&gt;element.key==element.key)&#123; pNode-&gt;element.value=element.value; return; &#125; // 此时已经保存了合适的前驱节点m_forwardNodes // 创建一个具有level层的节点 skipNode&lt;KeyType,ValueType&gt;*pNewNode = new skipNode&lt;KeyType,ValueType&gt;(element,level); // 建立索引节点 for (int i = level-1; i &gt;=0; --i)&#123; pNewNode-&gt;next[i]=m_forwardNodes[i]-&gt;next[i]; m_forwardNodes[i]-&gt;next[i]=pNewNode; &#125; m_size++;&#125; skiplist删除删除操作类似插入操作，也需要通过search保存 前驱节点m_forwardNodes 12345678910111213141516171819202122232425template&lt;class KeyType,class ValueType&gt;bool skiplist&lt;KeyType,ValueType&gt;::erase(const KeyType&amp;key)&#123; // 不符合的key if(key&gt;m_tailKey) return false; skipNode&lt;KeyType,ValueType&gt;*pNode=search(key); // 不存在 if(pNode-&gt;element.key!=key) return false; // 更新跳表链表结构 for (int i = m_curMaxLevel-1; i &gt;= 0; --i)&#123; // 此处 m_forwardNodes[i]-&gt;next[i] 可能不是 pNode if(m_forwardNodes[i]-&gt;next[i]==pNode) m_forwardNodes[i]-&gt;next[i]=pNode-&gt;next[i]; &#125; // 维护当前最大层级数 // 当删除一个具有最大层级的节点时，可能会导致 m_headNode-&gt;next[m_maxLevel-1]=m_tailNode，那么此时需要降低层级 while (m_curMaxLevel-1 &gt; 0&amp;&amp;m_headNode-&gt;next[m_curMaxLevel-1]==m_tailNode)&#123; m_curMaxLevel--; &#125; delete pNode; m_size--; return true;&#125; 需要注意的是，删除节点后还要维护m_curMaxLevel使其不能太高 释放跳跃表在析构函数中释放所有内存 12345678910template&lt;class KeyType,class ValueType&gt;skiplist&lt;KeyType,ValueType&gt;::~skiplist()&#123; while (m_headNode!=m_tailNode)&#123; auto x=m_headNode-&gt;next[0]; delete m_headNode; m_headNode=x; &#125; delete m_tailNode; delete []m_forwardNodes;&#125; 测试用skiplist和STL map测试插入操作，仅供参考 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475#include &lt;map&gt;#include &lt;iostream&gt;#include "skiplist.h"#include "ClockTest.h"using namespace std;// 一个无穷数#define TAIL_INFINITY_KEY 0xffffffint main(int argc, char const *argv[])&#123; int n=1000000; srand(time(nullptr)); // 测试skiplist insert CClock::start_timeclock(); skiplist&lt;int,int&gt; sk(0.5,TAIL_INFINITY_KEY,0,n); for (int i = n; i &gt;= 0; --i)&#123; sk.insert(Element&lt;int,int&gt;&#123;rand()%n,i&#125;); &#125; CClock::stop_timeclock(); auto skiplist_insert_time=CClock::time_duration(); // 测试map insert CClock::start_timeclock(); map&lt;int,int&gt; mp; for (int i = n; i &gt;=0; --i)&#123; mp.insert(pair&lt;int,int&gt;(rand()%n,i)); &#125; CClock::stop_timeclock(); auto map_insert_time=CClock::time_duration(); // 测试skiplist find CClock::start_timeclock(); for (int i = n; i &gt;=0; --i)&#123; sk.find(rand()%n); &#125; CClock::stop_timeclock(); auto skip_find_time=CClock::time_duration(); // 测试map find CClock::start_timeclock(); for (int i = n; i &gt;=0; --i)&#123; mp.find(rand()%n); &#125; CClock::stop_timeclock(); auto map_find_time=CClock::time_duration(); // 测试skiplist erase CClock::start_timeclock(); for (int i = n; i &gt;=0; --i)&#123; sk.erase(rand()%n); &#125; CClock::stop_timeclock(); auto skip_erase_time=CClock::time_duration(); // 测试map erase CClock::start_timeclock(); for (int i = n; i &gt;=0; --i)&#123; mp.erase(rand()%n); &#125; CClock::stop_timeclock(); auto map_erase_time=CClock::time_duration(); cout&lt;&lt;"SkipList insert time: "&lt;&lt;skiplist_insert_time&lt;&lt;endl; cout&lt;&lt;"SkipList find time: "&lt;&lt;skip_find_time&lt;&lt;endl; cout&lt;&lt;"SkipList erase time: "&lt;&lt;skip_erase_time&lt;&lt;endl; cout&lt;&lt;endl; cout&lt;&lt;"Map insert time: "&lt;&lt;map_insert_time&lt;&lt;endl; cout&lt;&lt;"Map find time: "&lt;&lt;map_find_time&lt;&lt;endl; cout&lt;&lt;"Map erase time: "&lt;&lt;map_erase_time&lt;&lt;endl; cout&lt;&lt;"SkipList size: "&lt;&lt;sk.size()&lt;&lt;endl; cout&lt;&lt;"Map size: "&lt;&lt;mp.size()&lt;&lt;endl; return 0;&#125; 我机器上测试 随机插入/查找/删除，结果仅供参考。单位秒 insert find erase skiplist1 1.44737 2.03802 2.158 skiplist2 1.34377 1.61364 1.52145 skiplist3 1.35671 2.31105 1.57659 map1 1.48519 1.28156 1.93228 map2 1.00754 1.099 1.29245 map3 1.23837 1.28021 1.35214 由此可见，跳跃表也是很高效的一种数据结构 skiplist源码地址: https://github.com/josexy/skiplist_c 参考维基百科-skiplistSkip Lists: A Probabilistic Alternative toBalanced Trees浅析SkipList跳跃表原理及代码实现]]></content>
@@ -8,9 +21,9 @@
         <category>数据结构与算法</category>
       </categories>
       <tags>
+        <tag>DataStructures</tag>
         <tag>C++</tag>
         <tag>C</tag>
-        <tag>DataStructures</tag>
       </tags>
   </entry>
   <entry>
@@ -21,9 +34,9 @@
         <category>数据结构与算法</category>
       </categories>
       <tags>
+        <tag>DataStructures</tag>
         <tag>C++</tag>
         <tag>C</tag>
-        <tag>DataStructures</tag>
       </tags>
   </entry>
   <entry>
@@ -34,9 +47,9 @@
         <category>数据结构与算法</category>
       </categories>
       <tags>
+        <tag>DataStructures</tag>
         <tag>C++</tag>
         <tag>C</tag>
-        <tag>DataStructures</tag>
       </tags>
   </entry>
   <entry>
@@ -202,8 +215,8 @@
       </categories>
       <tags>
         <tag>C++</tag>
-        <tag>Linux</tag>
         <tag>C</tag>
+        <tag>Linux</tag>
         <tag>MongoDB</tag>
       </tags>
   </entry>
@@ -238,8 +251,8 @@
         <category>MongoDB</category>
       </categories>
       <tags>
-        <tag>Linux</tag>
         <tag>C</tag>
+        <tag>Linux</tag>
         <tag>MongoDB</tag>
       </tags>
   </entry>
@@ -298,8 +311,8 @@
       </categories>
       <tags>
         <tag>C++</tag>
-        <tag>Linux</tag>
         <tag>C</tag>
+        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
@@ -570,8 +583,8 @@
       </categories>
       <tags>
         <tag>C++</tag>
-        <tag>Linux</tag>
         <tag>C</tag>
+        <tag>Linux</tag>
         <tag>SDL2</tag>
       </tags>
   </entry>
@@ -583,8 +596,8 @@
         <category>Others</category>
       </categories>
       <tags>
-        <tag>Linux</tag>
         <tag>Google</tag>
+        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
@@ -656,8 +669,8 @@
       </categories>
       <tags>
         <tag>C++</tag>
-        <tag>Linux</tag>
         <tag>C</tag>
+        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
@@ -691,8 +704,8 @@
       </categories>
       <tags>
         <tag>C++</tag>
-        <tag>Linux</tag>
         <tag>C</tag>
+        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
@@ -704,8 +717,8 @@
       </categories>
       <tags>
         <tag>C++</tag>
-        <tag>Windows</tag>
         <tag>C</tag>
+        <tag>Windows</tag>
       </tags>
   </entry>
 </search>

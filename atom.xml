@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.joxrays.com/"/>
-  <updated>2020-01-15T05:49:11.835Z</updated>
+  <updated>2020-01-20T09:45:15.933Z</updated>
   <id>http://www.joxrays.com/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>数据结构-二叉查找树(BST)</title>
+    <link href="http://www.joxrays.com/bst-cpp/"/>
+    <id>http://www.joxrays.com/bst-cpp/</id>
+    <published>2020-01-14T16:00:00.000Z</published>
+    <updated>2020-01-20T09:45:15.933Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在计算机科学中，树是一种&lt;strong&gt;非线性数据结构&lt;/strong&gt;，树的种类有大致分为两类:&lt;strong&gt;无序树&lt;/strong&gt;和&lt;strong&gt;有序树&lt;/strong&gt;。有序树又分为二叉查找树、堆、左高树、AVL树、红黑树等。树是一种非常重要的数据结构，如C++ STL中的map底层实现原理是红黑树，Java (jdk1.8) HashMap更是采用了散列表+链表+红黑树。&lt;br&gt;不过在讨论二叉查找树之前，我们需要了解树的一些基本知识。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="数据结构与算法" scheme="http://www.joxrays.com/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
+    
+    
+      <category term="DataStructures" scheme="http://www.joxrays.com/tags/DataStructures/"/>
+    
+      <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
+    
+      <category term="C" scheme="http://www.joxrays.com/tags/C/"/>
+    
+  </entry>
   
   <entry>
     <title>数据结构-跳跃表C++实现</title>
@@ -32,11 +56,11 @@
       <category term="数据结构与算法" scheme="http://www.joxrays.com/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
     
     
+      <category term="DataStructures" scheme="http://www.joxrays.com/tags/DataStructures/"/>
+    
       <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
     
       <category term="C" scheme="http://www.joxrays.com/tags/C/"/>
-    
-      <category term="DataStructures" scheme="http://www.joxrays.com/tags/DataStructures/"/>
     
   </entry>
   
@@ -56,11 +80,11 @@
       <category term="数据结构与算法" scheme="http://www.joxrays.com/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
     
     
+      <category term="DataStructures" scheme="http://www.joxrays.com/tags/DataStructures/"/>
+    
       <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
     
       <category term="C" scheme="http://www.joxrays.com/tags/C/"/>
-    
-      <category term="DataStructures" scheme="http://www.joxrays.com/tags/DataStructures/"/>
     
   </entry>
   
@@ -80,11 +104,11 @@
       <category term="数据结构与算法" scheme="http://www.joxrays.com/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
     
     
+      <category term="DataStructures" scheme="http://www.joxrays.com/tags/DataStructures/"/>
+    
       <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
     
       <category term="C" scheme="http://www.joxrays.com/tags/C/"/>
-    
-      <category term="DataStructures" scheme="http://www.joxrays.com/tags/DataStructures/"/>
     
   </entry>
   
@@ -390,9 +414,9 @@
     
       <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
     
-      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
-    
       <category term="C" scheme="http://www.joxrays.com/tags/C/"/>
+    
+      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
     
       <category term="MongoDB" scheme="http://www.joxrays.com/tags/MongoDB/"/>
     
@@ -437,30 +461,6 @@
     
     
       <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>MongoDB C Driver安装</title>
-    <link href="http://www.joxrays.com/mongodb-driver-install/"/>
-    <id>http://www.joxrays.com/mongodb-driver-install/</id>
-    <published>2019-06-04T16:00:00.000Z</published>
-    <updated>2019-07-20T15:33:55.000Z</updated>
-    
-    <summary type="html">
-    
-      &lt;p&gt;这次就MongoDB来记录下安装C Driver过程。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="MongoDB" scheme="http://www.joxrays.com/categories/MongoDB/"/>
-    
-    
-      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
-    
-      <category term="C" scheme="http://www.joxrays.com/tags/C/"/>
-    
-      <category term="MongoDB" scheme="http://www.joxrays.com/tags/MongoDB/"/>
     
   </entry>
   
