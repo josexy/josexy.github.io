@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.joxrays.com/"/>
-  <updated>2020-01-20T09:45:15.933Z</updated>
+  <updated>2020-01-21T12:09:34.208Z</updated>
   <id>http://www.joxrays.com/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>数据结构-AVL树</title>
+    <link href="http://www.joxrays.com/avl-tree-cpp/"/>
+    <id>http://www.joxrays.com/avl-tree-cpp/</id>
+    <published>2020-01-20T16:00:00.000Z</published>
+    <updated>2020-01-21T12:09:34.208Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;AVL树是最早被发明的&lt;strong&gt;自平衡二叉查找树&lt;/strong&gt;。其查找、插入和删除在&lt;strong&gt;平均&lt;/strong&gt;和&lt;strong&gt;最坏&lt;/strong&gt;情况下的时间复杂度都是 $O(\log n)$。AVL树由&lt;strong&gt;G. M. Adelson-Velsky&lt;/strong&gt;和&lt;strong&gt;Evgenii Landis&lt;/strong&gt;发明，AVL树的名称取自他们名字中的字母。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="数据结构与算法" scheme="http://www.joxrays.com/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
+    
+    
+      <category term="DataStructures" scheme="http://www.joxrays.com/tags/DataStructures/"/>
+    
+      <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
+    
+      <category term="C" scheme="http://www.joxrays.com/tags/C/"/>
+    
+  </entry>
   
   <entry>
     <title>数据结构-二叉查找树(BST)</title>
@@ -441,26 +465,6 @@
       <category term="Chrome" scheme="http://www.joxrays.com/tags/Chrome/"/>
     
       <category term="Google" scheme="http://www.joxrays.com/tags/Google/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Fork bomb命令</title>
-    <link href="http://www.joxrays.com/fork-bomb-commands/"/>
-    <id>http://www.joxrays.com/fork-bomb-commands/</id>
-    <published>2019-06-04T16:00:00.000Z</published>
-    <updated>2019-07-21T03:52:34.000Z</updated>
-    
-    <summary type="html">
-    
-      &lt;p&gt;&lt;strong&gt;Fork bomb&lt;/strong&gt; 是一种拒绝服务攻击，无限 &lt;strong&gt;fork&lt;/strong&gt; 子进程以耗尽可用系统资源(CPU占用率高达100%)，由于资源匮乏而导致系统速度放慢或崩溃。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Others" scheme="http://www.joxrays.com/categories/Others/"/>
-    
-    
-      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
     
   </entry>
   

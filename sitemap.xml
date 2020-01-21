@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.joxrays.com/avl-tree-cpp/</loc>
+    
+    <lastmod>2020-01-21T12:09:34.208Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.joxrays.com/bst-cpp/</loc>
     
     <lastmod>2020-01-20T09:45:15.933Z</lastmod>
