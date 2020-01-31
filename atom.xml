@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.joxrays.com/"/>
-  <updated>2020-01-21T12:09:34.208Z</updated>
+  <updated>2020-01-31T16:55:46.300Z</updated>
   <id>http://www.joxrays.com/</id>
   
   <author>
@@ -17,11 +17,37 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>我所理解的红黑树(RBT)</title>
+    <link href="http://www.joxrays.com/rb-ree-cpp/"/>
+    <id>http://www.joxrays.com/rb-ree-cpp/</id>
+    <published>2020-01-31T16:00:00.000Z</published>
+    <updated>2020-01-31T16:55:46.300Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;红黑树（Red–Black Tree）是一种自平衡二叉查找树，用于实现&lt;strong&gt;关联数组&lt;/strong&gt;。它在1972年由鲁道夫·贝尔（Rudolf Bayer）发明，被称为”对称二叉B树”。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="数据结构与算法" scheme="http://www.joxrays.com/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
+    
+    
+      <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
+    
+      <category term="DataStructures" scheme="http://www.joxrays.com/tags/DataStructures/"/>
+    
+      <category term="C" scheme="http://www.joxrays.com/tags/C/"/>
+    
+      <category term="红黑树" scheme="http://www.joxrays.com/tags/%E7%BA%A2%E9%BB%91%E6%A0%91/"/>
+    
+  </entry>
+  
+  <entry>
     <title>数据结构-AVL树</title>
     <link href="http://www.joxrays.com/avl-tree-cpp/"/>
     <id>http://www.joxrays.com/avl-tree-cpp/</id>
     <published>2020-01-20T16:00:00.000Z</published>
-    <updated>2020-01-21T12:09:34.208Z</updated>
+    <updated>2020-01-31T07:17:19.874Z</updated>
     
     <summary type="html">
     
@@ -32,9 +58,9 @@
       <category term="数据结构与算法" scheme="http://www.joxrays.com/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
     
     
-      <category term="DataStructures" scheme="http://www.joxrays.com/tags/DataStructures/"/>
-    
       <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
+    
+      <category term="DataStructures" scheme="http://www.joxrays.com/tags/DataStructures/"/>
     
       <category term="C" scheme="http://www.joxrays.com/tags/C/"/>
     
@@ -56,9 +82,9 @@
       <category term="数据结构与算法" scheme="http://www.joxrays.com/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
     
     
-      <category term="DataStructures" scheme="http://www.joxrays.com/tags/DataStructures/"/>
-    
       <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
+    
+      <category term="DataStructures" scheme="http://www.joxrays.com/tags/DataStructures/"/>
     
       <category term="C" scheme="http://www.joxrays.com/tags/C/"/>
     
@@ -80,9 +106,9 @@
       <category term="数据结构与算法" scheme="http://www.joxrays.com/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
     
     
-      <category term="DataStructures" scheme="http://www.joxrays.com/tags/DataStructures/"/>
-    
       <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
+    
+      <category term="DataStructures" scheme="http://www.joxrays.com/tags/DataStructures/"/>
     
       <category term="C" scheme="http://www.joxrays.com/tags/C/"/>
     
@@ -104,9 +130,9 @@
       <category term="数据结构与算法" scheme="http://www.joxrays.com/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
     
     
-      <category term="DataStructures" scheme="http://www.joxrays.com/tags/DataStructures/"/>
-    
       <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
+    
+      <category term="DataStructures" scheme="http://www.joxrays.com/tags/DataStructures/"/>
     
       <category term="C" scheme="http://www.joxrays.com/tags/C/"/>
     
@@ -128,9 +154,9 @@
       <category term="数据结构与算法" scheme="http://www.joxrays.com/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
     
     
-      <category term="DataStructures" scheme="http://www.joxrays.com/tags/DataStructures/"/>
-    
       <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
+    
+      <category term="DataStructures" scheme="http://www.joxrays.com/tags/DataStructures/"/>
     
       <category term="C" scheme="http://www.joxrays.com/tags/C/"/>
     
@@ -438,33 +464,11 @@
     
       <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
     
-      <category term="C" scheme="http://www.joxrays.com/tags/C/"/>
-    
       <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
     
+      <category term="C" scheme="http://www.joxrays.com/tags/C/"/>
+    
       <category term="MongoDB" scheme="http://www.joxrays.com/tags/MongoDB/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Chrome浏览器网页变成黑色(Dark Reader)</title>
-    <link href="http://www.joxrays.com/chrome-dark/"/>
-    <id>http://www.joxrays.com/chrome-dark/</id>
-    <published>2019-06-10T16:00:00.000Z</published>
-    <updated>2019-08-12T03:26:22.000Z</updated>
-    
-    <summary type="html">
-    
-      &lt;p&gt;Dark Reader 就是一个开源chrome浏览器的扩展程序，它可以让大部分网页在夜间和日间浏览。对于使用Chrome的用户来说，这是一个很好的护眼插件。目前Dark Reader支持的浏览器有Chrome，Firefox，Safari&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Others" scheme="http://www.joxrays.com/categories/Others/"/>
-    
-    
-      <category term="Chrome" scheme="http://www.joxrays.com/tags/Chrome/"/>
-    
-      <category term="Google" scheme="http://www.joxrays.com/tags/Google/"/>
     
   </entry>
   
