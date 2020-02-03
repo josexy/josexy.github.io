@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.joxrays.com/"/>
-  <updated>2020-02-01T04:23:24.669Z</updated>
+  <updated>2020-02-03T03:54:06.672Z</updated>
   <id>http://www.joxrays.com/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="http://www.joxrays.com/rb-tree-cpp/"/>
     <id>http://www.joxrays.com/rb-tree-cpp/</id>
     <published>2020-01-31T16:00:00.000Z</published>
-    <updated>2020-02-01T04:23:24.669Z</updated>
+    <updated>2020-02-03T03:54:06.672Z</updated>
     
     <summary type="html">
     
@@ -464,9 +464,9 @@
     
       <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
     
-      <category term="C" scheme="http://www.joxrays.com/tags/C/"/>
-    
       <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
+    
+      <category term="C" scheme="http://www.joxrays.com/tags/C/"/>
     
       <category term="MongoDB" scheme="http://www.joxrays.com/tags/MongoDB/"/>
     
