@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[二叉堆-堆排序]]></title>
+    <url>%2Fheap-leftist-tree-cpp%2F</url>
+    <content type="text"><![CDATA[堆是实现优先级队列效率很高的数据结构，如C++STL priority_queue、Python PriorityQueue。堆的变体很多，二叉堆、斐波那契堆……由堆实现的一种高效排序算法为堆排序。 二叉堆注意：数据结构中的堆和内存中的堆是两个完全不同的概念，就像数据结构栈和栈内存一样，之间没有必然联系。堆(Heap)也可称为大/小根堆、大/小根树，最大/小堆： 其中每个节点的值大于等于或小于等于其子节点（如果存在）的值； 一个大根堆（小根堆）是完全二叉树。 二叉堆由J.W.J.Williams于1964年引入，作为堆排序的数据结构。一般来说，默认堆指的是二叉堆(Binary heap)。由于堆是完全二叉树，因此我们可以用数组描述，也可以用链表描述，不过数组描述比较普遍。 二叉堆中某个节点的左右子节点无论谁大谁小，只要满足子节点的值小于其父节点的值（最大堆）或大于其父节点的值（最小堆）即可。 由于用数组描述的二叉堆，堆节点存储在数组中，那么如何用数组表示呢？节点的父子关系又如何解决？1.因为二叉堆是完全二叉树，所以从上到下，从左到右依次将二叉堆节点填入数组，数组之间没有空隙。2.这里有两种映射方式。假设父节点索引为 $i$，左孩子节点索引为 $l$，右孩子节点索引为 $r$，则：数组索引从0开始： $l=2i+1$、$r=2i+2$、$i=\lfloor \frac{l-1}{2} \rfloor=\lfloor \frac{r-1}{2} \rfloor$ 数组索引从1开始： $l=2i$、$r=2i+1$、$i=\lfloor \frac{l}{2} \rfloor=\lfloor \frac{r}{2} \rfloor$ 两者均采用了向下取整floor是防止数组下标越界同时还能保证不同左右孩子的父节点索引相同；数组索引从1开始是为了简化运算，除此之外没有差别，本文是采用第一种方式。 本文仅仅演示最大堆的基本操作，最小堆也是类似的。首先定义堆的ADT 12345678910template&lt;class T&gt;class Heap&#123;public: virtual void push(const T&amp;)=0; virtual int size()=0; virtual T&amp; top()=0; virtual void pop()=0; virtual bool empty()=0; virtual ~Heap()&#123;&#125;&#125;; 从Heap派生出最大堆maxHeap 1234567891011121314151617181920212223242526272829303132template&lt;class T&gt;class maxHeap: public Heap&lt;T&gt;&#123;public: maxHeap(int init_capacity=20); ~maxHeap(); // 插入元素 void push(const T&amp; data); // 删除堆顶元素 void pop(); int size()&#123;return m_heapSize;&#125; int capacity()&#123;return m_capacity;&#125; // 获取堆顶元素 T&amp; top()&#123; if(m_heapSize&gt;=1) return m_heap[0]; throw "heap is empty"; &#125;; bool empty()&#123;return m_heapSize==0;&#125;protected: // 改变数组大小 void changeHeapCapacity(int oldLength,int newLength)&#123; T *temp=new T[newLength]; m_capacity=newLength; std::copy(m_heap,m_heap+m_heapSize,temp); delete[] m_heap; m_heap=temp; &#125;private: T *m_heap; int m_capacity; int m_heapSize;&#125;; 二叉堆的插入最大堆的插入必须要确保每个节点$\ge$其子节点。向最大堆插入一个节点步骤如下： 在最大堆的底部最左边添加一个新节点作为子节点，也就是在数组内有效元素的下一个位置插入； 若子节点&gt;父节点，则交换它们的值，继续向上调整；否则调整结束。 二叉堆插入时间复杂度为$O(Height)=O(\log n)$。 向上调整就像冒泡排序一样，从叶子到根不断将新节点移动到某个位置直到该新节点$\le$其父节点。以下图为例，假设数组大小为12，在数组尾部插入70后是不满足二叉堆性质的，因此需要调整。调整方法很简单，依次将70“上浮”到某个合适的位置，也就是通过比较该节点与父节点的值来进行的。由于70&gt;45，节点70在数组中的索引为8，可以计算出父节点45索引为$\lfloor \frac{8-1}{2} \rfloor=3$，于是交换他们的值，此时节点70所在数组的索引为3； 接着继续判断节点70和父节点60大小，70&gt;60，继续交换节点70与父节点60的值；此时70&lt;80，调整结束。 如果在空堆中插入节点直接插入即可，注意此处并没有直接交换父节点和子节点，而是将父节点不断的向下移动，最后在合适位置插入新节点。 12345678910111213141516171819202122232425template&lt;class T&gt;void maxHeap&lt;T&gt;::push(const T&amp;data)&#123; // 数组扩容 if(m_heapSize&gt;=m_capacity)&#123; changeHeapCapacity(m_capacity,2*m_capacity); &#125; // 子节点索引 int index=m_heapSize; // 父节点索引，向下取整 int parent_index=((index-1)/2); // 向上调整 while (true) &#123; if(index==0)break; // 若子节点大于父节点，继续向上调整 if(data &gt; m_heap[parent_index]) m_heap[index]=m_heap[parent_index]; else break; index=parent_index; parent_index=((index-1)/2); &#125; m_heap[index]=data; m_heapSize++;&#125; 二叉堆的删除一般二叉堆的删除指的是删除堆顶元素，其步骤如下： 删除堆顶元素并将二叉堆最底层的最后一个节点(数组最后一个元素)替换到堆顶位置(数组第一个元素)； 先比较父节点的左右孩子的大小，较大的子节点再与父节点进行比较，若父节点&lt;其子节点，继续向下调整；否则调整结束。 二叉堆删除时间复杂度为$O(Height)=O(\log n)$。 删除根节点80，将节点45替换到根节点，此时不满足二叉堆性质，故继续向下调整。此时有效数组大小为heapSize-1。 父节点45的左右孩子节点70&gt;50且45&lt;70，故交换值后继续向下调整； 父节点45的左右孩子节点60&gt;40且45&lt;60，故交换值后继续向下调整； 父节点45只有左孩子且45&gt;10，故调整结束。 类似插入操作此处也并没有直接交换父节点和子节点值，而是将子节点不断的向上移动，最后在合适位置插入旧值。 1234567891011121314151617181920212223242526template&lt;class T&gt;void maxHeap&lt;T&gt;::pop()&#123; if(m_heapSize&lt;=0) return; int index=0; int child_index=2*index+1; int lastChild=m_heap[--m_heapSize]; // 向下调整 while (true)&#123; if(child_index &gt;= m_heapSize) break; // 当父节点只有一个左孩子时，child_index+1 &lt; m_heapSize不成立 if(child_index+1 &lt; m_heapSize &amp;&amp; m_heap[child_index]&lt;m_heap[child_index+1])&#123; child_index++; &#125; // 若父节点&lt;子节点，继续向下调整 if(lastChild &lt; m_heap[child_index]) m_heap[index]=m_heap[child_index]; else break; index=child_index; child_index=2*index+1; &#125; m_heap[index]=lastChild;&#125; 构建二叉堆构建二叉堆是在一个循环内不断地插入元素，实际上这是Williams法，其复杂度为$O(n\log n)$。 12345int array[]=&#123;90 , 40 ,30 ,60 ,70 ,200 ,20 ,10 ,50 ,80&#125;;maxHeap&lt;int&gt;mhp;for(auto &amp;&amp;x:array) &#123; mhp.push(x);&#125; 但是，Williams的方法不够好。事实上，我们可以直接在原数组通过向下调整的方法来建堆，而且这种方法比上面的方法还要快。维基百科中有一段话 More specifically if all the subtrees starting at some height $h$ have already been “heapified” (the bottommost level corresponding to $h=0$), the trees at height $h+1$ can be heapified by sending their root down along the path of maximum valued children when building a max-heap, or minimum valued children when building a min-heap 大概意思是说，如果一个二叉堆的底层子树也是二叉堆的话，那么可以逐层向上合并这些子二叉堆，也就是在$h$层存在多个子树已经堆化，那么在$h+1$层可以很快的完成调整。 1234Build-Max-Heap (A): heap_length[A] ← length[A] for each index i from floor((length[A]-1-1)/2) downto 0 do: Max-Heapify(A, i) 比如下面这张图，数组表示为[90 40 30 60 70 200]，这不是一个二叉堆，现在需要将其调整为二叉堆。从floor((length[A]-1-1)/2)开始（最后一个子节点的父节点），依次递减直到0（根节点），虚线框表示已经完成堆化的子树。 其中parent代表要下浮的节点，从父节点开始将parent下浮到某个合适位置。最后结果就是真正的二叉堆[200 70 90 60 40 30]。 总之该方法一句话搞定：逐层向上（从右到左，从下到上）的向下调整。代码如下 1234567891011121314151617181920212223242526272829void buildHeap(T*array,int size)&#123; delete []m_heap; m_heap=array; m_capacity=size; m_heapSize=size--; for (int i = (size-1)/2; i &gt;=0; --i)&#123; // 父节点索引 int index=i; // 子节点索引 int child_index=2*index+1; // 下浮父节点parent T parent=m_heap[index]; // 向下调整 while (true)&#123; if(child_index&gt;=size) break; if(child_index+1&lt;size&amp;&amp;m_heap[child_index]&lt;m_heap[child_index+1]) child_index++; if(parent&gt;=m_heap[child_index]) break; m_heap[index]=m_heap[child_index]; index=child_index; child_index=index*2+1; &#125; m_heap[index]=parent; &#125;&#125; 虽然该方法复杂度可以说是$O(n\log n)$，但比第一种方法要快很多。 堆排序利用最大堆可以对数组升序排序，最小堆可以对数组降序排序。堆排序通过每次“删除”（交换数组首尾元素）堆顶元素（最大/小值），再重新构建二叉堆，使得数组内元素由后往前依次减小，从而数组变得有序。 1234567891011121314151617181920212223242526272829void down(int *array,int size,int i)&#123; int index=i; int child_index=2*index+1; int x=array[index]; while (true)&#123; if(child_index&gt;=size) break; if(child_index+1&lt;size&amp;&amp;array[child_index]&lt;array[child_index+1]) child_index++; if(x&gt;=array[child_index]) break; array[index]=array[child_index]; index=child_index; child_index=index*2+1; &#125; array[index]=x;&#125;void HeapSort(int *array,int size)&#123; int index,child_index,parent,child; // 构建堆，下到上 for (int i = (size-1-1)/2; i &gt;=0; --i)&#123; down(array,size,i); &#125; // 交换数据后重新构建堆，上到下 for (int i = size-1; i &gt;=0; --i)&#123; swap(array[i],array[0]); down(array,i-1,0); &#125;&#125;]]></content>
+      <categories>
+        <category>数据结构与算法</category>
+      </categories>
+      <tags>
+        <tag>DataStructures</tag>
+        <tag>C++</tag>
+        <tag>C</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[我所理解的红黑树(RBT)]]></title>
     <url>%2Frb-tree-cpp%2F</url>
     <content type="text"><![CDATA[红黑树（Red–Black Tree）是一种自平衡二叉查找树，用于实现关联数组。它在1972年由鲁道夫·贝尔（Rudolf Bayer）发明，被称为”对称二叉B树”。 2-3树由于红黑树过于复杂，因此在讲述之前我们先来大致了解一下2-3树，2-3树类似红黑树，也是平衡树，时间复杂度均为$O(\log n)$。2–3树早于红黑树出现，由约翰·霍普克洛夫特于1970年发明。2-3树也称为3阶B-树、3叉搜索树。2-3树中的一个父节点可以有2个子节点也可以有3个子节点。有2个子节点的父节点称为2-节点，该节点有1个key。这类似二叉树的节点有3个子节点的父节点称为3-节点，该节点有2个key。假设父节点键为key1和key2且key1 &lt; key2，左子树L、中子树M、右子树R。则左子树L &lt; key1，key1 &lt; 中子树M &lt; key2 ，右子树 &gt; key2。 2-3树是一棵完全3插搜索树。每个节点要么是叶子节点，要么是2-节点或3-节点，，而且每个节点的子树一定是等高的。 如上图，关键字为 [f h] 的3-节点有3个子节点e、g、[i j]，且 e&lt;f、f&lt;g&lt;h、[i j]&gt;h 查找2-3树的查找类似bst，比如查找上图的g 首先g和d比较，g&gt;d，查找右子树 f&lt;g&lt;h，进入中子树 g=g，返回节点，查找结束 插入插入操作只需在叶子节点处插入一个新节点，不过由于2-3树的定义需要调整树的结构，使其平衡。在叶子节点而不是空节点处插入节点的好处是以后维护平衡就简单了，而且树的高度也是尽可能的低。插入新节点处的叶子节点可为2-节点或3-节点 如上图就是在2-节点位置i直接插入一个新节点j而变成一个3-节点，这种情况下无需调整树结构就已经平衡。 在3-节点处插入新节点同样也是在叶子节点插入，不过这样会导致形成一个4-节点，在2-3树中这是不允许的，因此需要调整。调整方式为就是将4-节点分裂与合并。 节点分裂 是将一个4-节点的中间值key节点提取处来作为父节点，左边key作为左节点，右边key作为右节点。若该4-节点存在子节点，那么将左边key作为最左边两个子节点父节点，将右边key作为最右边两个子节点父节点。 节点分裂一般伴随着节点合并，也就是将分裂后的父节点与之前未分裂4-节点的父节点合并成一个新的节点，如果新节点依旧是4-节点，那么继续向上分裂合并直到满足平衡。 举个例子：向这棵2-3树插入k节点后成为4-节点，不符合定义，需要分裂该节点。 将节点[i j k]中的j提取出来与与父节点[f h]合并成[f h j]，发现该节点依然是一个4-节点，因此需要继续分裂+合并。 此时[d h]已经是一个3-节点了，而且整个2-3树也是等高的，调整结束。 插入a-k的整个过程如下 删除2-3树的删除虽然较为复杂，但大致可分为两类：删除叶子节点和删除非叶子节点。 删除叶子节点删除叶子节点又可以分为删除2-节点和删除3-节点。删除3-节点的情况最简单，直接删除即可。如下删除key为k的情况 删除2-节点不能简单的删除该节点，因为这样一删除后，该位置为空，2-3树是不允许存在这种情况的。此时可分为如下几类情况来处理： 待删除节点的临近兄弟节点是3-节点 待删除节点的临近兄弟节点是2-节点，但父节点是3-节点 待删除节点的临近兄弟节点和父节点均是2-节点 对于第一种情况，删除该节点后只需向临近兄弟节点“借”一个key与待删除节点相近作为新的节点并调整其与父节点，此时树的高度不变。如下图，删除i节点，而且兄弟是3-节点，将兄弟节点中keyk与删除节点相近的keyj而不是l作为已删除节点。由于k&gt;j，因此需要调整父子节点键值 对于第二种情况，首先删除该节点后，发现临近兄弟节点g是一个2-节点且父节点[f h]为3-节点。因此将父节点分解为2-节点，由于e&lt;f&lt;g，于是将f与临近兄弟节点g合并成3-节点，并作为一个新的左孩子 演示过程如下 第三种情况待删除节点的兄弟节点和父节点均是2-节点，删除节点后将父节点b和兄弟节点c合并成3-节点。1.若此时兄弟节点f和父节点d又是2-节点，故继续合并d、f直到平衡，最终的结构如下。图中空位置只是直观上表示一棵等高的2-3树且该节点被“删除”了。 2.若此时临近兄弟节点是2-节点、父节点是3-节点，则可看作是上述第二种删除情况。如下，删除2-节点a，此时兄弟节点c和父节点b均为2-节点，因此合并成3-节点[b c]，此时仍然未平衡，且临近兄弟节f点是2-节点、父节点[d h]是3-节点，因此分解父节点[d h]，将d与临近兄弟节f合并为3-节点[d-f] 演示过程如下 3.若此时临近兄弟节点是3-节点，该过程也可看作是上述第一种删除情况，此处不再叙述。 演示过程如下 删除非叶子节点删除非叶子节点首先也需要找到一个前驱/后继节点，有点类似BST。总之简单来说，前驱节点就是节点的左子树的最右节点，后继节点就是节点的右子树的最左节点。 如下删除key=d的节点，该key位于3-节点，不过没关系。找到其前驱节点c，将键值替换后删除前驱节点c，删除操作就转化为上述3种情况之一。 演示过程如下 以上大致是关于2-3树的一些基本操作了。说了这么多，就是为了2-3树和为红黑树之间的转化。先来看这张图，将2-3树的3-节点拆解成父子节点，且用红色箭头表明两者父子关系，将子节点染成红色，父节点染成黑色；再将其余2-节点全部染成黑色。经过适当调整树结构后发现这是一棵红黑树！实际上，这是红黑树的变体——左偏红黑树。 实际上向一棵普通的红黑树插入key为a-l应该是这样的： 2-3树一定能转化为红黑树(左偏红黑树)，而红黑树不一定能转化为2-3树！由于2-3-4树是红黑树的一种等同，故2-3-4树一定能转化为红黑树，而红黑树也一定能转化为2-3-4树！ 红黑树基本概念 红黑树（英语：Red–black tree）是一种自平衡二叉查找树，是在计算机科学中用到的一种数据结构，典型的用途是实现关联数组。它在1972年由鲁道夫·贝尔发明，被称为”对称二叉B树”，它现代的名字源于Leo J. Guibas和Robert Sedgewick于1978年写的一篇论文。红黑树的结构复杂，但它的操作有着良好的最坏情况运行时间，并且在实践中高效：它可以在 $\log N$ 时间内完成查找，插入和删除，这里的 $N$ 是树中元素的数目。 红黑树相对于AVL树来说，牺牲了部分平衡性以换取插入/删除操作时少量的旋转操作，整体来说性能要优于AVL树。 根据2-3树转化为红黑树可以这样定义红黑树，或者是规则： 红黑树一定是二叉搜索树，因为2-3树也是二叉搜索树； 根节点和所有外部节点(Nil)都是黑色，根据2-3树转化为左偏红黑树可看出来； 在根至外部节点(Nil)路径上，没有连续两个节点是红色的； 在所有根至外部节点的路径上，黑色节点的数目相同，即黑高相等。 如果再添加这一规则红色节点位于左侧，那么这个红黑树是一棵左偏红黑树。不过本文主要是介绍普通的红黑树。上述规则3和规则4是极其重要的，但凡涉及插入和删除操作都是要使红黑树满足这两条规则。 本文红黑树C++类 123456789101112131415161718192021222324252627282930313233class RedBlackTree&#123;private: RBNodeEntry *m_RB_Root; RBNodeEntry *m_Nil;public: RedBlackTree(); RedBlackTree(int key,int data); ~RedBlackTree(); bool Insert(int key,int data); bool Remove(int key); RBNodeEntry* Search(RBNodeEntry* pNode,int key); void ClearAll(RBNodeEntry*&amp; root); RBNodeEntry* successor(RBNodeEntry* pnode); RBNodeEntry* predecessor(RBNodeEntry* pnode); int Height(RBNodeEntry* pnode)&#123; if(pnode==m_Nil)return 0; int hl= Height(pnode-&gt;leftChild); int hr= Height(pnode-&gt;rightChild); return std::max(hl,hr)+1; &#125; RBNodeEntry* &amp;root()&#123;return this-&gt;m_RB_Root;&#125; void PreOrder(RBNodeEntry* pnode); void InOrder(RBNodeEntry* pnode); void PostOrder(RBNodeEntry* pnode); void LevelOrder(RBNodeEntry* pnode); void leftRotate(RBNodeEntry *pnode); void rightRotate(RBNodeEntry *pnode); void RedBlack_insertFixup(RBNodeEntry* pnode); void RedBlack_removeFixup(RBNodeEntry* pnode);&#125;; 哨兵节点本文红黑树利用了哨兵节点技巧，省去了判断nullptr的麻烦，不过BST部分代码需要稍微修改。 由于哨兵节点也是RBNodeEntry结构，但哨兵节点无父节点，因此设置为nullptr；同时还需要设置其leftChild和rightChild指向自身。 1234567891011121314151617RedBlackTree::RedBlackTree()&#123; this-&gt;m_RB_Root=nullptr; // 哨兵节点 this-&gt;m_Nil=new RBNodeEntry; this-&gt;m_Nil-&gt;color=BLACK; this-&gt;m_Nil-&gt;key=-1; this-&gt;m_Nil-&gt;data=0xffffff; this-&gt;m_Nil-&gt;leftChild=this-&gt;m_Nil; this-&gt;m_Nil-&gt;rightChild=this-&gt;m_Nil;&#125;RedBlackTree::RedBlackTree(int key,int data):RedBlackTree&#123;&#125;&#123; this-&gt;m_RB_Root=new RBNodeEntry(key,data); this-&gt;m_RB_Root-&gt;parent=nullptr; this-&gt;m_RB_Root-&gt;leftChild=this-&gt;m_Nil; this-&gt;m_RB_Root-&gt;rightChild=this-&gt;m_Nil; this-&gt;m_RB_Root-&gt;color=BLACK;&#125; 查找由于红黑树也是平衡树，其查找也为$O(\log N)$，查找过程与普通的二叉查找树没有太大区别。不过红黑树和AVL树相比，在最坏情况下却是AVL树占优势。这是因为AVL树是严格的自平衡树，在最坏情况下同样多的节点，其高度小于红黑树，这就导致其查找效率高于红黑树。 旋转红黑树的旋转操作只有左旋和右旋，而且也是核心。以这张图为例，插入红色节点42后无需进行任何操作就满足红黑树性质。 下面这个例子就是典型的LLb型，至于什么是LLb，此处简单介绍下。图中u表示pu的左孩子、pu表示gu的左孩子、gr表示gu的右孩子，也就是pu的兄弟，u的叔叔。而LLb的意思是：pu是gu的左孩子、u是pu的左孩子，且gu的另外一个孩子是黑色的（Nil节点是黑色节点）。 首先插入节点41后违背规则3，需要对节点45右旋，不过为了直观表示，我将图中的旋转箭头方向位置于42与45之间。旋转操作实质是对节点指针关系的修改。 而这个例子就是LRb型，对节点42左旋后再对节点45右旋。这说明LRb可以转化为LLb类型，也就是说对于插入操作其实也就那几种不平衡类型。 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394enum COLOR&#123; RED, BLACK&#125;;// 红黑树节点struct RBNodeEntry&#123; int key; int data; int color; RBNodeEntry *parent; RBNodeEntry *leftChild; RBNodeEntry *rightChild; RBNodeEntry()&#123;&#125; RBNodeEntry(int k,int d)&#123; this-&gt;key=k; this-&gt;data=d; this-&gt;color=RED; &#125;&#125;;void RedBlackTree::leftRotate(RBNodeEntry *pnode)&#123; RBNodeEntry *right = pnode-&gt;rightChild; pnode-&gt;rightChild = right-&gt;leftChild; if (right-&gt;leftChild != m_Nil) right-&gt;leftChild-&gt;parent = pnode; right-&gt;parent = pnode-&gt;parent; // 表示根节点 if (pnode-&gt;parent == NULL)&#123; root = right; /* parent parent / \ / \ pnode brother right brother / \ ---&gt; / \ l right pnode y / \ / \ x y l x */ &#125;else if (pnode-&gt;parent-&gt;leftChild == pnode)&#123; pnode-&gt;parent-&gt;leftChild = right; /* parent parent / \ / \ brother pnode brother right / \ ---&gt; / \ l right pnode y / \ / \ x y l x */ &#125;else&#123; pnode-&gt;parent-&gt;rightChild = right; &#125; right-&gt;leftChild = pnode; pnode-&gt;parent = right;&#125;void RedBlackTree::rightRotate(RBNodeEntry *pnode)&#123; RBNodeEntry *left = pnode-&gt;leftChild; pnode-&gt;leftChild=left-&gt;rightChild; if(left-&gt;rightChild!=m_Nil)&#123; left-&gt;rightChild-&gt;parent=pnode; &#125; left-&gt;parent=pnode-&gt;parent; // 根节点 if(pnode-&gt;parent==nullptr)&#123; this-&gt;m_RB_Root=left; /* parent parent / \ / \ pnode brother left brother / \ ---&gt; / \ left r x pnode / \ / \ x y y r */ &#125;else if(pnode-&gt;parent-&gt;leftChild==pnode)&#123; pnode-&gt;parent-&gt;leftChild=left; /* parent parent / \ / \ brother pnode brother left / \ ---&gt; / \ left r x pnode / \ / \ x y y r */ &#125;else&#123; pnode-&gt;parent-&gt;rightChild=left; &#125; left-&gt;rightChild=pnode; pnode-&gt;parent=left;&#125; 插入红黑树的插入操作类似BST插入，除此之外还要对节点进行染色。那么问题来了，毕竟是红黑树嘛到底是染成黑色还是红色？1.若染成黑色，那么就会一定会违背规则4，即黑色节点数目不相同，之后还需要重新调整红黑树，要知道红黑树调整是很复杂的，若是改写成代码那估计得累死人。2.若染成红色，此时一定不会违背规则4，不过这有可能会违背规则3，即有连续两个节点是红色的。虽说还需要进行调整，不过这代码量相比之前就会少很多了……基于此，染成红色是正确的选择。 插入完成后往往需要修正Fixup树结构，而修正过程需要旋转Rotate。 1234567891011121314151617181920212223242526272829303132333435363738394041bool RedBlackTree::Insert(int key,int data)&#123; if(this-&gt;m_RB_Root==nullptr)&#123; this-&gt;m_RB_Root=new RBNodeEntry(key,data); this-&gt;m_RB_Root-&gt;leftChild=m_Nil; this-&gt;m_RB_Root-&gt;rightChild=m_Nil; this-&gt;m_RB_Root-&gt;parent=nullptr; this-&gt;m_RB_Root-&gt;color=BLACK; return true; &#125; RBNodeEntry *x=this-&gt;m_RB_Root; RBNodeEntry *p=nullptr; while (x!=m_Nil)&#123; // 保存父节点p p=x; if(key &lt; x-&gt;key) x=x-&gt;leftChild; else if(key &gt; x-&gt;key) x=x-&gt;rightChild; // 已经存在 else&#123; x-&gt;data=data; return true; &#125; &#125; RBNodeEntry *pnode=new RBNodeEntry(key,data); pnode-&gt;leftChild=m_Nil; pnode-&gt;rightChild=m_Nil; pnode-&gt;color=RED; pnode-&gt;parent=p; // 判断插入节点位于父节点的哪边 if(key &lt; p-&gt;key) p-&gt;leftChild=pnode; else p-&gt;rightChild=pnode; // 检查是否满足红黑树的平衡条件并重新平衡 RedBlack_insertFixup(pnode); return true;&#125; InsertFixup插入操作所引起的不平衡主要是以下8种类型（主要针对插入在红色节点之后）：LLr、LRr、RRr、RLr、LLb、LRb、RRb、RLb。图中u表示pu的左孩子、pu表示gu的左孩子、gr表示gu的右孩子，也就是pu的兄弟，u的叔叔。而LLb的意思是：pu是gu的左孩子、u是pu的左孩子，且gu的另外一个孩子(可以是Nil节点)是黑色的。 可以总结为下面这两种类型，插入新节点后的平衡主要是对新插入节点u、其父节点pu、爷爷节点gu以及叔叔节点gl/gr来操作的。 如果叔叔节点不存在一定是Nil黑色节点！！！ 根据叔叔节点uncle的颜色是红色或黑色，InsertFixup大致可以分为以下两种类型： uncle节点是红色，也就是LLr、LRr、RRr、RLr类型，直接换色即可完成红黑树平衡； uncle节点是黑色，也就是LLb、LRb、RRb、RLb类型，需要旋转和换色。 LLr、LRr、RRr、RLr处理这类不平衡问题，只需要换色即可，这是因为父节点和叔叔节点此时一定是红色的，那么爷爷节点也一定是黑色的。这个过程是这样的： 若父节点pu/parent存在且为红色，则执行该过程；否则将根节点root染成为黑色并结束； 将父节点pu/parent和叔叔节点gl/gr/uncle染成黑色； 将爷爷节点gu染成红色； 移动当前新插入红色节点u到爷爷节点gu，重复执行第一步骤。 第4步的作用是确保整棵红黑树均符合其规则，因此将爷爷节点gu染成红色之后，可能爷爷节点gu的父节点是红色，那么还需要再次向上修正，直到某个节点的父节点不存在（根节点）或其父节点是黑色节点。 例子：插入节点30，导致形成LLr不平衡，将父节点和叔叔节点与爷爷节点换色后移动u到gu，此时再判断其父节点为nullptr表示达到了根节点root，因此修正结束，并将根节点root染成黑色。 其他3种情况处理类似。 LLb、LRb、RRb、RLb这4种情况只需解释其中一种就能够举一反三了。处理过程如下： 若父节点pu/parent存在且为红色，则执行该过程；否则将根节点root染成为黑色并结束； 根据插入节点u位于父节点pu的哪一侧对父节点pu旋转：若u在pu左边，对pu右旋；否则左旋； 旋转完成后对父节点pu/parent和叔叔节点gl/gr/uncle（如果存在）与爷爷节点gu交换颜色；（实际上，只需要对父节点和爷爷节点换色） 根据爷爷节点gu位于爷爷节点gu父节点pgu的哪一侧对爷爷节点gu旋转：若gu在pgu左边，对gu右旋；否则左旋。 注意，这种类型无需向上修正：移动当前新插入红色节点u到爷爷节点gu，再重复执行第一步骤，这是因为经过第2步旋转换色后，此时父节点pu一定是黑色的，那么下一次再旋转后，此时新的爷爷节点gu也一定是黑色的。 例子：向这棵红黑树插入节点35，可以看出这是LRb型，虽然爷爷节点40的右孩子是Nil节点。先是对父节点30左旋后再交换爷爷节点40(黑)和父节点35(红)的颜色（此处叔叔节点为Nil，因此没有换色），然后对爷爷节点40右旋后完成了修正。实际上，LRb型经过左旋转化为LLb型，同样RLb型经过右旋转化为RRb型。 再看一个例子，其大致过程：插入节点41后形成LLr型，那么交换爷爷节点45和父节点44、叔叔节点46的颜色；移动u到gu位置后发现此时u存在父节点且为红色，那么还得继续修正；而此时是LRb型，故先对父节点40左旋后还要交换爷爷节点50和父节点45、叔叔节点60的颜色；之后再对爷爷节点45右旋；最后还要将根节点root染成黑色，至此红黑树平衡，修正结束。 演示过程 C++代码123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657void RedBlackTree::RedBlack_insertFixup(RBNodeEntry *pNode)&#123; // 父节点 RBNodeEntry *parent=nullptr; // 爷爷节点 RBNodeEntry *gparent=nullptr; // 如果父节点存在且为红色 while((parent=pNode-&gt;parent) &amp;&amp; parent-&gt;color==RED)&#123; gparent=parent-&gt;parent; // L-型 if(parent==gparent-&gt;leftChild)&#123; RBNodeEntry * uncle=gparent-&gt;rightChild; // LLr/LRr型 叔叔节点是红色，那么直接换色 if(uncle!=m_Nil &amp;&amp; uncle-&gt;color==RED)&#123; parent-&gt;color=BLACK; uncle-&gt;color=BLACK; gparent-&gt;color=RED; // 从当前爷爷节点开始继续向上调整 pNode=gparent; continue; // LRb，叔叔节点gr是黑色节点(可以Nil)，且当前节点是父节点的右孩子 // 将LRb转化为LLb型 &#125;if(pNode==parent-&gt;rightChild)&#123; // 对父节点左旋 leftRotate(parent); &#125; // 处理LLb的情况 // 先换色，在旋转 parent-&gt;color=BLACK; gparent-&gt;color=RED; rightRotate(gparent); &#125; // R-型 else&#123; RBNodeEntry *uncle=gparent-&gt;leftChild; // RLr/RRr型 叔叔节点是红色 if (uncle!=m_Nil &amp;&amp; uncle-&gt;color==RED)&#123; uncle-&gt;color=BLACK; parent-&gt;color=BLACK; gparent-&gt;color=RED; // 继续向上调整 pNode=gparent; continue; // RLb型 叔叔是黑色，且当前节点是左孩子 // 转化为 RRb &#125; if(pNode==parent-&gt;leftChild)&#123; rightRotate(parent); &#125; // RRb型 parent-&gt;color=BLACK; gparent-&gt;color=RED; leftRotate(gparent); &#125; &#125; // 根节点必须为黑色！ this-&gt;m_RB_Root-&gt;color=BLACK;&#125; 删除红黑树删除类似BST，删除操作的前半部分代码一样，差别在于删除后红黑树的修正。事实上删除操作的修正要十分复杂，要考虑的情况较多。 在红黑树中查找该节点是否存在； 若存在左子树和右子树，寻找前驱/后继节点将其转化为只有一个子树/叶子情况； 根据child节点、child的兄弟节点、child的父节点修正删除后的红黑树； 删除该节点。 12345678910111213141516171819202122232425262728293031323334353637383940414243bool RedBlackTree::Remove(int key) &#123; RBNodeEntry *node=Search(this-&gt;m_RB_Root,key); if(!node)return false; RBNodeEntry *child=m_Nil; RBNodeEntry *parent=nullptr; // 存在左子树和右子树，将其转化为只有一个子树/叶子情况 if (node-&gt;leftChild!=m_Nil &amp;&amp; node-&gt;rightChild!=m_Nil) &#123; // 后继节点，即将是要被删除的节点 RBNodeEntry *successor = this-&gt;successor(node); // 数据替换 node-&gt;key=successor-&gt;key; node-&gt;data=successor-&gt;data; // 删除后继节点 node=successor; &#125; // 若node是叶子节点那么leftChild=rightChild=m_Nil if(node-&gt;leftChild!=m_Nil)&#123; child=node-&gt;leftChild; &#125;else&#123; child=node-&gt;rightChild; &#125; // 即使child是Nil也要设置child的parent。因为removeFixup需要parent来修正 child-&gt;parent=node-&gt;parent; // 删除的是根节点 if(node-&gt;parent==nullptr)&#123; this-&gt;m_RB_Root=child; &#125;else if(node-&gt;parent-&gt;leftChild==node)&#123; node-&gt;parent-&gt;leftChild=child; &#125;else &#123; node-&gt;parent-&gt;rightChild=child; &#125; if(node-&gt;color==BLACK)&#123; RedBlack_removeFixup(child); &#125; // 直接删除节点即可 delete node; node=nullptr; return true;&#125; RemoveFixup给出下图的删除操作所引起的不平衡情况模板其中白色节点处于未定型状态，表示可以为黑/红/节点甚至Nil节点，但根节点一定是黑色节点。节点u表示删除节点的child节点。 我们首先讨论删除黑色节点的复杂情况。而且是上图的第一个模板，另一个也是类似的（旋转方向相反）。 删除黑色节点删除黑色节点引起的不平衡大致有4种情况： Case1：兄弟节点brother为红色； Case2：兄弟节点brother为黑色，而且brother的两个child也都是黑色； Case3：兄弟节点brother为黑色，而且brother的leftchild是红色，rightchild是黑色； Case4：兄弟节点brother为黑色，而且brother的rightchild是红色。 Case1这种情况下是兄弟节点brother为红色，那么parent节点一定黑色。修正过程为： 将兄弟节点brother染成黑色； 将u的父节点parent染成红色； 对parent进行左旋； 移动brother到u的父节点parent的右孩子rightchild。 注意，这种情况下修正还没有结束！ 假设存在如下红黑树，删除节点a后为case 1情况，然而经过第一次修正发现并没有完全平衡，不过经过case 1却意外的进入了case 2/3/4，那么就继续修正。 Case2这种情况是：brother为黑色，而且brother的两个child也都是黑色。修正的方法如下： 将brother染成红色； 移动u到其父节点parent； 至此，再根据u(图中的B)的颜色可以分两种情况： u是红色，结束修正同时把u染成黑色； u是黑色且不是根节点root，则继续下一轮修正过程，再根据不同情况进行修正。 Case3这种情况是：brother为黑色，而且brother的leftchild是红色，rightchild是黑色。修正的方法如下： 将brother的左孩子leftchild染成黑色； 将brother染成红色； 对brother右旋； 移动brother到u的父节点parent的右孩子rightchild。 Case4这是最后一种情况了：brother为黑色，而且brother的rightchild是红色。修正方法： 将brother染成u的父节点parent的颜色(黑或红)； 将parent染成黑色； 将brother的右孩子rightchild染成黑色； 对parent左旋； 移动u移至根节点root，用于结束修正循环（图中节点b只是起演示作用，不一定为root）； 最后修改根节点root颜色为黑色。 总结以上4种情况，它们之间的转化关系大概如下： Case1-&gt;Case2/3/4 Case3-&gt;Case4 Case1-&gt;Case3-&gt;Case4 修正完Case4就说明红黑树平衡了 Case5其实这类情况最简单了，也就是删除一个黑色节点p，但其子节点child是一个红色节点，无论黑色节点p的父节点是黑色还是红色。这样的话根本没必要再去考虑上述4种情况了。 删除黑色节点，如果存在红色child节点，那么将其染成黑色。 删除红色节点删除红色节点可能是删除叶子节点或者含有子树的节点。前者很容易实现，对于后者需要找到一个前驱/后继节点，而这个前驱/后继节点可能是黑色或红色的。如果是红色，那就删除该红色前驱/后继节点并向上修正直到平衡；如果是黑色，那么就判断不同的情况case1/2/3/4/5并进行修正； 删除红色节点55，前驱节点53也是红色节点 删除红色节点65，前驱节点60是黑色节点，需要进入case3和case4修正过程；删除红色节点65，后继节点67是红色节点。 例子为了说明情况，现在以下面这棵红黑树为例子来说明删除操作。 删除黑色节点55，由于其子节点为Nil，故形成如下的case4： 将兄弟节点57染成u节点Nil的父节点56的红色； 将父节点56染成黑色和兄弟节点57的右节点58染成黑色； 对父节点56左旋； 移动u移至根节点root，结束修正循环； 修改根节点root颜色为黑色。 最终效果删除黑色节点58，由于其子节点也为Nil，故形成如下的case2： 将兄弟节点56染成红色； 移动u到其父节点57； 由于u是红色的，因此把父节点57染成黑色； 结束修正。 最终效果现在删除黑色节点60，由于其存在左右子树，因此需要寻找前驱/后继节点，此处寻找得前驱黑色节点57，替换前驱黑色节点57键值到黑色节点60。此时转化为删除前驱黑色节点57后形成case5，由于其子节点56为红色，故删除了前驱黑色节点57后，将子节点56染成黑色并结束修正。 上述演示过程 C++代码1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889909192939495void RedBlackTree::RedBlack_removeFixup(RBNodeEntry*node) &#123; // case5: // 若node是红色，那么把子节点node直接染黑 // 若node是root，那么也把它直接染黑 while (node!=m_RB_Root &amp;&amp; node-&gt;color==BLACK) &#123; // node是左节点 if (node==node-&gt;parent-&gt;leftChild) &#123; RBNodeEntry *brother=node-&gt;parent-&gt;rightChild; /* case1: case1最终转化为case2/3/4 1.将兄弟节点brother染成黑色； 2.将node的父节点parent染成红色； 3.对parent进行左旋； 4.移动brother到node的父节点parent的右孩子rightchild。 */ if(brother-&gt;color==RED)&#123; brother-&gt;color=BLACK; node-&gt;parent-&gt;color=RED; leftRotate(node-&gt;parent); brother=node-&gt;parent-&gt;rightChild; &#125; /* case2:(单独处理) 1.将brother染成红色； 2.移动node到其父节点parent； */ if(brother-&gt;leftChild-&gt;color==BLACK&amp;&amp;brother-&gt;rightChild-&gt;color==BLACK)&#123; brother-&gt;color=RED; node=node-&gt;parent; &#125; // case3-&gt;case4 else &#123; /* case3: 1.将brother的左孩子leftchild染成黑色； 2.将brother染成红色； 3.对brother右旋； 4.移动brother到node的父节点parent的右孩子rightchild。 */ if(brother-&gt;rightChild-&gt;color==BLACK)&#123; brother-&gt;leftChild-&gt;color=BLACK; brother-&gt;color=RED; rightRotate(brother); brother=node-&gt;parent-&gt;rightChild; &#125; /* case4: 1.将brother染成node的父节点parent的颜色(黑或红)； 2.将parent染成黑色； 3.将brother的右孩子rightchild染成黑色； 4.对parent左旋； 5.移动node移至根节点root，用于结束修正循环。 */ brother-&gt;color=node-&gt;parent-&gt;color; node-&gt;parent-&gt;color=BLACK; brother-&gt;rightChild-&gt;color=BLACK; leftRotate(node-&gt;parent); node=this-&gt;m_RB_Root; &#125; // node是右节点 &#125;else&#123; RBNodeEntry *brother=node-&gt;parent-&gt;leftChild; // case1-&gt;case2/3/4: if (brother-&gt;color == RED) &#123; brother-&gt;color = BLACK; node-&gt;parent-&gt;color = RED; rightRotate(node-&gt;parent); brother = node-&gt;parent-&gt;leftChild; &#125; // case2: if (brother-&gt;leftChild-&gt;color == BLACK&amp;&amp;brother-&gt;rightChild-&gt;color == BLACK) &#123; brother-&gt;color = RED; node = node-&gt;parent; &#125;else &#123; // case3: if (brother-&gt;leftChild-&gt;color == BLACK)&#123; brother-&gt;rightChild-&gt;color = BLACK; brother-&gt;color = RED; leftRotate(brother); brother = node-&gt;parent-&gt;leftChild; &#125; // case4: brother-&gt;color = node-&gt;parent-&gt;color; node-&gt;parent-&gt;color = BLACK; brother-&gt;leftChild-&gt;color = BLACK; rightRotate(node-&gt;parent); node = this-&gt;m_RB_Root; &#125; &#125; &#125; // 即使node是Nil也染黑 node-&gt;color=BLACK;&#125; 结尾红黑树实在是太复杂了，还得慢慢来～关于红黑树和AVL树差别，可以看看 https://stackoverflow.com/questions/13852870/red-black-tree-over-avl-tree篇幅有限，红黑树全部源码就不全放出来了，毕竟也参考了别人写的，仅供学习罢了～有兴趣的可以去看看本文红黑树大概实现源码：源码链接 总之，红黑树上红黑果，红黑树下你和我～ bye~ 参考红黑树-维基百科Red Black Tree: Intro(簡介)2-3树与红黑树《数据结构、算法与应用 C++语言描述》]]></content>
@@ -8,8 +21,8 @@
         <category>数据结构与算法</category>
       </categories>
       <tags>
-        <tag>C++</tag>
         <tag>DataStructures</tag>
+        <tag>C++</tag>
         <tag>C</tag>
         <tag>红黑树</tag>
       </tags>
@@ -22,8 +35,8 @@
         <category>数据结构与算法</category>
       </categories>
       <tags>
-        <tag>C++</tag>
         <tag>DataStructures</tag>
+        <tag>C++</tag>
         <tag>C</tag>
       </tags>
   </entry>
@@ -35,8 +48,8 @@
         <category>数据结构与算法</category>
       </categories>
       <tags>
-        <tag>C++</tag>
         <tag>DataStructures</tag>
+        <tag>C++</tag>
         <tag>C</tag>
       </tags>
   </entry>
@@ -48,8 +61,8 @@
         <category>数据结构与算法</category>
       </categories>
       <tags>
-        <tag>C++</tag>
         <tag>DataStructures</tag>
+        <tag>C++</tag>
         <tag>C</tag>
       </tags>
   </entry>
@@ -61,8 +74,8 @@
         <category>数据结构与算法</category>
       </categories>
       <tags>
-        <tag>C++</tag>
         <tag>DataStructures</tag>
+        <tag>C++</tag>
         <tag>C</tag>
       </tags>
   </entry>
@@ -74,8 +87,8 @@
         <category>数据结构与算法</category>
       </categories>
       <tags>
-        <tag>C++</tag>
         <tag>DataStructures</tag>
+        <tag>C++</tag>
         <tag>C</tag>
       </tags>
   </entry>
@@ -242,8 +255,8 @@
       </categories>
       <tags>
         <tag>C++</tag>
-        <tag>Linux</tag>
         <tag>C</tag>
+        <tag>Linux</tag>
         <tag>MongoDB</tag>
       </tags>
   </entry>
@@ -278,8 +291,8 @@
         <category>MongoDB</category>
       </categories>
       <tags>
-        <tag>Linux</tag>
         <tag>C</tag>
+        <tag>Linux</tag>
         <tag>MongoDB</tag>
       </tags>
   </entry>
@@ -338,8 +351,8 @@
       </categories>
       <tags>
         <tag>C++</tag>
-        <tag>Linux</tag>
         <tag>C</tag>
+        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
@@ -395,8 +408,8 @@
         <category>MongoDB</category>
       </categories>
       <tags>
-        <tag>Windows</tag>
         <tag>MongoDB</tag>
+        <tag>Windows</tag>
       </tags>
   </entry>
   <entry>
@@ -610,8 +623,8 @@
       </categories>
       <tags>
         <tag>C++</tag>
-        <tag>Linux</tag>
         <tag>C</tag>
+        <tag>Linux</tag>
         <tag>SDL2</tag>
       </tags>
   </entry>
@@ -696,8 +709,8 @@
       </categories>
       <tags>
         <tag>C++</tag>
-        <tag>Linux</tag>
         <tag>C</tag>
+        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
@@ -731,8 +744,8 @@
       </categories>
       <tags>
         <tag>C++</tag>
-        <tag>Linux</tag>
         <tag>C</tag>
+        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
