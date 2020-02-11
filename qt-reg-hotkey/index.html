@@ -467,7 +467,7 @@
               
                 <span class="post-meta-item-text">本文字数：</span>
               
-              <span title="本文字数">2.2k</span>
+              <span title="本文字数">2k</span>
             </span>
           
 
@@ -513,7 +513,7 @@
 <p>include(QHotkey/qhotkey.pri)<br>LIBS += -L$$PWD/QHotkey/QHotkey -lQHotkey<br>INCLUDEPATH += $$PWD/QHotkey/QHotkey</p>
 <p>注意，我把 QHotkey 文件夹复制到项目目录下，并且要include <strong>qhotkey.pri</strong><br>LIBS 和 INCLUDEPATH不能直接写成，否则出现 <strong>No such file or directory</strong>：<br>LIBS += -LQHotkey/QHotkey -lQHotkey<br>INCLUDEPATH += QHotkey/QHotkey</p>
 <p>主要代码实例</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"QHotkey"</span></span></span><br><span class="line"><span class="keyword">bool</span> ispressed=<span class="literal">false</span>;</span><br><span class="line">Widget::Widget(QWidget *parent) :</span><br><span class="line">    QWidget(parent),</span><br><span class="line">    ui(<span class="keyword">new</span> Ui::Widget)</span><br><span class="line">&#123;</span><br><span class="line">    ui-&gt;setupUi(<span class="keyword">this</span>);</span><br><span class="line">    <span class="comment">// 过滤警告</span></span><br><span class="line">    QLoggingCategory::setFilterRules(QStringLiteral(<span class="string">"QHotkey.warning=false"</span>));</span><br><span class="line">	<span class="comment">// Ctrl+P 之间不能有空格</span></span><br><span class="line">    QHotkey *hotkey = <span class="keyword">new</span> QHotkey&#123;QKeySequence(<span class="string">"Ctrl+P"</span>),<span class="literal">true</span>&#125;; </span><br><span class="line">    connect(hotkey, &amp;QHotkey::activated, [<span class="keyword">this</span>]()&#123;</span><br><span class="line">        <span class="comment">//这里进行判断,只允许按下一次</span></span><br><span class="line">        <span class="keyword">if</span>(ispressed==<span class="literal">false</span>)&#123;</span><br><span class="line">            ispressed=<span class="literal">true</span>;</span><br><span class="line">            QMessageBox::information(<span class="keyword">this</span>,<span class="string">"Hello"</span>,<span class="string">"Hello"</span>);</span><br><span class="line">            ispressed=<span class="literal">false</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            ispressed=<span class="literal">true</span>;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">     &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"QHotkey"</span></span></span><br><span class="line"><span class="keyword">bool</span> ispressed=<span class="literal">false</span>;</span><br><span class="line">Widget::Widget(QWidget *parent) :</span><br><span class="line">    QWidget(parent),</span><br><span class="line">    ui(<span class="keyword">new</span> Ui::Widget)</span><br><span class="line">&#123;</span><br><span class="line">    ui-&gt;setupUi(<span class="keyword">this</span>);</span><br><span class="line">    <span class="comment">// 过滤警告</span></span><br><span class="line">    QLoggingCategory::setFilterRules(QStringLiteral(<span class="string">"QHotkey.warning=false"</span>));</span><br><span class="line">	<span class="comment">// Ctrl+P 之间不能有空格</span></span><br><span class="line">    QHotkey *hotkey = <span class="keyword">new</span> QHotkey&#123;QKeySequence(<span class="string">"Ctrl+P"</span>),<span class="literal">true</span>&#125;; </span><br><span class="line">    <span class="built_in">connect</span>(hotkey, &amp;QHotkey::activated, [<span class="keyword">this</span>]()&#123;</span><br><span class="line">        <span class="comment">//这里进行判断,只允许按下一次</span></span><br><span class="line">        <span class="keyword">if</span>(ispressed==<span class="literal">false</span>)&#123;</span><br><span class="line">            ispressed=<span class="literal">true</span>;</span><br><span class="line">            QMessageBox::information(<span class="keyword">this</span>,<span class="string">"Hello"</span>,<span class="string">"Hello"</span>);</span><br><span class="line">            ispressed=<span class="literal">false</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            ispressed=<span class="literal">true</span>;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">     &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>默认的，QHotkey会打印一些警告信息，不过可以用 <strong>QLoggingCategory::setFilterRules</strong> 过滤掉这些信息。</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">QHotkey (QObject *parent=Q_NULLPTR)</span><br><span class="line">QHotkey (<span class="keyword">const</span> QKeySequence &amp;shortcut, <span class="keyword">bool</span> autoRegister=<span class="literal">false</span>, QObject *parent=Q_NULLPTR)</span><br><span class="line">QHotkey (Qt::Key key, Qt::KeyboardModifiers modifiers, <span class="keyword">bool</span> autoRegister=<span class="literal">false</span>, QObject *parent=Q_NULLPTR)</span><br><span class="line">QHotkey (<span class="keyword">const</span> NativeShortcut &amp;shortcut, <span class="keyword">bool</span> autoRegister=<span class="literal">false</span>, QObject *parent=Q_NULLPTR)</span><br><span class="line"><span class="function"><span class="keyword">bool</span> 	<span class="title">setRegistered</span> <span class="params">(<span class="keyword">bool</span> registered)</span></span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> 	<span class="title">setShortcut</span> <span class="params">(<span class="keyword">const</span> QKeySequence &amp;shortcut, <span class="keyword">bool</span> autoRegister=<span class="literal">false</span>)</span></span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> 	<span class="title">setShortcut</span> <span class="params">(Qt::Key key, Qt::KeyboardModifiers modifiers, <span class="keyword">bool</span> autoRegister=<span class="literal">false</span>)</span></span></span><br></pre></td></tr></table></figure>
@@ -881,7 +881,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">331k</span>
+    <span title="站点总字数">284k</span>
   
 
   
@@ -890,7 +890,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="站点阅读时长">5:01</span>
+    <span title="站点阅读时长">4:18</span>
   
 </div>
 
@@ -903,32 +903,6 @@
 
 
         
-<div class="busuanzi-count">
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-  
-    <span class="post-meta-item-icon">
-      <i class="fa fa-user"></i>
-    </span>
-    <span class="site-uv" title="总访客量">
-      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
-    </span>
-  
-
-  
-    <span class="post-meta-divider">|</span>
-  
-
-  
-    <span class="post-meta-item-icon">
-      <i class="fa fa-eye"></i>
-    </span>
-    <span class="site-pv" title="总访问量">
-      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
-    </span>
-  
-</div>
-
 
 
 

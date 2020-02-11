@@ -467,7 +467,7 @@
               
                 <span class="post-meta-item-text">本文字数：</span>
               
-              <span title="本文字数">3.4k</span>
+              <span title="本文字数">3.1k</span>
             </span>
           
 
@@ -528,7 +528,7 @@
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> MYTESTPLUGIN_H</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MYTESTPLUGIN_H</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">"mytestplugininterface.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;QObject&gt;</span></span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyTestPlugin</span>:</span><span class="keyword">public</span> QObject,MyTestPluginInterface</span><br><span class="line">&#123;</span><br><span class="line">    Q_OBJECT</span><br><span class="line">     <span class="comment">//导出该插件</span></span><br><span class="line">    Q_PLUGIN_METADATA(IID <span class="string">"myplugin.example.my.com"</span>)</span><br><span class="line">     <span class="comment">//将该接口注册到Qt的元对象系统</span></span><br><span class="line">    Q_INTERFACES(MyTestPluginInterface)</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    MyTestPlugin();</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">helloworld</span><span class="params">(QString <span class="built_in">string</span>)</span></span>;</span><br><span class="line">    ~MyTestPlugin()&#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span> <span class="comment">// MYTESTPLUGIN_H</span></span></span><br></pre></td></tr></table></figure>
 
 <p>mytestplugin.cpp <strong>插件类cpp源文件</strong></p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">"mytestplugin.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;QtPlugin&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;QDebug&gt;</span></span></span><br><span class="line">MyTestPlugin::MyTestPlugin()&#123;&#125;</span><br><span class="line"><span class="comment">//重写该接口类的虚函数</span></span><br><span class="line"><span class="keyword">void</span> MyTestPlugin::helloworld(QString <span class="built_in">string</span>)&#123;</span><br><span class="line">    qDebug()&lt;&lt;<span class="string">"Hello---&gt; "</span>&lt;&lt;<span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">"mytestplugin.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;QtPlugin&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;QDebug&gt;</span></span></span><br><span class="line">MyTestPlugin::MyTestPlugin()&#123;&#125;</span><br><span class="line"><span class="comment">//重写该接口类的虚函数</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">MyTestPlugin::helloworld</span><span class="params">(QString <span class="built_in">string</span>)</span></span>&#123;</span><br><span class="line">    qDebug()&lt;&lt;<span class="string">"Hello---&gt; "</span>&lt;&lt;<span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>最后就是编辑.pro文件并构建该插件</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">TEMPLATE = lib</span><br><span class="line">CONFIG += plugin</span><br><span class="line">TARGET = mytestPlugin</span><br><span class="line">DESTDIR = ../outputDir</span><br><span class="line">HEADERS += \</span><br><span class="line">    mytestplugin.h \</span><br><span class="line">    mytestplugininterface.h</span><br><span class="line">SOURCES += \</span><br><span class="line">    mytestplugin.cpp</span><br></pre></td></tr></table></figure>
@@ -538,7 +538,7 @@
 </blockquote>
 <p>最后还要把本地部署改为<strong>Release</strong>，然后在构建该项目即可生成指定的库文件，比如我的是 <strong>libmytestPlugin.so</strong></p>
 <h3 id="测试插件"><a href="#测试插件" class="headerlink" title="测试插件"></a>测试插件</h3><p>为了做一个简单的测试，我另外创建了一个项目，调用插件也很简单，这里给出核心代码</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//用QPluginLoader加载动态链接库，注意QLibrary类与QPluginLoader类的区别</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;QPluginLoader&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">"mytestplugininterface.h"</span></span></span><br><span class="line"><span class="keyword">void</span> Dialog::loadmyPlugin()</span><br><span class="line">&#123;</span><br><span class="line">    QPluginLoader *loader=<span class="keyword">new</span> QPluginLoader(<span class="keyword">this</span>);</span><br><span class="line">    <span class="comment">//把插件文件和包含插件声明的文件放到项目下</span></span><br><span class="line">    loader-&gt;setFileName(<span class="string">"libmytestPlugin.so"</span>);</span><br><span class="line">    <span class="comment">//判断加载插件是否成功</span></span><br><span class="line">    <span class="keyword">if</span>(!loader-&gt;load())&#123;</span><br><span class="line">        qDebug()&lt;&lt;<span class="string">"Error:"</span>&lt;&lt;loader-&gt;errorString();</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//遍历插件的元数据信息</span></span><br><span class="line">    foreach (QString key,loader-&gt;metaData().keys()) &#123;</span><br><span class="line">        qDebug()&lt;&lt;key&lt;&lt;<span class="string">"\t"</span>&lt;&lt;loader-&gt;metaData().value(key);</span><br><span class="line">    &#125;</span><br><span class="line">    QObject*plugin= loader-&gt;instance();</span><br><span class="line">    <span class="comment">//转换获取插件类对象</span></span><br><span class="line">    MyTestPluginInterface *mytestpliugin=qobject_cast&lt;MyTestPluginInterface*&gt;(plugin);</span><br><span class="line">    mytestpliugin-&gt;helloworld(<span class="string">"Google..."</span>);</span><br><span class="line">    <span class="comment">//卸载插件</span></span><br><span class="line">    loader-&gt;unload();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//用QPluginLoader加载动态链接库，注意QLibrary类与QPluginLoader类的区别</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;QPluginLoader&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">"mytestplugininterface.h"</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Dialog::loadmyPlugin</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    QPluginLoader *loader=<span class="keyword">new</span> QPluginLoader(<span class="keyword">this</span>);</span><br><span class="line">    <span class="comment">//把插件文件和包含插件声明的文件放到项目下</span></span><br><span class="line">    loader-&gt;setFileName(<span class="string">"libmytestPlugin.so"</span>);</span><br><span class="line">    <span class="comment">//判断加载插件是否成功</span></span><br><span class="line">    <span class="keyword">if</span>(!loader-&gt;load())&#123;</span><br><span class="line">        qDebug()&lt;&lt;<span class="string">"Error:"</span>&lt;&lt;loader-&gt;errorString();</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//遍历插件的元数据信息</span></span><br><span class="line">    foreach (QString key,loader-&gt;metaData().keys()) &#123;</span><br><span class="line">        qDebug()&lt;&lt;key&lt;&lt;<span class="string">"\t"</span>&lt;&lt;loader-&gt;metaData().value(key);</span><br><span class="line">    &#125;</span><br><span class="line">    QObject*plugin= loader-&gt;instance();</span><br><span class="line">    <span class="comment">//转换获取插件类对象</span></span><br><span class="line">    MyTestPluginInterface *mytestpliugin=qobject_cast&lt;MyTestPluginInterface*&gt;(plugin);</span><br><span class="line">    mytestpliugin-&gt;helloworld(<span class="string">"Google..."</span>);</span><br><span class="line">    <span class="comment">//卸载插件</span></span><br><span class="line">    loader-&gt;unload();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>ok，到此基本上完成了一个简单的插件使用了 ：)</p>
 
@@ -893,7 +893,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">331k</span>
+    <span title="站点总字数">284k</span>
   
 
   
@@ -902,7 +902,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="站点阅读时长">5:01</span>
+    <span title="站点阅读时长">4:18</span>
   
 </div>
 
@@ -915,32 +915,6 @@
 
 
         
-<div class="busuanzi-count">
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-  
-    <span class="post-meta-item-icon">
-      <i class="fa fa-user"></i>
-    </span>
-    <span class="site-uv" title="总访客量">
-      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
-    </span>
-  
-
-  
-    <span class="post-meta-divider">|</span>
-  
-
-  
-    <span class="post-meta-item-icon">
-      <i class="fa fa-eye"></i>
-    </span>
-    <span class="site-pv" title="总访问量">
-      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
-    </span>
-  
-</div>
-
 
 
 

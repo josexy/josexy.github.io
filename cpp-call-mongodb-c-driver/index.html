@@ -94,7 +94,7 @@
 </script>
 
   <meta name="description" content="嗯……环境都准备好了，那么现在可以开始用我们敬爱的C++通过接口来间接操控MongoDB数据库。注意，要有一定的MongoDB数据库基础知识哦～">
-<meta name="keywords" content="C++,Linux,C,MongoDB">
+<meta name="keywords" content="C++,C,Linux,MongoDB">
 <meta property="og:type" content="article">
 <meta property="og:title" content="C++ 调用MongoDB C Driver">
 <meta property="og:url" content="http://www.joxrays.com/cpp-call-mongodb-c-driver/index.html">
@@ -467,7 +467,7 @@
               
                 <span class="post-meta-item-text">本文字数：</span>
               
-              <span title="本文字数">13k</span>
+              <span title="本文字数">11k</span>
             </span>
           
 
@@ -479,7 +479,7 @@
               
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
               
-              <span title="阅读时长">12 分钟</span>
+              <span title="阅读时长">10 分钟</span>
             </span>
           
 
@@ -515,20 +515,20 @@
 <p>要连接到MongoDB数据库，就得提供一个连接字符串，类似于</p>
 <p>mongodb://username:password@host:port/db<br>例如： mongodb://localhost:27017表示连接到本地回环地址127.0.0.1，以及端口27017的服务器，这个连接方式无需验证身份(没有开启 <strong>auth</strong>)。<br>然而，这个例子的连接字符串为： <strong>mongodb://user_test:<a href="mailto:12345@127.0.0.1" target="_blank" rel="noopener">12345@127.0.0.1</a>:27017/db_test</strong></p>
 <p>有了连接字符串，那么我们怎么连接到服务器？可以通过 mongoc_client_get_database() 来建立一个client</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">mongoc_client_t</span> * mongoc_client_new (<span class="keyword">const</span> <span class="keyword">char</span> *uri_string);</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">mongoc_client_t</span> * <span class="title">mongoc_client_new</span> <span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *uri_string)</span></span>;</span><br></pre></td></tr></table></figure>
 
 <p>该函数返回一个 mongoc_client_t* 结构指针，之后的操作就是通过该指针来访问 database、collection……</p>
 <blockquote>
 <p>除了直接通过一个连接字符串来建立client，还可以‘构造’一个 <strong>uri</strong> 建立client。这一步也很简单，可以调用 <strong>mongoc_uri*</strong> 系列函数，再<br> mongoc_client_new_from_uri()，如：<br>mongoc_uri_t <em>uri=mongoc_uri_new(“mongodb://127.0.0.1:27017”);<br>mongoc_uri_set_database(uri,”xxxx”);<br>mongoc_uri_set_username(uri,”xxxx”);<br>mongoc_uri_set_password(uri,”xxxx”);<br>mongoc_client_t</em> client= mongoc_client_new_from_uri(uri);</p>
 </blockquote>
 <p>连接成功后，可以通过来获取 <strong>mongoc_client_get_default_database</strong> 来获取默认的数据库（前提是刚才连接字符串提供了一个数据库），或者 <strong>mongoc_client_get_database</strong> 来获取指定名称的数据库</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">mongoc_database_t</span> * mongoc_client_get_database (<span class="keyword">mongoc_client_t</span> *client, <span class="keyword">const</span> <span class="keyword">char</span> *name);</span><br><span class="line"><span class="keyword">mongoc_database_t</span> * mongoc_client_get_default_database (<span class="keyword">mongoc_client_t</span> *client);</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">mongoc_database_t</span> * <span class="title">mongoc_client_get_database</span> <span class="params">(<span class="keyword">mongoc_client_t</span> *client, <span class="keyword">const</span> <span class="keyword">char</span> *name)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">mongoc_database_t</span> * <span class="title">mongoc_client_get_default_database</span> <span class="params">(<span class="keyword">mongoc_client_t</span> *client)</span></span>;</span><br></pre></td></tr></table></figure>
 
 <p>通过 mongoc_database_has_collection() 判断是否存在一个 collection</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">mongoc_database_has_collection</span> <span class="params">(<span class="keyword">mongoc_database_t</span> *database,<span class="keyword">const</span> <span class="keyword">char</span> *name,<span class="keyword">bson_error_t</span> *error)</span></span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">bson_error_t</span> &#123;</span></span><br><span class="line">   <span class="keyword">uint32_t</span> domain;</span><br><span class="line">   <span class="keyword">uint32_t</span> code;</span><br><span class="line">   <span class="keyword">char</span> message[BSON_ERROR_BUFFER_SIZE];</span><br><span class="line">&#125; <span class="keyword">bson_error_t</span>;</span><br></pre></td></tr></table></figure>
 
 <p>有了database，那么就可以获取某个collection，方法有两个</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">mongoc_collection_t</span> * mongoc_client_get_collection (<span class="keyword">mongoc_client_t</span> *client,<span class="keyword">const</span> <span class="keyword">char</span> *db,<span class="keyword">const</span> <span class="keyword">char</span> *collection);</span><br><span class="line"><span class="keyword">mongoc_collection_t</span> *</span><br><span class="line">mongoc_database_get_collection (<span class="keyword">mongoc_database_t</span> *database, <span class="keyword">const</span> <span class="keyword">char</span> *name);</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">mongoc_collection_t</span> * <span class="title">mongoc_client_get_collection</span> <span class="params">(<span class="keyword">mongoc_client_t</span> *client,<span class="keyword">const</span> <span class="keyword">char</span> *db,<span class="keyword">const</span> <span class="keyword">char</span> *collection)</span></span>;</span><br><span class="line"><span class="keyword">mongoc_collection_t</span> *</span><br><span class="line">mongoc_database_get_collection (<span class="keyword">mongoc_database_t</span> *database, <span class="keyword">const</span> <span class="keyword">char</span> *name);</span><br></pre></td></tr></table></figure>
 
 <p>接下来，就是重头戏了</p>
 <h4 id="Creating-BSON-Documents"><a href="#Creating-BSON-Documents" class="headerlink" title="Creating BSON Documents"></a>Creating BSON Documents</h4><p>BSON，类似与JSON，但又有点不同。通过创建BSON Document来实现与MongoDB的交互。如：</p>
@@ -552,7 +552,7 @@
 <p>{ “name” : “xiaoHong”, “age” : { “$numberInt” : “15” }, “info” : [ { “country” : “China” }, { “phone” : “110” } ] }</p>
 <p>通过使用 BCON_* 函数更直观、方便简单的创建BSON文档。</p>
 <h4 id="Creating-BSON-from-JSON"><a href="#Creating-BSON-from-JSON" class="headerlink" title="Creating BSON from JSON"></a>Creating BSON from JSON</h4><p>上面介绍了创建一个BSON文档以及从BSON文档获取一个JSON字符串。<br>那么，我们是否可以通过JSON字符串反向解析一个BSON文档呢？答案是肯定的。不过，这好像是对于单文档而言，</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bson_t</span> * bson_new_from_json (<span class="keyword">const</span> <span class="keyword">uint8_t</span> *data, <span class="keyword">ssize_t</span> len, <span class="keyword">bson_error_t</span> *error);</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bson_t</span> * <span class="title">bson_new_from_json</span> <span class="params">(<span class="keyword">const</span> <span class="keyword">uint8_t</span> *data, <span class="keyword">ssize_t</span> len, <span class="keyword">bson_error_t</span> *error)</span></span>;</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">char</span> *json = <span class="string">"&#123;\"name\":\"xiaoJun\",\"age\":15&#125;"</span>;</span><br><span class="line"><span class="keyword">bson_t</span> *newbs= bson_new_from_json((<span class="keyword">const</span> <span class="keyword">uint8_t</span>*)json,<span class="number">-1</span>,<span class="literal">NULL</span>);</span><br><span class="line">jsonstr=bson_as_canonical_extended_json(newbs,<span class="literal">NULL</span>);</span><br><span class="line"><span class="built_in">printf</span>(json);</span><br><span class="line">bson_free(jsonstr);</span><br><span class="line">bson_destroy(newbs);</span><br></pre></td></tr></table></figure>
 
@@ -561,10 +561,10 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> db.test.find</span></span><br><span class="line">function (query, fields, limit, skip, batchSize, options) &#123;</span><br><span class="line">    var cursor = new DBQuery(this._mongo,</span><br><span class="line">                             this._db,</span><br><span class="line">                             this,</span><br><span class="line">                             this._fullName,</span><br><span class="line">                             this._massageObject(query),</span><br><span class="line">                             fields,</span><br><span class="line">                             limit,</span><br><span class="line">                             skip,</span><br><span class="line">                             batchSize,</span><br><span class="line">                             options || this.getQueryOptions());</span><br><span class="line">    &#123;</span><br><span class="line">        const session = this.getDB().getSession();</span><br><span class="line">        const readPreference = session._serverSession.client.getReadPreference(session);</span><br><span class="line">        if (readPreference !== null) &#123;</span><br><span class="line">            cursor.readPref(readPreference.mode, readPreference.tags);</span><br><span class="line">        &#125;</span><br><span class="line">        const readConcern = session._serverSession.client.getReadConcern(session);</span><br><span class="line">        if (readConcern !== null) &#123;</span><br><span class="line">            cursor.readConcern(readConcern.level);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return cursor;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>mongoc提供了 <strong>mongoc_collection_find_with_opts</strong> 函数来获取一个 游标(<strong>Cursor</strong>) ，注意 <strong>mongoc_collection_find</strong> 被弃用了。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">mongoc_cursor_t</span> * mongoc_collection_find_with_opts (<span class="keyword">mongoc_collection_t</span> *collection,<span class="keyword">const</span> <span class="keyword">bson_t</span> *filter,<span class="keyword">const</span> <span class="keyword">bson_t</span> *opts,<span class="keyword">const</span> <span class="keyword">mongoc_read_prefs_t</span> *read_prefs)</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">mongoc_cursor_t</span> * <span class="title">mongoc_collection_find_with_opts</span> <span class="params">(<span class="keyword">mongoc_collection_t</span> *collection,<span class="keyword">const</span> <span class="keyword">bson_t</span> *filter,<span class="keyword">const</span> <span class="keyword">bson_t</span> *opts,<span class="keyword">const</span> <span class="keyword">mongoc_read_prefs_t</span> *read_prefs)</span></span></span><br></pre></td></tr></table></figure>
 
 <p><strong>mongoc_collection_find_with_opts</strong> 要求4个参数，参数我们只关注前两个参数，其中 <strong>bson_t *filter</strong> 至关重要，类似于 MYSQL select <em>from tb_xxx *where id = 5</em></p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 空BSON文档 &#123;&#125;</span></span><br><span class="line"><span class="keyword">bson_t</span> *bson=BCON_NEW(<span class="literal">NULL</span>);</span><br><span class="line"><span class="keyword">mongoc_cursor_t</span> *cursor= mongoc_collection_find_with_opts(coll,bson,<span class="literal">NULL</span>,<span class="literal">NULL</span>);</span><br><span class="line"><span class="comment">// 获取当前文档，注意是一个 const bson_t *，并传入 mongoc_cursor_next 第二个参数</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">bson_t</span> *ps=mongoc_cursor_current(cursor);</span><br><span class="line"><span class="keyword">while</span> (mongoc_cursor_next(cursor,&amp;ps))</span><br><span class="line">&#123;</span><br><span class="line">       <span class="keyword">char</span> *json=bson_as_canonical_extended_json(ps,&amp;size);</span><br><span class="line">       <span class="built_in">printf</span>(json);</span><br><span class="line">       bson_free(json);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 释放 cursor</span></span><br><span class="line">mongoc_cursor_destroy(cursor);</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 空BSON文档 &#123;&#125;</span></span><br><span class="line"><span class="keyword">bson_t</span> *bson=BCON_NEW(<span class="literal">NULL</span>);</span><br><span class="line"><span class="keyword">mongoc_cursor_t</span> *<span class="built_in">cursor</span>= mongoc_collection_find_with_opts(coll,bson,<span class="literal">NULL</span>,<span class="literal">NULL</span>);</span><br><span class="line"><span class="comment">// 获取当前文档，注意是一个 const bson_t *，并传入 mongoc_cursor_next 第二个参数</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">bson_t</span> *ps=mongoc_cursor_current(<span class="built_in">cursor</span>);</span><br><span class="line"><span class="keyword">while</span> (mongoc_cursor_next(<span class="built_in">cursor</span>,&amp;ps))</span><br><span class="line">&#123;</span><br><span class="line">       <span class="keyword">char</span> *json=bson_as_canonical_extended_json(ps,&amp;<span class="built_in">size</span>);</span><br><span class="line">       <span class="built_in">printf</span>(json);</span><br><span class="line">       bson_free(json);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 释放 cursor</span></span><br><span class="line">mongoc_cursor_destroy(<span class="built_in">cursor</span>);</span><br></pre></td></tr></table></figure>
 
 <p>bson_t <em>bson=BCON_NEW(NULL); 等价于 db.test.find({}) 或者 db.test.find()当然，也可以这么来写bson_t</em> bson=BCON_NEW(“age”,”{“,”$gt”,BCON_INT32(13),”}”);<br>这就类似于 db.test.find({‘age’:{‘$gt’:13}})</p>
 <h4 id="增删查改"><a href="#增删查改" class="headerlink" title="增删查改"></a>增删查改</h4><p>像大多数数据库一样，增删查改是必不可少的基本步骤。</p>
@@ -603,7 +603,7 @@
 
 <p>注意，<strong>“age”,”{“</strong> 要单独写，不能写成 <strong>“age{“</strong>，否则 <strong>src/bson/bcon.c:784 bcon_append_ctx_va(): precondition failed: type == BCON_TYPE_UTF8</strong> 这是最坑爹的地方</p>
 <h4 id="内存释放"><a href="#内存释放" class="headerlink" title="内存释放"></a>内存释放</h4><p>别以为这样就结束了哦，还要记得要释放所有的内存</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 释放char*指针</span></span><br><span class="line">bson_free(<span class="keyword">void</span> *mem);</span><br><span class="line"><span class="comment">// 释放 bson_t *bson文档</span></span><br><span class="line">bson_destroy(<span class="keyword">bson_t</span> *bson);</span><br><span class="line">mongoc_cursor_destroy(cursor);</span><br><span class="line">mongoc_collection_destroy(coll);</span><br><span class="line">mongoc_database_destroy(database);</span><br><span class="line">mongoc_client_destroy(client);</span><br><span class="line">mongoc_cleanup();</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 释放char*指针</span></span><br><span class="line">bson_free(<span class="keyword">void</span> *mem);</span><br><span class="line"><span class="comment">// 释放 bson_t *bson文档</span></span><br><span class="line">bson_destroy(<span class="keyword">bson_t</span> *bson);</span><br><span class="line">mongoc_cursor_destroy(<span class="built_in">cursor</span>);</span><br><span class="line">mongoc_collection_destroy(coll);</span><br><span class="line">mongoc_database_destroy(database);</span><br><span class="line">mongoc_client_destroy(client);</span><br><span class="line">mongoc_cleanup();</span><br></pre></td></tr></table></figure>
 
 <h3 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h3><p>编译方法也很简单</p>
 <blockquote>
@@ -669,9 +669,9 @@
           
             <a href="/tags/C/" rel="tag"> <i class="fa fa-tag"></i> C++</a>
           
-            <a href="/tags/Linux/" rel="tag"> <i class="fa fa-tag"></i> Linux</a>
-          
             <a href="/tags/C/" rel="tag"> <i class="fa fa-tag"></i> C</a>
+          
+            <a href="/tags/Linux/" rel="tag"> <i class="fa fa-tag"></i> Linux</a>
           
             <a href="/tags/MongoDB/" rel="tag"> <i class="fa fa-tag"></i> MongoDB</a>
           
@@ -974,7 +974,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">331k</span>
+    <span title="站点总字数">284k</span>
   
 
   
@@ -983,7 +983,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="站点阅读时长">5:01</span>
+    <span title="站点阅读时长">4:18</span>
   
 </div>
 
@@ -996,32 +996,6 @@
 
 
         
-<div class="busuanzi-count">
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-  
-    <span class="post-meta-item-icon">
-      <i class="fa fa-user"></i>
-    </span>
-    <span class="site-uv" title="总访客量">
-      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
-    </span>
-  
-
-  
-    <span class="post-meta-divider">|</span>
-  
-
-  
-    <span class="post-meta-item-icon">
-      <i class="fa fa-eye"></i>
-    </span>
-    <span class="site-pv" title="总访问量">
-      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
-    </span>
-  
-</div>
-
 
 
 

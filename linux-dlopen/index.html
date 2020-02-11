@@ -94,7 +94,7 @@
 </script>
 
   <meta name="description" content="前言说到加载库,第一个方法就是包含库的头文件,在编译时通过  加载链接库.第二种方法在运行时用函数来加载链接库,获取其中的函数地址并调用.本文讲述后者">
-<meta name="keywords" content="C++,Linux,C">
+<meta name="keywords" content="C++,C,Linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux dlopen 加载动态链接库">
 <meta property="og:url" content="http://www.joxrays.com/linux-dlopen/index.html">
@@ -467,7 +467,7 @@
               
                 <span class="post-meta-item-text">本文字数：</span>
               
-              <span title="本文字数">3.7k</span>
+              <span title="本文字数">3.1k</span>
             </span>
           
 
@@ -524,7 +524,7 @@
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;dlfcn.h&gt; //包含的头文件</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LIB_PATH <span class="meta-string">"./libtest.so"</span></span></span><br><span class="line"><span class="comment">//声明函数指针</span></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">int</span> <span class="params">(*PFUN)</span><span class="params">(<span class="keyword">int</span> ,<span class="keyword">int</span> )</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    PFUN pf=<span class="literal">NULL</span>;</span><br><span class="line">    <span class="comment">//加载链接库</span></span><br><span class="line">    <span class="keyword">void</span> *handle=dlopen(LIB_PATH,RTLD_LAZY);</span><br><span class="line">    <span class="keyword">if</span>(handle==<span class="literal">NULL</span>)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"load library failed!\n"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">//dlvsym(handle,"add","1.0.0"); </span></span><br><span class="line">    <span class="comment">//获取链接库里函数地址</span></span><br><span class="line">    <span class="comment">//方法1,参考网站上的写法</span></span><br><span class="line">    <span class="comment">//*(void**)(&amp;pf)=dlsym(handle,"add");</span></span><br><span class="line">   </span><br><span class="line">    <span class="comment">//方法2,相当与Windows下的 GetProcAddress() 函数.</span></span><br><span class="line">    pf=(PFUN)dlsym(handle,<span class="string">"sub"</span>);</span><br><span class="line">    <span class="keyword">if</span>(pf!=<span class="literal">NULL</span>)&#123;</span><br><span class="line">        <span class="comment">//获取函数地址信息</span></span><br><span class="line">        Dl_info info;</span><br><span class="line">       <span class="keyword">int</span> r= dladdr((<span class="keyword">void</span>*)pf,&amp;info);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"library filepath:%s\n"</span>\</span><br><span class="line">                <span class="string">"address1:0x%08x\n"</span>\</span><br><span class="line">                <span class="string">"funciton name:%s\n"</span>\</span><br><span class="line">                <span class="string">"address2:0x%08x\n\n"</span>,</span><br><span class="line">                info.dli_fname,info.dli_fbase,</span><br><span class="line">                info.dli_sname,info.dli_saddr);</span><br><span class="line">        <span class="comment">//0 表示失败</span></span><br><span class="line">        <span class="keyword">if</span>(r==<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"can not get the dl info...\n"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"get the function address...\n"</span>);</span><br><span class="line">        <span class="comment">//调用函数</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"result: %d \n"</span>,pf(<span class="number">50</span>,<span class="number">15</span>));</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"can not get the function address...\n"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//卸载链接库</span></span><br><span class="line">    dlclose(handle);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>生成:<code>g++ test.cpp -o out_test -ldl -rdynamic</code><br>运行<code>./out_test</code><br>输出结果如下</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">library filepath:./libtest.so</span><br><span class="line">address1:<span class="number">0xeabfa000</span></span><br><span class="line">funciton name:sub</span><br><span class="line">address2:<span class="number">0xeabfa7f4</span></span><br><span class="line">get the function address...</span><br><span class="line">result: <span class="number">35</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">library filepath:./libtest.so</span><br><span class="line">address1:<span class="number">0xeabfa000</span></span><br><span class="line">funciton name:sub</span><br><span class="line">address2:<span class="number">0xeabfa7f4</span></span><br><span class="line"><span class="built_in">get</span> the function address...</span><br><span class="line">result: <span class="number">35</span></span><br></pre></td></tr></table></figure>
 
 <p>注意上面的库文件<strong>libtest.so</strong>在当前程序目录下的,代码如下</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> _TEST_H</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> _TEST_H</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span> <span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a+b;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span> <span class="function"><span class="keyword">int</span> <span class="title">sub</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a-b;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span> <span class="function"><span class="keyword">int</span> <span class="title">maxnum</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a&gt;b?a:b;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
@@ -583,9 +583,9 @@
           
             <a href="/tags/C/" rel="tag"> <i class="fa fa-tag"></i> C++</a>
           
-            <a href="/tags/Linux/" rel="tag"> <i class="fa fa-tag"></i> Linux</a>
-          
             <a href="/tags/C/" rel="tag"> <i class="fa fa-tag"></i> C</a>
+          
+            <a href="/tags/Linux/" rel="tag"> <i class="fa fa-tag"></i> Linux</a>
           
         </div>
       
@@ -886,7 +886,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">331k</span>
+    <span title="站点总字数">284k</span>
   
 
   
@@ -895,7 +895,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="站点阅读时长">5:01</span>
+    <span title="站点阅读时长">4:18</span>
   
 </div>
 
@@ -908,32 +908,6 @@
 
 
         
-<div class="busuanzi-count">
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-  
-    <span class="post-meta-item-icon">
-      <i class="fa fa-user"></i>
-    </span>
-    <span class="site-uv" title="总访客量">
-      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
-    </span>
-  
-
-  
-    <span class="post-meta-divider">|</span>
-  
-
-  
-    <span class="post-meta-item-icon">
-      <i class="fa fa-eye"></i>
-    </span>
-    <span class="site-pv" title="总访问量">
-      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
-    </span>
-  
-</div>
-
 
 
 

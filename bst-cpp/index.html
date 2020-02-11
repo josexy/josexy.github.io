@@ -113,7 +113,7 @@
 <meta property="og:image" content="http://www.joxrays.com/uploads/images/data_structure/bst_cpp/09.png">
 <meta property="og:image" content="http://www.joxrays.com/uploads/images/data_structure/bst_cpp/10.png">
 <meta property="og:image" content="http://www.joxrays.com/uploads/images/data_structure/bst_cpp/11.png">
-<meta property="og:updated_time" content="2020-01-20T09:45:15.933Z">
+<meta property="og:updated_time" content="2020-01-20T09:45:15.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="数据结构-二叉查找树(BST)">
 <meta name="twitter:description" content="在计算机科学中，树是一种非线性数据结构，树的种类有大致分为两类:无序树和有序树。有序树又分为二叉查找树、堆、左高树、AVL树、红黑树等。树是一种非常重要的数据结构，如C++ STL中的map底层实现原理是红黑树，Java (jdk1.8) HashMap更是采用了散列表+链表+红黑树。不过在讨论二叉查找树之前，我们需要了解树的一些基本知识。">
@@ -480,7 +480,7 @@
               
                 <span class="post-meta-item-text">本文字数：</span>
               
-              <span title="本文字数">11k</span>
+              <span title="本文字数">9.1k</span>
             </span>
           
 
@@ -492,7 +492,7 @@
               
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
               
-              <span title="阅读时长">10 分钟</span>
+              <span title="阅读时长">8 分钟</span>
             </span>
           
 
@@ -543,7 +543,7 @@
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">NodeEntry</span>&#123;</span></span><br><span class="line">    <span class="keyword">int</span> key; <span class="comment">// 关键字</span></span><br><span class="line">    T data; <span class="comment">// 数据域 </span></span><br><span class="line">    NodeEntry *parent; <span class="comment">// 父节点</span></span><br><span class="line">    NodeEntry *left_nodes; <span class="comment">// 左子树</span></span><br><span class="line">    NodeEntry *right_nodes; <span class="comment">// 右子树</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
 <p>bst模板类</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">binaryTree</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">typedef</span> T value_type;</span><br><span class="line">    <span class="keyword">typedef</span> T&amp; reference_type;</span><br><span class="line">    <span class="keyword">typedef</span> <span class="keyword">const</span> T&amp; const_reference_type;</span><br><span class="line">    <span class="keyword">typedef</span> <span class="keyword">const</span> <span class="keyword">int</span>&amp; const_key_type;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">typedef</span> NodeEntry&lt;T&gt; NODE;</span><br><span class="line">    <span class="keyword">typedef</span> NodeEntry&lt;T&gt;&amp; REF_NODE;</span><br><span class="line">    <span class="keyword">typedef</span> NodeEntry&lt;T&gt;* PNODE;</span><br><span class="line">    <span class="keyword">typedef</span> NodeEntry&lt;T&gt;* &amp; REF_PNODE;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    PNODE m_NodeRoot;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    binaryTree();</span><br><span class="line">    binaryTree(const_key_type  k,const_reference_type v);</span><br><span class="line">    ~binaryTree();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">Height</span><span class="params">(PNODE pNode)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">Insert</span><span class="params">(REF_PNODE pNode,PNODE pNodeParent,const_key_type key,const_reference_type value)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">Delete</span><span class="params">(PNODE pNode,const_key_type key)</span></span>;</span><br><span class="line">    NodeEntry&lt;T&gt;* Search(PNODE pNode,const_key_type key);</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">ClearAll</span><span class="params">(REF_PNODE pNode)</span></span>;</span><br><span class="line"></span><br><span class="line">    NodeEntry&lt;T&gt;* predecessor(NODE* pNode);</span><br><span class="line">    NodeEntry&lt;T&gt;* successor(NODE* pNode);</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">PreOrder</span><span class="params">(NODE * pRootNode)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">InOrder</span><span class="params">(NODE * pRootNode)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">PostOrder</span><span class="params">(NODE * pRootNode)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">LevelOrder</span><span class="params">(NODE * pRootNode)</span></span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">binaryTree</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">typedef</span> T value_type;</span><br><span class="line">    <span class="keyword">typedef</span> T&amp; reference_type;</span><br><span class="line">    <span class="keyword">typedef</span> <span class="keyword">const</span> T&amp; const_reference_type;</span><br><span class="line">    <span class="keyword">typedef</span> <span class="keyword">const</span> <span class="keyword">int</span>&amp; const_key_type;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">typedef</span> NodeEntry&lt;T&gt; NODE;</span><br><span class="line">    <span class="keyword">typedef</span> NodeEntry&lt;T&gt;&amp; REF_NODE;</span><br><span class="line">    <span class="keyword">typedef</span> NodeEntry&lt;T&gt;* PNODE;</span><br><span class="line">    <span class="keyword">typedef</span> NodeEntry&lt;T&gt;* &amp; REF_PNODE;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    PNODE m_NodeRoot;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    binaryTree();</span><br><span class="line">    binaryTree(const_key_type  k,const_reference_type v);</span><br><span class="line">    ~binaryTree();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">Height</span><span class="params">(PNODE pNode)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">Insert</span><span class="params">(REF_PNODE pNode,PNODE pNodeParent,const_key_type key,const_reference_type value)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">Delete</span><span class="params">(PNODE pNode,const_key_type key)</span></span>;</span><br><span class="line">    <span class="function">NodeEntry&lt;T&gt;* <span class="title">Search</span><span class="params">(PNODE pNode,const_key_type key)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">ClearAll</span><span class="params">(REF_PNODE pNode)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">NodeEntry&lt;T&gt;* <span class="title">predecessor</span><span class="params">(NODE* pNode)</span></span>;</span><br><span class="line">    <span class="function">NodeEntry&lt;T&gt;* <span class="title">successor</span><span class="params">(NODE* pNode)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">PreOrder</span><span class="params">(NODE * pRootNode)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">InOrder</span><span class="params">(NODE * pRootNode)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">PostOrder</span><span class="params">(NODE * pRootNode)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">LevelOrder</span><span class="params">(NODE * pRootNode)</span></span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
 <h4 id="遍历"><a href="#遍历" class="headerlink" title="遍历"></a>遍历</h4><p>bst有三种遍历方式</p>
 <ul>
@@ -964,7 +964,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">331k</span>
+    <span title="站点总字数">284k</span>
   
 
   
@@ -973,7 +973,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="站点阅读时长">5:01</span>
+    <span title="站点阅读时长">4:18</span>
   
 </div>
 
@@ -986,32 +986,6 @@
 
 
         
-<div class="busuanzi-count">
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-  
-    <span class="post-meta-item-icon">
-      <i class="fa fa-user"></i>
-    </span>
-    <span class="site-uv" title="总访客量">
-      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
-    </span>
-  
-
-  
-    <span class="post-meta-divider">|</span>
-  
-
-  
-    <span class="post-meta-item-icon">
-      <i class="fa fa-eye"></i>
-    </span>
-    <span class="site-pv" title="总访问量">
-      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
-    </span>
-  
-</div>
-
 
 
 

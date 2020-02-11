@@ -513,7 +513,7 @@
 <li><p>声明的API函数</p>
 </li>
 </ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">NTKERNELAPI HANDLE <span class="title">PsGetProcessInheritedFromUniqueProcessId</span><span class="params">(IN PEPROCESS Process)</span></span>;</span><br><span class="line"><span class="function">NTKERNELAPI  PPEB_EX  <span class="title">PsGetProcessPeb</span><span class="params">(PEPROCESS Process)</span></span>;</span><br><span class="line"><span class="function">NTKERNELAPI NTSTATUS <span class="title">PsLookupProcessByProcessId</span><span class="params">(HANDLE Id, PEPROCESS *Process)</span></span>;</span><br><span class="line"><span class="function">NTKERNELAPI NTSTATUS <span class="title">PsLookupThreadByThreadId</span><span class="params">(HANDLE Id, PETHREAD *Thread)</span></span>;</span><br><span class="line"><span class="function">NTKERNELAPI PEPROCESS <span class="title">IoThreadToProcess</span><span class="params">(PETHREAD Thread)</span></span>;</span><br><span class="line"><span class="comment">//NTKERNELAPI VOID NTAPI KeAttachProcess(PEPROCESS Process);</span></span><br><span class="line"><span class="comment">//NTKERNELAPI VOID NTAPI KeDetachProcess();</span></span><br><span class="line"><span class="comment">//NTKERNELAPI VOID NTAPI KeStackAttachProcess(PEPROCESS Process, PKAPC_STATE ApcState);</span></span><br><span class="line"><span class="comment">//NTKERNELAPI VOID NTAPI KeUnstackDetachProcess(PKAPC_STATE ApcState);</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">NTKERNELAPI HANDLE <span class="title">PsGetProcessInheritedFromUniqueProcessId</span><span class="params">(IN PEPROCESS <span class="built_in">Process</span>)</span></span>;</span><br><span class="line"><span class="function">NTKERNELAPI  PPEB_EX  <span class="title">PsGetProcessPeb</span><span class="params">(PEPROCESS <span class="built_in">Process</span>)</span></span>;</span><br><span class="line"><span class="function">NTKERNELAPI NTSTATUS <span class="title">PsLookupProcessByProcessId</span><span class="params">(HANDLE Id, PEPROCESS *<span class="built_in">Process</span>)</span></span>;</span><br><span class="line"><span class="function">NTKERNELAPI NTSTATUS <span class="title">PsLookupThreadByThreadId</span><span class="params">(HANDLE Id, PETHREAD *Thread)</span></span>;</span><br><span class="line"><span class="function">NTKERNELAPI PEPROCESS <span class="title">IoThreadToProcess</span><span class="params">(PETHREAD Thread)</span></span>;</span><br><span class="line"><span class="comment">//NTKERNELAPI VOID NTAPI KeAttachProcess(PEPROCESS Process);</span></span><br><span class="line"><span class="comment">//NTKERNELAPI VOID NTAPI KeDetachProcess();</span></span><br><span class="line"><span class="comment">//NTKERNELAPI VOID NTAPI KeStackAttachProcess(PEPROCESS Process, PKAPC_STATE ApcState);</span></span><br><span class="line"><span class="comment">//NTKERNELAPI VOID NTAPI KeUnstackDetachProcess(PKAPC_STATE ApcState);</span></span><br></pre></td></tr></table></figure>
 
 <ul>
 <li>因为要通过 <code>PEPROCESS</code> 来获取进程和模块，所以还要用到几个结构体，在<strong>WinDbg</strong> 可看到。<br>这里新建一个头文件，包含了PEB等信息</li>
@@ -873,7 +873,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">331k</span>
+    <span title="站点总字数">284k</span>
   
 
   
@@ -882,7 +882,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="站点阅读时长">5:01</span>
+    <span title="站点阅读时长">4:18</span>
   
 </div>
 
@@ -895,32 +895,6 @@
 
 
         
-<div class="busuanzi-count">
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-  
-    <span class="post-meta-item-icon">
-      <i class="fa fa-user"></i>
-    </span>
-    <span class="site-uv" title="总访客量">
-      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
-    </span>
-  
-
-  
-    <span class="post-meta-divider">|</span>
-  
-
-  
-    <span class="post-meta-item-icon">
-      <i class="fa fa-eye"></i>
-    </span>
-    <span class="site-pv" title="总访问量">
-      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
-    </span>
-  
-</div>
-
 
 
 

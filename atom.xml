@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.joxrays.com/"/>
-  <updated>2020-02-05T09:51:43.584Z</updated>
+  <updated>2020-02-05T09:51:43.000Z</updated>
   <id>http://www.joxrays.com/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="http://www.joxrays.com/binaryheap-cpp/"/>
     <id>http://www.joxrays.com/binaryheap-cpp/</id>
     <published>2020-02-04T16:00:00.000Z</published>
-    <updated>2020-02-05T09:51:43.584Z</updated>
+    <updated>2020-02-05T09:51:43.000Z</updated>
     
     <summary type="html">
     
@@ -45,7 +45,7 @@
     <link href="http://www.joxrays.com/rb-tree-cpp/"/>
     <id>http://www.joxrays.com/rb-tree-cpp/</id>
     <published>2020-01-31T16:00:00.000Z</published>
-    <updated>2020-02-03T03:54:06.672Z</updated>
+    <updated>2020-02-03T03:54:06.000Z</updated>
     
     <summary type="html">
     
@@ -71,7 +71,7 @@
     <link href="http://www.joxrays.com/avl-tree-cpp/"/>
     <id>http://www.joxrays.com/avl-tree-cpp/</id>
     <published>2020-01-20T16:00:00.000Z</published>
-    <updated>2020-01-31T07:17:19.874Z</updated>
+    <updated>2020-01-31T07:17:19.000Z</updated>
     
     <summary type="html">
     
@@ -95,7 +95,7 @@
     <link href="http://www.joxrays.com/bst-cpp/"/>
     <id>http://www.joxrays.com/bst-cpp/</id>
     <published>2020-01-14T16:00:00.000Z</published>
-    <updated>2020-01-20T09:45:15.933Z</updated>
+    <updated>2020-01-20T09:45:15.000Z</updated>
     
     <summary type="html">
     
@@ -119,7 +119,7 @@
     <link href="http://www.joxrays.com/skiplist-cpp/"/>
     <id>http://www.joxrays.com/skiplist-cpp/</id>
     <published>2020-01-14T16:00:00.000Z</published>
-    <updated>2020-01-15T05:49:11.835Z</updated>
+    <updated>2020-01-15T05:49:11.000Z</updated>
     
     <summary type="html">
     
@@ -143,7 +143,7 @@
     <link href="http://www.joxrays.com/queue-cpp/"/>
     <id>http://www.joxrays.com/queue-cpp/</id>
     <published>2020-01-12T16:00:00.000Z</published>
-    <updated>2020-01-13T11:48:08.381Z</updated>
+    <updated>2020-01-13T11:48:08.000Z</updated>
     
     <summary type="html">
     
@@ -167,7 +167,7 @@
     <link href="http://www.joxrays.com/linkedlist-cpp/"/>
     <id>http://www.joxrays.com/linkedlist-cpp/</id>
     <published>2020-01-10T16:00:00.000Z</published>
-    <updated>2020-01-13T04:54:59.511Z</updated>
+    <updated>2020-01-13T04:54:59.000Z</updated>
     
     <summary type="html">
     
@@ -191,7 +191,7 @@
     <link href="http://www.joxrays.com/cpp-printtable/"/>
     <id>http://www.joxrays.com/cpp-printtable/</id>
     <published>2019-11-29T16:00:00.000Z</published>
-    <updated>2019-11-30T02:11:52.712Z</updated>
+    <updated>2019-11-30T02:11:52.000Z</updated>
     
     <summary type="html">
     
@@ -211,7 +211,7 @@
     <link href="http://www.joxrays.com/add-subtract-multiply-divide/"/>
     <id>http://www.joxrays.com/add-subtract-multiply-divide/</id>
     <published>2019-11-20T16:00:00.000Z</published>
-    <updated>2019-11-21T15:28:25.976Z</updated>
+    <updated>2019-11-21T15:28:25.000Z</updated>
     
     <summary type="html">
     
@@ -231,7 +231,7 @@
     <link href="http://www.joxrays.com/linux-ycm-vim/"/>
     <id>http://www.joxrays.com/linux-ycm-vim/</id>
     <published>2019-09-08T16:00:00.000Z</published>
-    <updated>2020-01-12T14:49:02.734Z</updated>
+    <updated>2020-01-12T14:49:02.000Z</updated>
     
     <summary type="html">
     
@@ -256,7 +256,7 @@
     <link href="http://www.joxrays.com/centos-shadowsocks/"/>
     <id>http://www.joxrays.com/centos-shadowsocks/</id>
     <published>2019-08-20T16:00:00.000Z</published>
-    <updated>2019-08-21T04:23:09.301Z</updated>
+    <updated>2019-08-21T04:23:09.000Z</updated>
     
     <summary type="html">
     
@@ -278,7 +278,7 @@
     <link href="http://www.joxrays.com/virtualbox-addrawdisk-err/"/>
     <id>http://www.joxrays.com/virtualbox-addrawdisk-err/</id>
     <published>2019-08-19T16:00:00.000Z</published>
-    <updated>2019-08-20T14:32:40.410Z</updated>
+    <updated>2019-08-20T14:32:40.000Z</updated>
     
     <summary type="html">
     
@@ -342,7 +342,7 @@
     <link href="http://www.joxrays.com/archlinux-configure/"/>
     <id>http://www.joxrays.com/archlinux-configure/</id>
     <published>2019-07-29T16:00:00.000Z</published>
-    <updated>2019-09-22T12:58:36.391Z</updated>
+    <updated>2020-02-11T02:50:12.997Z</updated>
     
     <summary type="html">
     
@@ -364,7 +364,7 @@
     <link href="http://www.joxrays.com/vsftp-configure/"/>
     <id>http://www.joxrays.com/vsftp-configure/</id>
     <published>2019-07-29T16:00:00.000Z</published>
-    <updated>2019-08-17T06:58:28.757Z</updated>
+    <updated>2019-08-17T06:58:28.000Z</updated>
     
     <summary type="html">
     
@@ -408,7 +408,7 @@
     <link href="http://www.joxrays.com/linux-ping-tools/"/>
     <id>http://www.joxrays.com/linux-ping-tools/</id>
     <published>2019-06-30T16:00:00.000Z</published>
-    <updated>2019-08-20T10:41:44.669Z</updated>
+    <updated>2019-08-20T10:41:44.000Z</updated>
     
     <summary type="html">
     

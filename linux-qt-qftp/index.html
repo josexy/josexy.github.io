@@ -467,7 +467,7 @@
               
                 <span class="post-meta-item-text">本文字数：</span>
               
-              <span title="本文字数">2.2k</span>
+              <span title="本文字数">2k</span>
             </span>
           
 
@@ -548,7 +548,7 @@
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">"QtFtp/QFtp"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;QtFtp/QUrlInfo&gt;</span></span></span><br></pre></td></tr></table></figure>
 
 <p>如：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// do something ...</span></span><br><span class="line">	QFtp * ftp =<span class="keyword">new</span> QFtp(<span class="keyword">this</span>);</span><br><span class="line">	connect(ftp,&amp;QFtp::listInfo,<span class="keyword">this</span>,[=](<span class="keyword">const</span> QUrlInfo u)&#123;</span><br><span class="line">	<span class="comment">// do something ...</span></span><br><span class="line">    &#125;);</span><br><span class="line">    connect(ftp,&amp;QFtp::dataTransferProgress,[=](qint64 _t1, qint64 _t2)&#123;</span><br><span class="line">	<span class="comment">// do something ...</span></span><br><span class="line">    &#125;);</span><br><span class="line">    connect(ftp,&amp;QFtp::readyRead,<span class="keyword">this</span>,[=]()&#123;</span><br><span class="line">	<span class="comment">// do something ...</span></span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">int</span> id=ftp-&gt;connectToHost(<span class="string">""</span>);</span><br><span class="line">    ftp-&gt;login(<span class="string">""</span>,<span class="string">""</span>);</span><br><span class="line">    ftp-&gt;cd(<span class="string">""</span>);</span><br><span class="line">    ftp-&gt;<span class="built_in">list</span>();</span><br><span class="line">	ftp-&gt;close();</span><br><span class="line">	<span class="comment">// do something ...</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// do something ...</span></span><br><span class="line">	QFtp * ftp =<span class="keyword">new</span> QFtp(<span class="keyword">this</span>);</span><br><span class="line">	<span class="built_in">connect</span>(ftp,&amp;QFtp::listInfo,<span class="keyword">this</span>,[=](<span class="keyword">const</span> QUrlInfo u)&#123;</span><br><span class="line">	<span class="comment">// do something ...</span></span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="built_in">connect</span>(ftp,&amp;QFtp::dataTransferProgress,[=](qint64 _t1, qint64 _t2)&#123;</span><br><span class="line">	<span class="comment">// do something ...</span></span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="built_in">connect</span>(ftp,&amp;QFtp::readyRead,<span class="keyword">this</span>,[=]()&#123;</span><br><span class="line">	<span class="comment">// do something ...</span></span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">int</span> id=ftp-&gt;connectToHost(<span class="string">""</span>);</span><br><span class="line">    ftp-&gt;login(<span class="string">""</span>,<span class="string">""</span>);</span><br><span class="line">    ftp-&gt;cd(<span class="string">""</span>);</span><br><span class="line">    ftp-&gt;<span class="built_in">list</span>();</span><br><span class="line">	ftp-&gt;<span class="built_in">close</span>();</span><br><span class="line">	<span class="comment">// do something ...</span></span><br></pre></td></tr></table></figure>
 
 
       
@@ -904,7 +904,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">331k</span>
+    <span title="站点总字数">284k</span>
   
 
   
@@ -913,7 +913,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="站点阅读时长">5:01</span>
+    <span title="站点阅读时长">4:18</span>
   
 </div>
 
@@ -926,32 +926,6 @@
 
 
         
-<div class="busuanzi-count">
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-  
-    <span class="post-meta-item-icon">
-      <i class="fa fa-user"></i>
-    </span>
-    <span class="site-uv" title="总访客量">
-      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
-    </span>
-  
-
-  
-    <span class="post-meta-divider">|</span>
-  
-
-  
-    <span class="post-meta-item-icon">
-      <i class="fa fa-eye"></i>
-    </span>
-    <span class="site-pv" title="总访问量">
-      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
-    </span>
-  
-</div>
-
 
 
 
