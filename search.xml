@@ -1,6 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Manjaro/Arch禁用独显</title>
+    <url>/linux-ban-nvidia/</url>
+    <content><![CDATA[<p>由于本人笔记本是双显卡的，曾几度尝试安装闭源NVIDIA驱动（为了hashcat），然而每次以失败告终，而系统自带的开源nouveau驱动实在太坑了，系统总是会出现一些莫名其妙的bug，忍无可忍之下干脆禁掉独显，只用核显得了。</p>
+<a id="more"></a>
+
+<h3 id="bbswitch"><a href="#bbswitch" class="headerlink" title="bbswitch"></a>bbswitch</h3><p>首先需要安装bbswitch模块，用于切换显卡</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pacman bbswitch</span><br><span class="line"></span><br><span class="line"><span class="comment"># 加载模块</span></span><br><span class="line">modprobe bbswitch</span><br><span class="line"><span class="comment"># 卸载模块</span></span><br><span class="line">rmmod bbswitch</span><br></pre></td></tr></table></figure>
+
+<h3 id="禁用独显"><a href="#禁用独显" class="headerlink" title="禁用独显"></a>禁用独显</h3><p>首先查看当前系统是否已经禁用独显</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cat /proc/acpi/bbswitch</span><br><span class="line">0000:01:00.0 OFF</span><br></pre></td></tr></table></figure>
+
+<p>OFF说明目前已经禁掉独显了，如果不为OFF，那么需要将其关闭</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 关闭独显</span></span><br><span class="line">tee /proc/acpi/bbswitch &lt;&lt;&lt; OFF</span><br><span class="line"><span class="comment"># 打开独显</span></span><br><span class="line">tee /proc/acpi/bbswitch &lt;&lt;&lt; ON</span><br></pre></td></tr></table></figure>
+
+<p>之后还需要告诉系统：modprobe加载bbswitch时关闭独显(load_state=0)，卸载bbswitch时打开独显(unload_state=1)</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nano /etc/modprobe.d/bbswitch.conf</span><br><span class="line">options bbswitch load_state=0 unload_state=1</span><br></pre></td></tr></table></figure>
+
+<h3 id="nouveau列入blacklist"><a href="#nouveau列入blacklist" class="headerlink" title="nouveau列入blacklist"></a>nouveau列入blacklist</h3><p>执行<code>tee /proc/acpi/bbswitch &lt;&lt;&lt; OFF</code>后还需要将nouveau列入黑名单，防止它后台运行。<br>在<code>blacklist.conf</code>添加<code>blacklist nouveau</code>禁用nouveau</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">nano /etc/modprobe.d/blacklist.conf</span><br><span class="line">blacklist nouveau</span><br></pre></td></tr></table></figure>
+
+<p>在下一次重启<code>lspci</code>就可以看到<code>rev ff</code>表示独显已经关闭了，或者<code>dmesg|grep -i nouveau</code>查看是否含有nouveau的内容</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">01:00.0 3D controller: NVIDIA Corporation GP108BM [GeForce MX250] (rev ff)</span><br></pre></td></tr></table></figure>
+
+<h3 id="rc-local"><a href="#rc-local" class="headerlink" title="rc.local"></a>rc.local</h3><p>将以上操作设置一个系统启动服务，这样在每次开机时就能够关闭独显了。基于Archlinux systemd写一个服务</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nano /etc/systemd/system/rc-local.service</span><br><span class="line">[Unit]</span><br><span class="line">Description=<span class="string">"/etc/rc.local Compatibility"</span> </span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=forking</span><br><span class="line">ExecStart=/etc/rc.local start</span><br><span class="line">TimeoutSec=0</span><br><span class="line">StandardInput=tty</span><br><span class="line">RemainAfterExit=yes</span><br><span class="line">SysVStartPriority=99</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>/etc/rc.local</code>就是要执行shell的启动脚步，开机时让modprobe加载bbswitch</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line">modprobe bbswitch</span><br></pre></td></tr></table></figure>
+
+<p>注意一定要赋予rc.local执行权限 <code>chmod +x /etc/rc.local</code>，最后将服务<code>rc-local</code>设置为开机启动 <code>systemctl enable rc-local.service</code>。</p>
+<p>重启计算机后<code>systemctl status rc-local.service</code> 查看rc-local服务状态。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">● rc-local.service - &quot;/etc/rc.local Compatibility&quot;</span><br><span class="line">   Loaded: loaded (/etc/systemd/system/rc-local.service; enabled; vendor preset: disabled)</span><br><span class="line">   Active: active (exited) since Fri 2020-02-14 09:55:13 CST; 4h 35min ago</span><br><span class="line">    Tasks: 0 (limit: 4915)</span><br><span class="line">   Memory: 0B</span><br><span class="line">   CGroup: /system.slice/rc-local.service</span><br><span class="line"></span><br><span class="line">2月 14 09:55:13 system systemd[1]: Starting &quot;/etc/rc.local Compatibility&quot;...</span><br><span class="line">2月 14 09:55:13 system systemd[1]: Started &quot;/etc/rc.local Compatibility&quot;.</span><br><span class="line">2月 14 10:07:31 system systemd[1]: /etc/systemd/system/rc-local.service:10: Support for option SysVStartPriority= has bee&gt;</span><br><span class="line">lines 1-10/10 (END)</span><br></pre></td></tr></table></figure>
+
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="https://xuchen.wang/archives/archbbswitch.html" target="_blank" rel="noopener">Arch下使用bbswitch彻底禁用双显卡笔记本的独立显卡</a><br><a href="https://superuser.com/questions/278396/systemd-does-not-run-etc-rc-local" target="_blank" rel="noopener">systemd does not run /etc/rc.local?</a></p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>二叉堆-堆排序</title>
     <url>/binaryheap-cpp/</url>
     <content><![CDATA[<p>堆是实现<strong>优先级队列</strong>效率很高的数据结构，如C++STL priority_queue、Python PriorityQueue。堆的变体很多，二叉堆、斐波那契堆……由堆实现的一种高效排序算法为堆排序。</p>
@@ -1969,8 +2012,8 @@
       </categories>
       <tags>
         <tag>C++</tag>
-        <tag>C</tag>
         <tag>Linux</tag>
+        <tag>C</tag>
         <tag>MongoDB</tag>
       </tags>
   </entry>
@@ -2148,8 +2191,8 @@
         <category>MongoDB</category>
       </categories>
       <tags>
-        <tag>C</tag>
         <tag>Linux</tag>
+        <tag>C</tag>
         <tag>MongoDB</tag>
       </tags>
   </entry>
@@ -2428,8 +2471,8 @@
       </categories>
       <tags>
         <tag>C++</tag>
-        <tag>C</tag>
         <tag>Linux</tag>
+        <tag>C</tag>
       </tags>
   </entry>
   <entry>
@@ -3504,8 +3547,8 @@
       </categories>
       <tags>
         <tag>C++</tag>
-        <tag>C</tag>
         <tag>Linux</tag>
+        <tag>C</tag>
         <tag>SDL2</tag>
       </tags>
   </entry>
@@ -3822,8 +3865,8 @@
       </categories>
       <tags>
         <tag>C++</tag>
-        <tag>C</tag>
         <tag>Linux</tag>
+        <tag>C</tag>
       </tags>
   </entry>
   <entry>
@@ -3922,8 +3965,8 @@
       </categories>
       <tags>
         <tag>C++</tag>
-        <tag>C</tag>
         <tag>Linux</tag>
+        <tag>C</tag>
       </tags>
   </entry>
   <entry>

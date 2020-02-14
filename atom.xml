@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.joxrays.com/"/>
-  <updated>2020-02-05T09:51:43.000Z</updated>
+  <updated>2020-02-14T06:31:25.833Z</updated>
   <id>http://www.joxrays.com/</id>
   
   <author>
@@ -15,6 +15,26 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Manjaro/Arch禁用独显</title>
+    <link href="http://www.joxrays.com/linux-ban-nvidia/"/>
+    <id>http://www.joxrays.com/linux-ban-nvidia/</id>
+    <published>2020-02-13T16:00:00.000Z</published>
+    <updated>2020-02-14T06:31:25.833Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;由于本人笔记本是双显卡的，曾几度尝试安装闭源NVIDIA驱动（为了hashcat），然而每次以失败告终，而系统自带的开源nouveau驱动实在太坑了，系统总是会出现一些莫名其妙的bug，忍无可忍之下干脆禁掉独显，只用核显得了。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Linux" scheme="http://www.joxrays.com/categories/Linux/"/>
+    
+    
+      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
+    
+  </entry>
   
   <entry>
     <title>二叉堆-堆排序</title>
@@ -436,28 +456,6 @@
     <summary type="html">
     
       &lt;p&gt;上次介绍了用 &lt;strong&gt;libxml2&lt;/strong&gt; 解析XML文档，用起来也挺“痛苦”的，不过这次即将介绍的同为开源 &lt;strong&gt;tinyxml2&lt;/strong&gt; 可再简单不够了。。。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Programming" scheme="http://www.joxrays.com/categories/Programming/"/>
-    
-    
-      <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
-    
-      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Libxml2解析XML文件</title>
-    <link href="http://www.joxrays.com/linux-libxml2/"/>
-    <id>http://www.joxrays.com/linux-libxml2/</id>
-    <published>2019-06-18T16:00:00.000Z</published>
-    <updated>2019-07-20T15:10:01.000Z</updated>
-    
-    <summary type="html">
-    
-      &lt;p&gt;Libxml2是由C语言开发的一个库，除了解析XML文档外，还可以解析HTML文档（不过这我没有研究）。同时，libxml2库可移植于多个平台&lt;br&gt;大致可与运行在如下平台： Linux, Unix, Windows, CygWin, MacOS, MacOS X, RISC Os, OS/2, VMS, QNX, MVS, VxWorks&lt;/p&gt;
     
     </summary>
     
