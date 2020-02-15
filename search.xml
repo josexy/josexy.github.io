@@ -3928,6 +3928,48 @@
       </tags>
   </entry>
   <entry>
+    <title>Linux popen()函数内部实现原理</title>
+    <url>/linux-popen/</url>
+    <content><![CDATA[<p>最近发现了一个函数 <strong>popen()/pclose()</strong> ,所以现在打算理清下思路…</p>
+<a id="more"></a>
+
+<h4 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h4><p>linux下的 <strong>popen</strong> 函数,大概就是通过 <strong>fork</strong> 一个子进程来执行命令并返回执行的结果给父进程.</p>
+<blockquote>
+<p>The popen() function shall <strong>execute the command</strong> specified by the string command. It shall <strong>create a pipe</strong> between the calling program and the executed command, and shall return a pointer to a stream that can be used to either read from or write to the pipe.</p>
+<p><a href="http://pubs.opengroup.org/onlinepubs/009695399/functions/popen.html" target="_blank" rel="noopener">http://pubs.opengroup.org/onlinepubs/009695399/functions/popen.html</a></p>
+</blockquote>
+<p>函数声明如下</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="comment">/* Create a new stream connected to a pipe running the given command.</span></span><br><span class="line"><span class="comment">   This function is a possible cancellation point and therefore not</span></span><br><span class="line"><span class="comment">   marked with __THROW.  */</span></span><br><span class="line"><span class="function"><span class="keyword">extern</span> FILE *<span class="title">popen</span> <span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *__command, <span class="keyword">const</span> <span class="keyword">char</span> *__modes)</span> __wur</span>;</span><br><span class="line"><span class="comment">/* Close a stream opened by popen and return the status of its child.</span></span><br><span class="line"><span class="comment">   This function is a possible cancellation point and therefore not</span></span><br><span class="line"><span class="comment">   marked with __THROW.  */</span></span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="keyword">int</span> <span class="title">pclose</span> <span class="params">(FILE *__stream)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>当然了,更重要的是要知道该函数内部是怎么实现的,大概步骤如下:<strong>(此处仅讨论子进程返回结果给父进程!)</strong></p>
+<ol>
+<li>父进程通过 <strong>pipe()</strong> 创建 <strong>读/写匿名管道</strong> ,并关闭写管道pfd[1]</li>
+<li>然后 <strong>fork()</strong> 创建子进程</li>
+<li>子进程 <strong>close()</strong> 读管道pfd[0]和标准输出(STDOUT_FILENO=1) ,并 <strong>dup()</strong> 写管道pfd[1]</li>
+<li>子进程通过 <strong>execl()</strong> 执行命令,执行的结果为标准输出重定向到了写管道pfd[1]</li>
+<li>父进程 <strong>wait()</strong> 子进程退出,接着 <strong>fdopen()</strong> 通过文件描述符返回一个 <strong>FILE*</strong> . 注意返回文件指针时,不能关闭读管道pfd[0],可以通过后续 fclose() 关闭该描述符</li>
+<li><strong>fclose()</strong> 关闭该读管道pfd[0]</li>
+</ol>
+<p>简单实现代码如下:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function">FILE* <span class="title">mypopen</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span>*cmd)</span></span>&#123;</span><br><span class="line">    <span class="comment">//管道文件描述符</span></span><br><span class="line">    <span class="keyword">int</span> pfd[<span class="number">2</span>];</span><br><span class="line">    <span class="keyword">if</span>(pipe(pfd)!=<span class="number">0</span>)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"error: %s\n"</span>,strerror(errno));</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//创建子进程</span></span><br><span class="line">    <span class="keyword">pid_t</span>  pid=fork();</span><br><span class="line">    <span class="keyword">if</span>(pid==<span class="number">0</span>)&#123;</span><br><span class="line">        <span class="built_in">close</span>(pfd[<span class="number">0</span>]);</span><br><span class="line">        </span><br><span class="line">         <span class="comment">//重定向 标准输出 到 写管道</span></span><br><span class="line">        <span class="built_in">close</span>(STDOUT_FILENO);</span><br><span class="line">        dup(pfd[<span class="number">1</span>]);</span><br><span class="line">        <span class="keyword">char</span> _cmd[<span class="number">50</span>]&#123;<span class="number">0</span>&#125;;</span><br><span class="line">        <span class="built_in">sprintf</span>(_cmd,<span class="string">"%s"</span>,cmd);</span><br><span class="line">        execl(<span class="string">"/bin/sh"</span>,<span class="string">"sh"</span>,<span class="string">"-c"</span>,_cmd,<span class="literal">NULL</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//关闭写管道</span></span><br><span class="line">    <span class="built_in">close</span>(pfd[<span class="number">1</span>]);</span><br><span class="line">    <span class="comment">//等待子进程退出</span></span><br><span class="line">    <span class="keyword">int</span> p= wait(<span class="number">0</span>);</span><br><span class="line">   <span class="comment">//printf("%d terminal\n",p);</span></span><br><span class="line">    <span class="comment">//直接读取数据</span></span><br><span class="line">    <span class="comment">//char buffer[1024*2]=&#123;0&#125;;</span></span><br><span class="line">    <span class="comment">//read(pfd[0],buffer,1024*2);</span></span><br><span class="line">    FILE* pfile =fdopen(pfd[<span class="number">0</span>],<span class="string">"r"</span>);</span><br><span class="line">    <span class="keyword">if</span>(!pfile) <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">return</span> pfile;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    FILE *file= mypopen(<span class="string">"ls -lSah"</span>);</span><br><span class="line">    <span class="keyword">char</span> <span class="built_in">buffer</span>[<span class="number">1024</span>];</span><br><span class="line">    <span class="keyword">while</span>(fgets(<span class="built_in">buffer</span>,<span class="number">1024</span>,file))&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%s"</span>,<span class="built_in">buffer</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//close pfd[0]!</span></span><br><span class="line">    fclose(file);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中,较重要的是在子进程中重定向标准输出,这里给出其他方法重定向标准输出到管道描述符</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//方法1</span></span><br><span class="line"><span class="comment">//重定向 标准输出 到 写管道</span></span><br><span class="line"><span class="built_in">close</span>(STDOUT_FILENO);</span><br><span class="line">dup(pfd[<span class="number">1</span>]);</span><br><span class="line"><span class="comment">//方法2,相当于先close(STDOUT_FILENO) ,再dup(pfd[1])</span></span><br><span class="line">dup2(pfd[<span class="number">1</span>],STDOUT_FILENO);</span><br><span class="line"><span class="comment">//方法3</span></span><br><span class="line"><span class="built_in">close</span>(STDOUT_FILENO);</span><br><span class="line"><span class="keyword">int</span> fd=fcntl(pfd[<span class="number">1</span>],F_DUPFD);</span><br></pre></td></tr></table></figure>
+
+<h4 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h4><p>参考文章: <a href="http://blog.csdn.net/litingli/article/details/5891726" target="_blank" rel="noopener">http://blog.csdn.net/litingli/article/details/5891726</a></p>
+]]></content>
+      <categories>
+        <category>Programming</category>
+      </categories>
+      <tags>
+        <tag>C++</tag>
+        <tag>Linux</tag>
+        <tag>C</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Windows API HOOK钩子</title>
     <url>/windows-hook/</url>
     <content><![CDATA[<p>本文讲下Windows API HOOK(钩子),主要和DLL注入联系在一起.<br>Windows系统把每个WindowsAPI函数功能封装到了每一个DLL库文件中,从而提高程序的编译运行效率,而在应用程序运行期间动态库时,必然存在程序获取DLL中的函数地址.于是通过注入DLL来截取信息.</p>
@@ -4017,48 +4059,6 @@
         <tag>C++</tag>
         <tag>C</tag>
         <tag>Windows</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Linux popen()函数内部实现原理</title>
-    <url>/linux-popen/</url>
-    <content><![CDATA[<p>最近发现了一个函数 <strong>popen()/pclose()</strong> ,所以现在打算理清下思路…</p>
-<a id="more"></a>
-
-<h4 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h4><p>linux下的 <strong>popen</strong> 函数,大概就是通过 <strong>fork</strong> 一个子进程来执行命令并返回执行的结果给父进程.</p>
-<blockquote>
-<p>The popen() function shall <strong>execute the command</strong> specified by the string command. It shall <strong>create a pipe</strong> between the calling program and the executed command, and shall return a pointer to a stream that can be used to either read from or write to the pipe.</p>
-<p><a href="http://pubs.opengroup.org/onlinepubs/009695399/functions/popen.html" target="_blank" rel="noopener">http://pubs.opengroup.org/onlinepubs/009695399/functions/popen.html</a></p>
-</blockquote>
-<p>函数声明如下</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="comment">/* Create a new stream connected to a pipe running the given command.</span></span><br><span class="line"><span class="comment">   This function is a possible cancellation point and therefore not</span></span><br><span class="line"><span class="comment">   marked with __THROW.  */</span></span><br><span class="line"><span class="function"><span class="keyword">extern</span> FILE *<span class="title">popen</span> <span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *__command, <span class="keyword">const</span> <span class="keyword">char</span> *__modes)</span> __wur</span>;</span><br><span class="line"><span class="comment">/* Close a stream opened by popen and return the status of its child.</span></span><br><span class="line"><span class="comment">   This function is a possible cancellation point and therefore not</span></span><br><span class="line"><span class="comment">   marked with __THROW.  */</span></span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="keyword">int</span> <span class="title">pclose</span> <span class="params">(FILE *__stream)</span></span>;</span><br></pre></td></tr></table></figure>
-
-<p>当然了,更重要的是要知道该函数内部是怎么实现的,大概步骤如下:<strong>(此处仅讨论子进程返回结果给父进程!)</strong></p>
-<ol>
-<li>父进程通过 <strong>pipe()</strong> 创建 <strong>读/写匿名管道</strong> ,并关闭写管道pfd[1]</li>
-<li>然后 <strong>fork()</strong> 创建子进程</li>
-<li>子进程 <strong>close()</strong> 读管道pfd[0]和标准输出(STDOUT_FILENO=1) ,并 <strong>dup()</strong> 写管道pfd[1]</li>
-<li>子进程通过 <strong>execl()</strong> 执行命令,执行的结果为标准输出重定向到了写管道pfd[1]</li>
-<li>父进程 <strong>wait()</strong> 子进程退出,接着 <strong>fdopen()</strong> 通过文件描述符返回一个 <strong>FILE*</strong> . 注意返回文件指针时,不能关闭读管道pfd[0],可以通过后续 fclose() 关闭该描述符</li>
-<li><strong>fclose()</strong> 关闭该读管道pfd[0]</li>
-</ol>
-<p>简单实现代码如下:</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function">FILE* <span class="title">mypopen</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span>*cmd)</span></span>&#123;</span><br><span class="line">    <span class="comment">//管道文件描述符</span></span><br><span class="line">    <span class="keyword">int</span> pfd[<span class="number">2</span>];</span><br><span class="line">    <span class="keyword">if</span>(pipe(pfd)!=<span class="number">0</span>)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"error: %s\n"</span>,strerror(errno));</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//创建子进程</span></span><br><span class="line">    <span class="keyword">pid_t</span>  pid=fork();</span><br><span class="line">    <span class="keyword">if</span>(pid==<span class="number">0</span>)&#123;</span><br><span class="line">        <span class="built_in">close</span>(pfd[<span class="number">0</span>]);</span><br><span class="line">        </span><br><span class="line">         <span class="comment">//重定向 标准输出 到 写管道</span></span><br><span class="line">        <span class="built_in">close</span>(STDOUT_FILENO);</span><br><span class="line">        dup(pfd[<span class="number">1</span>]);</span><br><span class="line">        <span class="keyword">char</span> _cmd[<span class="number">50</span>]&#123;<span class="number">0</span>&#125;;</span><br><span class="line">        <span class="built_in">sprintf</span>(_cmd,<span class="string">"%s"</span>,cmd);</span><br><span class="line">        execl(<span class="string">"/bin/sh"</span>,<span class="string">"sh"</span>,<span class="string">"-c"</span>,_cmd,<span class="literal">NULL</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//关闭写管道</span></span><br><span class="line">    <span class="built_in">close</span>(pfd[<span class="number">1</span>]);</span><br><span class="line">    <span class="comment">//等待子进程退出</span></span><br><span class="line">    <span class="keyword">int</span> p= wait(<span class="number">0</span>);</span><br><span class="line">   <span class="comment">//printf("%d terminal\n",p);</span></span><br><span class="line">    <span class="comment">//直接读取数据</span></span><br><span class="line">    <span class="comment">//char buffer[1024*2]=&#123;0&#125;;</span></span><br><span class="line">    <span class="comment">//read(pfd[0],buffer,1024*2);</span></span><br><span class="line">    FILE* pfile =fdopen(pfd[<span class="number">0</span>],<span class="string">"r"</span>);</span><br><span class="line">    <span class="keyword">if</span>(!pfile) <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">return</span> pfile;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    FILE *file= mypopen(<span class="string">"ls -lSah"</span>);</span><br><span class="line">    <span class="keyword">char</span> <span class="built_in">buffer</span>[<span class="number">1024</span>];</span><br><span class="line">    <span class="keyword">while</span>(fgets(<span class="built_in">buffer</span>,<span class="number">1024</span>,file))&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%s"</span>,<span class="built_in">buffer</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//close pfd[0]!</span></span><br><span class="line">    fclose(file);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>其中,较重要的是在子进程中重定向标准输出,这里给出其他方法重定向标准输出到管道描述符</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//方法1</span></span><br><span class="line"><span class="comment">//重定向 标准输出 到 写管道</span></span><br><span class="line"><span class="built_in">close</span>(STDOUT_FILENO);</span><br><span class="line">dup(pfd[<span class="number">1</span>]);</span><br><span class="line"><span class="comment">//方法2,相当于先close(STDOUT_FILENO) ,再dup(pfd[1])</span></span><br><span class="line">dup2(pfd[<span class="number">1</span>],STDOUT_FILENO);</span><br><span class="line"><span class="comment">//方法3</span></span><br><span class="line"><span class="built_in">close</span>(STDOUT_FILENO);</span><br><span class="line"><span class="keyword">int</span> fd=fcntl(pfd[<span class="number">1</span>],F_DUPFD);</span><br></pre></td></tr></table></figure>
-
-<h4 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h4><p>参考文章: <a href="http://blog.csdn.net/litingli/article/details/5891726" target="_blank" rel="noopener">http://blog.csdn.net/litingli/article/details/5891726</a></p>
-]]></content>
-      <categories>
-        <category>Programming</category>
-      </categories>
-      <tags>
-        <tag>C++</tag>
-        <tag>Linux</tag>
-        <tag>C</tag>
       </tags>
   </entry>
 </search>
