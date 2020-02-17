@@ -1,6 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>CentOS+TinyProxy+Stunnel配置HTTP代理服务器</title>
+    <url>/linux-tinyproxy/</url>
+    <content><![CDATA[<p>本文将利用CentOS、TinyProxy、Stunnel搭建一个正向代理服务器……</p>
+<a id="more"></a>
+
+<p>之前的 <a href="http://localhost:4000/centos-shadowsocks/" target="_blank" rel="noopener">CentOS服务器Shadowsocks</a> 是在CentOS7上配置Shadowsocks将其作为代理服务器，而这次的tinyproxy配置同样也是把CentOS7作为一个代理服务器，而且SS是基于Socks5协议，tinyproxy是HTTP/HTTPS协议。</p>
+<h3 id="TinyProxy"><a href="#TinyProxy" class="headerlink" title="TinyProxy"></a>TinyProxy</h3><p>TinyProxy是一个由C语言开发、开源、轻量级的HTTP/HTTPS代理服务器 <a href="https://github.com/tinyproxy/tinyproxy" target="_blank" rel="noopener">Github</a></p>
+<blockquote>
+<p>Tinyproxy is a light-weight HTTP/HTTPS proxy daemon for POSIX operating systems. Designed from the ground up to be fast and yet small, it is an ideal solution for use cases such as embedded deployments where a full featured HTTP proxy is required, but the system resources for a larger proxy are unavailable.</p>
+</blockquote>
+<p>tinyproxy比squid配置要简单，但squid功能却比tinyproxy要多且灵活性高。不过我对squid不是很深入了解，暂时就拿tinyproxy来说吧。<br>由于我的服务器是CentOS7，故可直接从包管理器安装</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@VM_0_17_centos ~]<span class="comment"># yum install -y tinyproxy</span></span><br></pre></td></tr></table></figure>
+
+<p>之后就是配置tinyproxy了</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@VM_0_17_centos ~]<span class="comment"># vim /etc/tinyproxy/tinyproxy.conf</span></span><br></pre></td></tr></table></figure>
+
+<p>修改tinyproxy监听端口<code>Port</code>，默认 <code>8888</code><br>注释<code>Allow</code>参数，表示允许所有人都可以访问代理服务器。如果只希望指定的IP能够访问代理服务器，那么可以添加多个<code>Allow</code></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Port 8888</span><br><span class="line"><span class="comment">#Allow 127.0.0.1</span></span><br><span class="line">Allow 10.10.6.0/24</span><br><span class="line">Allow 123.200.123.66</span><br></pre></td></tr></table></figure>
+
+<p>注意 <code>#DisableViaHeader Yes</code> 这个参数，用于指定是否在请求Header中显示tinyproxy相关信息（比如：<code>Proxy-agent: tinyproxy/1.8.3</code>），默认是关闭的。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># ViaProxyName: The "Via" header is required by the HTTP RFC, but using</span></span><br><span class="line"><span class="comment"># the real host name is a security concern.  If the following directive</span></span><br><span class="line"><span class="comment"># is enabled, the string supplied will be used as the host name in the</span></span><br><span class="line"><span class="comment"># Via header; otherwise, the server's host name will be used.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#ViaProxyName "tinyproxy"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># DisableViaHeader: When this is set to yes, Tinyproxy does NOT add</span></span><br><span class="line"><span class="comment"># the Via header to the requests. This virtually puts Tinyproxy into</span></span><br><span class="line"><span class="comment"># stealth mode. Note that RFC 2616 requires proxies to set the Via</span></span><br><span class="line"><span class="comment"># header, so by enabling this option, you break compliance.</span></span><br><span class="line"><span class="comment"># Don't disable the Via header unless you know what you are doing...</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#DisableViaHeader Yes</span></span><br></pre></td></tr></table></figure>
+
+<p>其他参数默认即可，之后就是启动tinyproxy</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@VM_0_17_centos ~]<span class="comment"># systemctl start tinyproxy.service</span></span><br><span class="line">[root@VM_0_17_centos ~]<span class="comment"># systemctl enable tinyproxy.service</span></span><br></pre></td></tr></table></figure>
+
+<p>配置iptables</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 允许访问</span></span><br><span class="line">iptables -I INPUT -p tcp --dport 8888 -j ACCEPT</span><br><span class="line"><span class="comment"># 拒绝访问</span></span><br><span class="line">iptables -I INPUT -p tcp --dport 8888 -j REJECT</span><br></pre></td></tr></table></figure>
+
+<p>可能还需要配置云服务器安全组外界才能访问tinyproxy端口</p>
+<p>之后就能够直接通过该代理服务器进行代理访问了</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">% curl -x 129.204.152.8:8888 https://ip.cn --head</span><br><span class="line">HTTP/1.0 200 Connection established</span><br><span class="line">Proxy-agent: tinyproxy/1.8.3</span><br><span class="line"></span><br><span class="line">HTTP/2 200 </span><br><span class="line">date: Mon, 17 Feb 2020 02:08:20 GMT</span><br><span class="line">content-type: application/json; charset=UTF-8</span><br><span class="line"><span class="built_in">set</span>-cookie: __cfduid=d404e02d9f8749f3815ce40da97e29bbf1581905300; expires=Wed, 18-Mar-20 02:08:20 GMT; path=/; domain=.ip.cn; HttpOnly; SameSite=Lax</span><br><span class="line">cf-cache-status: DYNAMIC</span><br><span class="line">expect-ct: max-age=604800, report-uri=<span class="string">"https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"</span></span><br><span class="line">server: cloudflare</span><br><span class="line">cf-ray: 5664367e282eeba9-LAX</span><br></pre></td></tr></table></figure>
+
+<p>当然也可以 <code>curl -x 129.204.152.8:8888 https://ip.cn --head -k</code>，即允许curl使用非安全的ssl连接并且传输数据（证书不受信）。<br>注意 <code>Proxy-agent: tinyproxy/1.8.3</code> ，之前我们并没有注释 <code>#DisableViaHeader Yes</code>，它会在Via请求中显示代理信息。<br>查看日志log <code>tail /var/log/tinyproxy/tinyproxy.log</code>。</p>
+<p>然而事情并没有结束……</p>
+<h3 id="Stunnel-隧道"><a href="#Stunnel-隧道" class="headerlink" title="Stunnel(隧道)"></a>Stunnel(隧道)</h3><blockquote>
+<p>Stunnel是一个自由的跨平台软件，用于提供全局的TLS/SSL服务。针对本身无法进行TLS或SSL通信的客户端及服务器，Stunnel可提供安全的加密连接。</p>
+</blockquote>
+<p>如果用代理服务器访问一个HTTP协议的网站，那么传输的数据是不会加密的，也就是说可以被抓包软件获取数据包，比如Wireshark。我在服务器配置了Apache，开启80端口，比如这样一个HTTP ULR： <a href="http://129.204.152.8:80。" target="_blank" rel="noopener">http://129.204.152.8:80。</a><br><code>curl -x 129.204.152.8:8888 http://129.204.152.8 -v</code><br><img src="/uploads/images/tinyproxy_stunnel/01.png" alt></p>
+<p>可见数据没有加密，而是直接在两台主机间传输，我们希望HTTP传输也是安全的，也就是经过加密的，那么可以使用Stunnel和TinyProxy来混淆HTTP流量。</p>
+<p>CentOS安装Stunnel <code>yum install -y stunnel</code></p>
+<h4 id="配置服务端Server"><a href="#配置服务端Server" class="headerlink" title="配置服务端Server"></a>配置服务端Server</h4><p><code>vim /etc/stunnel/stunnel.conf</code>，如果stunnel.conf不存在，那么新建一个并添加以下内容</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[tinyproxy]</span><br><span class="line">accept = 0.0.0.0:3128</span><br><span class="line">connect = 0.0.0.0:8888</span><br><span class="line">cert = /etc/ssl/cert.pem</span><br><span class="line">key = /etc/ssl/key.pem</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>accept 服务器stunnel监听端口，用于与客户端进行连接</li>
+<li>connect 用于告诉stunnel要连接的IP和端口。这需要是TinyProxy监听的IP和端口，<code>netstat -anpl|grep tinyproxy</code>可看到</li>
+<li>cert 本地证书文件路径，可以用<code>openssl</code>生成</li>
+<li>key 本地密匙文件路径</li>
+</ul>
+<h5 id="创建自签名证书"><a href="#创建自签名证书" class="headerlink" title="创建自签名证书"></a>创建自签名证书</h5><p>要启动stunnel，那还需要创建自签名证书。</p>
+<p>生成key.pem</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@VM_0_17_centos ~]<span class="comment"># openssl genrsa -out /etc/ssl/key.pem 4096</span></span><br><span class="line">Generating RSA private key, 4096 bit long modulus</span><br><span class="line">......................................................................++</span><br><span class="line">..............................................................++</span><br><span class="line">e is 65537 (0x10001)</span><br></pre></td></tr></table></figure>
+
+<p>这将创建一个<code>4096</code>位RSA密钥<code>key.pem</code>。有兴趣的可以了解下<a href="https://danielpocock.com/rsa-key-sizes-2048-or-4096-bits/" target="_blank" rel="noopener">“RSA Key Sizes: 2048 or 4096 bits?”</a></p>
+<p>生成cert.pem</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@VM_0_17_centos ~]<span class="comment"># openssl req -new -x509 -key /etc/ssl/key.pem -out /etc/ssl/cert.pem -days 1826</span></span><br><span class="line">You are about to be asked to enter information that will be incorporated</span><br><span class="line">into your certificate request.</span><br><span class="line">What you are about to enter is what is called a Distinguished Name or a DN.</span><br><span class="line">There are quite a few fields but you can leave some blank</span><br><span class="line">For some fields there will be a default value,</span><br><span class="line">If you enter <span class="string">'.'</span>, the field will be left blank.</span><br><span class="line">-----</span><br><span class="line">Country Name (2 letter code) [XX]:US</span><br><span class="line">State or Province Name (full name) []:Arizona</span><br><span class="line">Locality Name (eg, city) [Default City]:Phoenix</span><br><span class="line">Organization Name (eg, company) [Default Company Ltd]:</span><br><span class="line">Organizational Unit Name (eg, section) []:</span><br><span class="line">Common Name (eg, your name or your server<span class="string">'s hostname) []:VM_0_17_centos</span></span><br><span class="line"><span class="string">Email Address []:helloworld@example.com          </span></span><br><span class="line"><span class="string">[root@VM_0_17_centos ~]# ls -lh /etc/ssl/</span></span><br><span class="line"><span class="string">total 8.0K</span></span><br><span class="line"><span class="string">-rw-r--r-- 1 root root 2.1K Feb 17 11:03 cert.pem</span></span><br><span class="line"><span class="string">lrwxrwxrwx 1 root root   16 Feb  6 11:56 certs -&gt; ../pki/tls/certs</span></span><br><span class="line"><span class="string">-rw-r--r-- 1 root root 3.2K Feb 17 10:55 key.pem</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>new x509 创建一个新的X509证书</li>
+<li>days 证书的有效期</li>
+<li>key 密匙文件</li>
+<li>out 输出到cert.pem</li>
+</ul>
+<p>生成的同时还要回答一些问题</p>
+<ul>
+<li>Country Name 国家 (PL,UK,US,CA)</li>
+<li>State or Province Name 州或省 (Illinois,Ontario,…)</li>
+<li>Locality Name 地区 (Chicago,Toronto,…)</li>
+<li>Organization Name 组织</li>
+<li>Organizational Unit Name 组织单位</li>
+<li>Common Name (your name or your server’s hostname) 一般服务器hostname</li>
+<li>Email Address 电子邮件</li>
+</ul>
+<p>启动stunnel <code>stunnel /etc/stunnel/stunnel.conf</code></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[root@VM_0_17_centos ~]# netstat -antpl|grep stunnel</span><br><span class="line">tcp        0      0 0.0.0.0:3128            0.0.0.0:*               LISTEN      24263/stunnel</span><br></pre></td></tr></table></figure>
+
+<h4 id="配置客户端Client"><a href="#配置客户端Client" class="headerlink" title="配置客户端Client"></a>配置客户端Client</h4><p>配置完服务器还需要配置本地客户端，就拿Arch/Manjaro举例。<br>安装stunnel <code>pacman -S stunnel</code></p>
+<p><code>cp /etc/stunnel/stunnel.conf-sample /etc/stunnel/stunnel.conf</code><br><code>vim /etc/stunnel/stunnel.conf</code><br>编辑配置文件stunnel.conf可以全部删除只添加以下内容</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[tinyproxy]</span><br><span class="line">client = yes</span><br><span class="line">accept = 0.0.0.0:3129</span><br><span class="line">connect = 129.204.152.8:3128</span><br><span class="line">verify = 3</span><br><span class="line">CAfile = /etc/stunnel/cert.pem</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>client 表明这是客户端</li>
+<li>accept 本地stunnel监听ip地址+端口 0.0.0.0:xxxx</li>
+<li>connect 要连接到远程stunnel服务器</li>
+<li>verify  证书验证级别，verify=3根据本地安装的证书并验证证书</li>
+<li>CAfile 服务器上生成的<code>cert.pem</code>，将其复制到本地/etc/stunnel/cert.pem</li>
+</ul>
+<p>之后就可以启动stunnel了，<code>stunnel /etc/stunnel/stunnel.conf</code>，也可以 <code>systemctl start stunnel.service</code>、<code>systemctl enable stunnel.service</code></p>
+<h5 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">% curl -x 127.0.0.1:3129 https://ip.cn --head</span><br><span class="line">HTTP/1.0 200 Connection established</span><br><span class="line">Proxy-agent: tinyproxy/1.8.3</span><br><span class="line"></span><br><span class="line">HTTP/2 200 </span><br><span class="line">date: Mon, 17 Feb 2020 03:58:29 GMT</span><br><span class="line">content-type: application/json; charset=UTF-8</span><br><span class="line"><span class="built_in">set</span>-cookie: __cfduid=d340c54d6fa045689f6f49e91ac7f918f1581911909; expires=Wed, 18-Mar-20 03:58:29 GMT; path=/; domain=.ip.cn; HttpOnly; SameSite=Lax</span><br><span class="line">cf-cache-status: DYNAMIC</span><br><span class="line">expect-ct: max-age=604800, report-uri=<span class="string">"https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"</span></span><br><span class="line">server: cloudflare</span><br><span class="line">cf-ray: 5664d7d91e5d77b8-LAX</span><br></pre></td></tr></table></figure>
+
+<p><code>curl -x 127.0.0.1:3129 http://129.204.152.8 -v</code><br><img src="/uploads/images/tinyproxy_stunnel/02.png" alt></p>
+<p>可见成功的搭建了一个基于TLS的HTTP/HTTPS代理。</p>
+<h3 id="Windows-Stunnel"><a href="#Windows-Stunnel" class="headerlink" title="Windows Stunnel"></a>Windows Stunnel</h3><p>对于Windows系统，可以从 <a href="https://www.stunnel.org/downloads.html" target="_blank" rel="noopener">https://www.stunnel.org/downloads.html</a> 下载Windows版本的stunnel，首次启动stunnel要回答一些问题来创建默认的<code>stunnel.pem</code>。<br>现在将服务器生成的<code>cert.pem</code>复制到Windows stunnel配置文件目录。<br><img src="/uploads/images/tinyproxy_stunnel/03.png" alt></p>
+<p>然后编辑配置文件<code>stunnel.conf</code>。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">debug = info</span><br><span class="line">output = stunnel.log</span><br><span class="line"></span><br><span class="line">[tinyproxy]</span><br><span class="line">client = yes</span><br><span class="line">accept = 6666</span><br><span class="line">connect = 129.204.152.8:3128</span><br><span class="line">;CAfile = cert.pem</span><br><span class="line">cert = cert.pem</span><br><span class="line">key = cert.pem</span><br><span class="line">verify = 3</span><br></pre></td></tr></table></figure>
+
+<p>最后启动stunnel，成功。<br><img src="/uploads/images/tinyproxy_stunnel/04.png" alt></p>
+<p>stunnel官网在线帮助手册: <a href="https://www.stunnel.org/static/stunnel.html" target="_blank" rel="noopener">https://www.stunnel.org/static/stunnel.html</a><br>以上便是代理服务器的配置～</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="https://github.com/tinyproxy/tinyproxy/wiki" target="_blank" rel="noopener">Tinyproxy Wiki</a><br><a href="http://kb.ictbanking.net/article.php?id=380" target="_blank" rel="noopener">Using stunnel and TinyProxy to obfuscate HTTP traffic</a><br><a href="https://blog.csdn.net/qq_39702947/article/details/87714520" target="_blank" rel="noopener">Windows系统Stunnel使用简介</a></p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+        <tag>CentOS</tag>
+        <tag>TinyProxy</tag>
+        <tag>HTTP</tag>
+        <tag>HTTPS</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Manjaro/Arch禁用独显</title>
     <url>/linux-ban-nvidia/</url>
     <content><![CDATA[<p>由于本人笔记本是双显卡的，曾几度尝试安装闭源NVIDIA驱动（为了hashcat），然而每次以失败告终，而系统自带的开源nouveau驱动实在太坑了，系统总是会出现一些莫名其妙的bug，忍无可忍之下干脆禁掉独显，只用核显得了。</p>

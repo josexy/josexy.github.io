@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.joxrays.com/"/>
-  <updated>2020-02-14T06:31:25.833Z</updated>
+  <updated>2020-02-17T05:39:19.939Z</updated>
   <id>http://www.joxrays.com/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>CentOS+TinyProxy+Stunnel配置HTTP代理服务器</title>
+    <link href="http://www.joxrays.com/linux-tinyproxy/"/>
+    <id>http://www.joxrays.com/linux-tinyproxy/</id>
+    <published>2020-02-16T16:00:00.000Z</published>
+    <updated>2020-02-17T05:39:19.939Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;本文将利用CentOS、TinyProxy、Stunnel搭建一个正向代理服务器……&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Linux" scheme="http://www.joxrays.com/categories/Linux/"/>
+    
+    
+      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
+    
+      <category term="CentOS" scheme="http://www.joxrays.com/tags/CentOS/"/>
+    
+      <category term="TinyProxy" scheme="http://www.joxrays.com/tags/TinyProxy/"/>
+    
+      <category term="HTTP" scheme="http://www.joxrays.com/tags/HTTP/"/>
+    
+      <category term="HTTPS" scheme="http://www.joxrays.com/tags/HTTPS/"/>
+    
+  </entry>
   
   <entry>
     <title>Manjaro/Arch禁用独显</title>
@@ -443,28 +471,6 @@
       <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
     
       <category term="Ping" scheme="http://www.joxrays.com/tags/Ping/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>TinyXML2解析XML文件</title>
-    <link href="http://www.joxrays.com/linux-tinyxml2/"/>
-    <id>http://www.joxrays.com/linux-tinyxml2/</id>
-    <published>2019-06-19T16:00:00.000Z</published>
-    <updated>2019-07-20T15:14:49.000Z</updated>
-    
-    <summary type="html">
-    
-      &lt;p&gt;上次介绍了用 &lt;strong&gt;libxml2&lt;/strong&gt; 解析XML文档，用起来也挺“痛苦”的，不过这次即将介绍的同为开源 &lt;strong&gt;tinyxml2&lt;/strong&gt; 可再简单不够了。。。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Programming" scheme="http://www.joxrays.com/categories/Programming/"/>
-    
-    
-      <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
-    
-      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
     
   </entry>
   
