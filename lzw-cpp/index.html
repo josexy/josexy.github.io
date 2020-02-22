@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/favicon.ico?v=7.2.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.2.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    copycode: {"enable":true,"show_result":true,"style":"mac"},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="最近翻看《数据结构、算法与应用》里面关于哈希表章节时看到一个LZW文本压缩算法的实例，啃了很久才基本了解LZW算法，于是赶紧把它记录下来方便日后翻看。">
+<meta name="keywords" content="C++,DataStructures,C">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LZW文本压缩">
+<meta property="og:url" content="http://www.joxrays.com/lzw-cpp/index.html">
+<meta property="og:site_name" content="JoXrays&#39;s Blog">
+<meta property="og:description" content="最近翻看《数据结构、算法与应用》里面关于哈希表章节时看到一个LZW文本压缩算法的实例，啃了很久才基本了解LZW算法，于是赶紧把它记录下来方便日后翻看。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://www.joxrays.com/uploads/images/data_structure/lzw_cpp/01.png">
+<meta property="og:image" content="http://www.joxrays.com/uploads/images/data_structure/lzw_cpp/02.png">
+<meta property="og:image" content="http://www.joxrays.com/uploads/images/data_structure/lzw_cpp/04.png">
+<meta property="og:image" content="http://www.joxrays.com/uploads/images/data_structure/lzw_cpp/03.png">
+<meta property="og:image" content="http://www.joxrays.com/uploads/images/data_structure/lzw_cpp/05.png">
+<meta property="og:image" content="http://www.joxrays.com/uploads/images/data_structure/lzw_cpp/06.png">
+<meta property="og:image" content="http://www.joxrays.com/uploads/images/data_structure/lzw_cpp/07.png">
+<meta property="og:updated_time" content="2020-02-22T10:35:11.827Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="LZW文本压缩">
+<meta name="twitter:description" content="最近翻看《数据结构、算法与应用》里面关于哈希表章节时看到一个LZW文本压缩算法的实例，啃了很久才基本了解LZW算法，于是赶紧把它记录下来方便日后翻看。">
+<meta name="twitter:image" content="http://www.joxrays.com/uploads/images/data_structure/lzw_cpp/01.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="JoXrays's Blog" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="http://www.joxrays.com/lzw-cpp/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  
+  <title>LZW文本压缩 | JoXrays's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="stylesheet" href="/css/prism-duotone-dark.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JoXrays's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <h1 class="site-subtitle" itemprop="description">All my interesting ...</h1>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.joxrays.com/lzw-cpp/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Joseph XRays">
+      <meta itemprop="description" content="Share the knowledge">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JoXrays's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">LZW文本压缩
+
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-02-22 00:00:00 / 修改时间：18:35:11" itemprop="dateCreated datePublished" datetime="2020-02-22T00:00:00+08:00">2020-02-22</time>
+            </span>
+          
+
+          
+            
+
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/数据结构与算法/" itemprop="url" rel="index"><span itemprop="name">数据结构与算法</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span title="本文字数">5.1k</span>
+            </span>
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span title="阅读时长">5 分钟</span>
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近翻看《数据结构、算法与应用》里面关于哈希表章节时看到一个LZW文本压缩算法的实例，啃了很久才基本了解LZW算法，于是赶紧把它记录下来方便日后翻看。</p>
+<a id="more"></a>
+<h3 id="LZW"><a href="#LZW" class="headerlink" title="LZW"></a>LZW</h3><p>Lempel-Ziv-Welch（LZW）是由Abraham Lempel，Jacob Ziv和Terry Welch创建的<strong>无损</strong>数据压缩算法。<br>为了减少一个文本文件占用的磁盘空间，通常需要将文本文件压缩编码后存储，这个过程需要对文件编码的<strong>压缩器compressor</strong>，以及解码的<strong>解压器decompressor</strong>。</p>
+<h3 id="压缩compress"><a href="#压缩compress" class="headerlink" title="压缩compress"></a>压缩compress</h3><p>LZW压缩方法是将文本字符串Text映射为数字编码Code（比如ASCII 0-255），而将文本字符串Text和数字编码Code这一对映射关系存储在字典/哈希表中。</p>
+<p>首先我们规定：<code>p</code>表示存在于字典中<code>最长</code>的字符串，称为<strong>前缀字符串</strong>；<code>c</code>表示在待编码字符串<code>S</code>中匹配到的<code>p</code>前缀字符串的<code>下一个字符</code>，称为<strong>后缀字符</strong>；<code>p</code>在字典表<code>table</code>中的<code>代码</code>为<code>table[p]</code>。</p>
+<p>为了简化事例，假设一串文本<code>S=aaabbbbbbaabaaba</code>只由a、b组成，初始情况下字典中只有<code>a</code>和<code>b</code>这两个字符，且存储在字典<code>table</code>中，已压缩串为空。</p>
+<p>这张图参考了书上的例子，加上自己修改觉得挺不错的。图中表格阴影部分表示输出的压缩串代码在字典中的位置。<br><img src="/uploads/images/data_structure/lzw_cpp/01.png" alt></p>
+<p>用LZW压缩算法来模拟上图的过程：<br>1.首先初始化字典<code>table&lt;String,Integer&gt;</code>；<br>2.然后找到待编码字符串<code>S</code>的第一个字符作为<code>前缀字符串p</code>，且这个字符一定能在字典中找到对应代码<code>table[p]</code>；<br>3.接着读取<code>S</code>的下一个<strong>字符</strong>作为<code>后缀字符c=a</code>；<br>4.如果<code>p+c</code>在字典中，则p指向下一个字符串：<code>p=p+c</code>；<br>5.如果<code>p+c</code>不在字典中，那么输出<code>p</code>在字典中的代码<code>table[p]</code>，同时为<code>p+c</code>在字典中分配一个新的代码<code>table[p+c]</code>，<code>p</code>指向下一个字符：<code>p=c</code>；<br>6.重复步骤3、4、5直到<code>EOF</code>；<br>7.最后输出代码<code>table[p]</code>；<br>8.结束。</p>
+<p>伪代码如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Initialize table</span><br><span class="line">P = first input character</span><br><span class="line">WHILE not EOF</span><br><span class="line">    C = next input character</span><br><span class="line">    IF P + C in table</span><br><span class="line">        P = P + C</span><br><span class="line">    ELSE</span><br><span class="line">        output the code for P</span><br><span class="line">        insert P + C into table</span><br><span class="line">        P = C</span><br><span class="line">output code for P</span><br></pre></td></tr></table></figure>
+
+<p>初始字典仅仅包含一些基本字符串和代码，但是随着编码的进行，字典不断扩增，如果遇到一个新的字符串<code>p+c</code>不在字典中，那么就将其添加到字典，以便下一次编码时<code>p+c</code>能够从字典中找到；如果能够在字典中找到<code>p+c</code>，意味着需要一个更长的字符串<code>p</code>来映射一些新的代码以达到文本压缩目的。就像上图例2,3，此时<code>p=a,c=a</code>,<code>&lt;aa,2&gt;</code>已经存在字典，下一次判断<code>p+c=aa</code>就能够在字典中找到<code>aa</code>，于是<code>p=p+c=aa</code>，尽可能选择一个最长的前缀字符串，接着下一次判断时<code>aa+b=aab</code>在字典中找不到，于是将<code>&lt;aab,3&gt;</code>插入到字典中。</p>
+<p>还有当读取文件尾/字符串到达结尾时，此时<code>p</code>还保留之前的字符串<code>p=c</code>或<code>p=p+c</code>，而且一定能在字典中找到。这是因为单个字符<code>p=c</code>在初始字典table时就已经有对应的代码了，而<code>p=p+c</code>要成立，那么它必须是插入<code>p+c</code>之后才能得到，也就是说，“输出”慢于“插入”。于是编码结束时，还要将对<code>table[p]</code>处理(输出)才算是完整的LZW编码。</p>
+<p>于是，压缩文本中并没有包含在编码过程中的生成的字典，而是通过编码的进行不断生成新的<code>&lt;新字符串前缀,新的代码&gt;</code>，而且注意到，将文本编码后的代码输出也只是<code>前缀字符串p</code>。</p>
+<h3 id="解压缩decompress"><a href="#解压缩decompress" class="headerlink" title="解压缩decompress"></a>解压缩decompress</h3><p>与压缩对应的便是解压缩，其实lzw解压缩与lzw压缩是互逆的，但要理解它是怎么处理的需要些功夫。<br>在前面的压缩compress时，定义一个初始字典，且映射关系为&lt;文本串,代码&gt; =&gt; <code>table&lt;String,Integer&gt;</code>。同样，解压缩也需要一个字典：<code>table&lt;Integer,String&gt;</code>。<br>由于解码的过程中，解码器得到的是一个代码数字int，那得考虑代码在不在字典内，以及对应的解码文本是什么。</p>
+<p>首先需要规定：<code>p</code>表示当前读取到的待解码串<code>S</code>中某一个代码，其对应的文本为<code>text(p)</code>（或者<code>table[p]</code>如果存在的话）；<code>q</code>表示出现于<code>p</code>之前的代码，可称为<code>前缀代码</code>，而且该代码<code>q</code>一定存在字典里，其对应的文本为<code>text(q)</code>；<code>fc(p)</code>表示<code>text(p)</code>的第一个字符(first character)，可称为<code>后缀字符</code>。</p>
+<p>还是以上面的例子来说明，存在已经编码的代码串<code>0214537</code>。图中表格阴影部分表示将新的&lt;代码,文本&gt;添加到字典中。<br><img src="/uploads/images/data_structure/lzw_cpp/02.png" alt></p>
+<p>LZW解码过程如下：<br>1.首先初始化字典；<br>2.然后找到<code>S</code>的第一个代码<code>q</code>，而且该代码一定存在字典内（这是由编码时决定的），输出文本<code>text(q)</code>；<br>3.接着读取<code>S</code>的下一个代码<code>p</code>；<br>4.如果<code>p</code>在字典里，则输出对应的文本<code>text(p)</code>，同时向字典添加新的代码<code>text(q)fc(p)</code>；<br>5.如果<code>p</code>不在字典里，则向字典添加新的代码<code>text(p)=text(q)fc(q)</code>，输出对应的文本<code>text(p)</code>；<br>6.重复步骤3、4、5，直到<code>EOF</code>；<br>7.结束。</p>
+<p>伪代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Initialize table</span><br><span class="line">Q = first input code</span><br><span class="line">output table[Q]</span><br><span class="line">WHILE not EOF</span><br><span class="line">    P = next input code</span><br><span class="line">    IF P int table</span><br><span class="line">        insert TEXT(Q)+FirstCharacter(P) into table</span><br><span class="line">    ELSE</span><br><span class="line">        insert TEXT(Q)+FirstCharacter(Q) into table</span><br><span class="line">    output table[P]</span><br><span class="line">    Q=P</span><br></pre></td></tr></table></figure>
+
+<p>1.<code>p</code>在字典里<br>以代码<code>p=1</code>和代码<code>q=2</code>为例。<br>现在根据<code>解压缩</code>的情况来分析：已知代码<code>p</code>在字典里，说明在<code>编码</code>过程（此时p表示代码对应的文本）中输出代码<code>table[p]=1</code>之前的某一步骤输出了代码<code>table[q]=2</code>，同时添加新的文本<code>q+c=aa+b=aab</code>到字典里且<code>table[q+c]=3</code>（<font color="red">这也就是解码时的text(q)+fc(p)，c=fc(p)</font>），然后<code>q=c=b</code>；之后继续判断<code>q+c=b+b=bb</code>不在字典内，则输出<code>table[q=b]=1</code>。于是就形成了代码<code>2 1</code>的情况。<br><img src="/uploads/images/data_structure/lzw_cpp/04.png" alt></p>
+<p>还有<code>5 3</code>这种情况<br><img src="/uploads/images/data_structure/lzw_cpp/03.png" alt></p>
+<p>2.<code>p</code>不在字典里<br>这种情况只有在文本段中形式为<code>text(q)text(q)fc(q)</code>和<code>text(q)fc(q)</code>，且相应的压缩代码串为<code>qp</code>的时候（qp相邻，观察上图可知），只有在<code>q</code>被<code>text(q)</code>代替的情况下，代码<code>q</code>在字典中才不会有对应的文本，而这个文本应该是<code>text(q)fc(q)</code>。比如上面的<code>q=3 p=7</code>且原始文本段<code>aab aaba</code>，即<code>text(7)=text(3)fc(3)</code>；又如<code>q=4 p=5</code>且原始文本段<code>bb bbb</code>，即<code>text(5)=text(4)fc(4)</code>；而<code>q=5 p=3</code>的原始文本段为<code>bbb aab</code>，但是没有<code>text(3)=text(5)fc(5)=bbbb</code>这种情况。这是在编码过程中决定的。</p>
+<p>解码是根据读取的代码来构建一个与编码之前完全相同的字典并输出对应的文本，而且也一定会将所有的代码读取完。</p>
+<p>以上例子只展示了一个字符串只有a、b两个字符，以及初始字典为&lt;a,0&gt;、&lt;b,1&gt;，一般来说，常见文本文件是ASCII文件，所以这时的初始字典大小可以是256，包含了扩展ASCII码。</p>
+<h3 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;unordered_map&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">constexpr</span> <span class="keyword">int</span> ALPHA_MAX=<span class="number">256</span>;</span><br><span class="line"><span class="built_in">unordered_map</span>&lt;<span class="built_in">string</span>,<span class="keyword">int</span>&gt;table;</span><br><span class="line"><span class="built_in">unordered_map</span>&lt;<span class="keyword">int</span>,<span class="built_in">string</span>&gt;table2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 保存编码之后的代码</span></span><br><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;codes;</span><br><span class="line"><span class="comment">// 保存解码之后的文本</span></span><br><span class="line"><span class="built_in">string</span> text;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">output</span><span class="params">(<span class="built_in">string</span> str)</span></span>&#123;</span><br><span class="line">    codes.push_back(table[str]);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">output</span><span class="params">(<span class="keyword">int</span> code)</span></span>&#123;</span><br><span class="line">    text+=table2[code];</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 编码</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">compress</span><span class="params">(<span class="built_in">string</span> source)</span></span>&#123;</span><br><span class="line">    <span class="comment">// 初始化字典</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; ALPHA_MAX; i++)&#123;</span><br><span class="line">        <span class="function"><span class="built_in">string</span> <span class="title">key</span><span class="params">(<span class="number">1</span>,<span class="keyword">char</span>(i))</span></span>;</span><br><span class="line">        table.insert(make_pair(key,i));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 已使用代码数量</span></span><br><span class="line">    <span class="keyword">int</span> usedCode=ALPHA_MAX;</span><br><span class="line">    <span class="built_in">string</span> p=<span class="string">""</span>;</span><br><span class="line">    <span class="built_in">string</span> c;</span><br><span class="line">    p+=source[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">int</span> len=source.size();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; len; i++) &#123;</span><br><span class="line">        c.clear();</span><br><span class="line">        c+=source[i];</span><br><span class="line">        <span class="comment">// p+c在字典</span></span><br><span class="line">        <span class="keyword">if</span>(table.find(p+c)!=table.end())&#123;</span><br><span class="line">            p=p+c;</span><br><span class="line">        <span class="comment">// p+c不在字典</span></span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            output(p);</span><br><span class="line">            table.insert(make_pair(p+c,usedCode++));</span><br><span class="line">            p=c;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    output(p);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 解码</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">uncompress</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;codes)</span></span>&#123;</span><br><span class="line">    <span class="comment">// 初始化字典</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; ALPHA_MAX; i++)&#123;</span><br><span class="line">        <span class="function"><span class="built_in">string</span> <span class="title">text</span><span class="params">(<span class="number">1</span>,<span class="keyword">char</span>(i))</span></span>;</span><br><span class="line">        table2.insert(make_pair(i,text));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 已使用代码数量</span></span><br><span class="line">    <span class="keyword">int</span> usedCode=ALPHA_MAX;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> q=codes[<span class="number">0</span>];</span><br><span class="line">    output(q);</span><br><span class="line">    <span class="keyword">int</span> len=codes.size();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; len; i++)&#123;</span><br><span class="line">        <span class="comment">// 读取下一个代码code</span></span><br><span class="line">        <span class="keyword">int</span> p=codes[i];</span><br><span class="line">        <span class="comment">// 当前读取的代码p在字典</span></span><br><span class="line">        <span class="keyword">if</span>(table2.find(p)!=table2.end())&#123;</span><br><span class="line">            <span class="comment">// text(code)=text(q)fc(p)</span></span><br><span class="line">            <span class="built_in">string</span> code=table2[q]+table2[p][<span class="number">0</span>];</span><br><span class="line">            table2.insert(make_pair(usedCode++,code));</span><br><span class="line">        <span class="comment">// 当前读取的代码p不在字典</span></span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="comment">// text(p)=text(q)fc(q)</span></span><br><span class="line">            <span class="built_in">string</span> pT=table2[q]+table2[q][<span class="number">0</span>];</span><br><span class="line">            table2.insert(make_pair(usedCode++,pT));</span><br><span class="line">        &#125;</span><br><span class="line">        q=p;</span><br><span class="line">        output(p);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ifstream in;</span><br><span class="line">    in.open(<span class="string">"test.txt"</span>,ios_base::binary);</span><br><span class="line">    <span class="built_in">string</span> text=<span class="string">""</span>;</span><br><span class="line">    <span class="keyword">char</span> c;</span><br><span class="line">    <span class="keyword">while</span>((c=in.get())!=EOF)&#123;</span><br><span class="line">        text+=c;</span><br><span class="line">    &#125;</span><br><span class="line">    compress(text);</span><br><span class="line">    in.close();</span><br><span class="line"></span><br><span class="line">    ofstream out;</span><br><span class="line">    out.open(<span class="string">"test.txt.lzw"</span>,ios_base::binary);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> x:codes)&#123;</span><br><span class="line">        out.put(x);</span><br><span class="line">    &#125;</span><br><span class="line">    out.close();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试一个ASCII文件<br><img src="/uploads/images/data_structure/lzw_cpp/05.png" alt></p>
+<p>又测试一个文件其最后压缩时生成的字典<br><img src="/uploads/images/data_structure/lzw_cpp/06.png" alt></p>
+<p>C++中char数组存储中文时，如果取其中一个char的话，由于char占用1个字节，使得中文发生截断（被分解），比如<code>string s=&quot;你好&quot;;</code> 不过上面的测试依然可以通过，只要在编码过程中将被截断的所有char依次写入编码文件中，在解码时按照同样的规则去读取char，最后还是可以解码成功的。<br><img src="/uploads/images/data_structure/lzw_cpp/07.png" alt></p>
+<p>就这样吧，等有空再来更新更新……</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>《数据结构、算法与应用》<br><a href="https://en.wikipedia.org/wiki/Lempel%E2%80%93Ziv%E2%80%93Welch" target="_blank" rel="noopener">Lempel–Ziv–Welch</a><br><a href="https://segmentfault.com/a/1190000011425787?utm_medium=referral&utm_source=tuicool" target="_blank" rel="noopener">LZW压缩算法原理解析</a></p>
+
+      
+    </div>
+
+    
+
+    
+      
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div id="reward-container">
+  <div>Give a rose, leave a handful of fragrance; life is not easy, I use the arch</div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/wechatpay.png" alt="Joseph XRays 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C/" rel="tag"> <i class="fa fa-tag"></i> C++</a>
+          
+            <a href="/tags/DataStructures/" rel="tag"> <i class="fa fa-tag"></i> DataStructures</a>
+          
+            <a href="/tags/C/" rel="tag"> <i class="fa fa-tag"></i> C</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/linux-tinyproxy/" rel="next" title="CentOS+TinyProxy+Stunnel配置HTTP代理服务器">
+                <i class="fa fa-chevron-left"></i> CentOS+TinyProxy+Stunnel配置HTTP代理服务器
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTkwNC84NDY4"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+    <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="Joseph XRays">
+  
+  <p class="site-author-name" itemprop="name">Joseph XRays</p>
+  <div class="site-description motion-element" itemprop="description">Share the knowledge</div>
+</div>
+
+
+  <nav class="site-state motion-element">
+    
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">66</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">28</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+
+
+
+
+
+  <div class="links-of-author motion-element">
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="https://github.com/josexy" title="GitHub &rarr; https://github.com/josexy" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+    
+  </div>
+
+
+
+
+
+
+  <div class="links-of-blogroll motion-element links-of-blogroll-block">
+    <div class="links-of-blogroll-title">
+      <i class="fa  fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://github.com/josexy" title="https://github.com/josexy" rel="noopener" target="_blank">Github</a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#LZW"><span class="nav-number">1.</span> <span class="nav-text">LZW</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#压缩compress"><span class="nav-number">2.</span> <span class="nav-text">压缩compress</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解压缩decompress"><span class="nav-number">3.</span> <span class="nav-text">解压缩decompress</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Code"><span class="nav-number">4.</span> <span class="nav-text">Code</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Joseph XRays</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+    <span title="站点总字数">298k</span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    
+    <span title="站点阅读时长">4:31</span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.2.0"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+    
+
+
+<script>
+  window.livereOptions = {
+    refer: 'lzw-cpp/'
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
+        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
+      }
+    });
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      document.getElementById(all[i].inputID + '-Frame').parentNode.className += ' has-jax';
+    }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+
+<script type="text/javascript" src="/js/float_wenzi.js"></script>
+</body>
+</html>
+
+
+

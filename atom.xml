@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.joxrays.com/"/>
-  <updated>2020-02-17T15:26:51.423Z</updated>
+  <updated>2020-02-22T10:35:11.827Z</updated>
   <id>http://www.joxrays.com/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>LZW文本压缩</title>
+    <link href="http://www.joxrays.com/lzw-cpp/"/>
+    <id>http://www.joxrays.com/lzw-cpp/</id>
+    <published>2020-02-21T16:00:00.000Z</published>
+    <updated>2020-02-22T10:35:11.827Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;最近翻看《数据结构、算法与应用》里面关于哈希表章节时看到一个LZW文本压缩算法的实例，啃了很久才基本了解LZW算法，于是赶紧把它记录下来方便日后翻看。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="数据结构与算法" scheme="http://www.joxrays.com/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
+    
+    
+      <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
+    
+      <category term="DataStructures" scheme="http://www.joxrays.com/tags/DataStructures/"/>
+    
+      <category term="C" scheme="http://www.joxrays.com/tags/C/"/>
+    
+  </entry>
   
   <entry>
     <title>CentOS+TinyProxy+Stunnel配置HTTP代理服务器</title>
@@ -448,29 +472,6 @@
       <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
     
       <category term="树莓派" scheme="http://www.joxrays.com/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Linux Ping工具汇总</title>
-    <link href="http://www.joxrays.com/linux-ping-tools/"/>
-    <id>http://www.joxrays.com/linux-ping-tools/</id>
-    <published>2019-06-30T16:00:00.000Z</published>
-    <updated>2019-08-20T10:41:44.000Z</updated>
-    
-    <summary type="html">
-    
-      &lt;p&gt;大家都应该熟悉ping这个网络诊断工具，它用来检测网络是否连通以及目的主机是否在线。然而唯一缺点是它只支持ICMP协议。因此，大多数主机都会防火墙过滤ICMP数据包，不过，Linux下也有跟他类似的ping工具，本文将会介绍一些常见的工具。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;/uploads/images/imgs/command-87198_640.jpg&quot; alt&gt;&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Linux" scheme="http://www.joxrays.com/categories/Linux/"/>
-    
-    
-      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
-    
-      <category term="Ping" scheme="http://www.joxrays.com/tags/Ping/"/>
     
   </entry>
   
