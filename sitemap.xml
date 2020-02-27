@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.joxrays.com/archlinux-configure/</loc>
+    
+    <lastmod>2020-02-27T11:11:34.524Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.joxrays.com/lzw-cpp/</loc>
     
     <lastmod>2020-02-22T10:35:11.827Z</lastmod>
@@ -19,13 +26,6 @@
     <loc>http://www.joxrays.com/linux-ban-nvidia/</loc>
     
     <lastmod>2020-02-14T06:31:25.833Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.joxrays.com/archlinux-configure/</loc>
-    
-    <lastmod>2020-02-11T02:50:12.997Z</lastmod>
     
   </url>
   
