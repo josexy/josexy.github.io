@@ -2,37 +2,58 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://www.joxrays.com/archlinux-configure/</loc>
+    <loc>http://www.joxrays.com/linux-rdp-windows/</loc>
     
-    <lastmod>2020-02-27T11:11:34.524Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.joxrays.com/lzw-cpp/</loc>
-    
-    <lastmod>2020-02-22T10:35:11.827Z</lastmod>
+    <lastmod>2020-03-11T15:21:44.386Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.joxrays.com/linux-tinyproxy/</loc>
+    <loc>http://www.joxrays.com/about/index.html</loc>
     
-    <lastmod>2020-02-17T15:26:51.423Z</lastmod>
+    <lastmod>2020-03-03T12:07:27.753Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.joxrays.com/linux-ban-nvidia/</loc>
+    <loc>http://www.joxrays.com/huffman-encode-decode/</loc>
     
-    <lastmod>2020-02-14T06:31:25.833Z</lastmod>
+    <lastmod>2020-03-02T16:47:16.000Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://www.joxrays.com/binaryheap-cpp/</loc>
     
-    <lastmod>2020-02-05T09:51:43.000Z</lastmod>
+    <lastmod>2020-03-02T08:17:34.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.joxrays.com/archlinux-configure/</loc>
+    
+    <lastmod>2020-02-27T11:11:34.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.joxrays.com/lzw-cpp/</loc>
+    
+    <lastmod>2020-02-22T10:35:12.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.joxrays.com/linux-tinyproxy/</loc>
+    
+    <lastmod>2020-02-17T15:26:52.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.joxrays.com/linux-ban-nvidia/</loc>
+    
+    <lastmod>2020-02-14T06:31:26.000Z</lastmod>
     
   </url>
   
@@ -46,21 +67,21 @@
   <url>
     <loc>http://www.joxrays.com/avl-tree-cpp/</loc>
     
-    <lastmod>2020-01-31T07:17:19.000Z</lastmod>
+    <lastmod>2020-01-31T07:17:20.000Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://www.joxrays.com/bst-cpp/</loc>
     
-    <lastmod>2020-01-20T09:45:15.000Z</lastmod>
+    <lastmod>2020-01-20T09:45:16.000Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://www.joxrays.com/skiplist-cpp/</loc>
     
-    <lastmod>2020-01-15T05:49:11.000Z</lastmod>
+    <lastmod>2020-01-15T05:49:12.000Z</lastmod>
     
   </url>
   
@@ -74,14 +95,14 @@
   <url>
     <loc>http://www.joxrays.com/linkedlist-cpp/</loc>
     
-    <lastmod>2020-01-13T04:54:59.000Z</lastmod>
+    <lastmod>2020-01-13T04:55:00.000Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://www.joxrays.com/linux-cpp-connect-mysql/</loc>
     
-    <lastmod>2020-01-13T04:34:29.000Z</lastmod>
+    <lastmod>2020-01-13T04:34:30.000Z</lastmod>
     
   </url>
   
@@ -109,7 +130,7 @@
   <url>
     <loc>http://www.joxrays.com/add-subtract-multiply-divide/</loc>
     
-    <lastmod>2019-11-21T15:28:25.000Z</lastmod>
+    <lastmod>2019-11-21T15:28:26.000Z</lastmod>
     
   </url>
   
@@ -123,7 +144,7 @@
   <url>
     <loc>http://www.joxrays.com/centos-shadowsocks/</loc>
     
-    <lastmod>2019-08-21T04:23:09.000Z</lastmod>
+    <lastmod>2019-08-21T04:23:10.000Z</lastmod>
     
   </url>
   
@@ -151,14 +172,14 @@
   <url>
     <loc>http://www.joxrays.com/raspberry-wifi-router/</loc>
     
-    <lastmod>2019-08-13T15:02:51.000Z</lastmod>
+    <lastmod>2019-08-13T15:02:52.000Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://www.joxrays.com/linux-tiv/</loc>
     
-    <lastmod>2019-08-12T03:50:11.000Z</lastmod>
+    <lastmod>2019-08-12T03:50:12.000Z</lastmod>
     
   </url>
   
@@ -172,7 +193,7 @@
   <url>
     <loc>http://www.joxrays.com/virtual-manjaro-guest-iso/</loc>
     
-    <lastmod>2019-08-07T04:43:13.000Z</lastmod>
+    <lastmod>2019-08-07T04:43:14.000Z</lastmod>
     
   </url>
   
@@ -191,16 +212,9 @@
   </url>
   
   <url>
-    <loc>http://www.joxrays.com/about/index.html</loc>
-    
-    <lastmod>2019-07-20T16:17:23.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.joxrays.com/installed-system-to-usb/</loc>
     
-    <lastmod>2019-07-20T16:11:57.000Z</lastmod>
+    <lastmod>2019-07-20T16:11:58.000Z</lastmod>
     
   </url>
   
@@ -214,21 +228,21 @@
   <url>
     <loc>http://www.joxrays.com/rasppi-meatsploit/</loc>
     
-    <lastmod>2019-07-20T15:43:23.000Z</lastmod>
+    <lastmod>2019-07-20T15:43:24.000Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://www.joxrays.com/connect-reappi/</loc>
     
-    <lastmod>2019-07-20T15:41:31.000Z</lastmod>
+    <lastmod>2019-07-20T15:41:32.000Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://www.joxrays.com/qt-reg-hotkey/</loc>
     
-    <lastmod>2019-07-20T15:38:33.000Z</lastmod>
+    <lastmod>2019-07-20T15:38:34.000Z</lastmod>
     
   </url>
   
@@ -242,7 +256,7 @@
   <url>
     <loc>http://www.joxrays.com/mongodb-driver-install/</loc>
     
-    <lastmod>2019-07-20T15:33:55.000Z</lastmod>
+    <lastmod>2019-07-20T15:33:56.000Z</lastmod>
     
   </url>
   
@@ -270,14 +284,14 @@
   <url>
     <loc>http://www.joxrays.com/linux-tinyxml2/</loc>
     
-    <lastmod>2019-07-20T15:14:49.000Z</lastmod>
+    <lastmod>2019-07-20T15:14:50.000Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://www.joxrays.com/linux-libxml2/</loc>
     
-    <lastmod>2019-07-20T15:10:01.000Z</lastmod>
+    <lastmod>2019-07-20T15:10:02.000Z</lastmod>
     
   </url>
   
@@ -291,7 +305,7 @@
   <url>
     <loc>http://www.joxrays.com/linux-crunch/</loc>
     
-    <lastmod>2019-07-20T15:03:31.000Z</lastmod>
+    <lastmod>2019-07-20T15:03:32.000Z</lastmod>
     
   </url>
   
@@ -305,7 +319,7 @@
   <url>
     <loc>http://www.joxrays.com/wget-tool/</loc>
     
-    <lastmod>2019-07-20T14:51:05.000Z</lastmod>
+    <lastmod>2019-07-20T14:51:06.000Z</lastmod>
     
   </url>
   
@@ -326,21 +340,21 @@
   <url>
     <loc>http://www.joxrays.com/linux-popen/</loc>
     
-    <lastmod>2019-07-20T14:34:29.000Z</lastmod>
+    <lastmod>2019-07-20T14:34:30.000Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://www.joxrays.com/linux-gnome-setting/</loc>
     
-    <lastmod>2019-07-20T14:31:07.000Z</lastmod>
+    <lastmod>2019-07-20T14:31:08.000Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://www.joxrays.com/windows-xxnet/</loc>
     
-    <lastmod>2019-07-20T14:28:47.000Z</lastmod>
+    <lastmod>2019-07-20T14:28:48.000Z</lastmod>
     
   </url>
   
@@ -361,21 +375,21 @@
   <url>
     <loc>http://www.joxrays.com/linux-xxnet/</loc>
     
-    <lastmod>2019-07-20T14:18:37.000Z</lastmod>
+    <lastmod>2019-07-20T14:18:38.000Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://www.joxrays.com/linux-dlopen/</loc>
     
-    <lastmod>2019-07-20T14:13:01.000Z</lastmod>
+    <lastmod>2019-07-20T14:13:02.000Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://www.joxrays.com/cpp-regex/</loc>
     
-    <lastmod>2019-07-20T14:06:19.000Z</lastmod>
+    <lastmod>2019-07-20T14:06:20.000Z</lastmod>
     
   </url>
   
@@ -396,7 +410,7 @@
   <url>
     <loc>http://www.joxrays.com/winpcap-use/</loc>
     
-    <lastmod>2019-07-20T13:22:21.000Z</lastmod>
+    <lastmod>2019-07-20T13:22:22.000Z</lastmod>
     
   </url>
   
@@ -410,14 +424,14 @@
   <url>
     <loc>http://www.joxrays.com/cpp-snake1/</loc>
     
-    <lastmod>2019-07-20T13:17:15.000Z</lastmod>
+    <lastmod>2019-07-20T13:17:16.000Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://www.joxrays.com/cpp-call-dll/</loc>
     
-    <lastmod>2019-07-20T13:11:21.000Z</lastmod>
+    <lastmod>2019-07-20T13:11:22.000Z</lastmod>
     
   </url>
   
@@ -431,14 +445,14 @@
   <url>
     <loc>http://www.joxrays.com/mysql-error-unix-socket/</loc>
     
-    <lastmod>2019-07-20T12:37:13.000Z</lastmod>
+    <lastmod>2019-07-20T12:37:14.000Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://www.joxrays.com/linux-qt-plugin/</loc>
     
-    <lastmod>2019-07-20T12:35:55.000Z</lastmod>
+    <lastmod>2019-07-20T12:35:56.000Z</lastmod>
     
   </url>
   
@@ -452,14 +466,14 @@
   <url>
     <loc>http://www.joxrays.com/linux-qzxing/</loc>
     
-    <lastmod>2019-07-20T12:21:51.000Z</lastmod>
+    <lastmod>2019-07-20T12:21:52.000Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://www.joxrays.com/linux-qt-process/</loc>
     
-    <lastmod>2019-07-20T12:17:49.000Z</lastmod>
+    <lastmod>2019-07-20T12:17:50.000Z</lastmod>
     
   </url>
   
@@ -480,7 +494,7 @@
   <url>
     <loc>http://www.joxrays.com/tags/index.html</loc>
     
-    <lastmod>2019-07-20T04:52:17.000Z</lastmod>
+    <lastmod>2019-07-20T04:52:18.000Z</lastmod>
     
   </url>
   

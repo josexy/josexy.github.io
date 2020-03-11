@@ -1,6 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Linux RDP远程桌面连接Windows</title>
+    <url>/linux-rdp-windows/</url>
+    <content><![CDATA[<p>远程桌面协议RDP（Remote Desktop Protocol）是Microsoft开发的专有协议，它为用户提供图形界面，以通过网络连接连接到另一台计算机。</p>
+<a id="more"></a>]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+        <tag>Windows</tag>
+        <tag>RDP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>哈夫曼编码实现解压缩文本文件</title>
+    <url>/huffman-encode-decode/</url>
+    <content><![CDATA[<p>之前已经简单地介绍了LZW 编码实现的原理，它由一个初始字典在编码/解码的过程中不断的扩增字典内容，从而在下一次编码/解码遇到重复的文本串时从字典中找出之前的代码并写入文本文件，这样就避免了重复的文本而达到文本文件空间缩小的目的。本文主要从<del>简单介绍</del>哈夫曼树过渡到编码解码内容。</p>
+<a id="more"></a>
+
+<h3 id="哈夫曼树"><a href="#哈夫曼树" class="headerlink" title="哈夫曼树"></a>哈夫曼树</h3><p>哈夫曼树也可以称作霍夫曼树（Huffman Tree），实际上它是一颗最优二叉树。它的最优主要体现在它的<code>加权路径长度WPL(weighted path length)</code> 最小！为什么最小，下文有解释……<br>注意，节点的<code>加权路径长度</code>是指从根节点到该节点之间的路径长度与该节点权值的乘积。而WPL指的是所有<code>叶子节点</code>的加权路径长度<code>总和</code>。</p>
+<p>哈夫曼树详细信息可以参考这位大佬的文章 <a href="https://blog.csdn.net/google19890102/article/details/54848262" target="_blank" rel="noopener">数据结构和算法——Huffman树和Huffman编码</a> 。毕竟本文主要是介绍哈夫曼的编码解码过程，而且理解哈夫曼树也花不了多长时间…… </p>
+<h3 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h3><p>哈夫曼编码与LZW编码均为无损数据压缩算法的实现，哈夫曼编码最明显的一个特点是无需存储8位的字符，只需要存储01比特流即可，它是用较少的比特来表示出现频率高的字符，用较多的比特表示出现频率低的字符，即<code>可变长编码</code>（从哈夫曼树的角度理解就是字符出现频率/权值高的位于树的顶层，反之位于树的底层）。这样的话能够比较容易节省空间（毕竟写入以位为单位的数据总比写入以字节为单位的要节省空间）。</p>
+<p>无论是编码还是解码，都需要构造<code>哈夫曼树</code>，并且得到一个<code>哈夫曼编码表</code>，之后我们就是利用这个表将ASCII文件中出现的字符所对应的二进制bit流写入到压缩文件中。</p>
+<p>假设压缩文件为ASCII文件，那么在构造哈夫曼树之前还需要统计ASCII文件中每个ASCII字符出现的<code>频率</code>，也就是哈夫曼树每个节点的权值。统计方法很简单，直接扫描一遍文件即可。</p>
+<p>那么如何构造哈夫曼树呢？从<code>字符出现频率/权值高的位于树的顶层，反之位于树的底层</code>可知，我们需要利用之前已经统计好的<code>字符频率表F(c)</code>来构造哈夫曼树，常见的方法是通过<code>优先级队列</code>来完成构造，除此之外还可以通过排序的方法完成。总之，构造的贪婪准则是每次选取两个出现频率最小(a,b)的节点作为子节点，其父节点表示子节点出现的总频率(a+b)，直到剩余根节点为止，这里的<code>节点</code>指的是F(c)中每个出现频率大于0的字符。宏观上来看，构造哈夫曼树是自底向上进行的。</p>
+<p>举个例子，假设有一段文本<code>S=hhelloooo</code>，首先统计每个字符出现频率：</p>
+<table>
+<thead>
+<tr>
+<th>character</th>
+<th>h</th>
+<th>e</th>
+<th>l</th>
+<th>o</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>frequency</td>
+<td>2</td>
+<td>1</td>
+<td>2</td>
+<td>4</td>
+</tr>
+</tbody></table>
+<p>接着利用这个表构造哈夫曼树如下图所示<br><img src="/uploads/images/data_structure/huffman_cpp/1.PNG" alt="image"></p>
+<p>假设将父节点与左节点相连接分支标记为0、右节点的标记为1（也可以这样理解：0表示向左子树移动一步、1表示向右子树移动一步）<br><img src="/uploads/images/data_structure/huffman_cpp/2.PNG" alt="image"></p>
+<p>那么字符h在哈夫曼树中表示二进制串为 10，同样e、l、o对应的二进制串分别为110、111、0。<br>于是进一步得到了一个完整的表格，从这个表格可以得到的信息有：</p>
+<ul>
+<li>字符到二进制代码的映射表</li>
+<li>字符的频率表</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>character</th>
+<th>h</th>
+<th>e</th>
+<th>l</th>
+<th>o</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>frequency</td>
+<td>2</td>
+<td>1</td>
+<td>2</td>
+<td>4</td>
+</tr>
+<tr>
+<td>bit stream</td>
+<td>10</td>
+<td>110</td>
+<td>111</td>
+<td>0</td>
+</tr>
+</tbody></table>
+<p>将字符串 hhelloooo 每个出现的字符用二进制表示就是： 10.10.110.111.111.0.0.0.0。</p>
+<p>注意，我们还发现字符h、e、l、o始终位于<code>叶子节点</code>，这样有什么意义吗？回答这个问题之前先引入一个概念：<code>变长前缀码</code>，大意是：<strong>没有一个代码是另一个代码的前缀</strong> 。 这句话我是摘自《数据结构算法与应用》，而《算法》第四版中是这样描述的：<strong>如果所有字符编码都不会成为其他字符编码的前缀，那么就不需要分隔符了</strong> 。其实这很容易理解，如果存在一个二进制代码是另外某一个二进制代码的前缀，那么在解码的过程中就会无法判断出该二进制代码属于哪个原始字符。因此，要避免这种情况，最好的办法就是将字符节点置于<code>叶子节点</code>，这样在解码的过程中自顶向下的寻找原始字符就可以完成了。</p>
+<p>现在再来讨论另一个问题，毕竟哈夫曼编码是解压缩算法嘛，那么其压缩效率如何呢？</p>
+<p>比如上面的字符串hhelloooo，由于每个ASCII码占一个字节，总共9bytes=72bits，编码后的二进制串 10101101,11111000,0 总共<strong>17bits</strong>，故压缩率大约是 23.6%，还行。<br>再来看一个全是字母a且长度为约62k字节的字符串，压缩后的文件大小仅为5字节！现在仅仅改变一个字母a为b，原文件大小不变，此时压缩后的文件大小约为7.7K字节！</p>
+<p>咳咳，现在回答之前的那个问题：为什么<code>加权路径长度WPL</code>是最小的。我们不妨来算一下现在这颗哈夫曼树的WPL是多少呢，<br>其WPL为：1x4+2x2+3x1+3x2=4+4+3+6=<strong>17</strong>。这与压缩后的文件大小相等，这也说明了WPL越小，压缩文件体积越小，但也不可能为0。<br>这时候得到一个结论：对于任意变长前缀码，编码后的二进制bit流的长度等于相应的哈夫曼树的WPL。</p>
+<p>注意：在某些情况下压缩率甚至会超过100%！</p>
+<p>可见哈夫曼编码对于文件压缩也是有要求的。</p>
+<blockquote>
+<p>1.必须<code>尽量</code>利用被压缩的数据流中的<code>已知</code>结构；<br>2.小规模的字母表；<br>3.较长的连续相同的位或字符；<br>4.频繁使用的字符；<br>5.较长的连续重复的位或字符。</p>
+</blockquote>
+<p>那么问题来了，既然能够压缩文件，那么也得必须完全成功解压文件才行啊，不然文件是真的损坏了哭都来不及:)。<del>总所周知</del>LZW 编码在实现编码的整个过程中没有将整个字典写入压缩文件，甚至在解码时也是没有一个完整的字典，这是LZW的独特之处。而哈夫曼编码则不同，它是需要写入相关信息的！这样在解码时才能够重构哈夫曼树。这个相关信息可以是字符到二进制代码的映射表bitstream(c)或者每个字符的频率表f(c)。不过《算法》第四版里面并没有用的以上两种方法，而是写入一个哈夫曼树结构（将哈夫曼树编码为bit流），这样做的直接目的是防止不必要的空间浪费。<br>至于怎么编码，其实就是通过一次前序遍历将<code>内部节点</code>和<code>叶子节点</code>的开关bit写入压缩文件中。比如下面这张图<br><img src="/uploads/images/data_structure/huffman_cpp/3.PNG" alt="image"></p>
+<p>在一次前序遍历过程中，如果遇到内部节点就写入0bit，如果是叶子节点除了写入1bit外还需要将字符的ASCII码（8bits）也写入文件，最后再写入变长前缀码。这样做的理由方便解码时重构哈夫曼树。<br>总之需要写入文件的内容有：编码哈夫曼树的bits流+<strong>字符个数(32bits)</strong>+对应字符的二进制代码（或者称为变长前缀码）。上面的图没有标字符个数的二进制（毕竟这个例子才只有9个字符，不可能画那么多0吧）。</p>
+<p>当然了，不是每次都恰好将每8bits一个字节写入文件，可能最后就会多出N位$( 1 \le N \le 7)$。要知道目前标准C++只能操作字节流，还不能操作位流（Java有BinaryStdIn/Out）。解决方法很简单粗暴，不足8位的就在后面补0。</p>
+<p>现在小结一下，要实现哈夫曼压缩算法，需要以下几个步骤：</p>
+<ul>
+<li>从文件输入流统计在ASCII码范围内字符出现频率；</li>
+<li>利用频率表构造哈夫曼树；</li>
+<li>利用哈夫曼树构造哈夫曼编码表（如a:10010）；</li>
+<li>写入哈夫曼树/bitstream(c)/f(c)；</li>
+<li>写入字符个数，毕竟解码可不知道有多少个字符；</li>
+<li>从哈夫曼编码表写入所有字符对应的二进制编码；</li>
+<li>压缩结束。</li>
+</ul>
+<h3 id="解码"><a href="#解码" class="headerlink" title="解码"></a>解码</h3><p>解码就是编码的逆操作，不过一些细节还是需要注意的。<br>还是以上面那个例子来说吧(⊙﹏⊙)<br>01(01101111)01(01101000)01(01100101)1(01101100)+10101101111110000</p>
+<p>解码的第一步肯定是读取前面那一坨已经将哈夫曼树编码成bit流的二进制串，关键是读取了该怎么构造出哈夫曼树。记得之前编码时我们是走一次前序遍历才将哈夫曼树编码成bit流，那么解码又有何不可呢？如果读取的一个bit是1，这说明该处是叶子节点(new)，那么接着再读取1byte就能够得到一个ASCII码，然后结束；如果读取到0bit，说明是这是一个内部节点(new)，将该内部节点作为父节点后那么继续递归，直到遍历完所有叶子节点。</p>
+<p>至此，我们已经通过bit流构造出了哈夫曼树，接着再读取32bits或者64bits，总之是一个记录着字符个数的整数。</p>
+<p>最后一步就是解析变长前缀码 10.10.110.111.111.0.0.0.0 。观察这一串二进制文本，它被分割的份数也就是他对应的字符总数，这也是为什么需要写入字符个数的原因，此时我们并不知道压缩文件总共有多少bits，但是我们知道它有N个字符，那么就可以通过哈夫曼树反解出所有的原始字符并写入解压文件。当然了，如果已经知道压缩文件有多少个bits，那么就没必要这个N了，直接的方法就是一位一位的读取并根据哈夫曼树解析出原始字符，不过就是另外一种方法，这里就不讨论了。</p>
+<p>小结一下，解码过程可以分为以下几个步骤：</p>
+<ul>
+<li>读取压缩文件bit流重构哈夫曼树；</li>
+<li>读取字符个数N；</li>
+<li>根据哈夫曼树、N解析出原始字符，方法是自顶向下轮循解析；</li>
+<li>解压结束。</li>
+</ul>
+<h3 id="解析位流"><a href="#解析位流" class="headerlink" title="解析位流"></a>解析位流</h3><p>代码参考了《算法》第四版的，不过书上是Java版本的，而且最dan teng的就是解析位流，无论是C的fread、fwrite、还是C++的basic_ifstream<bool>、basic_ofstream<bool>，都至少一个字节，根本不能直接操作位流，而Java的BinaryStdIn/Out可以操作位流。无奈之下，只能自己写一个简单地可以控制位流的类，原理也很简单，就是一些&amp;|&lt;&lt;&gt;&gt;……（后来发现网上已经有大佬完成了……）然后再改写Java版本的哈夫曼编码实现，<br>本来想着能简就简的……<br>想着能简就简的……<br>能简就简的……<br>简简的…<br>简的..<br>简.<br>.</bool></bool></p>
+<p>代码就不放了……<br>码不放了……<br>码了…<br>了…<br>..<br>.</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>《算法》第四版<br>《数据结构算法与应用》<br><a href="https://en.wikipedia.org/wiki/Huffman_coding" target="_blank" rel="noopener">Huffman coding</a><br><a href="https://www.cnblogs.com/skywang12345/p/3706370.html" target="_blank" rel="noopener">哈夫曼树</a></p>
+]]></content>
+      <categories>
+        <category>数据结构与算法</category>
+      </categories>
+      <tags>
+        <tag>C++</tag>
+        <tag>DataStructures</tag>
+        <tag>C</tag>
+        <tag>Huffman</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>LZW文本压缩</title>
     <url>/lzw-cpp/</url>
     <content><![CDATA[<p>最近翻看《数据结构、算法与应用》里面关于哈希表章节时看到一个LZW文本压缩算法的实例，啃了很久才基本了解LZW算法，于是赶紧把它记录下来方便日后翻看。</p>
@@ -2182,8 +2307,8 @@
       </categories>
       <tags>
         <tag>C++</tag>
-        <tag>C</tag>
         <tag>Linux</tag>
+        <tag>C</tag>
         <tag>MongoDB</tag>
       </tags>
   </entry>
@@ -2361,8 +2486,8 @@
         <category>MongoDB</category>
       </categories>
       <tags>
-        <tag>C</tag>
         <tag>Linux</tag>
+        <tag>C</tag>
         <tag>MongoDB</tag>
       </tags>
   </entry>
@@ -2641,8 +2766,8 @@
       </categories>
       <tags>
         <tag>C++</tag>
-        <tag>C</tag>
         <tag>Linux</tag>
+        <tag>C</tag>
       </tags>
   </entry>
   <entry>
@@ -3717,8 +3842,8 @@
       </categories>
       <tags>
         <tag>C++</tag>
-        <tag>C</tag>
         <tag>Linux</tag>
+        <tag>C</tag>
         <tag>SDL2</tag>
       </tags>
   </entry>
@@ -4035,8 +4160,8 @@
       </categories>
       <tags>
         <tag>C++</tag>
-        <tag>C</tag>
         <tag>Linux</tag>
+        <tag>C</tag>
       </tags>
   </entry>
   <entry>
@@ -4135,8 +4260,8 @@
       </categories>
       <tags>
         <tag>C++</tag>
-        <tag>C</tag>
         <tag>Linux</tag>
+        <tag>C</tag>
       </tags>
   </entry>
   <entry>

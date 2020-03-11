@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.joxrays.com/"/>
-  <updated>2020-02-22T10:35:11.827Z</updated>
+  <updated>2020-03-11T15:21:44.386Z</updated>
   <id>http://www.joxrays.com/</id>
   
   <author>
@@ -17,11 +17,61 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Linux RDP远程桌面连接Windows</title>
+    <link href="http://www.joxrays.com/linux-rdp-windows/"/>
+    <id>http://www.joxrays.com/linux-rdp-windows/</id>
+    <published>2020-03-10T16:00:00.000Z</published>
+    <updated>2020-03-11T15:21:44.386Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;远程桌面协议RDP（Remote Desktop Protocol）是Microsoft开发的专有协议，它为用户提供图形界面，以通过网络连接连接到另一台计算机。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Linux" scheme="http://www.joxrays.com/categories/Linux/"/>
+    
+    
+      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
+    
+      <category term="Windows" scheme="http://www.joxrays.com/tags/Windows/"/>
+    
+      <category term="RDP" scheme="http://www.joxrays.com/tags/RDP/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>哈夫曼编码实现解压缩文本文件</title>
+    <link href="http://www.joxrays.com/huffman-encode-decode/"/>
+    <id>http://www.joxrays.com/huffman-encode-decode/</id>
+    <published>2020-03-01T16:00:00.000Z</published>
+    <updated>2020-03-02T16:47:16.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;之前已经简单地介绍了LZW 编码实现的原理，它由一个初始字典在编码/解码的过程中不断的扩增字典内容，从而在下一次编码/解码遇到重复的文本串时从字典中找出之前的代码并写入文本文件，这样就避免了重复的文本而达到文本文件空间缩小的目的。本文主要从&lt;del&gt;简单介绍&lt;/del&gt;哈夫曼树过渡到编码解码内容。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="数据结构与算法" scheme="http://www.joxrays.com/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
+    
+    
+      <category term="C++" scheme="http://www.joxrays.com/tags/C/"/>
+    
+      <category term="DataStructures" scheme="http://www.joxrays.com/tags/DataStructures/"/>
+    
+      <category term="C" scheme="http://www.joxrays.com/tags/C/"/>
+    
+      <category term="Huffman" scheme="http://www.joxrays.com/tags/Huffman/"/>
+    
+  </entry>
+  
+  <entry>
     <title>LZW文本压缩</title>
     <link href="http://www.joxrays.com/lzw-cpp/"/>
     <id>http://www.joxrays.com/lzw-cpp/</id>
     <published>2020-02-21T16:00:00.000Z</published>
-    <updated>2020-02-22T10:35:11.827Z</updated>
+    <updated>2020-02-22T10:35:12.000Z</updated>
     
     <summary type="html">
     
@@ -45,7 +95,7 @@
     <link href="http://www.joxrays.com/linux-tinyproxy/"/>
     <id>http://www.joxrays.com/linux-tinyproxy/</id>
     <published>2020-02-16T16:00:00.000Z</published>
-    <updated>2020-02-17T15:26:51.423Z</updated>
+    <updated>2020-02-17T15:26:52.000Z</updated>
     
     <summary type="html">
     
@@ -73,7 +123,7 @@
     <link href="http://www.joxrays.com/linux-ban-nvidia/"/>
     <id>http://www.joxrays.com/linux-ban-nvidia/</id>
     <published>2020-02-13T16:00:00.000Z</published>
-    <updated>2020-02-14T06:31:25.833Z</updated>
+    <updated>2020-02-14T06:31:26.000Z</updated>
     
     <summary type="html">
     
@@ -93,7 +143,7 @@
     <link href="http://www.joxrays.com/binaryheap-cpp/"/>
     <id>http://www.joxrays.com/binaryheap-cpp/</id>
     <published>2020-02-04T16:00:00.000Z</published>
-    <updated>2020-02-05T09:51:43.000Z</updated>
+    <updated>2020-03-02T08:17:34.000Z</updated>
     
     <summary type="html">
     
@@ -143,7 +193,7 @@
     <link href="http://www.joxrays.com/avl-tree-cpp/"/>
     <id>http://www.joxrays.com/avl-tree-cpp/</id>
     <published>2020-01-20T16:00:00.000Z</published>
-    <updated>2020-01-31T07:17:19.000Z</updated>
+    <updated>2020-01-31T07:17:20.000Z</updated>
     
     <summary type="html">
     
@@ -167,7 +217,7 @@
     <link href="http://www.joxrays.com/bst-cpp/"/>
     <id>http://www.joxrays.com/bst-cpp/</id>
     <published>2020-01-14T16:00:00.000Z</published>
-    <updated>2020-01-20T09:45:15.000Z</updated>
+    <updated>2020-01-20T09:45:16.000Z</updated>
     
     <summary type="html">
     
@@ -191,7 +241,7 @@
     <link href="http://www.joxrays.com/skiplist-cpp/"/>
     <id>http://www.joxrays.com/skiplist-cpp/</id>
     <published>2020-01-14T16:00:00.000Z</published>
-    <updated>2020-01-15T05:49:11.000Z</updated>
+    <updated>2020-01-15T05:49:12.000Z</updated>
     
     <summary type="html">
     
@@ -239,7 +289,7 @@
     <link href="http://www.joxrays.com/linkedlist-cpp/"/>
     <id>http://www.joxrays.com/linkedlist-cpp/</id>
     <published>2020-01-10T16:00:00.000Z</published>
-    <updated>2020-01-13T04:54:59.000Z</updated>
+    <updated>2020-01-13T04:55:00.000Z</updated>
     
     <summary type="html">
     
@@ -283,7 +333,7 @@
     <link href="http://www.joxrays.com/add-subtract-multiply-divide/"/>
     <id>http://www.joxrays.com/add-subtract-multiply-divide/</id>
     <published>2019-11-20T16:00:00.000Z</published>
-    <updated>2019-11-21T15:28:25.000Z</updated>
+    <updated>2019-11-21T15:28:26.000Z</updated>
     
     <summary type="html">
     
@@ -328,7 +378,7 @@
     <link href="http://www.joxrays.com/centos-shadowsocks/"/>
     <id>http://www.joxrays.com/centos-shadowsocks/</id>
     <published>2019-08-20T16:00:00.000Z</published>
-    <updated>2019-08-21T04:23:09.000Z</updated>
+    <updated>2019-08-21T04:23:10.000Z</updated>
     
     <summary type="html">
     
@@ -372,7 +422,7 @@
     <link href="http://www.joxrays.com/linux-tiv/"/>
     <id>http://www.joxrays.com/linux-tiv/</id>
     <published>2019-08-11T16:00:00.000Z</published>
-    <updated>2019-08-12T03:50:11.000Z</updated>
+    <updated>2019-08-12T03:50:12.000Z</updated>
     
     <summary type="html">
     
@@ -392,7 +442,7 @@
     <link href="http://www.joxrays.com/virtual-manjaro-guest-iso/"/>
     <id>http://www.joxrays.com/virtual-manjaro-guest-iso/</id>
     <published>2019-08-06T16:00:00.000Z</published>
-    <updated>2019-08-07T04:43:13.000Z</updated>
+    <updated>2019-08-07T04:43:14.000Z</updated>
     
     <summary type="html">
     
@@ -414,7 +464,7 @@
     <link href="http://www.joxrays.com/archlinux-configure/"/>
     <id>http://www.joxrays.com/archlinux-configure/</id>
     <published>2019-07-29T16:00:00.000Z</published>
-    <updated>2020-02-27T11:11:34.524Z</updated>
+    <updated>2020-02-27T11:11:34.000Z</updated>
     
     <summary type="html">
     
@@ -428,50 +478,6 @@
       <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
     
       <category term="Archlinux" scheme="http://www.joxrays.com/tags/Archlinux/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>配置Vsftpd遇到的问题</title>
-    <link href="http://www.joxrays.com/vsftp-configure/"/>
-    <id>http://www.joxrays.com/vsftp-configure/</id>
-    <published>2019-07-29T16:00:00.000Z</published>
-    <updated>2019-08-17T06:58:28.000Z</updated>
-    
-    <summary type="html">
-    
-      &lt;p&gt;目前我用的系统是archlinux，所以在配置vsftpd是不是一帆风顺的，这里将安装配置过程记录下来，也无法确保是否还有其他错误。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Linux" scheme="http://www.joxrays.com/categories/Linux/"/>
-    
-    
-      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
-    
-      <category term="vsftpd" scheme="http://www.joxrays.com/tags/vsftpd/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>树莓派搭建简略WiFi无线路由器</title>
-    <link href="http://www.joxrays.com/raspberry-wifi-router/"/>
-    <id>http://www.joxrays.com/raspberry-wifi-router/</id>
-    <published>2019-07-04T16:00:00.000Z</published>
-    <updated>2019-08-13T15:02:51.000Z</updated>
-    
-    <summary type="html">
-    
-      &lt;p&gt;目前我家有装有倆路由器，所以在搞一个觉得有点……&lt;br&gt;然而本文介绍用树莓派来搭建一个简略的WiFi无线路由器，来体验树莓派的强大功能。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="RaspberryPi" scheme="http://www.joxrays.com/categories/RaspberryPi/"/>
-    
-    
-      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
-    
-      <category term="树莓派" scheme="http://www.joxrays.com/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/"/>
     
   </entry>
   

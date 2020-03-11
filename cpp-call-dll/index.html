@@ -38,7 +38,9 @@
 
   
   
-  <link rel="stylesheet" href="/lib/fancybox/source/jquery.fancybox.css">
+    
+  
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 
 
@@ -132,7 +134,7 @@
 <meta property="og:description" content="前言 动态链接提供了一种方法，使进程可以调用不属于其可执行代码的函数。函数的可执行代码位于一个 DLL 文件中，该 DLL 包含一个或多个已被编译、链接并与使用它们的进程分开存储的函数。DLL 还有助于共享数据和资源。多个应用程序可同时访问内存中单个 DLL 副本的内容。使用动态链接库可以更为容易地将更新应用于各个模块，而不会影响该程序的其他部分。例如，您有一个大型网络游戏，如果把整个数百MB甚至">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://www.joxrays.com/uploads/images/cpp/0.png">
-<meta property="og:updated_time" content="2019-07-20T13:11:21.000Z">
+<meta property="og:updated_time" content="2019-07-20T13:11:22.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C++编写动态链接库Dll+调用Dll">
 <meta name="twitter:description" content="前言 动态链接提供了一种方法，使进程可以调用不属于其可执行代码的函数。函数的可执行代码位于一个 DLL 文件中，该 DLL 包含一个或多个已被编译、链接并与使用它们的进程分开存储的函数。DLL 还有助于共享数据和资源。多个应用程序可同时访问内存中单个 DLL 副本的内容。使用动态链接库可以更为容易地将更新应用于各个模块，而不会影响该程序的其他部分。例如，您有一个大型网络游戏，如果把整个数百MB甚至">
@@ -456,7 +458,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-07-20 21:11:21" itemprop="dateModified" datetime="2019-07-20T21:11:21+08:00">2019-07-20</time>
+                <time title="修改时间：2019-07-20 21:11:22" itemprop="dateModified" datetime="2019-07-20T21:11:22+08:00">2019-07-20</time>
               </span>
             
           
@@ -715,7 +717,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">66</span>
+          <span class="site-state-item-count">68</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -819,7 +821,11 @@
         
           
         
-        <span class="site-state-item-count">28</span>
+          
+        
+          
+        
+        <span class="site-state-item-count">30</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -920,7 +926,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">298k</span>
+    <span title="站点总字数">302k</span>
   
 
   
@@ -929,7 +935,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="站点阅读时长">4:31</span>
+    <span title="站点阅读时长">4:35</span>
   
 </div>
 
@@ -1012,7 +1018,7 @@
   <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
 
   
-  <script src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
 
 
 
@@ -1417,6 +1423,16 @@
   
 
   
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
 
   
 

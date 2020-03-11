@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Sans SC:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext">
+  
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/favicon.ico?v=7.2.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.2.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    copycode: {"enable":true,"show_result":true,"style":"mac"},
+    fancybox: true,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="之前已经简单地介绍了LZW 编码实现的原理，它由一个初始字典在编码/解码的过程中不断的扩增字典内容，从而在下一次编码/解码遇到重复的文本串时从字典中找出之前的代码并写入文本文件，这样就避免了重复的文本而达到文本文件空间缩小的目的。本文主要从简单介绍哈夫曼树过渡到编码解码内容。">
+<meta name="keywords" content="C++,DataStructures,C,Huffman">
+<meta property="og:type" content="article">
+<meta property="og:title" content="哈夫曼编码实现解压缩文本文件">
+<meta property="og:url" content="http://www.joxrays.com/huffman-encode-decode/index.html">
+<meta property="og:site_name" content="JoXrays&#39;s Blog">
+<meta property="og:description" content="之前已经简单地介绍了LZW 编码实现的原理，它由一个初始字典在编码/解码的过程中不断的扩增字典内容，从而在下一次编码/解码遇到重复的文本串时从字典中找出之前的代码并写入文本文件，这样就避免了重复的文本而达到文本文件空间缩小的目的。本文主要从简单介绍哈夫曼树过渡到编码解码内容。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://www.joxrays.com/uploads/images/data_structure/huffman_cpp/1.PNG">
+<meta property="og:image" content="http://www.joxrays.com/uploads/images/data_structure/huffman_cpp/2.PNG">
+<meta property="og:image" content="http://www.joxrays.com/uploads/images/data_structure/huffman_cpp/3.PNG">
+<meta property="og:updated_time" content="2020-03-02T16:47:16.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="哈夫曼编码实现解压缩文本文件">
+<meta name="twitter:description" content="之前已经简单地介绍了LZW 编码实现的原理，它由一个初始字典在编码/解码的过程中不断的扩增字典内容，从而在下一次编码/解码遇到重复的文本串时从字典中找出之前的代码并写入文本文件，这样就避免了重复的文本而达到文本文件空间缩小的目的。本文主要从简单介绍哈夫曼树过渡到编码解码内容。">
+<meta name="twitter:image" content="http://www.joxrays.com/uploads/images/data_structure/huffman_cpp/1.PNG">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="JoXrays's Blog" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="http://www.joxrays.com/huffman-encode-decode/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  
+  <title>哈夫曼编码实现解压缩文本文件 | JoXrays's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="stylesheet" href="/css/prism-duotone-dark.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JoXrays's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <h1 class="site-subtitle" itemprop="description">All my interesting ...</h1>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.joxrays.com/huffman-encode-decode/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Joseph XRays">
+      <meta itemprop="description" content="Share the knowledge">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JoXrays's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">哈夫曼编码实现解压缩文本文件
+
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-03-02 00:00:00" itemprop="dateCreated datePublished" datetime="2020-03-02T00:00:00+08:00">2020-03-02</time>
+            </span>
+          
+
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-03-03 00:47:16" itemprop="dateModified" datetime="2020-03-03T00:47:16+08:00">2020-03-03</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/数据结构与算法/" itemprop="url" rel="index"><span itemprop="name">数据结构与算法</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">本文字数：</span>
+              
+              <span title="本文字数">3.9k</span>
+            </span>
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              
+              <span title="阅读时长">4 分钟</span>
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>之前已经简单地介绍了LZW 编码实现的原理，它由一个初始字典在编码/解码的过程中不断的扩增字典内容，从而在下一次编码/解码遇到重复的文本串时从字典中找出之前的代码并写入文本文件，这样就避免了重复的文本而达到文本文件空间缩小的目的。本文主要从<del>简单介绍</del>哈夫曼树过渡到编码解码内容。</p>
+<a id="more"></a>
+
+<h3 id="哈夫曼树"><a href="#哈夫曼树" class="headerlink" title="哈夫曼树"></a>哈夫曼树</h3><p>哈夫曼树也可以称作霍夫曼树（Huffman Tree），实际上它是一颗最优二叉树。它的最优主要体现在它的<code>加权路径长度WPL(weighted path length)</code> 最小！为什么最小，下文有解释……<br>注意，节点的<code>加权路径长度</code>是指从根节点到该节点之间的路径长度与该节点权值的乘积。而WPL指的是所有<code>叶子节点</code>的加权路径长度<code>总和</code>。</p>
+<p>哈夫曼树详细信息可以参考这位大佬的文章 <a href="https://blog.csdn.net/google19890102/article/details/54848262" target="_blank" rel="noopener">数据结构和算法——Huffman树和Huffman编码</a> 。毕竟本文主要是介绍哈夫曼的编码解码过程，而且理解哈夫曼树也花不了多长时间…… </p>
+<h3 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h3><p>哈夫曼编码与LZW编码均为无损数据压缩算法的实现，哈夫曼编码最明显的一个特点是无需存储8位的字符，只需要存储01比特流即可，它是用较少的比特来表示出现频率高的字符，用较多的比特表示出现频率低的字符，即<code>可变长编码</code>（从哈夫曼树的角度理解就是字符出现频率/权值高的位于树的顶层，反之位于树的底层）。这样的话能够比较容易节省空间（毕竟写入以位为单位的数据总比写入以字节为单位的要节省空间）。</p>
+<p>无论是编码还是解码，都需要构造<code>哈夫曼树</code>，并且得到一个<code>哈夫曼编码表</code>，之后我们就是利用这个表将ASCII文件中出现的字符所对应的二进制bit流写入到压缩文件中。</p>
+<p>假设压缩文件为ASCII文件，那么在构造哈夫曼树之前还需要统计ASCII文件中每个ASCII字符出现的<code>频率</code>，也就是哈夫曼树每个节点的权值。统计方法很简单，直接扫描一遍文件即可。</p>
+<p>那么如何构造哈夫曼树呢？从<code>字符出现频率/权值高的位于树的顶层，反之位于树的底层</code>可知，我们需要利用之前已经统计好的<code>字符频率表F(c)</code>来构造哈夫曼树，常见的方法是通过<code>优先级队列</code>来完成构造，除此之外还可以通过排序的方法完成。总之，构造的贪婪准则是每次选取两个出现频率最小(a,b)的节点作为子节点，其父节点表示子节点出现的总频率(a+b)，直到剩余根节点为止，这里的<code>节点</code>指的是F(c)中每个出现频率大于0的字符。宏观上来看，构造哈夫曼树是自底向上进行的。</p>
+<p>举个例子，假设有一段文本<code>S=hhelloooo</code>，首先统计每个字符出现频率：</p>
+<table>
+<thead>
+<tr>
+<th>character</th>
+<th>h</th>
+<th>e</th>
+<th>l</th>
+<th>o</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>frequency</td>
+<td>2</td>
+<td>1</td>
+<td>2</td>
+<td>4</td>
+</tr>
+</tbody></table>
+<p>接着利用这个表构造哈夫曼树如下图所示<br><img src="/uploads/images/data_structure/huffman_cpp/1.PNG" alt="image"></p>
+<p>假设将父节点与左节点相连接分支标记为0、右节点的标记为1（也可以这样理解：0表示向左子树移动一步、1表示向右子树移动一步）<br><img src="/uploads/images/data_structure/huffman_cpp/2.PNG" alt="image"></p>
+<p>那么字符h在哈夫曼树中表示二进制串为 10，同样e、l、o对应的二进制串分别为110、111、0。<br>于是进一步得到了一个完整的表格，从这个表格可以得到的信息有：</p>
+<ul>
+<li>字符到二进制代码的映射表</li>
+<li>字符的频率表</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>character</th>
+<th>h</th>
+<th>e</th>
+<th>l</th>
+<th>o</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>frequency</td>
+<td>2</td>
+<td>1</td>
+<td>2</td>
+<td>4</td>
+</tr>
+<tr>
+<td>bit stream</td>
+<td>10</td>
+<td>110</td>
+<td>111</td>
+<td>0</td>
+</tr>
+</tbody></table>
+<p>将字符串 hhelloooo 每个出现的字符用二进制表示就是： 10.10.110.111.111.0.0.0.0。</p>
+<p>注意，我们还发现字符h、e、l、o始终位于<code>叶子节点</code>，这样有什么意义吗？回答这个问题之前先引入一个概念：<code>变长前缀码</code>，大意是：<strong>没有一个代码是另一个代码的前缀</strong> 。 这句话我是摘自《数据结构算法与应用》，而《算法》第四版中是这样描述的：<strong>如果所有字符编码都不会成为其他字符编码的前缀，那么就不需要分隔符了</strong> 。其实这很容易理解，如果存在一个二进制代码是另外某一个二进制代码的前缀，那么在解码的过程中就会无法判断出该二进制代码属于哪个原始字符。因此，要避免这种情况，最好的办法就是将字符节点置于<code>叶子节点</code>，这样在解码的过程中自顶向下的寻找原始字符就可以完成了。</p>
+<p>现在再来讨论另一个问题，毕竟哈夫曼编码是解压缩算法嘛，那么其压缩效率如何呢？</p>
+<p>比如上面的字符串hhelloooo，由于每个ASCII码占一个字节，总共9bytes=72bits，编码后的二进制串 10101101,11111000,0 总共<strong>17bits</strong>，故压缩率大约是 23.6%，还行。<br>再来看一个全是字母a且长度为约62k字节的字符串，压缩后的文件大小仅为5字节！现在仅仅改变一个字母a为b，原文件大小不变，此时压缩后的文件大小约为7.7K字节！</p>
+<p>咳咳，现在回答之前的那个问题：为什么<code>加权路径长度WPL</code>是最小的。我们不妨来算一下现在这颗哈夫曼树的WPL是多少呢，<br>其WPL为：1x4+2x2+3x1+3x2=4+4+3+6=<strong>17</strong>。这与压缩后的文件大小相等，这也说明了WPL越小，压缩文件体积越小，但也不可能为0。<br>这时候得到一个结论：对于任意变长前缀码，编码后的二进制bit流的长度等于相应的哈夫曼树的WPL。</p>
+<p>注意：在某些情况下压缩率甚至会超过100%！</p>
+<p>可见哈夫曼编码对于文件压缩也是有要求的。</p>
+<blockquote>
+<p>1.必须<code>尽量</code>利用被压缩的数据流中的<code>已知</code>结构；<br>2.小规模的字母表；<br>3.较长的连续相同的位或字符；<br>4.频繁使用的字符；<br>5.较长的连续重复的位或字符。</p>
+</blockquote>
+<p>那么问题来了，既然能够压缩文件，那么也得必须完全成功解压文件才行啊，不然文件是真的损坏了哭都来不及:)。<del>总所周知</del>LZW 编码在实现编码的整个过程中没有将整个字典写入压缩文件，甚至在解码时也是没有一个完整的字典，这是LZW的独特之处。而哈夫曼编码则不同，它是需要写入相关信息的！这样在解码时才能够重构哈夫曼树。这个相关信息可以是字符到二进制代码的映射表bitstream(c)或者每个字符的频率表f(c)。不过《算法》第四版里面并没有用的以上两种方法，而是写入一个哈夫曼树结构（将哈夫曼树编码为bit流），这样做的直接目的是防止不必要的空间浪费。<br>至于怎么编码，其实就是通过一次前序遍历将<code>内部节点</code>和<code>叶子节点</code>的开关bit写入压缩文件中。比如下面这张图<br><img src="/uploads/images/data_structure/huffman_cpp/3.PNG" alt="image"></p>
+<p>在一次前序遍历过程中，如果遇到内部节点就写入0bit，如果是叶子节点除了写入1bit外还需要将字符的ASCII码（8bits）也写入文件，最后再写入变长前缀码。这样做的理由方便解码时重构哈夫曼树。<br>总之需要写入文件的内容有：编码哈夫曼树的bits流+<strong>字符个数(32bits)</strong>+对应字符的二进制代码（或者称为变长前缀码）。上面的图没有标字符个数的二进制（毕竟这个例子才只有9个字符，不可能画那么多0吧）。</p>
+<p>当然了，不是每次都恰好将每8bits一个字节写入文件，可能最后就会多出N位$( 1 \le N \le 7)$。要知道目前标准C++只能操作字节流，还不能操作位流（Java有BinaryStdIn/Out）。解决方法很简单粗暴，不足8位的就在后面补0。</p>
+<p>现在小结一下，要实现哈夫曼压缩算法，需要以下几个步骤：</p>
+<ul>
+<li>从文件输入流统计在ASCII码范围内字符出现频率；</li>
+<li>利用频率表构造哈夫曼树；</li>
+<li>利用哈夫曼树构造哈夫曼编码表（如a:10010）；</li>
+<li>写入哈夫曼树/bitstream(c)/f(c)；</li>
+<li>写入字符个数，毕竟解码可不知道有多少个字符；</li>
+<li>从哈夫曼编码表写入所有字符对应的二进制编码；</li>
+<li>压缩结束。</li>
+</ul>
+<h3 id="解码"><a href="#解码" class="headerlink" title="解码"></a>解码</h3><p>解码就是编码的逆操作，不过一些细节还是需要注意的。<br>还是以上面那个例子来说吧(⊙﹏⊙)<br>01(01101111)01(01101000)01(01100101)1(01101100)+10101101111110000</p>
+<p>解码的第一步肯定是读取前面那一坨已经将哈夫曼树编码成bit流的二进制串，关键是读取了该怎么构造出哈夫曼树。记得之前编码时我们是走一次前序遍历才将哈夫曼树编码成bit流，那么解码又有何不可呢？如果读取的一个bit是1，这说明该处是叶子节点(new)，那么接着再读取1byte就能够得到一个ASCII码，然后结束；如果读取到0bit，说明是这是一个内部节点(new)，将该内部节点作为父节点后那么继续递归，直到遍历完所有叶子节点。</p>
+<p>至此，我们已经通过bit流构造出了哈夫曼树，接着再读取32bits或者64bits，总之是一个记录着字符个数的整数。</p>
+<p>最后一步就是解析变长前缀码 10.10.110.111.111.0.0.0.0 。观察这一串二进制文本，它被分割的份数也就是他对应的字符总数，这也是为什么需要写入字符个数的原因，此时我们并不知道压缩文件总共有多少bits，但是我们知道它有N个字符，那么就可以通过哈夫曼树反解出所有的原始字符并写入解压文件。当然了，如果已经知道压缩文件有多少个bits，那么就没必要这个N了，直接的方法就是一位一位的读取并根据哈夫曼树解析出原始字符，不过就是另外一种方法，这里就不讨论了。</p>
+<p>小结一下，解码过程可以分为以下几个步骤：</p>
+<ul>
+<li>读取压缩文件bit流重构哈夫曼树；</li>
+<li>读取字符个数N；</li>
+<li>根据哈夫曼树、N解析出原始字符，方法是自顶向下轮循解析；</li>
+<li>解压结束。</li>
+</ul>
+<h3 id="解析位流"><a href="#解析位流" class="headerlink" title="解析位流"></a>解析位流</h3><p>代码参考了《算法》第四版的，不过书上是Java版本的，而且最dan teng的就是解析位流，无论是C的fread、fwrite、还是C++的basic_ifstream<bool>、basic_ofstream<bool>，都至少一个字节，根本不能直接操作位流，而Java的BinaryStdIn/Out可以操作位流。无奈之下，只能自己写一个简单地可以控制位流的类，原理也很简单，就是一些&amp;|&lt;&lt;&gt;&gt;……（后来发现网上已经有大佬完成了……）然后再改写Java版本的哈夫曼编码实现，<br>本来想着能简就简的……<br>想着能简就简的……<br>能简就简的……<br>简简的…<br>简的..<br>简.<br>.</bool></bool></p>
+<p>代码就不放了……<br>码不放了……<br>码了…<br>了…<br>..<br>.</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>《算法》第四版<br>《数据结构算法与应用》<br><a href="https://en.wikipedia.org/wiki/Huffman_coding" target="_blank" rel="noopener">Huffman coding</a><br><a href="https://www.cnblogs.com/skywang12345/p/3706370.html" target="_blank" rel="noopener">哈夫曼树</a></p>
+
+      
+    </div>
+
+    
+
+    
+      
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div id="reward-container">
+  <div>Give a rose, leave a handful of fragrance; life is not easy, I use the arch</div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/wechatpay.png" alt="Joseph XRays 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C/" rel="tag"> <i class="fa fa-tag"></i> C++</a>
+          
+            <a href="/tags/DataStructures/" rel="tag"> <i class="fa fa-tag"></i> DataStructures</a>
+          
+            <a href="/tags/C/" rel="tag"> <i class="fa fa-tag"></i> C</a>
+          
+            <a href="/tags/Huffman/" rel="tag"> <i class="fa fa-tag"></i> Huffman</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/lzw-cpp/" rel="next" title="LZW文本压缩">
+                <i class="fa fa-chevron-left"></i> LZW文本压缩
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/linux-rdp-windows/" rel="prev" title="Linux RDP远程桌面连接Windows">
+                Linux RDP远程桌面连接Windows <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTkwNC84NDY4"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+    <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="Joseph XRays">
+  
+  <p class="site-author-name" itemprop="name">Joseph XRays</p>
+  <div class="site-description motion-element" itemprop="description">Share the knowledge</div>
+</div>
+
+
+  <nav class="site-state motion-element">
+    
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+
+
+
+
+
+  <div class="links-of-author motion-element">
+    
+      <span class="links-of-author-item">
+      
+      
+      
+        
+      
+        <a href="https://github.com/josexy" title="GitHub &rarr; https://github.com/josexy" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+    
+  </div>
+
+
+
+
+
+
+  <div class="links-of-blogroll motion-element links-of-blogroll-block">
+    <div class="links-of-blogroll-title">
+      <i class="fa  fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://github.com/josexy" title="https://github.com/josexy" rel="noopener" target="_blank">Github</a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#哈夫曼树"><span class="nav-number">1.</span> <span class="nav-text">哈夫曼树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编码"><span class="nav-number">2.</span> <span class="nav-text">编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解码"><span class="nav-number">3.</span> <span class="nav-text">解码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解析位流"><span class="nav-number">4.</span> <span class="nav-text">解析位流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Joseph XRays</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+    <span title="站点总字数">302k</span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    
+    <span title="站点阅读时长">4:35</span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+
+
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.2.0"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+    
+
+
+<script>
+  window.livereOptions = {
+    refer: 'huffman-encode-decode/'
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
+        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
+      }
+    });
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      document.getElementById(all[i].inputID + '-Frame').parentNode.className += ' has-jax';
+    }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    
+  
+
+
+  
+
+  
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+   
+
+
+  
+
+
+
+<script type="text/javascript" src="/js/float_wenzi.js"></script>
+</body>
+</html>
+
+
+

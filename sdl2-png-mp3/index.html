@@ -38,7 +38,9 @@
 
   
   
-  <link rel="stylesheet" href="/lib/fancybox/source/jquery.fancybox.css">
+    
+  
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 
 
@@ -124,7 +126,7 @@
 </script>
 
   <meta name="description" content="在使用SDL时，发现就算编译安装了SDL2_image和SDL_mixer也无法显示png格式图片和播放MP3音频文件。在网上搜索许久，这里总结一下编译过程。。。">
-<meta name="keywords" content="C++,C,Linux,SDL2">
+<meta name="keywords" content="C++,Linux,C,SDL2">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SDL2显示PNG图片+播放MP3">
 <meta property="og:url" content="http://www.joxrays.com/sdl2-png-mp3/index.html">
@@ -621,9 +623,9 @@
           
             <a href="/tags/C/" rel="tag"> <i class="fa fa-tag"></i> C++</a>
           
-            <a href="/tags/C/" rel="tag"> <i class="fa fa-tag"></i> C</a>
-          
             <a href="/tags/Linux/" rel="tag"> <i class="fa fa-tag"></i> Linux</a>
+          
+            <a href="/tags/C/" rel="tag"> <i class="fa fa-tag"></i> C</a>
           
             <a href="/tags/SDL2/" rel="tag"> <i class="fa fa-tag"></i> SDL2</a>
           
@@ -727,7 +729,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">66</span>
+          <span class="site-state-item-count">68</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -831,7 +833,11 @@
         
           
         
-        <span class="site-state-item-count">28</span>
+          
+        
+          
+        
+        <span class="site-state-item-count">30</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -932,7 +938,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">298k</span>
+    <span title="站点总字数">302k</span>
   
 
   
@@ -941,7 +947,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="站点阅读时长">4:31</span>
+    <span title="站点阅读时长">4:35</span>
   
 </div>
 
@@ -1024,7 +1030,7 @@
   <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
 
   
-  <script src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
 
 
 
@@ -1429,6 +1435,16 @@
   
 
   
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
 
   
 
