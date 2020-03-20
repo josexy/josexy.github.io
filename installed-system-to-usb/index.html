@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -217,7 +217,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -350,6 +350,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -386,9 +389,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -543,43 +543,56 @@
       
         <p>有时我们想让一个系统随时随地切换到另一台机器上，实现便携式系统。即通过一个U盘启动切换要启动的系统。本文以一个Linux系统安装到U盘为例简单介绍。</p>
 <a id="more"></a>
-
-<h3 id="准备条件"><a href="#准备条件" class="headerlink" title="准备条件"></a>准备条件</h3><blockquote>
-<p>Linux ISO镜像文件： <a href="https://www.kali.org/downloads/" target="_blank" rel="noopener">Kali Linux Light 64 Bit (2018.2)</a> <strong>865M</strong><br>VirtualBox虚拟机： <a href="https://www.virtualbox.org/wiki/Downloads" target="_blank" rel="noopener">https://www.virtualbox.org/wiki/Downloads</a><br>U盘： Kingston Datatraveler USB(2.0) / <strong>SanDisk Ultra USB 3.0</strong> 推荐30GB以上</p>
+<h3 id="准备条件"><a class="markdownIt-Anchor" href="#准备条件"></a> 准备条件</h3>
+<blockquote>
+<p>Linux ISO镜像文件： <a href="https://www.kali.org/downloads/" target="_blank" rel="noopener">Kali Linux Light 64 Bit (2018.2)</a> <strong>865M</strong><br>
+VirtualBox虚拟机： <a href="https://www.virtualbox.org/wiki/Downloads" target="_blank" rel="noopener">https://www.virtualbox.org/wiki/Downloads</a><br>
+U盘： Kingston Datatraveler USB(2.0) / <strong>SanDisk Ultra USB 3.0</strong> 推荐30GB以上</p>
 <p>注意： 如果U盘是3.0的，VirtualBox需要额外安装拓展包。方法见下文</p>
 </blockquote>
 <p>注意： 如果U盘是3.0的，VirtualBox需要额外安装拓展包。方法见下文</p>
-<h3 id="支持USB3-0"><a href="#支持USB3-0" class="headerlink" title="支持USB3.0"></a>支持USB3.0</h3><p>默认virtual box只支持USB1.0/2.0，要想让他支持USB3.0，需要到 <a href="https://www.virtualbox.org/wiki/Downloads" target="_blank" rel="noopener">官网</a> 下载拓展包（Extension Pack）<br><img src="/uploads/images/virtual_box/file_001.png" alt="img"></p>
+<h3 id="支持usb30"><a class="markdownIt-Anchor" href="#支持usb30"></a> 支持USB3.0</h3>
+<p>默认virtual box只支持USB1.0/2.0，要想让他支持USB3.0，需要到 <a href="https://www.virtualbox.org/wiki/Downloads" target="_blank" rel="noopener">官网</a> 下载拓展包（Extension Pack）<br>
+<img src="/uploads/images/virtual_box/file_001.png" alt="img"></p>
 <p>注意，要下载对应VirtualBox版本的 <strong>Extension Pack</strong>，当前我使用的版本是5.2.8。另外我的U盘是USB2.0的</p>
-<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>在启动虚拟机前，需要插入U盘。<br>用 <strong>lsblk</strong> 可看到该设备为sdb</p>
+<h3 id="安装"><a class="markdownIt-Anchor" href="#安装"></a> 安装</h3>
+<p>在启动虚拟机前，需要插入U盘。<br>
+用 <strong>lsblk</strong> 可看到该设备为sdb</p>
 <blockquote>
-<p>sdb 8:16 1 7.2G 0 disk<br>└─sdb1 8:17 1 7.2G 0 part /media/root/3c6de664-902f-4f45-b588-f295e7c42666</p>
+<p>sdb 8:16 1 7.2G 0 disk<br>
+└─sdb1 8:17 1 7.2G 0 part /media/root/3c6de664-902f-4f45-b588-f295e7c42666</p>
 </blockquote>
 <p>要让VirtualBox能够访问到USB设备，还需要执行以下命令</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vboxmanage internalcommands createrawvmdk -filename usb.vmdk -rawdisk /dev/sdb</span><br></pre></td></tr></table></figure>
-
-<p>其中 <strong>/dev/sdb</strong> 对于USB的设备文件名称<br>这会在当前目录创建一个 <strong>usb.vmdk</strong> 文件</p>
-<p>接着启动虚拟机，任意新建一个虚拟电脑，默认下一步，直至创建成功<br><img src="/uploads/images/virtual_box/file_003.png" alt="img"></p>
+<p>其中 <strong>/dev/sdb</strong> 对于USB的设备文件名称<br>
+这会在当前目录创建一个 <strong>usb.vmdk</strong> 文件</p>
+<p>接着启动虚拟机，任意新建一个虚拟电脑，默认下一步，直至创建成功<br>
+<img src="/uploads/images/virtual_box/file_003.png" alt="img"></p>
 <p>【设置】-&gt;【存储】底盘为Linux ISO文件，同时添加一个虚拟盘（<strong>使用现有的虚拟盘</strong>），并选择刚才创建好的<strong>usb.vmdk</strong>文件</p>
-<p>启动该虚拟机<br><img src="/uploads/images/virtual_box/file_004.png" alt="img"><br><img src="/uploads/images/virtual_box/file_005.png" alt="img"><br><img src="/uploads/images/virtual_box/file_006.png" alt="img"></p>
+<p>启动该虚拟机<br>
+<img src="/uploads/images/virtual_box/file_004.png" alt="img"><br>
+<img src="/uploads/images/virtual_box/file_005.png" alt="img"><br>
+<img src="/uploads/images/virtual_box/file_006.png" alt="img"></p>
 <p>到了磁盘分区要注意，我们要选择 <strong>sdb</strong>，即要将Linux系统安装到的U盘设备</p>
-<p><img src="/uploads/images/virtual_box/file_007.png" alt="img"><br><img src="/uploads/images/virtual_box/file_008.png" alt="img"></p>
-<p>之后就是漫长等待…<br><img src="/uploads/images/virtual_box/file_009.png" alt="img"></p>
-<p>安装完成之后，重启虚拟机，同时按 <strong>F11</strong> ，即可进入系统启动项选择。<br><img src="/uploads/images/virtual_box/file_010.png" alt="img"></p>
-<h3 id="解决中文乱码"><a href="#解决中文乱码" class="headerlink" title="解决中文乱码"></a>解决中文乱码</h3><p>登录之后发现系统显示中文乱码！</p>
+<p><img src="/uploads/images/virtual_box/file_007.png" alt="img"><br>
+<img src="/uploads/images/virtual_box/file_008.png" alt="img"></p>
+<p>之后就是漫长等待…<br>
+<img src="/uploads/images/virtual_box/file_009.png" alt="img"></p>
+<p>安装完成之后，重启虚拟机，同时按 <strong>F11</strong> ，即可进入系统启动项选择。<br>
+<img src="/uploads/images/virtual_box/file_010.png" alt="img"></p>
+<h3 id="解决中文乱码"><a class="markdownIt-Anchor" href="#解决中文乱码"></a> 解决中文乱码</h3>
+<p>登录之后发现系统显示中文乱码！</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo $LANG</span><br><span class="line">输出 zh_CN.UTF-8</span><br></pre></td></tr></table></figure>
-
 <p>先修改更新源，编辑 <strong>/etc/apt/sources.list</strong> 文件，添加以下内容</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">deb https://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib</span><br><span class="line">deb-src https://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib</span><br></pre></td></tr></table></figure>
-
 <p>在终端下输入 <code>apt-get upgrade</code> 更新系统</p>
 <p>输入 <strong>dpkg-reconfigure locales</strong> 之后选中<strong>en_US.UTF-8</strong>和<strong>zh_CN.UTF-8</strong>，确定后，将<strong>zh_CN.UTF-8</strong>选为默认</p>
 <p>安装中文字体</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install xfonts-wqy xfonts-intl-chinese</span><br></pre></td></tr></table></figure>
-
 <p>重启</p>
 <p><img src="/uploads/images/virtual_box/file_011.png" alt="img"></p>
-<h3 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h3><p>这样就完成了一个便携式U盘系统了～</p>
+<h3 id="结尾"><a class="markdownIt-Anchor" href="#结尾"></a> 结尾</h3>
+<p>这样就完成了一个便携式U盘系统了～</p>
 
       
     </div>
@@ -733,7 +746,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -839,9 +852,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -909,7 +920,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#准备条件"><span class="nav-number">1.</span> <span class="nav-text">准备条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#支持USB3-0"><span class="nav-number">2.</span> <span class="nav-text">支持USB3.0</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装"><span class="nav-number">3.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决中文乱码"><span class="nav-number">4.</span> <span class="nav-text">解决中文乱码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结尾"><span class="nav-number">5.</span> <span class="nav-text">结尾</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#准备条件"><span class="nav-number">1.</span> <span class="nav-text"> 准备条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#支持usb30"><span class="nav-number">2.</span> <span class="nav-text"> 支持USB3.0</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装"><span class="nav-number">3.</span> <span class="nav-text"> 安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决中文乱码"><span class="nav-number">4.</span> <span class="nav-text"> 解决中文乱码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结尾"><span class="nav-number">5.</span> <span class="nav-text"> 结尾</span></a></li></ol></div>
             
 
           </div>
@@ -942,7 +953,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1049,10 +1060,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

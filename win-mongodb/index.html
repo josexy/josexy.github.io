@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -211,7 +211,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -344,6 +344,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -380,9 +383,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -537,60 +537,134 @@
       
         <p>关于MongoD非关系数据库，网上有太多的解释，与其讲得再多，还不如亲自体验一下</p>
 <a id="more"></a>
-
-<h3 id="MongoDB"><a href="#MongoDB" class="headerlink" title="MongoDB"></a>MongoDB</h3><p>有用过MySQL，PostgreSQL，sqlite3等这些数据库的，是时候应该考虑下MongoDB了。。此处之外，MongoDB搭建也是非常简单的，本文以windows系统为例（问：为什么不是Linux？答：我想怎么玩就这么怎么玩！管得着？）</p>
+<h3 id="mongodb"><a class="markdownIt-Anchor" href="#mongodb"></a> MongoDB</h3>
+<p>有用过MySQL，PostgreSQL，sqlite3等这些数据库的，是时候应该考虑下MongoDB了。。此处之外，MongoDB搭建也是非常简单的，本文以windows系统为例（问：为什么不是Linux？答：我想怎么玩就这么怎么玩！管得着？）</p>
 <p>测试环境：</p>
 <blockquote>
-<p>Windows 10<br>MongoDB 3.6.3</p>
+<p>Windows 10<br>
+MongoDB 3.6.3</p>
 </blockquote>
 <p><a href="https://www.mongodb.com" target="_blank" rel="noopener">下载地址见官网</a></p>
-<p>下载完成后是一个压缩文件，解压后bin目录下有如下文件<br><img src="/uploads/images/windows/file_001.png" alt="img"></p>
-<p>mongod.exe 数据库服务器进程（守护进程）<br>mongo.exe 用于与服务器进行交互的shell控制台（JavaScript）<br>mongoexport.exe 数据导出（备份）<br>mongoimport.exe 数据导入（恢复）</p>
-<p>进入CMD，cd 到mongoDB bin目录，通过 <code>mongod.exe --help</code> 可查看可执行文件的参数列表，参数还挺多的。。。<br><img src="/uploads/images/windows/file_002.png" alt="img"></p>
+<p>下载完成后是一个压缩文件，解压后bin目录下有如下文件<br>
+<img src="/uploads/images/windows/file_001.png" alt="img"></p>
+<p>mongod.exe 数据库服务器进程（守护进程）<br>
+mongo.exe 用于与服务器进行交互的shell控制台（JavaScript）<br>
+mongoexport.exe 数据导出（备份）<br>
+mongoimport.exe 数据导入（恢复）</p>
+<p>进入CMD，cd 到mongoDB bin目录，通过 <code>mongod.exe --help</code> 可查看可执行文件的参数列表，参数还挺多的。。。<br>
+<img src="/uploads/images/windows/file_002.png" alt="img"></p>
 <p>注意那一个参数</p>
 <blockquote>
 <p>-f [ –config ] arg configuration file specifying additional options</p>
 </blockquote>
-<p>可以指定一个配置文件作为服务器启动的参数<br>比如以下几个参数：</p>
+<p>可以指定一个配置文件作为服务器启动的参数<br>
+比如以下几个参数：</p>
 <blockquote>
-<p>dbpath=C:\MongoDB\data\db<br>logpath=C:\MongoDB\logs\mongo.log<br>logappend=true<br>port=27017<br>auth=true<br>bind_ip_all=true</p>
+<p>dbpath=C:\MongoDB\data\db<br>
+logpath=C:\MongoDB\logs\mongo.log<br>
+logappend=true<br>
+port=27017<br>
+auth=true<br>
+bind_ip_all=true</p>
 </blockquote>
-<p><strong>dbpath</strong> 指定database<strong>目录</strong>，默认为 <strong>C:\data\db\</strong><br><strong>logpath</strong> 指定日志<strong>文件</strong>，而不是标准输出到console。注意是文件，不是目录！<br><strong>logappend</strong> 指定以追加的模式写入日志文件，而不是覆盖<br><strong>port</strong> 指定服务器监听的端口，默认 27017<br><strong>auth</strong> 指定访问数据库时必须要经过身份验证<br><strong>bind_ip_all</strong> 绑定（监听）所有IP地址，或者 <strong>bind_ip</strong> 指定要绑定的IP地址列表，默认 <strong>localhost</strong><br>关于配置文件更详细信息还得去官网查查…</p>
+<p><strong>dbpath</strong> 指定database<strong>目录</strong>，默认为 <em><em>C:\data\db*</em><br>
+<strong>logpath</strong> 指定日志</em><em>文件</em>*，而不是标准输出到console。注意是文件，不是目录！<br>
+<strong>logappend</strong> 指定以追加的模式写入日志文件，而不是覆盖<br>
+<strong>port</strong> 指定服务器监听的端口，默认 27017<br>
+<strong>auth</strong> 指定访问数据库时必须要经过身份验证<br>
+<strong>bind_ip_all</strong> 绑定（监听）所有IP地址，或者 <strong>bind_ip</strong> 指定要绑定的IP地址列表，默认 <strong>localhost</strong><br>
+关于配置文件更详细信息还得去官网查查…</p>
 <p>MongoDB根目录下所有的文件，不存在的目录和文件自行创建</p>
 <blockquote>
-<p>C:\MongoDB<br>|–bin<br>——-|– …<br>|–conf<br>——-|– mongo.conf<br>|–data<br>——-|– db<br>|–logs<br>——-|– mongo.log</p>
+<p>C:\MongoDB<br>
+|–bin<br>
+——-|– …<br>
+|–conf<br>
+——-|– mongo.conf<br>
+|–data<br>
+——-|– db<br>
+|–logs<br>
+——-|– mongo.log</p>
 </blockquote>
-<p>之后在<br><code>mongod.exe --config c:\MongoDB\conf\mongo.conf</code><br><img src="/uploads/images/windows/file_003.png" alt="img"></p>
+<p>之后在<br>
+<code>mongod.exe --config c:\MongoDB\conf\mongo.conf</code><br>
+<img src="/uploads/images/windows/file_003.png" alt="img"></p>
 <p>接着我们输出 show dbs</p>
 <blockquote>
-<p>&gt;show dbs<br>2018-02-21T10:29:48.852+0800 E QUERY [thread1] Error: listDatabases failed:{<br>“ok” : 0,<br>“errmsg” : “not authorized on admin to execute command { listDatabases: 1.0, $db: \”admin\” }”,<br>“code” : 13,<br>“codeName” : “Unauthorized”<br>} :<br>_getErrorWithCode@src/mongo/shell/utils.js:25:13<br>Mongo.prototype.getDBs@src/mongo/shell/mongo.js:65:1<br>shellHelper.show@src/mongo/shell/utils.js:816:19<br>shellHelper@src/mongo/shell/utils.js:706:15<br>@(shellhelp2):1:1<br>&gt;</p>
+<p>&gt;show dbs<br>
+2018-02-21T10:29:48.852+0800 E QUERY [thread1] Error: listDatabases failed:{<br>
+“ok” : 0,<br>
+“errmsg” : “not authorized on admin to execute command { listDatabases: 1.0, $db: \”admin\” }”,<br>
+“code” : 13,<br>
+“codeName” : “Unauthorized”<br>
+} :<br>
+_getErrorWithCode@src/mongo/shell/utils.js:25:13<br>
+Mongo.prototype.getDBs@src/mongo/shell/mongo.js:65:1<br>
+shellHelper.show@src/mongo/shell/utils.js:816:19<br>
+shellHelper@src/mongo/shell/utils.js:706:15<br>
+@(shellhelp2):1:1<br>
+&gt;</p>
 </blockquote>
 <p>报错了，因为没有权限列举出所有的database，这就是之前的 <strong>auth</strong> 的作用。那么现在创建一个用户</p>
 <blockquote>
-<p>&gt; <strong>use admin</strong><br>switched to db admin<br>&gt; <strong>db.createUser({user:’fuck’,pwd:’12345’,roles:[{role:’root’,db:’admin’}]})</strong></p>
-<p>Successfully added user: {<br>“user” : “fuck”,<br>“roles” : [<br>{<br>“role” : “root”,<br>“db” : “admin”<br>}<br>]<br>}<br>&gt;</p>
+<p>&gt; <strong>use admin</strong><br>
+switched to db admin<br>
+&gt; <strong>db.createUser({user:’fuck’,pwd:’12345’,roles:[{role:’root’,db:’admin’}]})</strong></p>
+<p>Successfully added user: {<br>
+“user” : “fuck”,<br>
+“roles” : [<br>
+{<br>
+“role” : “root”,<br>
+“db” : “admin”<br>
+}<br>
+]<br>
+}<br>
+&gt;</p>
 </blockquote>
-<p>首先，切换到 admin 这个database，然后通过 <code>db.createUser</code> 来创建一个新的用户，这里创建一个root权限的用户 :)<br>exit，重新进入 mongo console<br>再次 <code>show dbs</code>，同样报错。接着</p>
+<p>首先，切换到 admin 这个database，然后通过 <code>db.createUser</code> 来创建一个新的用户，这里创建一个root权限的用户 😃<br>
+exit，重新进入 mongo console<br>
+再次 <code>show dbs</code>，同样报错。接着</p>
 <blockquote>
-<p>&gt;use admin<br>&gt;db.auth(‘fuck’,’12345’)<br>&gt;1<br>&gt;show dbs<br>admin 0.000GB<br>config 0.000GB<br>local 0.000GB<br>1 说明验证成功；0 验证失败</p>
+<p>&gt;use admin<br>
+&gt;db.auth(‘fuck’,’12345’)<br>
+&gt;1<br>
+&gt;show dbs<br>
+admin 0.000GB<br>
+config 0.000GB<br>
+local 0.000GB<br>
+1 说明验证成功；0 验证失败</p>
 </blockquote>
 <p>现在我们已经成功搭建的MongoDB服务器。。等等，那么我们下次开机还不是还要重新通过命令行来启动服务器？这样也太麻烦了吧。是的，所以可以把MongoDB添加到系统服务里面，让它开机自启动。</p>
 <p>还记得 <code>mongod.exe --help</code>吗？我们可以找找有哪些参数有用得到的。。。</p>
 <p>Windows服务控制管理</p>
 <blockquote>
-<p>Windows Service Control Manager options:<br><strong>–install</strong> install Windows service<br><strong>–remove</strong> remove Windows service<br>-<strong>-reinstall</strong> reinstall Windows service (equivalent<br>to –remove followed by –install)<br><strong>–serviceName</strong> arg Windows service name<br><strong>–serviceDisplayName</strong> arg Windows service display name<br><strong>–serviceDescription</strong> arg Windows service description<br><strong>–serviceUser</strong> arg account for service execution<br><strong>–servicePassword</strong> arg password used to authenticate<br>serviceUser</p>
+<p>Windows Service Control Manager options:<br>
+<strong>–install</strong> install Windows service<br>
+<strong>–remove</strong> remove Windows service<br>
+-<strong>-reinstall</strong> reinstall Windows service (equivalent<br>
+to –remove followed by –install)<br>
+<strong>–serviceName</strong> arg Windows service name<br>
+<strong>–serviceDisplayName</strong> arg Windows service display name<br>
+<strong>–serviceDescription</strong> arg Windows service description<br>
+<strong>–serviceUser</strong> arg account for service execution<br>
+<strong>–servicePassword</strong> arg password used to authenticate<br>
+serviceUser</p>
 </blockquote>
-<p>那么，我们可以这样做，通过 –install 安装系统服务</p>
+<p>那么，我们可以这样做，通过 --install 安装系统服务</p>
 <blockquote>
-<p>mongod.exe –config c:\MongoDB\conf\mongo.conf <strong>–serviceName MongoDB</strong> –serviceDisplayName MongoDB_Server –serviceDescription “This is my MongoDB Server…” <strong>–install</strong></p>
+<p>mongod.exe --config c:\MongoDB\conf\mongo.conf <strong>–serviceName MongoDB</strong> --serviceDisplayName MongoDB_Server --serviceDescription “This is my MongoDB Server…” <strong>–install</strong></p>
 </blockquote>
 <p><img src="/uploads/images/windows/file_004.png" alt="img"></p>
-<p>看！是不是OK了，So easy!除此之外，我们还可以把 <code>C:\MongoDB\bin</code> 添加到PATH环境变量里。<br>现在启动该服务或者 <code>net start MongoDB</code>，回到cmd，输入</p>
+<p>看！是不是OK了，So easy!除此之外，我们还可以把 <code>C:\MongoDB\bin</code> 添加到PATH环境变量里。<br>
+现在启动该服务或者 <code>net start MongoDB</code>，回到cmd，输入</p>
 <blockquote>
 <p>mongo -u fuck -p 12345 admin</p>
 </blockquote>
-<p>-u 指定用户名称<br>-p 指定用户密码<br>后面的 admin 则是要登录的database</p>
-<h3 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h3><p>嗯…很简单吧！除此之外，MongoDB数据库提供的编程接口也是支持大多数语言的，比如 C，C++，Java，Python，PHP……具体可从官网上查看使用方法。对于C/C++，似乎挺复杂的。</p>
+<p>-u 指定用户名称<br>
+-p 指定用户密码<br>
+后面的 admin 则是要登录的database</p>
+<h3 id="结尾"><a class="markdownIt-Anchor" href="#结尾"></a> 结尾</h3>
+<p>嗯…很简单吧！除此之外，MongoDB数据库提供的编程接口也是支持大多数语言的，比如 C，C++，Java，Python，PHP……具体可从官网上查看使用方法。对于C/C++，似乎挺复杂的。</p>
 
       
     </div>
@@ -746,7 +820,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -852,9 +926,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -922,7 +994,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#MongoDB"><span class="nav-number">1.</span> <span class="nav-text">MongoDB</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结尾"><span class="nav-number">2.</span> <span class="nav-text">结尾</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#mongodb"><span class="nav-number">1.</span> <span class="nav-text"> MongoDB</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结尾"><span class="nav-number">2.</span> <span class="nav-text"> 结尾</span></a></li></ol></div>
             
 
           </div>
@@ -955,7 +1027,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1062,10 +1134,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

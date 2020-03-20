@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -125,13 +125,13 @@
   };
 </script>
 
-  <meta name="description" content="本章讲述Windows下怎么快速的搭建FQ环境,同样是用XX-NET同样的,还是到github获取xx-net.本文的重点是在Windows上开始 IPv6 .在未开启ipv6首次打开xx-net时,会显示 尚未建立连接.">
+  <meta name="description" content="本章讲述Windows下怎么快速的搭建FQ环境,同样是用XX-NET 同样的,还是到github获取xx-net. 本文的重点是在Windows上开始 IPv6 . 在未开启ipv6首次打开xx-net时,会显示 尚未建立连接.">
 <meta name="keywords" content="Google,Windows">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Windows XX-NET使用">
 <meta property="og:url" content="http://www.joxrays.com/windows-xxnet/index.html">
 <meta property="og:site_name" content="JoXrays&#39;s Blog">
-<meta property="og:description" content="本章讲述Windows下怎么快速的搭建FQ环境,同样是用XX-NET同样的,还是到github获取xx-net.本文的重点是在Windows上开始 IPv6 .在未开启ipv6首次打开xx-net时,会显示 尚未建立连接.">
+<meta property="og:description" content="本章讲述Windows下怎么快速的搭建FQ环境,同样是用XX-NET 同样的,还是到github获取xx-net. 本文的重点是在Windows上开始 IPv6 . 在未开启ipv6首次打开xx-net时,会显示 尚未建立连接.">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://www.joxrays.com/uploads/images/win_vpn/file_013.png">
 <meta property="og:image" content="http://www.joxrays.com/uploads/images/win_vpn/file_017.png">
@@ -143,7 +143,7 @@
 <meta property="og:updated_time" content="2019-07-20T14:28:48.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Windows XX-NET使用">
-<meta name="twitter:description" content="本章讲述Windows下怎么快速的搭建FQ环境,同样是用XX-NET同样的,还是到github获取xx-net.本文的重点是在Windows上开始 IPv6 .在未开启ipv6首次打开xx-net时,会显示 尚未建立连接.">
+<meta name="twitter:description" content="本章讲述Windows下怎么快速的搭建FQ环境,同样是用XX-NET 同样的,还是到github获取xx-net. 本文的重点是在Windows上开始 IPv6 . 在未开启ipv6首次打开xx-net时,会显示 尚未建立连接.">
 <meta name="twitter:image" content="http://www.joxrays.com/uploads/images/win_vpn/file_013.png">
 
 
@@ -214,7 +214,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -347,6 +347,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -383,9 +386,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -538,30 +538,58 @@
       
 
       
-        <p>本章讲述Windows下怎么快速的搭建FQ环境,同样是用XX-NET<br>同样的,还是到github获取xx-net.<br>本文的重点是在Windows上开始 <strong>IPv6</strong> .<br>在未开启ipv6首次打开xx-net时,会显示 <strong>尚未建立连接</strong>.</p>
+        <p>本章讲述Windows下怎么快速的搭建FQ环境,同样是用XX-NET<br>
+同样的,还是到github获取xx-net.<br>
+本文的重点是在Windows上开始 <strong>IPv6</strong> .<br>
+在未开启ipv6首次打开xx-net时,会显示 <strong>尚未建立连接</strong>.</p>
 <a id="more"></a>
-
 <p><font color="green">PS： 以下方法可能比较旧，目前我使用的是X-Tunnel</font></p>
-<h4 id="开启ipv6"><a href="#开启ipv6" class="headerlink" title="开启ipv6"></a>开启ipv6</h4><p>直接在 <strong>cmd命令提示符</strong> 下输入一下命令</p>
+<h4 id="开启ipv6"><a class="markdownIt-Anchor" href="#开启ipv6"></a> 开启ipv6</h4>
+<p>直接在 <strong>cmd命令提示符</strong> 下输入一下命令</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//teredo服务器：teredo-debian.remlab.net</span><br><span class="line">netsh interface teredo set state server=teredo-debian.remlab.net</span><br><span class="line">netsh int ter set state enterpriseclient</span><br><span class="line">netsh int ipv6 show teredo	//查看状态</span><br></pre></td></tr></table></figure>
-
 <blockquote>
-<p>Teredo 参数<br>-——————————————–<br>类型 : enterpriseclient<br>服务器名称 : teredo-debian.remlab.net<br>客户端刷新间隔 : 30 秒<br>客户端端口 : unspecified<br>状态 : qualified<br>客户端类型 : teredo client<br>网络 : unmanaged<br>NAT : restricted<br>NAT 特殊行为 : UPNP: 是，PortPreserving: 否<br>本地映射 : 192.168.1.103:64530<br>外部 NAT 映射 : xxx.xxx.xxx.xxx:23441</p>
+<p>Teredo 参数<br>
+-——————————————–<br>
+类型 : enterpriseclient<br>
+服务器名称 : <a href="http://teredo-debian.remlab.net" target="_blank" rel="noopener">teredo-debian.remlab.net</a><br>
+客户端刷新间隔 : 30 秒<br>
+客户端端口 : unspecified<br>
+状态 : qualified<br>
+客户端类型 : teredo client<br>
+网络 : unmanaged<br>
+NAT : restricted<br>
+NAT 特殊行为 : UPNP: 是，PortPreserving: 否<br>
+本地映射 : 192.168.1.103:64530<br>
+外部 NAT 映射 : <a href="http://xxx.xxx.xxx.xxx:23441" target="_blank" rel="noopener">xxx.xxx.xxx.xxx:23441</a></p>
 </blockquote>
 <p><img src="/uploads/images/win_vpn/file_013.png" alt="img"></p>
-<h4 id="恢复teredo"><a href="#恢复teredo" class="headerlink" title="恢复teredo"></a>恢复teredo</h4><p>断开连接的话,可以直接 <strong>退出</strong> xx-net,还需在cmd下输入一下命令即可</p>
+<h4 id="恢复teredo"><a class="markdownIt-Anchor" href="#恢复teredo"></a> 恢复teredo</h4>
+<p>断开连接的话,可以直接 <strong>退出</strong> xx-net,还需在cmd下输入一下命令即可</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">//恢复teredo</span><br><span class="line">netsh interface teredo set state default server=default</span><br><span class="line">netsh int ipv6 show teredo //查看状态</span><br></pre></td></tr></table></figure>
-
 <blockquote>
-<p>Teredo 参数<br>-—————————————–<br>类型 : client<br>服务器名称 : teredo.ipv6.micr<br>客户端刷新间隔 : 30 秒<br>客户端端口 : unspecified<br>状态 : offline<br>错误 : 未能解析服务器名</p>
+<p>Teredo 参数<br>
+-—————————————–<br>
+类型 : client<br>
+服务器名称 : teredo.ipv6.micr<br>
+客户端刷新间隔 : 30 秒<br>
+客户端端口 : unspecified<br>
+状态 : offline<br>
+错误 : 未能解析服务器名</p>
 </blockquote>
-<h4 id="IE浏览器代理设置"><a href="#IE浏览器代理设置" class="headerlink" title="IE浏览器代理设置"></a>IE浏览器代理设置</h4><p><img src="/uploads/images/win_vpn/file_017.png" alt="img"></p>
+<h4 id="ie浏览器代理设置"><a class="markdownIt-Anchor" href="#ie浏览器代理设置"></a> IE浏览器代理设置</h4>
+<p><img src="/uploads/images/win_vpn/file_017.png" alt="img"></p>
 <p>默认情况下,IE浏览器时没有设置代理,所以也就无法访问一些网站.这里介绍两种方法</p>
-<h5 id="Internet选项-LAN-设置"><a href="#Internet选项-LAN-设置" class="headerlink" title="Internet选项(LAN)设置"></a>Internet选项(LAN)设置</h5><p>打开IE浏览器&gt;&gt;Internet选项&gt;&gt;连接&gt;&gt;<strong>局域网(LAN)设置</strong>,之后 勾选 代理服务器之一,并填入 <strong>地址</strong> 和 <strong>端口</strong> ,其中地址默认 <code>127.0.0.1</code> ,端口可以从 GAEProxy状态信息 &gt;&gt; 配置 属性里的 <strong>监听代理</strong> 为 <code>8087</code></p>
-<p><img src="/uploads/images/win_vpn/file_015.png" alt="img"><br><img src="/uploads/images/win_vpn/file_016.png" alt="img"></p>
-<h5 id="花刺代理-ProxyThorn"><a href="#花刺代理-ProxyThorn" class="headerlink" title="花刺代理(ProxyThorn)"></a>花刺代理(ProxyThorn)</h5><p>添加代理<br><img src="/uploads/images/win_vpn/file_018.png" alt="img"></p>
-<p>填入gae的服务器地址以及端口<br><img src="/uploads/images/win_vpn/file_019.png" alt="img"></p>
-<p>先验证再设为IE代理<br><img src="/uploads/images/win_vpn/file_020.png" alt="img"></p>
+<h5 id="internet选项lan设置"><a class="markdownIt-Anchor" href="#internet选项lan设置"></a> Internet选项(LAN)设置</h5>
+<p>打开IE浏览器&gt;&gt;Internet选项&gt;&gt;连接&gt;&gt;<strong>局域网(LAN)设置</strong>,之后 勾选 代理服务器之一,并填入 <strong>地址</strong> 和 <strong>端口</strong> ,其中地址默认 <code>127.0.0.1</code> ,端口可以从 GAEProxy状态信息 &gt;&gt; 配置 属性里的 <strong>监听代理</strong> 为 <code>8087</code></p>
+<p><img src="/uploads/images/win_vpn/file_015.png" alt="img"><br>
+<img src="/uploads/images/win_vpn/file_016.png" alt="img"></p>
+<h5 id="花刺代理proxythorn"><a class="markdownIt-Anchor" href="#花刺代理proxythorn"></a> 花刺代理(ProxyThorn)</h5>
+<p>添加代理<br>
+<img src="/uploads/images/win_vpn/file_018.png" alt="img"></p>
+<p>填入gae的服务器地址以及端口<br>
+<img src="/uploads/images/win_vpn/file_019.png" alt="img"></p>
+<p>先验证再设为IE代理<br>
+<img src="/uploads/images/win_vpn/file_020.png" alt="img"></p>
 <p>然后在次刷新IE浏览器即可再次看到Google主页!</p>
 <p>bye</p>
 
@@ -719,7 +747,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -825,9 +853,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -895,7 +921,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#开启ipv6"><span class="nav-number">1.</span> <span class="nav-text">开启ipv6</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#恢复teredo"><span class="nav-number">2.</span> <span class="nav-text">恢复teredo</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#IE浏览器代理设置"><span class="nav-number">3.</span> <span class="nav-text">IE浏览器代理设置</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Internet选项-LAN-设置"><span class="nav-number">3.1.</span> <span class="nav-text">Internet选项(LAN)设置</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#花刺代理-ProxyThorn"><span class="nav-number">3.2.</span> <span class="nav-text">花刺代理(ProxyThorn)</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#开启ipv6"><span class="nav-number">1.</span> <span class="nav-text"> 开启ipv6</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#恢复teredo"><span class="nav-number">2.</span> <span class="nav-text"> 恢复teredo</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ie浏览器代理设置"><span class="nav-number">3.</span> <span class="nav-text"> IE浏览器代理设置</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#internet选项lan设置"><span class="nav-number">3.1.</span> <span class="nav-text"> Internet选项(LAN)设置</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#花刺代理proxythorn"><span class="nav-number">3.2.</span> <span class="nav-text"> 花刺代理(ProxyThorn)</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -928,7 +954,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1035,10 +1061,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -206,7 +206,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -339,6 +339,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -375,9 +378,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -532,8 +532,8 @@
       
         <p>这次就MongoDB来记录下安装C Driver过程。</p>
 <a id="more"></a>
-
-<h3 id="Install-MongoDB-C-Driver"><a href="#Install-MongoDB-C-Driver" class="headerlink" title="Install MongoDB C Driver"></a>Install MongoDB C Driver</h3><p>我百度了一下，有关用C/C++调用MongoDB提供的接口的教程，貌似很少，我也没怎么Google，索性就看官网提供的文档算了，反正大部分都是代码。。。</p>
+<h3 id="install-mongodb-c-driver"><a class="markdownIt-Anchor" href="#install-mongodb-c-driver"></a> Install MongoDB C Driver</h3>
+<p>我百度了一下，有关用C/C++调用MongoDB提供的接口的教程，貌似很少，我也没怎么Google，索性就看官网提供的文档算了，反正大部分都是代码。。。</p>
 <p>MongoDB C Driver支持的平台如下</p>
 <table>
 <thead>
@@ -541,7 +541,8 @@
 <th>Supported Platforms</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>Archlinux</td>
 </tr>
 <tr>
@@ -577,13 +578,16 @@
 <tr>
 <td>x86, x86_64, ARM (aarch64), Power8 (ppc64le), zSeries (s390x)</td>
 </tr>
-</tbody></table>
-<h4 id="从包管理工具安装"><a href="#从包管理工具安装" class="headerlink" title="从包管理工具安装"></a>从包管理工具安装</h4><p>对于Debian或Ubuntu，可以直接从以下命令安装</p>
+</tbody>
+</table>
+<h4 id="从包管理工具安装"><a class="markdownIt-Anchor" href="#从包管理工具安装"></a> 从包管理工具安装</h4>
+<p>对于Debian或Ubuntu，可以直接从以下命令安装</p>
 <blockquote>
 <p>apt-get install libmongoc-1.0-0</p>
 </blockquote>
 <p>对于其他Linux系统，也是大同小异的。然而，我还是比较喜欢编译安装，感觉可控性更高些。</p>
-<h4 id="编译安装"><a href="#编译安装" class="headerlink" title="编译安装"></a>编译安装</h4><blockquote>
+<h4 id="编译安装"><a class="markdownIt-Anchor" href="#编译安装"></a> 编译安装</h4>
+<blockquote>
 <p>OpenSSL is required for authentication or for SSL connections to MongoDB. Kerberos or LDAP support requires Cyrus SASL.</p>
 </blockquote>
 <p>这一步我直接跳过。</p>
@@ -591,12 +595,16 @@
 <p>注意，<a href="http://mongoc.org/libmongoc/current/init-cleanup.html" target="_blank" rel="noopener">–disable-automatic-init-and-cleanup</a> 是官网推荐的参数，意思大概就是 禁止自动初始化和释放，这应该跟调用库有关，不过我没有加上</p>
 <p>默认安装到 /usr/local</p>
 <p>之后就可以 make + make install</p>
-<h4 id="Building-from-git"><a href="#Building-from-git" class="headerlink" title="Building from git"></a>Building from git</h4><blockquote>
+<h4 id="building-from-git"><a class="markdownIt-Anchor" href="#building-from-git"></a> Building from git</h4>
+<blockquote>
 <p>git clone <a href="https://github.com/mongodb/mongo-c-driver.git" target="_blank" rel="noopener">https://github.com/mongodb/mongo-c-driver.git</a></p>
 </blockquote>
 <p>这个方法我没怎么注意，有兴趣的可以自己尝试下</p>
-<h4 id="其他平台的构建"><a href="#其他平台的构建" class="headerlink" title="其他平台的构建"></a>其他平台的构建</h4><p>除了Linux，常用的Mac OS，Windows的安装方法这里就不在赘述了</p>
-<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p>因为我是从源码编译安装的，在这过程中，也遇到了一些奇葩问题。<br>configure默认prefix为 /usr/local，libmongoc-1.0，libbson-1.0头文件安装到/usr/local/include，以及相应的链接库在/usr/local/lib。这似乎没有什么错误。但是当我用编写代码时发现我引用头文件</p>
+<h4 id="其他平台的构建"><a class="markdownIt-Anchor" href="#其他平台的构建"></a> 其他平台的构建</h4>
+<p>除了Linux，常用的Mac OS，Windows的安装方法这里就不在赘述了</p>
+<h3 id="注意"><a class="markdownIt-Anchor" href="#注意"></a> 注意</h3>
+<p>因为我是从源码编译安装的，在这过程中，也遇到了一些奇葩问题。<br>
+configure默认prefix为 /usr/local，libmongoc-1.0，libbson-1.0头文件安装到/usr/local/include，以及相应的链接库在/usr/local/lib。这似乎没有什么错误。但是当我用编写代码时发现我引用头文件</p>
 <blockquote>
 <p>#include</p>
 </blockquote>
@@ -606,7 +614,8 @@
 </blockquote>
 <p>而经过 <code>locate bson.h</code>，结果发现只存在 /usr/local/include/libbson-1.0/bson.h。。。这就是问题了</p>
 <p>于是我可以cp /usr/local/include/libbson-1.0 目录下所有文件到 /usr/include</p>
-<h3 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h3><p>编译安装MongoDB C Driver算是简单了吧，与 MongoCXX 的安装方法相比，这的确算是简单了 :)</p>
+<h3 id="结尾"><a class="markdownIt-Anchor" href="#结尾"></a> 结尾</h3>
+<p>编译安装MongoDB C Driver算是简单了吧，与 MongoCXX 的安装方法相比，这的确算是简单了 😃</p>
 <p>详细过程参阅 <strong>Installing the MongoDB C Driver</strong></p>
 <p>bye~</p>
 
@@ -766,7 +775,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -872,9 +881,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -942,7 +949,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Install-MongoDB-C-Driver"><span class="nav-number">1.</span> <span class="nav-text">Install MongoDB C Driver</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#从包管理工具安装"><span class="nav-number">1.1.</span> <span class="nav-text">从包管理工具安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#编译安装"><span class="nav-number">1.2.</span> <span class="nav-text">编译安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Building-from-git"><span class="nav-number">1.3.</span> <span class="nav-text">Building from git</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#其他平台的构建"><span class="nav-number">1.4.</span> <span class="nav-text">其他平台的构建</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注意"><span class="nav-number">2.</span> <span class="nav-text">注意</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结尾"><span class="nav-number">3.</span> <span class="nav-text">结尾</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#install-mongodb-c-driver"><span class="nav-number">1.</span> <span class="nav-text"> Install MongoDB C Driver</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#从包管理工具安装"><span class="nav-number">1.1.</span> <span class="nav-text"> 从包管理工具安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#编译安装"><span class="nav-number">1.2.</span> <span class="nav-text"> 编译安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#building-from-git"><span class="nav-number">1.3.</span> <span class="nav-text"> Building from git</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#其他平台的构建"><span class="nav-number">1.4.</span> <span class="nav-text"> 其他平台的构建</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注意"><span class="nav-number">2.</span> <span class="nav-text"> 注意</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结尾"><span class="nav-number">3.</span> <span class="nav-text"> 结尾</span></a></li></ol></div>
             
 
           </div>
@@ -975,7 +982,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1082,10 +1089,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

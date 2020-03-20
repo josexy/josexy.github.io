@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -206,7 +206,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -339,6 +339,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -375,9 +378,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -532,18 +532,27 @@
       
         <p>Metasploit框架包含的大量的模块、插件，其强大的功能使得渗透变得不在是想象中的那么难。Kali Linux本身就自带了metasploit框架，当然了，有兴趣的可以在树莓派上安装 <a href="https://www.offensive-security.com/kali-linux-arm-images/" target="_blank" rel="noopener">kali Linux</a> 。不过本文的重点是在raspbian上进行安装</p>
 <a id="more"></a>
-
-<h3 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h3><p>首先呢，当然是要连接到树莓派了。<br>接着我们把以下更新源追加到 sources.list</p>
+<h3 id="正文"><a class="markdownIt-Anchor" href="#正文"></a> 正文</h3>
+<p>首先呢，当然是要连接到树莓派了。<br>
+接着我们把以下更新源追加到 sources.list</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">deb http://mirrors.ustc.edu.cn/raspbian/raspbian/ stretch main contrib non-free rpi</span><br><span class="line">#deb-src http://mirrors.ustc.edu.cn/raspbian/raspbian/ stretch main contrib non-free rpi</span><br><span class="line">##### 所需的有关kali linux更新源</span><br><span class="line">deb http://http.kali.org/kali kali-rolling main non-free contrib</span><br><span class="line">deb-src http://http.kali.org/kali kali-rolling main non-free contrib</span><br></pre></td></tr></table></figure>
-
 <p>再 <code>sudo apt-get update</code> ，如果在这时出现了类似一下的错误，那么是正常的，因为我们没有授权在raspbian系统上使用kali的更新源</p>
 <blockquote>
-<p>正在读取软件包列表… 完成<br>W: GPG 错误：<a href="http://kali.mirror.garr.it/mirrors/kali" target="_blank" rel="noopener">http://kali.mirror.garr.it/mirrors/kali</a> kali-rolling InRelease: 由于没有公钥，无法验证下列签名： NO_PUBKEY <strong>ED444FF07D8D0BF6</strong><br>W: 仓库 “<a href="http://http.kali.org/kali" target="_blank" rel="noopener">http://http.kali.org/kali</a> kali-rolling InRelease” 没有数字签名。<br>N: 无法认证来自该源的数据，所以使用它会带来潜在风险。<br>N: 参见 apt-secure(8) 手册以了解仓库创建和用户配置方面的细节</p>
-<p><strong>解决方法：</strong><br><strong>gpg –keyserver pgp.mit.edu –recv-keys ED444FF07D8D0BF6</strong><br>gpg -a –export <strong>ED444FF07D8D0BF6</strong> | sudo apt-key add -</p>
+<p>正在读取软件包列表… 完成<br>
+W: GPG 错误：<a href="http://kali.mirror.garr.it/mirrors/kali" target="_blank" rel="noopener">http://kali.mirror.garr.it/mirrors/kali</a> kali-rolling InRelease: 由于没有公钥，无法验证下列签名： NO_PUBKEY <strong>ED444FF07D8D0BF6</strong><br>
+W: 仓库 “<a href="http://http.kali.org/kali" target="_blank" rel="noopener">http://http.kali.org/kali</a> kali-rolling InRelease” 没有数字签名。<br>
+N: 无法认证来自该源的数据，所以使用它会带来潜在风险。<br>
+N: 参见 apt-secure(8) 手册以了解仓库创建和用户配置方面的细节</p>
+<p><strong>解决方法：</strong><br>
+<strong>gpg --keyserver <a href="http://pgp.mit.edu" target="_blank" rel="noopener">pgp.mit.edu</a> --recv-keys ED444FF07D8D0BF6</strong><br>
+gpg -a --export <strong>ED444FF07D8D0BF6</strong> | sudo apt-key add -</p>
 </blockquote>
-<p>其中 –keyserver 后面的 pgp.mit.edu 可换成：</p>
+<p>其中 --keyserver 后面的 <a href="http://pgp.mit.edu" target="_blank" rel="noopener">pgp.mit.edu</a> 可换成：</p>
 <blockquote>
-<p>keyserver.ubuntu.com<br>pgp.mit.edu<br>subkeys.pgp.net<br><a href="http://www.gpg-keyserver.de" target="_blank" rel="noopener">www.gpg-keyserver.de</a></p>
+<p><a href="http://keyserver.ubuntu.com" target="_blank" rel="noopener">keyserver.ubuntu.com</a><br>
+<a href="http://pgp.mit.edu" target="_blank" rel="noopener">pgp.mit.edu</a><br>
+<a href="http://subkeys.pgp.net" target="_blank" rel="noopener">subkeys.pgp.net</a><br>
+<a href="http://www.gpg-keyserver.de" target="_blank" rel="noopener">www.gpg-keyserver.de</a></p>
 </blockquote>
 <p>然后在执行 <code>sudo apt-get update</code></p>
 <p>接下来我们就可以安装metasploit框架了</p>
@@ -705,7 +714,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -811,9 +820,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -881,7 +888,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#正文"><span class="nav-number">1.</span> <span class="nav-text">正文</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#正文"><span class="nav-number">1.</span> <span class="nav-text"> 正文</span></a></li></ol></div>
             
 
           </div>
@@ -914,7 +921,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1021,10 +1028,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

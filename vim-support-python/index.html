@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -206,7 +206,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -339,6 +339,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -375,9 +378,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -532,15 +532,13 @@
       
         <p>Archlinux安装vim是默认应该是支持Python2和Python3的，而Ubuntu等若直接安装vim则只支持Python3。那么这样的话vim就无法使用YCM插件了，因此本文介绍从源代码安装vim支持以Python2和Python3。</p>
 <a id="more"></a>
-
-<h3 id="查看vim是否支持Python"><a href="#查看vim是否支持Python" class="headerlink" title="查看vim是否支持Python"></a>查看vim是否支持Python</h3><p>用如下命令：</p>
+<h3 id="查看vim是否支持python"><a class="markdownIt-Anchor" href="#查看vim是否支持python"></a> 查看vim是否支持Python</h3>
+<p>用如下命令：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim --version</span><br></pre></td></tr></table></figure>
-
 <p>若显示一下，则表示默认不支持。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-python/dyn</span><br><span class="line">+python3/dyn</span><br></pre></td></tr></table></figure>
-
-<h3 id="编译vim源代码，安装vim"><a href="#编译vim源代码，安装vim" class="headerlink" title="编译vim源代码，安装vim"></a>编译vim源代码，安装vim</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/vim/vim.git</span><br><span class="line"><span class="built_in">cd</span> vim</span><br><span class="line">sudo apt-get install libncurses5-dev python-dev python3-dev</span><br><span class="line"></span><br><span class="line">./configure --with-features=huge \</span><br><span class="line">-<span class="built_in">enable</span>-rubyinterp \</span><br><span class="line">-<span class="built_in">enable</span>-pythoninterp \</span><br><span class="line">-<span class="built_in">enable</span>-python3interp \</span><br><span class="line">--<span class="built_in">enable</span>-luainterp \</span><br><span class="line">--<span class="built_in">enable</span>-perlinterp \</span><br><span class="line">--<span class="built_in">enable</span>-multibyte \</span><br><span class="line">--<span class="built_in">enable</span>-cscope \</span><br><span class="line">--with-python-config-dir=/usr/lib/python2.7/config-x86_64-linux-gnu/ \</span><br><span class="line">--with-python3-config-dir=/usr/lib/python3.7/config-3.7m-x86_64-linux-gnu/</span><br><span class="line"></span><br><span class="line">make</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
-
+<h3 id="编译vim源代码安装vim"><a class="markdownIt-Anchor" href="#编译vim源代码安装vim"></a> 编译vim源代码，安装vim</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/vim/vim.git</span><br><span class="line"><span class="built_in">cd</span> vim</span><br><span class="line">sudo apt-get install libncurses5-dev python-dev python3-dev</span><br><span class="line"></span><br><span class="line">./configure --with-features=huge \</span><br><span class="line">-<span class="built_in">enable</span>-rubyinterp \</span><br><span class="line">-<span class="built_in">enable</span>-pythoninterp \</span><br><span class="line">-<span class="built_in">enable</span>-python3interp \</span><br><span class="line">--<span class="built_in">enable</span>-luainterp \</span><br><span class="line">--<span class="built_in">enable</span>-perlinterp \</span><br><span class="line">--<span class="built_in">enable</span>-multibyte \</span><br><span class="line">--<span class="built_in">enable</span>-cscope \</span><br><span class="line">--with-python-config-dir=/usr/lib/python2.7/config-x86_64-linux-gnu/ \</span><br><span class="line">--with-python3-config-dir=/usr/lib/python3.7/config-3.7m-x86_64-linux-gnu/</span><br><span class="line"></span><br><span class="line">make</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
 <p>其中 <code>--with-python-config-dir</code> 和 <code>--with-python3-config-dir</code> 视自己Python目录而定。</p>
 <p>再次查看vim版本就发现支持Python了！</p>
 
@@ -698,7 +696,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -804,9 +802,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -874,7 +870,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#查看vim是否支持Python"><span class="nav-number">1.</span> <span class="nav-text">查看vim是否支持Python</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编译vim源代码，安装vim"><span class="nav-number">2.</span> <span class="nav-text">编译vim源代码，安装vim</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#查看vim是否支持python"><span class="nav-number">1.</span> <span class="nav-text"> 查看vim是否支持Python</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编译vim源代码安装vim"><span class="nav-number">2.</span> <span class="nav-text"> 编译vim源代码，安装vim</span></a></li></ol></div>
             
 
           </div>
@@ -907,7 +903,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1014,10 +1010,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

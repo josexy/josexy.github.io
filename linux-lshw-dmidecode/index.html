@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -206,7 +206,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -339,6 +339,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -375,9 +378,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -532,49 +532,172 @@
       
         <p><strong>Dmidecode</strong>和<strong>lshw</strong>这两个工具可以查看Linux下有关硬件信息,这些信息包括 BIOS、系统、主板、处理器、内存、缓存等等</p>
 <a id="more"></a>
-
-<h3 id="Dmidecode"><a href="#Dmidecode" class="headerlink" title="Dmidecode"></a>Dmidecode</h3><p>LINUX下直接安装 <code>apt-get install dmidecode</code><br>输入 <strong>dmidecode –help</strong> 查看帮助</p>
+<h3 id="dmidecode"><a class="markdownIt-Anchor" href="#dmidecode"></a> Dmidecode</h3>
+<p>LINUX下直接安装 <code>apt-get install dmidecode</code><br>
+输入 <strong>dmidecode –help</strong> 查看帮助</p>
 <blockquote>
-<p>Usage: dmidecode [OPTIONS]<br>Options are:<br>-d, –dev-mem FILE Read memory from device FILE (default: /dev/mem)<br>-h, –help Display this help text and exit<br>-q, –quiet Less verbose output<br>-s, –string KEYWORD Only display the value of the given DMI string<br>-t, –type TYPE Only display the entries of given type<br>-u, –dump Do not decode the entries<br>–dump-bin FILE Dump the DMI data to a binary file<br>–from-dump FILE Read the DMI data from a binary file<br>–no-sysfs Do not attempt to read DMI data from sysfs files<br>–oem-string N Only display the value of the given OEM string<br>-V, –version Display the version and exit</p>
+<p>Usage: dmidecode [OPTIONS]<br>
+Options are:<br>
+-d, –dev-mem FILE Read memory from device FILE (default: /dev/mem)<br>
+-h, –help Display this help text and exit<br>
+-q, –quiet Less verbose output<br>
+-s, –string KEYWORD Only display the value of the given DMI string<br>
+-t, –type TYPE Only display the entries of given type<br>
+-u, –dump Do not decode the entries<br>
+–dump-bin FILE Dump the DMI data to a binary file<br>
+–from-dump FILE Read the DMI data from a binary file<br>
+–no-sysfs Do not attempt to read DMI data from sysfs files<br>
+–oem-string N Only display the value of the given OEM string<br>
+-V, –version Display the version and exit</p>
 </blockquote>
 <blockquote>
-<p>0 BIOS<br>1 System<br>2 Base Board<br>3 Chassis<br>4 Processor<br>5 Memory Controller<br>6 Memory Module<br>7 Cache<br>8 Port Connector<br>9 System Slots<br>10 On Board Devices<br>11 OEM Strings<br>12 System Configuration Options<br>13 BIOS Language<br>14 Group Associations<br>15 System Event Log<br>16 Physical Memory Array<br>17 Memory Device<br>18 32-bit Memory Error<br>19 Memory Array Mapped Address<br>20 Memory Device Mapped Address<br>21 Built-in Pointing Device<br>22 Portable Battery<br>23 System Reset<br>24 Hardware Security<br>25 System Power Controls<br>26 Voltage Probe<br>27 Cooling Device<br>28 Temperature Probe<br>29 Electrical Current Probe<br>30 Out-of-band Remote Access<br>31 Boot Integrity Services<br>32 System Boot<br>33 64-bit Memory Error<br>34 Management Device<br>35 Management Device Component<br>36 Management Device Threshold Data<br>37 Memory Channel<br>38 IPMI Device<br>39 Power Supply<br>40 Additional Information<br>41 Onboard Device</p>
+<p>0 BIOS<br>
+1 System<br>
+2 Base Board<br>
+3 Chassis<br>
+4 Processor<br>
+5 Memory Controller<br>
+6 Memory Module<br>
+7 Cache<br>
+8 Port Connector<br>
+9 System Slots<br>
+10 On Board Devices<br>
+11 OEM Strings<br>
+12 System Configuration Options<br>
+13 BIOS Language<br>
+14 Group Associations<br>
+15 System Event Log<br>
+16 Physical Memory Array<br>
+17 Memory Device<br>
+18 32-bit Memory Error<br>
+19 Memory Array Mapped Address<br>
+20 Memory Device Mapped Address<br>
+21 Built-in Pointing Device<br>
+22 Portable Battery<br>
+23 System Reset<br>
+24 Hardware Security<br>
+25 System Power Controls<br>
+26 Voltage Probe<br>
+27 Cooling Device<br>
+28 Temperature Probe<br>
+29 Electrical Current Probe<br>
+30 Out-of-band Remote Access<br>
+31 Boot Integrity Services<br>
+32 System Boot<br>
+33 64-bit Memory Error<br>
+34 Management Device<br>
+35 Management Device Component<br>
+36 Management Device Threshold Data<br>
+37 Memory Channel<br>
+38 IPMI Device<br>
+39 Power Supply<br>
+40 Additional Information<br>
+41 Onboard Device</p>
 </blockquote>
 <p>1.输入 <strong>dmidecode -t</strong> 列出关键字</p>
 <blockquote>
-<p>dmidecode: option requires an argument – ‘t’<br>Type number or keyword expected<br>Valid type keywords are:</p>
-<p>bios<br>system<br>baseboard<br>chassis<br>processor<br>memory<br>cache<br>connector<br>slot</p>
+<p>dmidecode: option requires an argument – ‘t’<br>
+Type number or keyword expected<br>
+Valid type keywords are:</p>
+<p>bios<br>
+system<br>
+baseboard<br>
+chassis<br>
+processor<br>
+memory<br>
+cache<br>
+connector<br>
+slot</p>
 </blockquote>
 <p>然后在 <strong>dmidecode -t system</strong> 或 <strong>dmidecode -t 1</strong> 输出</p>
 <blockquote>
-<p># dmidecode 3.1<br>Getting SMBIOS data from sysfs.<br>SMBIOS 2.7 present.</p>
-<p>Handle 0x0001, DMI type 1, 27 bytes<br>System Information<br>Manufacturer: LENOVO<br>Product Name: 33661R8<br>Version: ThinkPad Edge E530c<br>Serial Number: MP43X9V<br>……</p>
+<p># dmidecode 3.1<br>
+Getting SMBIOS data from sysfs.<br>
+SMBIOS 2.7 present.</p>
+<p>Handle 0x0001, DMI type 1, 27 bytes<br>
+System Information<br>
+Manufacturer: LENOVO<br>
+Product Name: 33661R8<br>
+Version: ThinkPad Edge E530c<br>
+Serial Number: MP43X9V<br>
+……</p>
 </blockquote>
 <p>2.<strong>dmidecode -s</strong></p>
 <blockquote>
-<p>dmidecode: option requires an argument – ‘s’<br>String keyword expected<br>Valid string keywords are:<br>bios-vendor<br>bios-version<br>bios-release-date<br>system-manufacturer<br>system-product-name<br>system-version<br>system-serial-number<br>system-uuid<br>baseboard-manufacturer<br>baseboard-product-name<br>baseboard-version<br>baseboard-serial-number<br>baseboard-asset-tag<br>chassis-manufacturer<br>chassis-type<br>chassis-version<br>chassis-serial-number<br>chassis-asset-tag<br>processor-family<br>processor-manufacturer<br>processor-version<br>processor-frequency</p>
+<p>dmidecode: option requires an argument – ‘s’<br>
+String keyword expected<br>
+Valid string keywords are:<br>
+bios-vendor<br>
+bios-version<br>
+bios-release-date<br>
+system-manufacturer<br>
+system-product-name<br>
+system-version<br>
+system-serial-number<br>
+system-uuid<br>
+baseboard-manufacturer<br>
+baseboard-product-name<br>
+baseboard-version<br>
+baseboard-serial-number<br>
+baseboard-asset-tag<br>
+chassis-manufacturer<br>
+chassis-type<br>
+chassis-version<br>
+chassis-serial-number<br>
+chassis-asset-tag<br>
+processor-family<br>
+processor-manufacturer<br>
+processor-version<br>
+processor-frequency</p>
 </blockquote>
 <p><strong>dmidecode -s system-version</strong> 输出</p>
 <blockquote>
 <p>ThinkPad Edge E530c</p>
 </blockquote>
-<h3 id="lshw-Hardware-Lister"><a href="#lshw-Hardware-Lister" class="headerlink" title="lshw(Hardware Lister)"></a>lshw(Hardware Lister)</h3><p>安装:<code>apt-get install lshw</code><br>lshw 比较简单 <strong>lshw –help</strong></p>
+<h3 id="lshwhardware-lister"><a class="markdownIt-Anchor" href="#lshwhardware-lister"></a> lshw(Hardware Lister)</h3>
+<p>安装:<code>apt-get install lshw</code><br>
+lshw 比较简单 <strong>lshw –help</strong></p>
 <blockquote>
-<p>Hardware Lister (lshw) - unknown<br>usage: lshw [-format] [-options …]<br>lshw -version</p>
-<p>-version print program version (unknown)<br>format can be<br><strong>-html</strong> output hardware tree as HTML<br><strong>-xml</strong> output hardware tree as XML<br>-short output hardware paths<br>-businfo output bus information<br>-X use graphical interface</p>
-<p>options can be<br><strong>-class CLASS</strong> only show a certain class of hardware<br>-C CLASS same as ‘-class CLASS’<br>-c CLASS same as ‘-class CLASS’<br>-disable TEST disable a test (like pci, isapnp, cpuid, etc. )<br>-enable TEST enable a test (like pci, isapnp, cpuid, etc. )<br>-quiet don’t display status<br>-sanitize sanitize output (remove sensitive information like serial numbers, etc.)<br>-numeric output numeric IDs (for PCI, USB, etc.)<br>-notime exclude volatile attributes (timestamps) from output</p>
+<p>Hardware Lister (lshw) - unknown<br>
+usage: lshw [-format] [-options …]<br>
+lshw -version</p>
+<p>-version print program version (unknown)<br>
+format can be<br>
+<strong>-html</strong> output hardware tree as HTML<br>
+<strong>-xml</strong> output hardware tree as XML<br>
+-short output hardware paths<br>
+-businfo output bus information<br>
+-X use graphical interface</p>
+<p>options can be<br>
+<strong>-class CLASS</strong> only show a certain class of hardware<br>
+-C CLASS same as ‘-class CLASS’<br>
+-c CLASS same as ‘-class CLASS’<br>
+-disable TEST disable a test (like pci, isapnp, cpuid, etc. )<br>
+-enable TEST enable a test (like pci, isapnp, cpuid, etc. )<br>
+-quiet don’t display status<br>
+-sanitize sanitize output (remove sensitive information like serial numbers, etc.)<br>
+-numeric output numeric IDs (for PCI, USB, etc.)<br>
+-notime exclude volatile attributes (timestamps) from output</p>
 </blockquote>
 <p>1.把信息保存为HTML/XML格式文本</p>
 <blockquote>
-<p>lshw -html &gt; my.html<br>lshw -xml &gt; my.html</p>
+<p>lshw -html &gt; my.html<br>
+lshw -xml &gt; my.html</p>
 </blockquote>
 <p>2.显示设备列表，输出包括设备路径(path)、类别(class)以及简单描述 <strong>lshw -short</strong></p>
 <blockquote>
-<p>H/W path Device <strong>Class</strong> Description<br>……</p>
+<p>H/W path Device <strong>Class</strong> Description<br>
+……</p>
 </blockquote>
 <p>3.显示指定类别的设备 <strong>lshw -C xxxx</strong>,其中 <code>xxxx</code> 就是 <strong>lshw -short</strong> 中的 <code>Class</code> 字段.如 <strong>lshw -C disk</strong></p>
 <blockquote>
-<p>*-disk<br>description: ATA Disk<br>product: WDC WD5000LPVT-0<br>vendor: Western Digital<br>……<br>*-cdrom<br>……</p>
+<p>*-disk<br>
+description: ATA Disk<br>
+product: WDC WD5000LPVT-0<br>
+vendor: Western Digital<br>
+……<br>
+*-cdrom<br>
+……</p>
 </blockquote>
 <p>例如: <strong>lshw -C system|grep version</strong> 输出</p>
 <blockquote>
@@ -733,7 +856,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -839,9 +962,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -909,7 +1030,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Dmidecode"><span class="nav-number">1.</span> <span class="nav-text">Dmidecode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lshw-Hardware-Lister"><span class="nav-number">2.</span> <span class="nav-text">lshw(Hardware Lister)</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#dmidecode"><span class="nav-number">1.</span> <span class="nav-text"> Dmidecode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lshwhardware-lister"><span class="nav-number">2.</span> <span class="nav-text"> lshw(Hardware Lister)</span></a></li></ol></div>
             
 
           </div>
@@ -942,7 +1063,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1049,10 +1170,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -206,7 +206,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -339,6 +339,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -375,9 +378,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -535,48 +535,39 @@
 </blockquote>
 <p>工具：WDK 7+VS2015 测试平台：虚拟机 WINDOWS XP</p>
 <a id="more"></a>
-
-
-
 <ul>
-<li><p>包含的头文件</p>
+<li>包含的头文件</li>
+</ul>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ntifs.h&gt;#include &lt;ntstrsafe.h&gt;</span></span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>声明的API函数</p>
-</li>
+<ul>
+<li>声明的API函数</li>
 </ul>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">NTKERNELAPI HANDLE <span class="title">PsGetProcessInheritedFromUniqueProcessId</span><span class="params">(IN PEPROCESS <span class="built_in">Process</span>)</span></span>;</span><br><span class="line"><span class="function">NTKERNELAPI  PPEB_EX  <span class="title">PsGetProcessPeb</span><span class="params">(PEPROCESS <span class="built_in">Process</span>)</span></span>;</span><br><span class="line"><span class="function">NTKERNELAPI NTSTATUS <span class="title">PsLookupProcessByProcessId</span><span class="params">(HANDLE Id, PEPROCESS *<span class="built_in">Process</span>)</span></span>;</span><br><span class="line"><span class="function">NTKERNELAPI NTSTATUS <span class="title">PsLookupThreadByThreadId</span><span class="params">(HANDLE Id, PETHREAD *Thread)</span></span>;</span><br><span class="line"><span class="function">NTKERNELAPI PEPROCESS <span class="title">IoThreadToProcess</span><span class="params">(PETHREAD Thread)</span></span>;</span><br><span class="line"><span class="comment">//NTKERNELAPI VOID NTAPI KeAttachProcess(PEPROCESS Process);</span></span><br><span class="line"><span class="comment">//NTKERNELAPI VOID NTAPI KeDetachProcess();</span></span><br><span class="line"><span class="comment">//NTKERNELAPI VOID NTAPI KeStackAttachProcess(PEPROCESS Process, PKAPC_STATE ApcState);</span></span><br><span class="line"><span class="comment">//NTKERNELAPI VOID NTAPI KeUnstackDetachProcess(PKAPC_STATE ApcState);</span></span><br></pre></td></tr></table></figure>
-
 <ul>
-<li>因为要通过 <code>PEPROCESS</code> 来获取进程和模块，所以还要用到几个结构体，在<strong>WinDbg</strong> 可看到。<br>这里新建一个头文件，包含了PEB等信息</li>
+<li>因为要通过 <code>PEPROCESS</code> 来获取进程和模块，所以还要用到几个结构体，在<strong>WinDbg</strong> 可看到。<br>
+这里新建一个头文件，包含了PEB等信息</li>
 </ul>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"peb.h"</span></span></span><br><span class="line">如下：</span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> once</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ntifs.h&gt;</span></span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">PEB_LDR_DATA_EX</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">ULONG Length; <span class="comment">// +0x00  </span></span><br><span class="line">BOOLEAN Initialized; <span class="comment">// +0x04  </span></span><br><span class="line">PVOID SsHandle; <span class="comment">// +0x08  </span></span><br><span class="line">LIST_ENTRY InLoadOrderModuleList; <span class="comment">// +0x0c </span></span><br><span class="line">LIST_ENTRY InMemoryOrderModuleList; <span class="comment">// +0x14</span></span><br><span class="line">LIST_ENTRY InInitializationOrderModuleList;<span class="comment">// +0x1c  </span></span><br><span class="line">&#125;PEB_LDR_DATA_EX, *PPEB_LDR_DATA_EX;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">LDR_DATA_TABLE_ENTRY_EX</span> &#123;</span></span><br><span class="line">LIST_ENTRY InLoadOrderLinks;</span><br><span class="line">LIST_ENTRY InMemoryOrderLinks;</span><br><span class="line">LIST_ENTRY InInitializationOrderLinks;</span><br><span class="line">PVOID DllBase;</span><br><span class="line">PVOID EntryPoint;</span><br><span class="line">ULONG SizeOfImage;</span><br><span class="line">UNICODE_STRING FullDllName;</span><br><span class="line">UNICODE_STRING BaseDllName;</span><br><span class="line">ULONG Flags;</span><br><span class="line">USHORT LoadCount;</span><br><span class="line">USHORT TlsIndex;</span><br><span class="line"><span class="keyword">union</span> &#123;</span><br><span class="line">LIST_ENTRY HashLinks;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">PVOID SectionPointer;</span><br><span class="line">ULONG CheckSum;</span><br><span class="line">&#125;;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">union</span> &#123;</span><br><span class="line">ULONG TimeDateStamp;</span><br><span class="line">PVOID LoadedImports;</span><br><span class="line">&#125;;</span><br><span class="line">PVOID EntryPointActivationContext;      </span><br><span class="line">PVOID PatchInformation;</span><br><span class="line">LIST_ENTRY ForwarderLinks;</span><br><span class="line">LIST_ENTRY ServiceTagLinks;</span><br><span class="line">LIST_ENTRY StaticLinks;</span><br><span class="line">PVOID ContextInformation;</span><br><span class="line">PVOID OriginalBase;</span><br><span class="line">LARGE_INTEGER LoadTime;</span><br><span class="line">&#125; LDR_DATA_TABLE_ENTRY_EX, *PLDR_DATA_TABLE_ENTRY_EX;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">CURDIR</span> &#123;</span></span><br><span class="line">UNICODE_STRING DosPath;</span><br><span class="line">PVOID Handle;</span><br><span class="line">&#125;CURDIR, *PCURDIR;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">RTL_DRIVE_LETTER_CURDIR</span> &#123;</span></span><br><span class="line">USHORT Flags;</span><br><span class="line">USHORT Length;</span><br><span class="line">ULONG TimeStamp;</span><br><span class="line">STRING DosPath;</span><br><span class="line">&#125;RTL_DRIVE_LETTER_CURDIR, *PRTL_DRIVE_LETTER_CURDIR;</span><br><span class="line"><span class="comment">//进程参数</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">RTL_USER_PROCESS_PARAMETERS</span>&#123;</span></span><br><span class="line">ULONG MaximumLength;</span><br><span class="line">ULONG Length;</span><br><span class="line">ULONG Flags;</span><br><span class="line">ULONG DebugFlags;</span><br><span class="line">PVOID ConsoleHandle;</span><br><span class="line">ULONG ConsoleFlags;</span><br><span class="line">PVOID StandardInput;</span><br><span class="line">PVOID StandardOutput;</span><br><span class="line">PVOID StandardError;</span><br><span class="line">CURDIR CurrentDirectory;</span><br><span class="line">UNICODE_STRING DllPath;</span><br><span class="line">UNICODE_STRING ImagePathName;</span><br><span class="line">UNICODE_STRING CommandLine;</span><br><span class="line">PVOID Environment;</span><br><span class="line">ULONG StartingX;</span><br><span class="line">ULONG StartingY;</span><br><span class="line">ULONG CountX;</span><br><span class="line">ULONG CountY;</span><br><span class="line">ULONG CountCharsX;</span><br><span class="line">ULONG CountCharsY;</span><br><span class="line">ULONG FillAttribute;</span><br><span class="line">ULONG WindowFlags;</span><br><span class="line">ULONG ShowWindowFlags;</span><br><span class="line">UNICODE_STRING WindowTitle;</span><br><span class="line">UNICODE_STRING DesktopInfo;</span><br><span class="line">UNICODE_STRING ShellInfo;</span><br><span class="line">UNICODE_STRING RuntimeData;</span><br><span class="line">RTL_DRIVE_LETTER_CURDIR CurrentDirectores[<span class="number">32</span>];</span><br><span class="line">&#125;RTL_USER_PROCESS_PARAMETERS,*PRTL_USER_PROCESS_PARAMETERS;</span><br><span class="line"><span class="comment">//进程环境块（因为Windows内核有一个机构PEB，为了不重定义，所以就另起一个名字）</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">PEB_EX</span> &#123;</span></span><br><span class="line">UCHAR InheritedAddressSpace;</span><br><span class="line">UCHAR ReadImageFileExecOptions;</span><br><span class="line">UCHAR BeingDebugged;</span><br><span class="line">UCHAR SpareBool;</span><br><span class="line">PVOID Mutant;</span><br><span class="line">PVOID ImageBaseAddress;</span><br><span class="line">PPEB_LDR_DATA_EX Ldr;</span><br><span class="line">PRTL_USER_PROCESS_PARAMETERS  ProcessParameters;</span><br><span class="line">UCHAR Reserved4[<span class="number">104</span>];</span><br><span class="line">PVOID Reserved5[<span class="number">52</span>];</span><br><span class="line">PVOID PostProcessInitRoutine;</span><br><span class="line">PVOID Reserved7;</span><br><span class="line">UCHAR Reserved6[<span class="number">128</span>];</span><br><span class="line">ULONG SessionId;</span><br><span class="line">&#125; PEB_EX, *PPEB_EX;</span><br></pre></td></tr></table></figure>
-
 <ul>
 <li>用于遍历进程函数</li>
 </ul>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">EnumProcess</span><span class="params">(PEPROCESS eprocess)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	KAPC_STATE ks;</span><br><span class="line">	<span class="keyword">if</span> (!MmIsAddressValid(eprocess))</span><br><span class="line">	<span class="keyword">return</span>;</span><br><span class="line">	<span class="comment">//获取 PEB信息</span></span><br><span class="line">	PPEB_EX peb = PsGetProcessPeb(eprocess);</span><br><span class="line">	<span class="keyword">if</span> (!peb)</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	<span class="comment">//依附进程!!!!!!!!!!!!!!</span></span><br><span class="line">	KeStackAttachProcess(eprocess, &amp;ks);</span><br><span class="line">	__try</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (PsGetProcessId(eprocess)!=<span class="number">0</span>)</span><br><span class="line">		&#123;</span><br><span class="line">		<span class="comment">//获取 进程参数</span></span><br><span class="line">		PRTL_USER_PROCESS_PARAMETERS rtl_user_process_param = </span><br><span class="line">(PRTL_USER_PROCESS_PARAMETERS)peb-&gt;ProcessParameters;</span><br><span class="line">		DbgPrint(<span class="string">"CommandLine:%wZ\n"</span>, &amp;rtl_user_process_param-&gt;CommandLine);</span><br><span class="line">		DbgPrint(<span class="string">"ImagePath=%wZ\n"</span>, &amp;rtl_user_process_param-&gt;ImagePathName);</span><br><span class="line">		<span class="comment">//DbgPrint("Window Title=%wZ\n", &amp;rtl_user_process_param-&gt;WindowTitle);</span></span><br><span class="line">		DbgPrint(<span class="string">"——————————————————————————————"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	__except (EXCEPTION_EXECUTE_HANDLER)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">//DbgPrint("Can not Process...");</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//取消依附进程</span></span><br><span class="line">	KeUnstackDetachProcess(&amp;ks);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <ul>
 <li>遍历模块，大体上和遍历进程一样，但也要注意区别</li>
 </ul>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">EnumModules</span><span class="params">(PEPROCESS eprocess)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	KAPC_STATE ks;</span><br><span class="line">	<span class="keyword">if</span> (!MmIsAddressValid(eprocess))</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	<span class="comment">//获取 PEB信息</span></span><br><span class="line">	PPEB_EX peb = PsGetProcessPeb(eprocess);</span><br><span class="line">	<span class="keyword">if</span> (!peb)</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	<span class="comment">//依附进程!!!!!!!!!!!!!!</span></span><br><span class="line">	KeStackAttachProcess(eprocess, &amp;ks);</span><br><span class="line">	__try</span><br><span class="line">	&#123;</span><br><span class="line">		PPEB_LDR_DATA_EX peb_LDR_data = (PPEB_LDR_DATA_EX)peb-&gt;Ldr;</span><br><span class="line">		PLIST_ENTRY list_entry = &amp;peb_LDR_data-&gt;InLoadOrderModuleList;</span><br><span class="line">		<span class="comment">//先获取第一个</span></span><br><span class="line">		PLIST_ENTRY currentList = list_entry-&gt;Flink;</span><br><span class="line">		<span class="keyword">while</span> (currentList!=list_entry)</span><br><span class="line">		&#123;</span><br><span class="line">		PLDR_DATA_TABLE_ENTRY_EX ldr_data_table_entry =(PLDR_DATA_TABLE_ENTRY_EX)currentList;</span><br><span class="line">		DbgPrint(<span class="string">"Module Base=%p DllPath=%wZ\n"</span>,ldr_data_table_entry-&gt;DllBase, &amp;ldr_data_table_entry-&gt;FullDllName);</span><br><span class="line">		<span class="comment">//指向下一个</span></span><br><span class="line">		currentList = currentList-&gt;Flink;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	__except (EXCEPTION_EXECUTE_HANDLER)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">//DbgPrint("Can not Modules...");</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//取消依附进程</span></span><br><span class="line">	KeUnstackDetachProcess(&amp;ks);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <ul>
 <li>这个函数把上面两个函数整合在一起了</li>
 </ul>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">VOID <span class="title">EnumProcessModuleInformations</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">//第一个进程环境块</span></span><br><span class="line">	PEPROCESS eprocess=PsGetCurrentProcess();</span><br><span class="line">	PEPROCESS eprocess_first = eprocess;</span><br><span class="line">	<span class="keyword">while</span> (<span class="number">1</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">//获取进程</span></span><br><span class="line">		EnumProcess(eprocess);</span><br><span class="line">		<span class="comment">//下一个进程，我获取的是WinXP的 EPROCESS !</span></span><br><span class="line">		eprocess = (PEPROCESS)(*(ULONG*)((ULONG)eprocess + <span class="number">0x88</span>) - <span class="number">0x88</span>);</span><br><span class="line">		<span class="keyword">if</span> (eprocess == eprocess_first)&#123;<span class="keyword">break</span>;&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	eprocess= eprocess_first;</span><br><span class="line">	<span class="keyword">while</span> (<span class="number">1</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">//获取模块</span></span><br><span class="line">		EnumModules(eprocess);</span><br><span class="line">		<span class="comment">//下一个进程</span></span><br><span class="line">		eprocess = (PEPROCESS)(*(ULONG*)((ULONG)eprocess + <span class="number">0x88</span>) - <span class="number">0x88</span>);</span><br><span class="line">		<span class="keyword">if</span> (eprocess == eprocess_first)&#123;<span class="keyword">break</span>;&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <ul>
 <li>卸载函数很简单</li>
 </ul>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">VOID <span class="title">unload</span><span class="params">(PDRIVER_OBJECT p)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	DbgPrint(<span class="string">"UnloadDriver..."</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <ul>
 <li>驱动入口函数</li>
 </ul>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">NTSTATUS <span class="title">DriverEntry</span><span class="params">(PDRIVER_OBJECT pDriver_Obj, PUNICODE_STRING pRegisterPath)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	DbgPrint(<span class="string">"DriverEntry..."</span>);</span><br><span class="line">	pDriver_Obj-&gt;DriverUnload = unload;</span><br><span class="line">	DbgPrint(<span class="string">"DriverName:%wZ RegisterPath:%wZ \n "</span>, &amp;pDriver_Obj-&gt;DriverName,pRegisterPath);</span><br><span class="line">	<span class="comment">//这里调用</span></span><br><span class="line">	EnumProcessModuleInformations();</span><br><span class="line">	<span class="keyword">return</span> STATUS_SUCCESS;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 
       
     </div>
@@ -723,7 +714,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -829,9 +820,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -915,7 +904,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1022,10 +1011,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -125,18 +125,18 @@
   };
 </script>
 
-  <meta name="description" content="Libxml2是由C语言开发的一个库，除了解析XML文档外，还可以解析HTML文档（不过这我没有研究）。同时，libxml2库可移植于多个平台大致可与运行在如下平台： Linux, Unix, Windows, CygWin, MacOS, MacOS X, RISC Os, OS/2, VMS, QNX, MVS, VxWorks">
+  <meta name="description" content="Libxml2是由C语言开发的一个库，除了解析XML文档外，还可以解析HTML文档（不过这我没有研究）。同时，libxml2库可移植于多个平台 大致可与运行在如下平台： Linux, Unix, Windows, CygWin, MacOS, MacOS X, RISC Os, OS/2, VMS, QNX, MVS, VxWorks">
 <meta name="keywords" content="C++,Linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Libxml2解析XML文件">
 <meta property="og:url" content="http://www.joxrays.com/linux-libxml2/index.html">
 <meta property="og:site_name" content="JoXrays&#39;s Blog">
-<meta property="og:description" content="Libxml2是由C语言开发的一个库，除了解析XML文档外，还可以解析HTML文档（不过这我没有研究）。同时，libxml2库可移植于多个平台大致可与运行在如下平台： Linux, Unix, Windows, CygWin, MacOS, MacOS X, RISC Os, OS/2, VMS, QNX, MVS, VxWorks">
+<meta property="og:description" content="Libxml2是由C语言开发的一个库，除了解析XML文档外，还可以解析HTML文档（不过这我没有研究）。同时，libxml2库可移植于多个平台 大致可与运行在如下平台： Linux, Unix, Windows, CygWin, MacOS, MacOS X, RISC Os, OS/2, VMS, QNX, MVS, VxWorks">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2019-07-20T15:10:02.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Libxml2解析XML文件">
-<meta name="twitter:description" content="Libxml2是由C语言开发的一个库，除了解析XML文档外，还可以解析HTML文档（不过这我没有研究）。同时，libxml2库可移植于多个平台大致可与运行在如下平台： Linux, Unix, Windows, CygWin, MacOS, MacOS X, RISC Os, OS/2, VMS, QNX, MVS, VxWorks">
+<meta name="twitter:description" content="Libxml2是由C语言开发的一个库，除了解析XML文档外，还可以解析HTML文档（不过这我没有研究）。同时，libxml2库可移植于多个平台 大致可与运行在如下平台： Linux, Unix, Windows, CygWin, MacOS, MacOS X, RISC Os, OS/2, VMS, QNX, MVS, VxWorks">
 
 
 
@@ -206,7 +206,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -339,6 +339,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -375,9 +378,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -530,15 +530,68 @@
       
 
       
-        <p>Libxml2是由C语言开发的一个库，除了解析XML文档外，还可以解析HTML文档（不过这我没有研究）。同时，libxml2库可移植于多个平台<br>大致可与运行在如下平台： Linux, Unix, Windows, CygWin, MacOS, MacOS X, RISC Os, OS/2, VMS, QNX, MVS, VxWorks</p>
+        <p>Libxml2是由C语言开发的一个库，除了解析XML文档外，还可以解析HTML文档（不过这我没有研究）。同时，libxml2库可移植于多个平台<br>
+大致可与运行在如下平台： Linux, Unix, Windows, CygWin, MacOS, MacOS X, RISC Os, OS/2, VMS, QNX, MVS, VxWorks</p>
 <a id="more"></a>
-
-<p>可以从官网： <a href="http://xmlsoft.org" target="_blank" rel="noopener">http://xmlsoft.org</a> 获取最新版本（2.9.8）的libxml2库。Linux下编译也很简单<br>./configure<br>make<br>make install</p>
+<p>可以从官网： <a href="http://xmlsoft.org" target="_blank" rel="noopener">http://xmlsoft.org</a> 获取最新版本（2.9.8）的libxml2库。Linux下编译也很简单<br>
+./configure<br>
+make<br>
+make install</p>
 <p>官网上也有一些例子，以及API接口文档，常见问题，Tutorial，建议去看看。也可以从下载的源文件目录doc中离线浏览</p>
 <p>libxml2库囊括了以下的模块，</p>
-<h4 id="Table-of-Contents"><a href="#Table-of-Contents" class="headerlink" title="Table of Contents"></a>Table of Contents</h4><p><strong>DOCBparser</strong>: old DocBook SGML parser<br><strong>HTMLparser</strong>: interface for an HTML 4.0 non-verifying parser<br><strong>HTMLtree</strong>: specific APIs to process HTML tree, especially serialization<br><strong>SAX</strong>: Old SAX version 1 handler, deprecated<br><strong>SAX2</strong>: SAX2 parser interface used to build the DOM tree<br><strong>c14n</strong>: Provide Canonical XML and Exclusive XML Canonicalization<br><strong>catalog</strong>: interfaces to the Catalog handling system<br><strong>chvalid</strong>: Unicode character range checking<br><strong>debugXML</strong>: Tree debugging APIs<br><strong>dict</strong>: string dictionary<br><strong>encoding</strong>: interface for the encoding conversion functions<br><strong>entities</strong>: interface for the XML entities handling<br><strong>globals</strong>: interface for all global variables of the library<br><strong>hash</strong>: Chained hash tables<br><strong>list</strong>: lists interfaces<br><strong>nanoftp</strong>: minimal FTP implementation<br><strong>nanohttp</strong>: minimal HTTP implementation<br><strong>parser</strong>: the core parser module<br><strong>parserInternals</strong>: internals routines and limits exported by the parser.<br><strong>pattern</strong>: pattern expression handling<br><strong>relaxng</strong>: implementation of the Relax-NG validation<br><strong>schemasInternals</strong>: internal interfaces for XML Schemas<br><strong>schematron</strong>: XML Schemastron implementation<br><strong>threads</strong>: interfaces for thread handling<br><strong>tree</strong>: interfaces for tree manipulation<br><strong>uri</strong>: library of generic URI related routines<br><strong>valid</strong>: The DTD validation<br><strong>xinclude</strong>: implementation of XInclude<br><strong>xlink</strong>: unfinished XLink detection module<br><strong>xmlIO</strong>: interface for the I/O interfaces used by the parser<br><strong>xmlautomata</strong>: API to build regexp automata<br><strong>xmlerror</strong>: error handling<br><strong>xmlexports</strong>: macros for marking symbols as exportable/importable.<br><strong>xmlmemory</strong>: interface for the memory allocator<br><strong>xmlmodule</strong>: dynamic module loading<br><strong>xmlreader</strong>: the XMLReader implementation<br><strong>xmlregexp</strong>: regular expressions handling<br><strong>xmlsave</strong>: the XML document serializer<br><strong>xmlschemas</strong>: incomplete XML Schemas structure implementation<br><strong>xmlschemastypes</strong>: implementation of XML Schema Datatypes<br><strong>xmlstring</strong>: set of routines to process strings<br><strong>xmlunicode</strong>: Unicode character APIs<br><strong>xmlversion</strong>: compile-time version informations<br><strong>xmlwriter</strong>: text writing API for XML<br><strong>xpath</strong>: XML Path Language implementation<br><strong>xpathInternals</strong>: internal interfaces for XML Path Language implementation<br><strong>xpointer</strong>: API to handle XML Pointers</p>
-<p>因为libxml2包含大量函数，实现有不同的方式。这里介绍一些常用的。至于其他的功能有兴趣自己研究吧……<br>而这里主要用到的为 parser，tree，xmlreader，xmlwriter 这几个模块</p>
-<h3 id="parser-tree"><a href="#parser-tree" class="headerlink" title="parser/tree"></a>parser/tree</h3><h4 id="读取XML文档"><a href="#读取XML文档" class="headerlink" title="读取XML文档"></a>读取XML文档</h4><p>首先介绍xml文档的解析吧，大致调用函数如下</p>
+<h4 id="table-of-contents"><a class="markdownIt-Anchor" href="#table-of-contents"></a> Table of Contents</h4>
+<p><strong>DOCBparser</strong>: old DocBook SGML parser<br>
+<strong>HTMLparser</strong>: interface for an HTML 4.0 non-verifying parser<br>
+<strong>HTMLtree</strong>: specific APIs to process HTML tree, especially serialization<br>
+<strong>SAX</strong>: Old SAX version 1 handler, deprecated<br>
+<strong>SAX2</strong>: SAX2 parser interface used to build the DOM tree<br>
+<strong>c14n</strong>: Provide Canonical XML and Exclusive XML Canonicalization<br>
+<strong>catalog</strong>: interfaces to the Catalog handling system<br>
+<strong>chvalid</strong>: Unicode character range checking<br>
+<strong>debugXML</strong>: Tree debugging APIs<br>
+<strong>dict</strong>: string dictionary<br>
+<strong>encoding</strong>: interface for the encoding conversion functions<br>
+<strong>entities</strong>: interface for the XML entities handling<br>
+<strong>globals</strong>: interface for all global variables of the library<br>
+<strong>hash</strong>: Chained hash tables<br>
+<strong>list</strong>: lists interfaces<br>
+<strong>nanoftp</strong>: minimal FTP implementation<br>
+<strong>nanohttp</strong>: minimal HTTP implementation<br>
+<strong>parser</strong>: the core parser module<br>
+<strong>parserInternals</strong>: internals routines and limits exported by the parser.<br>
+<strong>pattern</strong>: pattern expression handling<br>
+<strong>relaxng</strong>: implementation of the Relax-NG validation<br>
+<strong>schemasInternals</strong>: internal interfaces for XML Schemas<br>
+<strong>schematron</strong>: XML Schemastron implementation<br>
+<strong>threads</strong>: interfaces for thread handling<br>
+<strong>tree</strong>: interfaces for tree manipulation<br>
+<strong>uri</strong>: library of generic URI related routines<br>
+<strong>valid</strong>: The DTD validation<br>
+<strong>xinclude</strong>: implementation of XInclude<br>
+<strong>xlink</strong>: unfinished XLink detection module<br>
+<strong>xmlIO</strong>: interface for the I/O interfaces used by the parser<br>
+<strong>xmlautomata</strong>: API to build regexp automata<br>
+<strong>xmlerror</strong>: error handling<br>
+<strong>xmlexports</strong>: macros for marking symbols as exportable/importable.<br>
+<strong>xmlmemory</strong>: interface for the memory allocator<br>
+<strong>xmlmodule</strong>: dynamic module loading<br>
+<strong>xmlreader</strong>: the XMLReader implementation<br>
+<strong>xmlregexp</strong>: regular expressions handling<br>
+<strong>xmlsave</strong>: the XML document serializer<br>
+<strong>xmlschemas</strong>: incomplete XML Schemas structure implementation<br>
+<strong>xmlschemastypes</strong>: implementation of XML Schema Datatypes<br>
+<strong>xmlstring</strong>: set of routines to process strings<br>
+<strong>xmlunicode</strong>: Unicode character APIs<br>
+<strong>xmlversion</strong>: compile-time version informations<br>
+<strong>xmlwriter</strong>: text writing API for XML<br>
+<strong>xpath</strong>: XML Path Language implementation<br>
+<strong>xpathInternals</strong>: internal interfaces for XML Path Language implementation<br>
+<strong>xpointer</strong>: API to handle XML Pointers</p>
+<p>因为libxml2包含大量函数，实现有不同的方式。这里介绍一些常用的。至于其他的功能有兴趣自己研究吧……<br>
+而这里主要用到的为 parser，tree，xmlreader，xmlwriter 这几个模块</p>
+<h3 id="parsertree"><a class="markdownIt-Anchor" href="#parsertree"></a> parser/tree</h3>
+<h4 id="读取xml文档"><a class="markdownIt-Anchor" href="#读取xml文档"></a> 读取XML文档</h4>
+<p>首先介绍xml文档的解析吧，大致调用函数如下</p>
 <ul>
 <li>xmlReadFile/xmlParseFile 打开一个XML文档并返回一个文档对象指针xmlDocPtr</li>
 <li>xmlDocGetRootElement 获取XML文档的根节点xmlNodePtr</li>
@@ -547,32 +600,42 @@
 </ul>
 <p>下面给出一个例子（C++）</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;libxml/parser.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;libxml/tree.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="comment">///</span></span><br><span class="line"><span class="comment">/// \param depth  递归深度</span></span><br><span class="line"><span class="comment">/// \param _xmlNodePtr 节点对象指针</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">ParserXML</span><span class="params">(<span class="keyword">int</span> &amp;depth,xmlNodePtr _xmlNodePtr)</span></span>&#123;</span><br><span class="line">    <span class="keyword">bool</span> ishas_child=<span class="literal">false</span>;</span><br><span class="line">    <span class="comment">// 所有子节点</span></span><br><span class="line">    xmlNodePtr xmlNodePtr1= _xmlNodePtr-&gt;children;</span><br><span class="line">    <span class="keyword">int</span> count=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (xmlNodePtr1)&#123;</span><br><span class="line">        <span class="comment">// 判断节点类型</span></span><br><span class="line">        <span class="keyword">if</span>(xmlNodePtr1-&gt;type!=XML_TEXT_NODE)&#123;</span><br><span class="line">        <span class="comment">// xmlStrcmp(xmlNodePtr1-&gt;name,BAD_CAST "text")</span></span><br><span class="line">            count++;</span><br><span class="line">            <span class="comment">// 子节点个数</span></span><br><span class="line">            <span class="keyword">int</span> childEleCount= xmlChildElementCount(xmlNodePtr1);</span><br><span class="line">            <span class="built_in">cout</span>.<span class="built_in">width</span>(depth);</span><br><span class="line">            <span class="keyword">if</span>(childEleCount==<span class="number">0</span>)&#123;</span><br><span class="line">                ishas_child=<span class="literal">false</span>;</span><br><span class="line">                <span class="comment">// 表明无子节点</span></span><br><span class="line">                <span class="built_in">cout</span>&lt;&lt;count&lt;&lt;<span class="string">"."</span>&lt;&lt;xmlNodePtr1-&gt;name&lt;&lt;<span class="string">" --&gt; "</span>&lt;&lt;xmlNodeGetContent(xmlNodePtr1)&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                ishas_child=<span class="literal">true</span>;</span><br><span class="line">                <span class="comment">// 表明有子节点</span></span><br><span class="line">                <span class="built_in">cout</span>&lt;&lt;count&lt;&lt;<span class="string">"."</span>&lt;&lt;xmlNodePtr1-&gt;name&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 遍历节点属性</span></span><br><span class="line">            xmlAttr* xmlAttr1=xmlNodePtr1-&gt;properties;</span><br><span class="line">            <span class="keyword">if</span>(xmlAttr1)&#123;</span><br><span class="line">                <span class="built_in">cout</span>.<span class="built_in">width</span>(depth+<span class="number">1</span>);</span><br><span class="line">                <span class="built_in">cout</span>&lt;&lt;<span class="string">"=&gt;"</span>;</span><br><span class="line">                <span class="keyword">while</span> (xmlAttr1!=<span class="literal">NULL</span>)&#123;</span><br><span class="line">                    <span class="comment">// 判断使用存在属性 ， xmlGetProp获取属性值</span></span><br><span class="line">                    <span class="keyword">if</span>(xmlHasProp(xmlNodePtr1,xmlAttr1-&gt;name))&#123;</span><br><span class="line">                        <span class="built_in">cout</span>&lt;&lt;<span class="string">" "</span>&lt;&lt;xmlAttr1-&gt;name&lt;&lt;<span class="string">":"</span>&lt;&lt;</span><br><span class="line">                            xmlGetProp(xmlNodePtr1,xmlAttr1-&gt;name);</span><br><span class="line">                    &#125;</span><br><span class="line">                    xmlAttr1=xmlAttr1-&gt;next;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="built_in">cout</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 递归调用</span></span><br><span class="line">            <span class="keyword">if</span>(ishas_child)&#123;</span><br><span class="line">                depth+=<span class="number">10</span>;</span><br><span class="line">                ParserXML(depth,xmlNodePtr1);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        xmlNodePtr1=xmlNodePtr1-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(depth&gt;<span class="number">0</span>)&#123;</span><br><span class="line">        depth-=<span class="number">10</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc,<span class="keyword">char</span>** argv)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(argc!=<span class="number">2</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    xmlDocPtr xmlDocPtr1=<span class="literal">NULL</span>;</span><br><span class="line">    <span class="comment">//xmlDocPtr1=xmlParseFile(argv[1]);</span></span><br><span class="line">    xmlInitParser();</span><br><span class="line">    <span class="comment">// 读取文件</span></span><br><span class="line">    xmlDocPtr1=xmlReadFile(argv[<span class="number">1</span>],<span class="string">"UTF-8"</span>,<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span>(xmlDocPtr1==<span class="literal">NULL</span>) &#123;</span><br><span class="line">        xmlErrorPtr xmlErrorPtr1 =xmlGetLastError();</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; xmlErrorPtr1-&gt;message &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"Version: "</span>&lt;&lt;xmlDocPtr1-&gt;version&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"Encoding: "</span>&lt;&lt;xmlDocPtr1-&gt;encoding&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="comment">// 获取根节点</span></span><br><span class="line">    xmlNodePtr xmlNodePtr1= xmlDocGetRootElement(xmlDocPtr1);</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"Root Element: "</span>&lt;&lt;xmlNodePtr1-&gt;name&lt;&lt;<span class="built_in">endl</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="comment">// 遍历所有信息</span></span><br><span class="line">    <span class="keyword">int</span> depth=<span class="number">0</span>;</span><br><span class="line">    ParserXML(depth,xmlNodePtr1);</span><br><span class="line">    <span class="comment">// 释放内存</span></span><br><span class="line">    xmlFreeDoc(xmlDocPtr1);</span><br><span class="line">    xmlCleanupParser();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>有如下 test.xml 文档</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">People</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Student</span> <span class="attr">id</span>=<span class="string">"0x00000000"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>Jack<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">age</span>&gt;</span>14<span class="tag">&lt;/<span class="name">age</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">sex</span>&gt;</span>Man<span class="tag">&lt;/<span class="name">sex</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">hobby</span>&gt;</span>Computer Programming<span class="tag">&lt;/<span class="name">hobby</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">Student</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Student</span> <span class="attr">id</span>=<span class="string">"0x11111111"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>Tony<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">age</span>&gt;</span>17<span class="tag">&lt;/<span class="name">age</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">sex</span>&gt;</span>Man<span class="tag">&lt;/<span class="name">sex</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">hobby</span>&gt;</span>Play Basketball<span class="tag">&lt;/<span class="name">hobby</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">Student</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Student</span> <span class="attr">id</span>=<span class="string">"0x22222222"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>Job<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">age</span>&gt;</span>20<span class="tag">&lt;/<span class="name">age</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">sex</span>&gt;</span>Man<span class="tag">&lt;/<span class="name">sex</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">hobby</span>&gt;</span>Play Football<span class="tag">&lt;/<span class="name">hobby</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">Student</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">People</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
 <p>编译运行 g++ main.cpp -o main <code>xml2-config –libs –cflags</code>&amp;&amp; ./main test.xml</p>
 <p>输出信息</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">Version: 1.0</span><br><span class="line">Encoding: UTF-8</span><br><span class="line">ROOT Element: People</span><br><span class="line">1.Student</span><br><span class="line">=&gt; id:0x00000000</span><br><span class="line">         1.name --&gt; Jack</span><br><span class="line">         2.age --&gt; 14</span><br><span class="line">         3.sex --&gt; Man</span><br><span class="line">         4.hobby --&gt; Computer Programming</span><br><span class="line">2.Student</span><br><span class="line">=&gt; id:0x11111111</span><br><span class="line">         1.name --&gt; Tony</span><br><span class="line">         2.age --&gt; 17</span><br><span class="line">         3.sex --&gt; Man</span><br><span class="line">         4.hobby --&gt; Play Basketball</span><br><span class="line">3.Student</span><br><span class="line">=&gt; id:0x22222222</span><br><span class="line">         1.name --&gt; Job</span><br><span class="line">         2.age --&gt; 20</span><br><span class="line">         3.sex --&gt; Man</span><br><span class="line">         4.hobby --&gt; Play Football</span><br></pre></td></tr></table></figure>
-
-<p>可以看到，成功的解析xml文档并格式化的输出信息。这个例子的核心代码就是那个递归函数。现在我们来看看它到底干了些什么。<br>不过在此之前，先谈谈 <strong>xmlParseFile</strong> 和 <strong>xmlReadFile</strong> 的区别。它们都是打开一个XML文档并返回一个文档对象指针 <strong>xmlDocPtr</strong> ，不同之处就在于它们提供的参数不同</p>
+<p>可以看到，成功的解析xml文档并格式化的输出信息。这个例子的核心代码就是那个递归函数。现在我们来看看它到底干了些什么。<br>
+不过在此之前，先谈谈 <strong>xmlParseFile</strong> 和 <strong>xmlReadFile</strong> 的区别。它们都是打开一个XML文档并返回一个文档对象指针 <strong>xmlDocPtr</strong> ，不同之处就在于它们提供的参数不同</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">xmlDocPtr <span class="title">xmlParseFile</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *filename)</span></span>;</span><br><span class="line"><span class="function">xmlDocPtr <span class="title">xmlReadFile</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *URL,**<span class="keyword">const</span> <span class="keyword">char</span> *encoding**,<span class="keyword">int</span> options)</span></span>;</span><br></pre></td></tr></table></figure>
-
-<p>xmlReadFile 以指定的编码格式打开xml文档，而 xmlParseFile 默认以UTF-8编码格式打开文档。<br>比如，刚才的test.xml <strong><?xml version=”1.0” encoding=”UTF-8”?></strong> 中通过encoding指定了UTF-8编码格式，那么用 xmlParseFile 能成功解析，用 xmlReadFile 函数无论<br><strong>const char *encoding</strong> 参数为NULL还是“UTF-8” 也能成功解析。<br>但是 test.xml 只有 <strong><?xml version=”1.0?></strong> 那么 xmlParseFile 会解析失败，而 xmlReadFile 只有 第二个参数为 “UTF-8”时才能解析成功。</p>
-<p>好了，继续看那个递归函数吧。。。<br>首先用 <strong>xmlNodePtr xmlNodePtr1= _xmlNodePtr-&gt;children;</strong> 获取的 _xmlNodePtr 节点的所有子节点，然后在while循环中判断每个子节点的类型，<strong>xmlNodePtr1-&gt;type!=XML_TEXT_NODE</strong> 如果不是 XML_TEXT_NODE 那就继续。接着 用 <strong>xmlChildElementCount</strong> 获取 xmlNodePtr1 节点指针的所有子节点个数，并用一个 <strong>ishas_child</strong> 标识是否存在子节点，对于存在子节点的节点，就进行<strong>递归</strong>。然后显示了节点的属性，通过 <strong>xmlHasProp</strong> 判断是否存在指定名字的属性，存在用 <strong>xmlGetProp</strong> 获取其值。注意，我获取了 一个属性对象（链表） <code>xmlAttr* xmlAttr1=xmlNodePtr1-&gt;properties</code> 之后进行遍历。在libxml2中，xmlNode、xmlDoc、xmlAttr 都是一个链表。<br>之后进入递归，depth 只是表示深度，用于格式化输出<br>if(ishas_child){<br>       depth+=10;<br>       ParserXML(depth,xmlNodePtr1);<br>}<br>在进入的每个递归函数执行结束之前减去刚才进入的深度<br>if(depth&gt;0){<br>       depth-=10;<br>}</p>
+<p>xmlReadFile 以指定的编码格式打开xml文档，而 xmlParseFile 默认以UTF-8编码格式打开文档。<br>
+比如，刚才的test.xml <strong><?xml version=”1.0” encoding=”UTF-8”?></strong> 中通过encoding指定了UTF-8编码格式，那么用 xmlParseFile 能成功解析，用 xmlReadFile 函数无论<br>
+<strong>const char *encoding</strong> 参数为NULL还是“UTF-8” 也能成功解析。<br>
+但是 test.xml 只有 <strong><?xml version=”1.0?></strong> 那么 xmlParseFile 会解析失败，而 xmlReadFile 只有 第二个参数为 “UTF-8”时才能解析成功。</p>
+<p>好了，继续看那个递归函数吧。。。<br>
+首先用 <strong>xmlNodePtr xmlNodePtr1= _xmlNodePtr-&gt;children;</strong> 获取的 _xmlNodePtr 节点的所有子节点，然后在while循环中判断每个子节点的类型，<strong>xmlNodePtr1-&gt;type!=XML_TEXT_NODE</strong> 如果不是 XML_TEXT_NODE 那就继续。接着 用 <strong>xmlChildElementCount</strong> 获取 xmlNodePtr1 节点指针的所有子节点个数，并用一个 <strong>ishas_child</strong> 标识是否存在子节点，对于存在子节点的节点，就进行<strong>递归</strong>。然后显示了节点的属性，通过 <strong>xmlHasProp</strong> 判断是否存在指定名字的属性，存在用 <strong>xmlGetProp</strong> 获取其值。注意，我获取了 一个属性对象（链表） <code>xmlAttr* xmlAttr1=xmlNodePtr1-&gt;properties</code> 之后进行遍历。在libxml2中，xmlNode、xmlDoc、xmlAttr 都是一个链表。<br>
+之后进入递归，depth 只是表示深度，用于格式化输出<br>
+if(ishas_child){<br>
+depth+=10;<br>
+ParserXML(depth,xmlNodePtr1);<br>
+}<br>
+在进入的每个递归函数执行结束之前减去刚才进入的深度<br>
+if(depth&gt;0){<br>
+depth-=10;<br>
+}</p>
 <p>接下来就是生成XML文档。。。</p>
-<h4 id="生成XML文档"><a href="#生成XML文档" class="headerlink" title="生成XML文档"></a>生成XML文档</h4><p>生成就简单一些了，下面是一个例子</p>
+<h4 id="生成xml文档"><a class="markdownIt-Anchor" href="#生成xml文档"></a> 生成XML文档</h4>
+<p>生成就简单一些了，下面是一个例子</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;libxml/parser.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;libxml/tree.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">GenerateXML</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *filename)</span></span>&#123;</span><br><span class="line">    xmlDocPtr xmlDocPtr1= xmlNewDoc(BAD_CAST XML_DEFAULT_VERSION);</span><br><span class="line">    <span class="keyword">if</span>(!xmlDocPtr1)&#123;</span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;<span class="string">"ERROR: "</span>&lt;&lt;xmlGetLastError()-&gt;message&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 创建根节点</span></span><br><span class="line">    xmlNodePtr xmlRootPtr=xmlNewNode(<span class="literal">NULL</span>,BAD_CAST<span class="string">"Root"</span>);</span><br><span class="line">    xmlDocSetRootElement(xmlDocPtr1,xmlRootPtr);</span><br><span class="line">    <span class="comment">// 创建一个文本子节点，父节点为 xmlRootPtr</span></span><br><span class="line">    xmlNodePtr  xmlNodePtr1= xmlNewTextChild(xmlRootPtr,<span class="literal">NULL</span>,BAD_CAST<span class="string">"Management"</span>,BAD_CAST<span class="string">"None"</span>);</span><br><span class="line">    <span class="comment">// 添加一个节点，父节点为 xmlNodePtr1</span></span><br><span class="line">    xmlNewTextChild(xmlNodePtr1,<span class="literal">NULL</span>,BAD_CAST<span class="string">"Score"</span>,BAD_CAST<span class="string">"None"</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 创建一个新的节点</span></span><br><span class="line">    xmlNodePtr xmlAnimalPtr= xmlNewNode(<span class="literal">NULL</span>,BAD_CAST<span class="string">"Animals"</span>);</span><br><span class="line">    xmlAddChild(xmlRootPtr,xmlAnimalPtr);</span><br><span class="line">    <span class="comment">// 创建元素</span></span><br><span class="line">    xmlAttrPtr xmlAttrPtr1= xmlNewProp(xmlAnimalPtr,BAD_CAST<span class="string">"Number"</span>,BAD_CAST<span class="string">"888"</span>);</span><br><span class="line">    xmlSetProp(xmlAnimalPtr,BAD_CAST<span class="string">"Number"</span>,BAD_CAST<span class="string">"9999"</span>);</span><br><span class="line"><span class="comment">//    xmlNodeSetName(xmlAnimalPtr,BAD_CAST"The_Animal");</span></span><br><span class="line"><span class="comment">//    xmlRemoveProp(xmlAttrPtr1);</span></span><br><span class="line">    <span class="comment">// 保存文件</span></span><br><span class="line">    <span class="keyword">if</span>(xmlSaveFileEnc(filename,xmlDocPtr1,<span class="string">"UTF-8"</span>))&#123;</span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;<span class="string">"生成 XML 文件成功！"</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 释放内存</span></span><br><span class="line">    xmlFreeDoc(xmlDocPtr1);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    GenerateXML(<span class="string">"test.xml"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>这里通用的做法为 <strong>xmlNewDoc</strong> 创建一个新的XML文档并返回一个 xmlDocPtr ，创建一个根节点就是创建一个 xmlNodePtr 并通过 <strong>xmlDocSetRootElement</strong> 设置 xmlDocPtr 的根节点为 xmlNodePtr 。之后在继续添加子节点时，只需在 xmlNodePtr 的基础上创建新节点并添加即可。</p>
 <p><strong>xmlNewTextChild</strong> 函数用于文件一个文本子节点。如 <code>&lt;node&gt;Hello&lt;/node&gt;</code></p>
 <p>创建新节点的方法为 <strong>xmlNewNode</strong> 它返回一个 xmlNodePtr ，之后 <strong>xmlAddChild</strong> 把一个节点添加到父节点上。</p>
-<p>通过 <strong>xmlNewProp</strong> 创建一个属性 xmlAttrPtr ，之后可通过<br><strong>xmlSetProp或xmlNodeSetName</strong> 设置属性的值。删除属性 <strong>xmlRemoveProp</strong></p>
+<p>通过 <strong>xmlNewProp</strong> 创建一个属性 xmlAttrPtr ，之后可通过<br>
+<strong>xmlSetProp或xmlNodeSetName</strong> 设置属性的值。删除属性 <strong>xmlRemoveProp</strong></p>
 <p>最后，全部OK了， <strong>xmlSaveFileEnc</strong> 来保存XML文档</p>
 <p>编译运行生成test.xml，可能格式有点混乱，我修改了一下</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Root</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Management</span>&gt;</span>None</span><br><span class="line">        <span class="tag">&lt;<span class="name">Score</span>&gt;</span>None<span class="tag">&lt;/<span class="name">Score</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">Management</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Animals</span> <span class="attr">Number</span>=<span class="string">"9999"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Root</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>OK，基本上解析XML也不算太难。除了libxml2库外，还有其他的库也可以解析XML。看个人爱好了 :)</p>
+<p>OK，基本上解析XML也不算太难。除了libxml2库外，还有其他的库也可以解析XML。看个人爱好了 😃</p>
 <p>bye~</p>
 
       
@@ -729,7 +792,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -835,9 +898,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -905,7 +966,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Table-of-Contents"><span class="nav-number">1.</span> <span class="nav-text">Table of Contents</span></a></li></ol><li class="nav-item nav-level-3"><a class="nav-link" href="#parser-tree"><span class="nav-number"></span> <span class="nav-text">parser/tree</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#读取XML文档"><span class="nav-number">1.</span> <span class="nav-text">读取XML文档</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#生成XML文档"><span class="nav-number">2.</span> <span class="nav-text">生成XML文档</span></a></li></ol></li></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#table-of-contents"><span class="nav-number">1.</span> <span class="nav-text"> Table of Contents</span></a></li></ol><li class="nav-item nav-level-3"><a class="nav-link" href="#parsertree"><span class="nav-number"></span> <span class="nav-text"> parser/tree</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#读取xml文档"><span class="nav-number">1.</span> <span class="nav-text"> 读取XML文档</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#生成xml文档"><span class="nav-number">2.</span> <span class="nav-text"> 生成XML文档</span></a></li></ol></li></div>
             
 
           </div>
@@ -938,7 +999,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1045,10 +1106,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

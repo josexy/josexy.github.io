@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -212,7 +212,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -345,6 +345,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -381,9 +384,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -528,59 +528,64 @@
       
         <p>队列是一种先进先出(FIFO)的数据结构，与栈(后进先出LIFO)不同，但两者都是线性结构，因此可以用线性表去描述队列，本文主要是用数组去实现一个简单的队列</p>
 <a id="more"></a>
-
-<h3 id="队列"><a href="#队列" class="headerlink" title="队列"></a>队列</h3><p>对一个队列操作，只能从队首删除元素，队尾插入元素，因此我们可以定义两个队列元素指针front,back，用于跟踪队列首尾元素。<br>C++ STL实现了队列数据结构，我们用时不可能立即手写一个队列，因而只需include头文件即可，不过对于队列这一数据结构原理还是要理解的</p>
+<h3 id="队列"><a class="markdownIt-Anchor" href="#队列"></a> 队列</h3>
+<p>对一个队列操作，只能从队首删除元素，队尾插入元素，因此我们可以定义两个队列元素指针front,back，用于跟踪队列首尾元素。<br>
+C++ STL实现了队列数据结构，我们用时不可能立即手写一个队列，因而只需include头文件即可，不过对于队列这一数据结构原理还是要理解的</p>
 <p>我们知道，队列可以用数组或链表实现，不过本文是以数组来讲述的因此较为简单</p>
-<h4 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h4><p>队列插入一个元素时，先将队尾指针back+1，使其指向下一个空闲区<br>域，然后在插入元素。复杂度为O(1)</p>
-<h4 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h4><p>删除队首元素有两种策略</p>
+<h4 id="插入"><a class="markdownIt-Anchor" href="#插入"></a> 插入</h4>
+<p>队列插入一个元素时，先将队尾指针back+1，使其指向下一个空闲区<br>
+域，然后在插入元素。复杂度为O(1)</p>
+<h4 id="删除"><a class="markdownIt-Anchor" href="#删除"></a> 删除</h4>
+<p>删除队首元素有两种策略</p>
 <ol>
 <li>直接整个数组左移一位，front不变，back向前移动一位。复杂度O(n)</li>
 <li>数组不移动，front移动到下一位，back不变。复杂度O(1)</li>
 </ol>
 <p>显然删除操作情况1不能接受，然而对于删除操作情况2，会导致数组空间浪费，这是因为front指针之前的区域未能被利用，而back指针之后的区域显然不够(这里在没有考虑数组变增的情况下)。</p>
 <p>如果将数组“串”起来怎样？事实上确实可以，这种数组叫环形数组，用此类型数组实现的队列称为<strong>循环队列</strong> 且其插入删除复杂度均为O(1)</p>
-<p>环形数组表示队列通过下面公式实现: </p>
+<p>环形数组表示队列通过下面公式实现:</p>
 <blockquote>
 <p>location(i)=(location(front)+i)%arrayLength</p>
 </blockquote>
-<p>如下图一个空队列，此时 front=back<br><img src="/uploads/images/data_structure/queue_cpp/01.png" alt></p>
+<p>如下图一个空队列，此时 front=back<br>
+<img src="/uploads/images/data_structure/queue_cpp/01.png" alt></p>
 <p>当插入一个元素时，也有两种策略</p>
 <blockquote>
-<p>1.先移动back，后插入元素。那么front指向元素为”空”<br>2.先插入元素，后移动back。那么back指向元素为”空”</p>
+<p>1.先移动back，后插入元素。那么front指向元素为&quot;空&quot;<br>
+2.先插入元素，后移动back。那么back指向元素为&quot;空&quot;</p>
 </blockquote>
 <img src="/uploads/images/data_structure/queue_cpp/02.png" width="70%" height="70%">
-
 <p>每次插入都需要判断 (back+1)%size == front ，为什么？我们知道，初始时front=back表示空队列，那么当插入元素数量达到数组长度此时front=back！这表示这个队列满的还是空的？因此我们预留一个位置，也就是队列不能插满。即</p>
 <blockquote>
-<p>front=back  空队列<br>(back+1)%size = front 满队列</p>
+<p>front=back  空队列<br>
+(back+1)%size = front 满队列</p>
 </blockquote>
 <img src="/uploads/images/data_structure/queue_cpp/03.png" width="70%" height="70%">
-
-<p>如何获取队列中第n个元素在数组中的下标？<br>假设front=10，back=4。<br><img src="/uploads/images/data_structure/queue_cpp/04.png" width="70%" height="70%"></p>
+<p>如何获取队列中第n个元素在数组中的下标？<br>
+假设front=10，back=4。<br>
+<img src="/uploads/images/data_structure/queue_cpp/04.png" width="70%" height="70%"></p>
 <p>因此我们用C++实现该循环队列</p>
-<h3 id="队列实现"><a href="#队列实现" class="headerlink" title="队列实现"></a>队列实现</h3><p>队列抽象数据类型</p>
+<h3 id="队列实现"><a class="markdownIt-Anchor" href="#队列实现"></a> 队列实现</h3>
+<p>队列抽象数据类型</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">class</span> <span class="title">QueueBase</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">virtual</span> ~QueueBase()&#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">push_back</span><span class="params">(<span class="keyword">const</span> T &amp;)</span></span>=<span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">pop_front</span><span class="params">()</span></span>=<span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> T &amp; <span class="title">front</span><span class="params">()</span></span>=<span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> T &amp; <span class="title">back</span><span class="params">()</span></span>=<span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="title">empty</span><span class="params">()</span></span>=<span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">int</span> <span class="title">size</span><span class="params">()</span></span>=<span class="number">0</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>之后在另外定义一个派生类继承QueueBase接口。<br>我是按照策略2来插入元素的，代码如下</p>
+<p>之后在另外定义一个派生类继承QueueBase接口。<br>
+我是按照策略2来插入元素的，代码如下</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">class</span> <span class="title">arrayQueue</span>&#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    T *m_array;</span><br><span class="line">    <span class="keyword">int</span> m_capacity;</span><br><span class="line">    <span class="keyword">int</span> front;</span><br><span class="line">    <span class="keyword">int</span> back;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    arrayQueue(<span class="keyword">int</span> initCapacity=<span class="number">10</span>)&#123;</span><br><span class="line">        m_capacity=initCapacity;</span><br><span class="line">        m_array=<span class="keyword">new</span> T[m_capacity];</span><br><span class="line">        front=<span class="number">0</span>;</span><br><span class="line">        back=<span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    ~arrayQueue()&#123;<span class="keyword">delete</span> []m_array;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">push_back</span><span class="params">(<span class="keyword">const</span> T &amp;)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">pop_front</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function">T &amp; <span class="title">Front</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> m_array[front];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">T &amp; <span class="title">Back</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> m_array[back<span class="number">-1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">empty</span><span class="params">()</span></span>&#123;<span class="keyword">return</span> front==back;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">size</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(front&lt;back)</span><br><span class="line">            <span class="keyword">return</span> back-front;</span><br><span class="line">        <span class="keyword">else</span> </span><br><span class="line">            <span class="keyword">return</span> back+m_capacity-front;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">changeLength</span><span class="params">(T* &amp;,<span class="keyword">int</span>,<span class="keyword">int</span>)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">output</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(empty())<span class="keyword">return</span>;</span><br><span class="line">        <span class="comment">// 情况1</span></span><br><span class="line">        <span class="keyword">if</span>(front&lt;back)&#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = front; i &lt; back; i++)&#123;</span><br><span class="line">                <span class="built_in">cout</span>&lt;&lt;<span class="string">"["</span>&lt;&lt;i&lt;&lt;<span class="string">"] "</span>&lt;&lt;m_array[i]&lt;&lt;<span class="string">"\n"</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        <span class="comment">// 情况2</span></span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = front; i &lt; m_capacity; i++)&#123;</span><br><span class="line">                <span class="built_in">cout</span>&lt;&lt;<span class="string">"["</span>&lt;&lt;i&lt;&lt;<span class="string">"] "</span>&lt;&lt;m_array[i]&lt;&lt;<span class="string">"\n"</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; back; i++)&#123;</span><br><span class="line">                <span class="built_in">cout</span>&lt;&lt;<span class="string">"["</span>&lt;&lt;i&lt;&lt;<span class="string">"] "</span>&lt;&lt;m_array[i]&lt;&lt;<span class="string">"\n"</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">void</span> <span class="title">arrayQueue</span>&lt;T&gt;:</span>:push_back(<span class="keyword">const</span> T &amp;element)&#123;</span><br><span class="line">    <span class="comment">// 满队列</span></span><br><span class="line">    <span class="keyword">if</span>((back+<span class="number">1</span>)%m_capacity==front)&#123;</span><br><span class="line">        <span class="comment">// 数组倍增</span></span><br><span class="line">        changeLength(m_array,m_capacity,m_capacity*<span class="number">2</span>);</span><br><span class="line">        m_capacity*=<span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 按照策略2插入: 先插入元素，后移动back</span></span><br><span class="line">    m_array[back]=element;</span><br><span class="line">    <span class="comment">// 注意，此处不能直接 back++，这样做会使back超出数组长度从而导致数组访问越界</span></span><br><span class="line">    <span class="comment">// 相反，(back+1)%m_capacity 会使back指针回到数组起始处继续插入</span></span><br><span class="line">    back=(back+<span class="number">1</span>)%m_capacity;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">void</span> <span class="title">arrayQueue</span>&lt;T&gt;:</span>:pop_front()&#123;</span><br><span class="line">    <span class="comment">// 判空</span></span><br><span class="line">    <span class="keyword">if</span>(back==front)<span class="keyword">return</span>;</span><br><span class="line">    m_array[front].~T();</span><br><span class="line">    <span class="comment">// 同样这里也是控制front只能处于数组之间</span></span><br><span class="line">    front=(front+<span class="number">1</span>)%<span class="keyword">this</span>-&gt;m_capacity;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">void</span> <span class="title">arrayQueue</span>&lt;T&gt;:</span>:changeLength(T* &amp;<span class="built_in">array</span>,<span class="keyword">int</span> oldLength,<span class="keyword">int</span> newLength)&#123;</span><br><span class="line">    <span class="keyword">if</span>(newLength&lt;<span class="number">0</span>)<span class="keyword">return</span>;</span><br><span class="line">    T* temp=<span class="keyword">new</span> T[newLength];</span><br><span class="line">    <span class="comment">// 从有效元素开始复制</span></span><br><span class="line">    <span class="keyword">if</span>(front&lt;back)</span><br><span class="line">        <span class="comment">// 没有形成环</span></span><br><span class="line">        <span class="built_in">std</span>::copy(<span class="built_in">array</span>+front,<span class="built_in">array</span>+back,temp);</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="comment">// 形成环</span></span><br><span class="line">        <span class="built_in">std</span>::copy(<span class="built_in">array</span>+front,<span class="built_in">array</span>+oldLength,temp);</span><br><span class="line">        <span class="built_in">std</span>::copy(<span class="built_in">array</span>,<span class="built_in">array</span>+back,temp+oldLength-front);</span><br><span class="line">        <span class="comment">// 重新设置front,back</span></span><br><span class="line">        front=<span class="number">0</span>;</span><br><span class="line">        back=oldLength<span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">delete</span> []<span class="built_in">array</span>;</span><br><span class="line">    <span class="built_in">array</span>=temp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>我认为比较难理解的是changeLength改变数组长度函数，其实用一张图表示就很简单了</p>
 <img src="/uploads/images/data_structure/queue_cpp/05.png" width="70%" height="70%">
-
-
-<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    arrayQueue&lt;<span class="keyword">int</span>&gt;q(<span class="number">5</span>);</span><br><span class="line">    q.push_back(<span class="number">1</span>);</span><br><span class="line">    q.push_back(<span class="number">2</span>);</span><br><span class="line">    q.push_back(<span class="number">3</span>);</span><br><span class="line">    q.push_back(<span class="number">4</span>);</span><br><span class="line">    q.push_back(<span class="number">40</span>);</span><br><span class="line">    q.push_back(<span class="number">400</span>);</span><br><span class="line">    q.push_back(<span class="number">4000</span>);</span><br><span class="line">    q.push_back(<span class="number">40000</span>);</span><br><span class="line"></span><br><span class="line">    q.pop_front();</span><br><span class="line">    q.pop_front();</span><br><span class="line">    q.pop_front();</span><br><span class="line">    q.pop_front();</span><br><span class="line">    q.pop_front();</span><br><span class="line">    q.pop_front();</span><br><span class="line"></span><br><span class="line">    q.push_back(<span class="number">5</span>);</span><br><span class="line">    q.push_back(<span class="number">6</span>);</span><br><span class="line">    q.push_back(<span class="number">7</span>);</span><br><span class="line">    q.push_back(<span class="number">8</span>);</span><br><span class="line">    q.push_back(<span class="number">9</span>);</span><br><span class="line"></span><br><span class="line">    q.output();</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"size: "</span>&lt;&lt;q.size()&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"front: "</span>&lt;&lt;q.Front()&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"back: "</span>&lt;&lt;q.Back()&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<h3 id="测试"><a class="markdownIt-Anchor" href="#测试"></a> 测试</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    arrayQueue&lt;<span class="keyword">int</span>&gt;q(<span class="number">5</span>);</span><br><span class="line">    q.push_back(<span class="number">1</span>);</span><br><span class="line">    q.push_back(<span class="number">2</span>);</span><br><span class="line">    q.push_back(<span class="number">3</span>);</span><br><span class="line">    q.push_back(<span class="number">4</span>);</span><br><span class="line">    q.push_back(<span class="number">40</span>);</span><br><span class="line">    q.push_back(<span class="number">400</span>);</span><br><span class="line">    q.push_back(<span class="number">4000</span>);</span><br><span class="line">    q.push_back(<span class="number">40000</span>);</span><br><span class="line"></span><br><span class="line">    q.pop_front();</span><br><span class="line">    q.pop_front();</span><br><span class="line">    q.pop_front();</span><br><span class="line">    q.pop_front();</span><br><span class="line">    q.pop_front();</span><br><span class="line">    q.pop_front();</span><br><span class="line"></span><br><span class="line">    q.push_back(<span class="number">5</span>);</span><br><span class="line">    q.push_back(<span class="number">6</span>);</span><br><span class="line">    q.push_back(<span class="number">7</span>);</span><br><span class="line">    q.push_back(<span class="number">8</span>);</span><br><span class="line">    q.push_back(<span class="number">9</span>);</span><br><span class="line"></span><br><span class="line">    q.output();</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"size: "</span>&lt;&lt;q.size()&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"front: "</span>&lt;&lt;q.Front()&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"back: "</span>&lt;&lt;q.Back()&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>输出</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[6] 4000</span><br><span class="line">[7] 40000</span><br><span class="line">[8] 5</span><br><span class="line">[9] 6</span><br><span class="line">[0] 7</span><br><span class="line">[1] 8</span><br><span class="line">[2] 9</span><br><span class="line">size: 7</span><br><span class="line">front: 4000</span><br><span class="line">back: 9</span><br></pre></td></tr></table></figure>
-
-<h3 id="STL-queue"><a href="#STL-queue" class="headerlink" title="STL queue"></a>STL queue</h3><p>将自己写的arrayQueue和STL queue分别测试，看看谁快些，这里我仅仅测试了先插入完成后再删除。</p>
+<h3 id="stl-queue"><a class="markdownIt-Anchor" href="#stl-queue"></a> STL queue</h3>
+<p>将自己写的arrayQueue和STL queue分别测试，看看谁快些，这里我仅仅测试了先插入完成后再删除。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    arrayQueue&lt;<span class="keyword">int</span>&gt;q2;</span><br><span class="line">    <span class="keyword">int</span> n=<span class="number">100000000</span>;</span><br><span class="line">    CClock::start_timeclock();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++)&#123;</span><br><span class="line">        q2.push_back(i);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++)&#123;</span><br><span class="line">        q2.pop_front();</span><br><span class="line">    &#125;</span><br><span class="line">    q2.output();</span><br><span class="line">    CClock::stop_timeclock();</span><br><span class="line">    <span class="keyword">auto</span> t1=CClock::time_duration();</span><br><span class="line"></span><br><span class="line">    CClock::start_timeclock();</span><br><span class="line">    <span class="built_in">queue</span>&lt;<span class="keyword">int</span>&gt;q3;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++)&#123;</span><br><span class="line">        q3.push(i);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++)&#123;</span><br><span class="line">        q3.pop();</span><br><span class="line">    &#125;</span><br><span class="line">    CClock::stop_timeclock();</span><br><span class="line">    <span class="keyword">auto</span> t2=CClock::time_duration();</span><br><span class="line"></span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"arrayQueue: "</span>&lt;&lt;t1&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"queue: "</span>&lt;&lt;t2&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>输出结果，单位秒</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">arrayQueue: 2.32446</span><br><span class="line">queue: 2.63278</span><br></pre></td></tr></table></figure>
-
-<p>不知道该如何表达……<br>(⊙o⊙)…</p>
-<h3 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h3><p>bye~</p>
+<p>不知道该如何表达…<br>
+(⊙o⊙)…</p>
+<h3 id="结尾"><a class="markdownIt-Anchor" href="#结尾"></a> 结尾</h3>
+<p>bye~</p>
 
       
     </div>
@@ -738,7 +743,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -844,9 +849,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -914,7 +917,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#队列"><span class="nav-number">1.</span> <span class="nav-text">队列</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#插入"><span class="nav-number">1.1.</span> <span class="nav-text">插入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#删除"><span class="nav-number">1.2.</span> <span class="nav-text">删除</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#队列实现"><span class="nav-number">2.</span> <span class="nav-text">队列实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试"><span class="nav-number">3.</span> <span class="nav-text">测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#STL-queue"><span class="nav-number">4.</span> <span class="nav-text">STL queue</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结尾"><span class="nav-number">5.</span> <span class="nav-text">结尾</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#队列"><span class="nav-number">1.</span> <span class="nav-text"> 队列</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#插入"><span class="nav-number">1.1.</span> <span class="nav-text"> 插入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#删除"><span class="nav-number">1.2.</span> <span class="nav-text"> 删除</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#队列实现"><span class="nav-number">2.</span> <span class="nav-text"> 队列实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试"><span class="nav-number">3.</span> <span class="nav-text"> 测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#stl-queue"><span class="nav-number">4.</span> <span class="nav-text"> STL queue</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结尾"><span class="nav-number">5.</span> <span class="nav-text"> 结尾</span></a></li></ol></div>
             
 
           </div>
@@ -947,7 +950,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1054,10 +1057,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

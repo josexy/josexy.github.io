@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -206,7 +206,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -339,6 +339,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -375,9 +378,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -532,32 +532,55 @@
       
         <p>不知什么原因,gedit找不到首选项,所以也无法直接修改配置,经一番琢磨,记录下过程…</p>
 <a id="more"></a>
-
-<h4 id="gsettings"><a href="#gsettings" class="headerlink" title="gsettings"></a>gsettings</h4><p>本文用到此工具,用它来查询,修改 <strong>Gnome桌面环境配置</strong> ,关于它的用法可以直接查看帮助文档<br>比如 <code>gsettings list-recursively</code> 就会输出很多信息</p>
+<h4 id="gsettings"><a class="markdownIt-Anchor" href="#gsettings"></a> gsettings</h4>
+<p>本文用到此工具,用它来查询,修改 <strong>Gnome桌面环境配置</strong> ,关于它的用法可以直接查看帮助文档<br>
+比如 <code>gsettings list-recursively</code> 就会输出很多信息</p>
 <blockquote>
-<p>……<br>org.gnome.gnome-system-monitor.proctree col-20-visible false<br>org.gnome.gnome-system-monitor.proctree col-10-visible false<br>org.gnome.gnome-system-monitor.proctree col-6-width 90<br>org.gnome.gnome-system-monitor.proctree col-22-visible true<br>org.gnome.gnome-system-monitor.proctree col-14-visible false<br>org.gnome.gnome-system-monitor.proctree col-13-visible false<br>org.gnome.gnome-system-monitor.proctree col-11-visible false<br>org.gnome.gnome-system-monitor.proctree col-7-width 90<br>org.gnome.gnome-system-monitor.proctree col-16-visible false<br>org.gnome.gnome-system-monitor.proctree col-15-visible true<br>org.gnome.gnome-system-monitor.proctree col-10-width 70<br>org.gnome.gnome-system-monitor.proctree col-8-width 71<br>org.gnome.gnome-system-monitor.proctree col-18-visible false<br>org.gnome.GWeather distance-unit ‘km’<br>……</p>
+<p>……<br>
+org.gnome.gnome-system-monitor.proctree col-20-visible false<br>
+org.gnome.gnome-system-monitor.proctree col-10-visible false<br>
+org.gnome.gnome-system-monitor.proctree col-6-width 90<br>
+org.gnome.gnome-system-monitor.proctree col-22-visible true<br>
+org.gnome.gnome-system-monitor.proctree col-14-visible false<br>
+org.gnome.gnome-system-monitor.proctree col-13-visible false<br>
+org.gnome.gnome-system-monitor.proctree col-11-visible false<br>
+org.gnome.gnome-system-monitor.proctree col-7-width 90<br>
+org.gnome.gnome-system-monitor.proctree col-16-visible false<br>
+org.gnome.gnome-system-monitor.proctree col-15-visible true<br>
+org.gnome.gnome-system-monitor.proctree col-10-width 70<br>
+org.gnome.gnome-system-monitor.proctree col-8-width 71<br>
+org.gnome.gnome-system-monitor.proctree col-18-visible false<br>
+org.gnome.GWeather distance-unit ‘km’<br>
+……</p>
 </blockquote>
 <p>获取关于 <strong>gedit</strong> 的配置信息 <code>gsettings list-recursively |grep org.gnome.gedit.preferences.editor</code> 就会输出很多 键值对 .</p>
-<h5 id="显示行号"><a href="#显示行号" class="headerlink" title="显示行号"></a>显示行号</h5><blockquote>
+<h5 id="显示行号"><a class="markdownIt-Anchor" href="#显示行号"></a> 显示行号</h5>
+<blockquote>
 <p>gsettings set org.gnome.gedit.preferences.editor display-line-numbers true</p>
 </blockquote>
-<h5 id="高亮当前行"><a href="#高亮当前行" class="headerlink" title="高亮当前行"></a>高亮当前行</h5><blockquote>
+<h5 id="高亮当前行"><a class="markdownIt-Anchor" href="#高亮当前行"></a> 高亮当前行</h5>
+<blockquote>
 <p>gsettings set org.gnome.gedit.preferences.editor highlight-current-line true</p>
 </blockquote>
-<h5 id="右侧预览"><a href="#右侧预览" class="headerlink" title="右侧预览"></a>右侧预览</h5><blockquote>
+<h5 id="右侧预览"><a class="markdownIt-Anchor" href="#右侧预览"></a> 右侧预览</h5>
+<blockquote>
 <p>gsettings set org.gnome.gedit.preferences.editor display-overview-map true</p>
 </blockquote>
-<h5 id="修改主题"><a href="#修改主题" class="headerlink" title="修改主题"></a>修改主题</h5><p>其中主题文件为xml格式,位于 <strong>/usr/share/gtksourceview-3.0/styles</strong> ,可以在 <a href="https://github.com/mig/gedit-themes" target="_blank" rel="noopener">https://github.com/mig/gedit-themes</a> 获取额外的主题文件.</p>
+<h5 id="修改主题"><a class="markdownIt-Anchor" href="#修改主题"></a> 修改主题</h5>
+<p>其中主题文件为xml格式,位于 <strong>/usr/share/gtksourceview-3.0/styles</strong> ,可以在 <a href="https://github.com/mig/gedit-themes" target="_blank" rel="noopener">https://github.com/mig/gedit-themes</a> 获取额外的主题文件.</p>
 <blockquote>
 <p>gsettings set org.gnome.gedit.preferences.editor scheme <strong>oblivion</strong></p>
 </blockquote>
 <p>其中 <strong>oblivion</strong> 为主题文件名(除去后缀.xml)</p>
-<h5 id="修改字体"><a href="#修改字体" class="headerlink" title="修改字体"></a>修改字体</h5><p>在修改字体之前一定要把使用默认字体的设为<code>false</code> ! 不然不会生效</p>
+<h5 id="修改字体"><a class="markdownIt-Anchor" href="#修改字体"></a> 修改字体</h5>
+<p>在修改字体之前一定要把使用默认字体的设为<code>false</code> ! 不然不会生效</p>
 <blockquote>
-<p>gsettings set org.gnome.gedit.preferences.editor <strong>use-default-font</strong> <strong>false</strong><br>gsettings set org.gnome.gedit.preferences.editor editor-font <strong>“Monospace 11”</strong></p>
+<p>gsettings set org.gnome.gedit.preferences.editor <strong>use-default-font</strong> <strong>false</strong><br>
+gsettings set org.gnome.gedit.preferences.editor editor-font <strong>“Monospace 11”</strong></p>
 </blockquote>
 <p><code>Monospace</code>为字体名称 , <code>11</code> 为字体大小,之前要有空格</p>
-<h4 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h4><p>最后,bye……</p>
+<h4 id="结尾"><a class="markdownIt-Anchor" href="#结尾"></a> 结尾</h4>
+<p>最后,bye……</p>
 
       
     </div>
@@ -713,7 +736,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -819,9 +842,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -889,7 +910,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#gsettings"><span class="nav-number">1.</span> <span class="nav-text">gsettings</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#显示行号"><span class="nav-number">1.1.</span> <span class="nav-text">显示行号</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#高亮当前行"><span class="nav-number">1.2.</span> <span class="nav-text">高亮当前行</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#右侧预览"><span class="nav-number">1.3.</span> <span class="nav-text">右侧预览</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#修改主题"><span class="nav-number">1.4.</span> <span class="nav-text">修改主题</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#修改字体"><span class="nav-number">1.5.</span> <span class="nav-text">修改字体</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#结尾"><span class="nav-number">2.</span> <span class="nav-text">结尾</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#gsettings"><span class="nav-number">1.</span> <span class="nav-text"> gsettings</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#显示行号"><span class="nav-number">1.1.</span> <span class="nav-text"> 显示行号</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#高亮当前行"><span class="nav-number">1.2.</span> <span class="nav-text"> 高亮当前行</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#右侧预览"><span class="nav-number">1.3.</span> <span class="nav-text"> 右侧预览</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#修改主题"><span class="nav-number">1.4.</span> <span class="nav-text"> 修改主题</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#修改字体"><span class="nav-number">1.5.</span> <span class="nav-text"> 修改字体</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#结尾"><span class="nav-number">2.</span> <span class="nav-text"> 结尾</span></a></li></ol></div>
             
 
           </div>
@@ -922,7 +943,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1029,10 +1050,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

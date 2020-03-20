@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -125,18 +125,18 @@
   };
 </script>
 
-  <meta name="description" content="计算机内部实现数据的加减乘除运算是通过对二进制位运算来实现的，基本运算” + - × ÷ “ 均可转换为位运算。">
+  <meta name="description" content="计算机内部实现数据的加减乘除运算是通过对二进制位运算来实现的，基本运算&amp;quot; + - × ÷ &amp;quot; 均可转换为位运算。">
 <meta name="keywords" content="C++">
 <meta property="og:type" content="article">
 <meta property="og:title" content="位运算实现加减乘除">
 <meta property="og:url" content="http://www.joxrays.com/add-subtract-multiply-divide/index.html">
 <meta property="og:site_name" content="JoXrays&#39;s Blog">
-<meta property="og:description" content="计算机内部实现数据的加减乘除运算是通过对二进制位运算来实现的，基本运算” + - × ÷ “ 均可转换为位运算。">
+<meta property="og:description" content="计算机内部实现数据的加减乘除运算是通过对二进制位运算来实现的，基本运算&amp;quot; + - × ÷ &amp;quot; 均可转换为位运算。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2019-11-21T15:28:26.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="位运算实现加减乘除">
-<meta name="twitter:description" content="计算机内部实现数据的加减乘除运算是通过对二进制位运算来实现的，基本运算” + - × ÷ “ 均可转换为位运算。">
+<meta name="twitter:description" content="计算机内部实现数据的加减乘除运算是通过对二进制位运算来实现的，基本运算&amp;quot; + - × ÷ &amp;quot; 均可转换为位运算。">
 
 
 
@@ -206,7 +206,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -339,6 +339,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -375,9 +378,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -520,18 +520,34 @@
       
 
       
-        <p>计算机内部实现数据的加减乘除运算是通过对二进制位运算来实现的，基本运算” + - × ÷ “ 均可转换为位运算。</p>
+        <p>计算机内部实现数据的加减乘除运算是通过对二进制位运算来实现的，基本运算&quot; + - × ÷ &quot; 均可转换为位运算。</p>
 <a id="more"></a>
-
 <p>在介绍加减乘除运算前，我们需要了解一些基本的位运算。</p>
-<p>与 &amp;<br>1 and 1 = 1<br>1 and 0 = 0<br>0 and 1 = 0<br>0 and 0 = 0</p>
-<p>或 |<br>1 or 1 = 1<br>1 or 0 = 1<br>0 or 1 = 1<br>0 or 0 = 0</p>
-<p>异或 ^<br>1 xor 1 = 0<br>1 xor 0 = 1<br>0 xor 1 = 1<br>0 xor 0 = 0</p>
-<h2 id="加法运算"><a href="#加法运算" class="headerlink" title="加法运算"></a>加法运算</h2><p>假如右两个32位的int整数：</p>
+<p>与 &amp;<br>
+1 and 1 = 1<br>
+1 and 0 = 0<br>
+0 and 1 = 0<br>
+0 and 0 = 0</p>
+<p>或 |<br>
+1 or 1 = 1<br>
+1 or 0 = 1<br>
+0 or 1 = 1<br>
+0 or 0 = 0</p>
+<p>异或 ^<br>
+1 xor 1 = 0<br>
+1 xor 0 = 1<br>
+0 xor 1 = 1<br>
+0 xor 0 = 0</p>
+<h2 id="加法运算"><a class="markdownIt-Anchor" href="#加法运算"></a> 加法运算</h2>
+<p>假如右两个32位的int整数：</p>
 <blockquote>
-<p>a=10: 00000000000000000000000000001010<br>b=13: 00000000000000000000000000001101</p>
+<p>a=10: 00000000000000000000000000001010<br>
+b=13: 00000000000000000000000000001101</p>
 </blockquote>
-<p>将这两个数10和13相加：<br>a=01010 (10)<br>b=01101 (13)<br>c=10111 (23)</p>
+<p>将这两个数10和13相加：<br>
+a=01010 (10)<br>
+b=01101 (13)<br>
+c=10111 (23)</p>
 <p>把上面的二进制分割为每一位后a+b=c</p>
 <table>
 <thead>
@@ -539,111 +555,129 @@
 <th>a</th>
 <th>b</th>
 <th>xor ^</th>
-<th align="left">and &amp;</th>
+<th style="text-align:left">and &amp;</th>
 <th>c</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>0</td>
 <td>1</td>
 <td>1</td>
-<td align="left">0</td>
+<td style="text-align:left">0</td>
 <td>1</td>
 </tr>
 <tr>
 <td>1</td>
 <td>0</td>
 <td>1</td>
-<td align="left">0</td>
+<td style="text-align:left">0</td>
 <td>1</td>
 </tr>
 <tr>
 <td>0</td>
 <td>1</td>
 <td>1</td>
-<td align="left">0</td>
+<td style="text-align:left">0</td>
 <td>1</td>
 </tr>
 <tr>
 <td>1</td>
 <td>1</td>
 <td>0</td>
-<td align="left">1</td>
+<td style="text-align:left">1</td>
 <td>0</td>
 </tr>
 <tr>
 <td>0</td>
 <td>0</td>
 <td>0</td>
-<td align="left">0</td>
+<td style="text-align:left">0</td>
 <td>1</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>我们发现 位异或^ 单纯的将两个数相加，不过并没有考虑 <strong>进位</strong> )，但是 与运算&amp; 能够表示两个二进制相加是否发生了进位（如上表所示）。</p>
 <p>也就是说，利用 xor 将两个数相加，and 判断是否有进位，如果有，那个满2进1位 carry&lt;&lt;=1</p>
 <blockquote>
-<p>sum = a^b<br>carry = a&amp;b<br>carry &lt;&lt;= 1</p>
+<p>sum = a^b<br>
+carry = a&amp;b<br>
+carry &lt;&lt;= 1</p>
 </blockquote>
 <p>假如这样计算会发生什么?</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">add(a,b)</span><br><span class="line">a=<span class="number">01010</span></span><br><span class="line">b=<span class="number">01101</span></span><br><span class="line"></span><br><span class="line">sum=a^b =&gt; <span class="number">00111</span> <span class="comment">// 求和</span></span><br><span class="line">carry=a&amp;b =&gt; <span class="number">01000</span> <span class="comment">// 求进位: 1&amp;1</span></span><br><span class="line">carry=carry&lt;&lt;<span class="number">1</span> =&gt; <span class="number">10000</span> <span class="comment">//满2进1</span></span><br><span class="line"></span><br><span class="line">如果carry进位!=<span class="number">0</span>,否则就结束</span><br><span class="line">假设</span><br><span class="line">a=sum=  <span class="number">00111</span></span><br><span class="line">b=carry=<span class="number">10000</span></span><br><span class="line">重复之前的步骤...此时新的a=sum,b=carry</span><br><span class="line">sum=a^b =&gt; <span class="number">10111</span></span><br><span class="line">carry=a&amp;b =&gt; <span class="number">00000</span></span><br><span class="line">carry=carry&lt;&lt;<span class="number">1</span> =&gt; <span class="number">00000</span></span><br><span class="line"></span><br><span class="line">此时sum=<span class="number">10111</span> 且 carry=<span class="number">0</span> </span><br><span class="line">结果正确！</span><br></pre></td></tr></table></figure>
-
 <p>sum=a^b 表明对a和b求和（不考虑进位），而 (a&amp;b)&lt;&lt;1 表明求a和b中哪个位发生了进位，并且将该位置于最高位(通过左移一位)</p>
 <p>因此C++代码如下:</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 迭代1，按照上面的思路来写</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> sum=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> carry=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">do</span></span><br><span class="line">    &#123;</span><br><span class="line">        sum=a^b;</span><br><span class="line">        carry=(a&amp;b)&lt;&lt;<span class="number">1</span>;</span><br><span class="line">        a=sum;</span><br><span class="line">        b=carry;</span><br><span class="line">    &#125; <span class="keyword">while</span> (carry); <span class="comment">//判断是否有进位。如无，则表示没有可以加的值</span></span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 迭代2</span></span><br><span class="line"><span class="comment">// 还可以修改为以下代码</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> sum=a; </span><br><span class="line">    <span class="keyword">int</span> carry=b;</span><br><span class="line">    <span class="keyword">while</span> (carry)&#123;</span><br><span class="line">        <span class="keyword">int</span> temp=sum;</span><br><span class="line">        sum=temp^carry; <span class="comment">//a+b</span></span><br><span class="line">        carry=(temp&amp;carry)&lt;&lt;<span class="number">1</span>; <span class="comment">//进1位</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//递归</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(b==<span class="number">0</span>) <span class="keyword">return</span> a;</span><br><span class="line">    <span class="keyword">int</span> carry=(a&amp;b)&lt;&lt;<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> sum=a^b;</span><br><span class="line">    <span class="comment">// 将a+b转化为sum+carry</span></span><br><span class="line">    add(sum,carry);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="减法运算"><a href="#减法运算" class="headerlink" title="减法运算"></a>减法运算</h2><p>由于计算机只会进行加法运算，那么减法就可以转变为加法运算，这涉及到计算机的原码反码和补码知识了。这里简单提下</p>
+<h2 id="减法运算"><a class="markdownIt-Anchor" href="#减法运算"></a> 减法运算</h2>
+<p>由于计算机只会进行加法运算，那么减法就可以转变为加法运算，这涉及到计算机的原码反码和补码知识了。这里简单提下</p>
 <ul>
 <li>正数的 <strong>原码=反码=补码</strong></li>
-<li>负数的 原码=正数的原码且最高位置为1。<br>如32位-3原码可表示为 10000000000000000000000000000011</li>
-<li>负数的反码为其原码的最高位1不变，其余位取反(~)<br>如32位-3反码可表示为 11111111111111111111111111111100</li>
-<li>负数的补码为其反码+1<br>如32位-3补码可表示为 11111111111111111111111111111101</li>
+<li>负数的 原码=正数的原码且最高位置为1。<br>
+如32位-3原码可表示为 10000000000000000000000000000011</li>
+<li>负数的反码为其原码的最高位1不变，其余位取反(~)<br>
+如32位-3反码可表示为 11111111111111111111111111111100</li>
+<li>负数的补码为其反码+1<br>
+如32位-3补码可表示为 11111111111111111111111111111101</li>
 </ul>
 <p><strong>目前补码普遍是计算机内部数值的表示方式，它很好的解决了 +0 和 -0的问题</strong></p>
-<p>因此减法运算就变得十分简单的<br>代码如下</p>
+<p>因此减法运算就变得十分简单的<br>
+代码如下</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// a - b = a + (-b) = a + (~b + 1 )</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">subtract</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> negative=add(~b,<span class="number">1</span>); <span class="comment">// ~b + 1</span></span><br><span class="line">    <span class="keyword">return</span> add(a,negative); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>负数和正数转换(设x&gt;0)：</p>
 <blockquote>
-<p>-x=(~x+1)  如 -10=(~10+1)<br>x=~(-x-1)  如 10=~(-10-1)<br>x=~(-x)+1 如 10=~(-10)+1</p>
+<p>-x=(~x+1)  如 -10=(~10+1)<br>
+x=~(-x-1)  如 10=~(-10-1)<br>
+x=~(-x)+1 如 10=~(-10)+1</p>
 </blockquote>
-<h2 id="乘法运算"><a href="#乘法运算" class="headerlink" title="乘法运算"></a>乘法运算</h2><p>其实乘法也就是多个加法的累积求和，在我们小学时，25×5应该是这样计算的</p>
+<h2 id="乘法运算"><a class="markdownIt-Anchor" href="#乘法运算"></a> 乘法运算</h2>
+<p>其实乘法也就是多个加法的累积求和，在我们小学时，25×5应该是这样计算的</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">    2 5</span><br><span class="line"> ×  0 5</span><br><span class="line"> ————————</span><br><span class="line">  1 2 5</span><br><span class="line">+ 0 0</span><br><span class="line"> ————————</span><br><span class="line">  1 2 5</span><br></pre></td></tr></table></figure>
-
 <p>二进制也可以这样计算，不过就是满2进1。这里还是以25×5=125为例</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">       0 1 1 0 0 1   = 25</span><br><span class="line">     ×       1 0 1   = 5</span><br><span class="line">————————————————————</span><br><span class="line">       0 1 1 0 0 1   = 25</span><br><span class="line">+    0 0 0 0 0 0     = 0</span><br><span class="line">+  0 1 1 0 0 1       = 25&lt;&lt;2 = 25*2^2=120</span><br><span class="line">——————————————————— </span><br><span class="line">   0 1 1 1 1 1 0 1   = 125 = 25+120</span><br></pre></td></tr></table></figure>
-
-<p>将乘法分解为加法即可实现位运算，大致思路如下，<br>存在一个函数 <code>int multiply(int a,int b);</code><br>1.若b&lt;0，则对b求负化为<strong>正数</strong>，同时设置一个标识neagtive_mask记录该b是负数<br>2.对除数b不断右移b&gt;&gt;=1并且取得b最低位的值(0或1)，直到b=0<br>3.若为1，则add操作得sum<br>4.a不断左移1位 a&lt;&lt;=1<br>5.结尾判断neagtive_mask来设置sum的正负</p>
-<p>注意，除数如果为负数，假设为 11111111111111111111111111111011 (-5)，那么其右移得不到b=0，至于被除数可以小于0<br>具体代码如下</p>
+<p>将乘法分解为加法即可实现位运算，大致思路如下，<br>
+存在一个函数 <code>int multiply(int a,int b);</code><br>
+1.若b&lt;0，则对b求负化为<strong>正数</strong>，同时设置一个标识neagtive_mask记录该b是负数<br>
+2.对除数b不断右移b&gt;&gt;=1并且取得b最低位的值(0或1)，直到b=0<br>
+3.若为1，则add操作得sum<br>
+4.a不断左移1位 a&lt;&lt;=1<br>
+5.结尾判断neagtive_mask来设置sum的正负</p>
+<p>注意，除数如果为负数，假设为 11111111111111111111111111111011 (-5)，那么其右移得不到b=0，至于被除数可以小于0<br>
+具体代码如下</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">multiply</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b)</span></span>&#123;</span><br><span class="line">    <span class="comment">// 判断正负</span></span><br><span class="line">    <span class="keyword">bool</span> neagtive_mask=(b&lt;<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span>(b&lt;<span class="number">0</span>)&#123;<span class="number">2</span></span><br><span class="line">        b=~(b<span class="number">-1</span>); <span class="comment">// 化为正数: -x=(~x+1) &lt;-&gt; x=-(-x-1) (x&gt;0) </span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> sum=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (b) </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(b&amp;<span class="number">0x1</span>)&#123; <span class="comment">//取最低位，最低位为1，求和</span></span><br><span class="line">            sum=add(sum,a); <span class="comment">//累加</span></span><br><span class="line">        &#125;</span><br><span class="line">        b&gt;&gt;=<span class="number">1</span>; <span class="comment">// 除数右移将最低位溢出</span></span><br><span class="line">        a&lt;&lt;=<span class="number">1</span>; <span class="comment">// 被除数左移</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(neagtive_mask)&#123;</span><br><span class="line">        sum=~(sum<span class="number">-1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="除法运算"><a href="#除法运算" class="headerlink" title="除法运算"></a>除法运算</h2><p>除法就相对来说复杂了，不过除法类似减法，不断地减去除数得到商，最后剩下余数<br>这里还是以小学数学除法为例子 37÷3=12…1</p>
+<h2 id="除法运算"><a class="markdownIt-Anchor" href="#除法运算"></a> 除法运算</h2>
+<p>除法就相对来说复杂了，不过除法类似减法，不断地减去除数得到商，最后剩下余数<br>
+这里还是以小学数学除法为例子 37÷3=12…1</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">     <span class="number">12</span> </span><br><span class="line">  -----</span><br><span class="line"><span class="number">3</span> | <span class="number">37</span></span><br><span class="line">  - <span class="number">3</span></span><br><span class="line">   ----	</span><br><span class="line">      <span class="number">7</span></span><br><span class="line">    - <span class="number">6</span>   </span><br><span class="line">    ---</span><br><span class="line">      <span class="number">1</span></span><br></pre></td></tr></table></figure>
-
 <p>其中这操作还可以转换为</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">步骤<span class="number">1</span></span><br><span class="line">     <span class="number">1</span></span><br><span class="line">   -----</span><br><span class="line"><span class="number">30</span> | <span class="number">37</span>    </span><br><span class="line">   - <span class="number">30</span></span><br><span class="line">    ----	</span><br><span class="line">	  <span class="number">7</span>  </span><br><span class="line">步骤<span class="number">2</span></span><br><span class="line">    <span class="number">2</span></span><br><span class="line">   ----</span><br><span class="line"> <span class="number">3</span>| <span class="number">7</span>   </span><br><span class="line">   <span class="number">-6</span></span><br><span class="line">    ---	</span><br><span class="line">    <span class="number">1</span></span><br><span class="line">  </span><br><span class="line">商: <span class="number">1</span>*<span class="number">10</span>^<span class="number">1</span> + <span class="number">2</span>*<span class="number">10</span>^<span class="number">0</span> = <span class="number">10</span>+<span class="number">2</span>=<span class="number">12</span></span><br><span class="line">最后余下<span class="number">1</span></span><br></pre></td></tr></table></figure>
-
-<p>发现了什么吗？ </p>
+<p>发现了什么吗？</p>
 <p>现在我们把上面十进制换成二进制</p>
 <blockquote>
-<p>37: 100101<br>3:       0011<br>7:       1101</p>
+<p>37: 100101<br>
+3:       0011<br>
+7:       1101</p>
 </blockquote>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">步骤<span class="number">1</span></span><br><span class="line">         <span class="number">1</span></span><br><span class="line">      --------</span><br><span class="line"> <span class="number">11000</span>|	<span class="number">100101</span> -&gt;a=<span class="number">37</span>  </span><br><span class="line">       - <span class="number">11000</span> </span><br><span class="line">    	-------	</span><br><span class="line">	      <span class="number">1101</span> -&gt;<span class="number">7</span></span><br><span class="line">步骤<span class="number">2</span></span><br><span class="line">       <span class="number">1</span></span><br><span class="line">    ------</span><br><span class="line"><span class="number">1100</span>| <span class="number">1101</span>  -&gt;a=<span class="number">7</span></span><br><span class="line">   -  <span class="number">1100</span> </span><br><span class="line">    ------	</span><br><span class="line">        <span class="number">1</span></span><br><span class="line">步骤<span class="number">3</span></span><br><span class="line">         <span class="number">0</span></span><br><span class="line">    ------</span><br><span class="line"> <span class="number">110</span>|   <span class="number">1</span> </span><br><span class="line">   -    <span class="number">0</span> </span><br><span class="line">    ------	</span><br><span class="line">        <span class="number">1</span></span><br><span class="line">商: <span class="number">1</span>*<span class="number">2</span>^<span class="number">3</span> + <span class="number">1</span>*<span class="number">2</span>^<span class="number">2</span> + <span class="number">0</span> </span><br><span class="line">  = <span class="number">1</span>&lt;&lt;<span class="number">3</span> + <span class="number">1</span>&lt;&lt;<span class="number">2</span> + <span class="number">0</span></span><br><span class="line">  = <span class="number">8</span>+<span class="number">4</span>+<span class="number">0</span>=<span class="number">12</span></span><br><span class="line">最后余下<span class="number">1</span></span><br></pre></td></tr></table></figure>
-
-<p>在上面例子中，除数3<strong>左移3位</strong>变为 11000，接着除数3<strong>左移2位</strong>变为 1100，最后<strong>左移1位</strong>变为 110。<br>此时发现 <strong>被除数1</strong> 小于 <strong>除数110</strong>，因此商为0（C++语言中除法运算导致返回一个<strong>整数</strong>）。<br>因此如果发现被除数小于除数，那么直接返回0即可。</p>
-<p>于是要先找到除数应该左移的位数，且使得除数是&lt;=除数<br>然后利用减法 :a=subtract(a,b&lt;&lt;nMove)</p>
+<p>在上面例子中，除数3<strong>左移3位</strong>变为 11000，接着除数3<strong>左移2位</strong>变为 1100，最后<strong>左移1位</strong>变为 110。<br>
+此时发现 <strong>被除数1</strong> 小于 <strong>除数110</strong>，因此商为0（C++语言中除法运算导致返回一个<strong>整数</strong>）。<br>
+因此如果发现被除数小于除数，那么直接返回0即可。</p>
+<p>于是要先找到除数应该左移的位数，且使得除数是&lt;=除数<br>
+然后利用减法 :a=subtract(a,b&lt;&lt;nMove)</p>
 <p>利用加法 :当前累加值r=add(前一个值累加值r,1&lt;&lt;nMove)</p>
 <p>代码如下</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">divide</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> nMove=<span class="number">0</span>; </span><br><span class="line">    <span class="keyword">bool</span> negative_mask=<span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">if</span>(a&lt;<span class="number">0</span>)&#123;</span><br><span class="line">        a=~(a<span class="number">-1</span>); <span class="comment">// 化正</span></span><br><span class="line">        negative_mask=<span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(b&lt;<span class="number">0</span>)&#123;</span><br><span class="line">        b=~(b<span class="number">-1</span>); <span class="comment">// 化正</span></span><br><span class="line">        <span class="comment">// 同号得正，异号的负</span></span><br><span class="line">        negative_mask=negative_mask==<span class="literal">false</span>?<span class="literal">true</span>:<span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(a&lt;b)&#123;<span class="keyword">return</span> <span class="number">0</span>;&#125;</span><br><span class="line">    <span class="comment">// 找到除数应该左移的位数，且使得除数是&lt;=除数</span></span><br><span class="line">    <span class="keyword">for</span> ( nMove = <span class="number">0</span>; nMove&lt;<span class="number">32</span>;nMove++)&#123;</span><br><span class="line">        <span class="keyword">if</span>((b&lt;&lt;nMove)&gt;=a)&#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> r=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = nMove; i &gt;=<span class="number">0</span>; i--)&#123;</span><br><span class="line">        <span class="keyword">int</span> t=b&lt;&lt;i;</span><br><span class="line">        <span class="keyword">if</span>(a&lt;t) <span class="comment">// 被除数小于除数</span></span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        a=subtract(a,t);</span><br><span class="line">        r=add(r,<span class="number">1</span>&lt;&lt;i);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(negative_mask)&#123;</span><br><span class="line">        r=~(r<span class="number">-1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> r;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="输出二进制"><a href="#输出二进制" class="headerlink" title="输出二进制"></a>输出二进制</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">printBinary</span><span class="params">(<span class="keyword">int</span> number)</span></span>&#123;</span><br><span class="line">	<span class="keyword">char</span> strBinary[<span class="number">33</span>]&#123; <span class="number">0</span> &#125;;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> bitmask = <span class="number">1</span> &lt;&lt; <span class="number">31</span>;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">32</span>; i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">char</span> k = ((number &amp; bitmask)&gt;&gt;<span class="number">31</span>)?<span class="string">'1'</span>:<span class="string">'0'</span>;</span><br><span class="line">		strBinary[i] = k;</span><br><span class="line">		number &lt;&lt;= <span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; strBinary &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="简单数据交换"><a href="#简单数据交换" class="headerlink" title="简单数据交换"></a>简单数据交换</h2><p>利用xor位异或来实现值交换</p>
+<h2 id="输出二进制"><a class="markdownIt-Anchor" href="#输出二进制"></a> 输出二进制</h2>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">printBinary</span><span class="params">(<span class="keyword">int</span> number)</span></span>&#123;</span><br><span class="line">	<span class="keyword">char</span> strBinary[<span class="number">33</span>]&#123; <span class="number">0</span> &#125;;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> bitmask = <span class="number">1</span> &lt;&lt; <span class="number">31</span>;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">32</span>; i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">char</span> k = ((number &amp; bitmask)&gt;&gt;<span class="number">31</span>)?<span class="string">'1'</span>:<span class="string">'0'</span>;</span><br><span class="line">		strBinary[i] = k;</span><br><span class="line">		number &lt;&lt;= <span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; strBinary &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="简单数据交换"><a class="markdownIt-Anchor" href="#简单数据交换"></a> 简单数据交换</h2>
+<p>利用xor位异或来实现值交换</p>
 <p>原理:</p>
 <blockquote>
-<p>a ^ a = 0<br>a ^ 0 = a<br>0 ^ a = a </p>
+<p>a ^ a = 0<br>
+a ^ 0 = a<br>
+0 ^ a = a</p>
 </blockquote>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a=<span class="number">10</span>,b=<span class="number">20</span>;</span><br><span class="line">a=a^b; <span class="comment">// a=a^b;</span></span><br><span class="line">b=a^b; <span class="comment">// b=(a^b)^b=a^(b^b)=a^0=a;</span></span><br><span class="line">a=a^b; <span class="comment">// a=(a^b)^a=(a^a)^b=0^b=b;</span></span><br></pre></td></tr></table></figure>
-
 <p>bye~</p>
 
       
@@ -798,7 +832,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -904,9 +938,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -974,7 +1006,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#加法运算"><span class="nav-number">1.</span> <span class="nav-text">加法运算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#减法运算"><span class="nav-number">2.</span> <span class="nav-text">减法运算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#乘法运算"><span class="nav-number">3.</span> <span class="nav-text">乘法运算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#除法运算"><span class="nav-number">4.</span> <span class="nav-text">除法运算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#输出二进制"><span class="nav-number">5.</span> <span class="nav-text">输出二进制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简单数据交换"><span class="nav-number">6.</span> <span class="nav-text">简单数据交换</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#加法运算"><span class="nav-number">1.</span> <span class="nav-text"> 加法运算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#减法运算"><span class="nav-number">2.</span> <span class="nav-text"> 减法运算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#乘法运算"><span class="nav-number">3.</span> <span class="nav-text"> 乘法运算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#除法运算"><span class="nav-number">4.</span> <span class="nav-text"> 除法运算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#输出二进制"><span class="nav-number">5.</span> <span class="nav-text"> 输出二进制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简单数据交换"><span class="nav-number">6.</span> <span class="nav-text"> 简单数据交换</span></a></li></ol></div>
             
 
           </div>
@@ -1007,7 +1039,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1114,10 +1146,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

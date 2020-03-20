@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -206,7 +206,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -339,6 +339,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -375,9 +378,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -532,53 +532,102 @@
       
         <p>前段时间在学习Linux shell编程时,发现了几个比较好玩的工具,这里给大家分享一下…(Just for fun!)</p>
 <a id="more"></a>
-
 <p>以下三个关于创建窗口部件的包,一般应用在没有窗口界面的脚本(Script)中</p>
-<h3 id="1-Dialog"><a href="#1-Dialog" class="headerlink" title="1.Dialog"></a>1.Dialog</h3><p>安装方法: <code>apt-get install dialog</code></p>
+<h3 id="1dialog"><a class="markdownIt-Anchor" href="#1dialog"></a> 1.Dialog</h3>
+<p>安装方法: <code>apt-get install dialog</code></p>
 <p>help:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">cdialog (ComeOn Dialog!) version 1.3-20171209</span><br><span class="line">Copyright 2000-2016,2017 Thomas E. Dickey</span><br><span class="line">This is free software; see the source for copying conditions.  There is NO</span><br><span class="line">warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span><br><span class="line">* Display dialog boxes from shell scripts *</span><br><span class="line">Usage: dialog &lt;options&gt; &#123; --and-widget &lt;options&gt; &#125;</span><br><span class="line">where options are &quot;common&quot; options, followed by &quot;box&quot; options</span><br><span class="line">Special options:</span><br><span class="line">  [--create-rc &quot;file&quot;]</span><br><span class="line">Common options:</span><br><span class="line">  [--ascii-lines] [--aspect &lt;ratio&gt;] [--backtitle &lt;backtitle&gt;] [--beep]</span><br><span class="line">  [--beep-after] [--begin &lt;y&gt; &lt;x&gt;] [--cancel-label &lt;str&gt;] [--clear]</span><br><span class="line">  [--colors] [--column-separator &lt;str&gt;] [--cr-wrap] [--date-format &lt;str&gt;]</span><br><span class="line">  [--default-button &lt;str&gt;] [--default-item &lt;str&gt;] [--defaultno]</span><br><span class="line">  [--exit-label &lt;str&gt;] [--extra-button] [--extra-label &lt;str&gt;]</span><br><span class="line">  [--help-button] [--help-label &lt;str&gt;] [--help-status] [--help-tags]</span><br><span class="line">  [--hfile &lt;str&gt;] [--hline &lt;str&gt;] [--ignore] [--input-fd &lt;fd&gt;]</span><br><span class="line">  [--insecure] [--item-help] [--keep-tite] [--keep-window] [--last-key]</span><br><span class="line">  [--max-input &lt;n&gt;] [--no-cancel] [--no-collapse] [--no-cr-wrap]</span><br><span class="line">  [--no-items] [--no-kill] [--no-label &lt;str&gt;] [--no-lines] [--no-mouse]</span><br><span class="line">  [--no-nl-expand] [--no-ok] [--no-shadow] [--no-tags] [--nook]</span><br><span class="line">  [--ok-label &lt;str&gt;] [--output-fd &lt;fd&gt;] [--output-separator &lt;str&gt;]</span><br><span class="line">  [--print-maxsize] [--print-size] [--print-version] [--quoted]</span><br><span class="line">  [--reorder] [--scrollbar] [--separate-output] [--separate-widget &lt;str&gt;]</span><br><span class="line">  [--shadow] [--single-quoted] [--size-err] [--sleep &lt;secs&gt;] [--stderr]</span><br><span class="line">  [--stdout] [--tab-correct] [--tab-len &lt;n&gt;] [--time-format &lt;str&gt;]</span><br><span class="line">  [--timeout &lt;secs&gt;] [--title &lt;title&gt;] [--trace &lt;file&gt;] [--trim]</span><br><span class="line">  [--version] [--visit-items] [--week-start &lt;str&gt;] [--yes-label &lt;str&gt;]</span><br><span class="line">Box options:</span><br><span class="line">  --buildlist    &lt;text&gt; &lt;height&gt; &lt;width&gt; &lt;list-height&gt; &lt;tag1&gt; &lt;item1&gt; &lt;status1&gt;...</span><br><span class="line">  --calendar     &lt;text&gt; &lt;height&gt; &lt;width&gt; &lt;day&gt; &lt;month&gt; &lt;year&gt;</span><br><span class="line">  --checklist    &lt;text&gt; &lt;height&gt; &lt;width&gt; &lt;list height&gt; &lt;tag1&gt; &lt;item1&gt; &lt;status1&gt;...</span><br><span class="line">  --dselect      &lt;directory&gt; &lt;height&gt; &lt;width&gt;</span><br><span class="line">  --editbox      &lt;file&gt; &lt;height&gt; &lt;width&gt;</span><br><span class="line">  --form         &lt;text&gt; &lt;height&gt; &lt;width&gt; &lt;form height&gt; &lt;label1&gt; &lt;l_y1&gt; &lt;l_x1&gt; &lt;item1&gt; &lt;i_y1&gt; &lt;i_x1&gt; &lt;flen1&gt; &lt;ilen1&gt;...</span><br><span class="line">  --fselect      &lt;filepath&gt; &lt;height&gt; &lt;width&gt;</span><br><span class="line">  --gauge        &lt;text&gt; &lt;height&gt; &lt;width&gt; [&lt;percent&gt;]</span><br><span class="line">  --infobox      &lt;text&gt; &lt;height&gt; &lt;width&gt;</span><br><span class="line">  --inputbox     &lt;text&gt; &lt;height&gt; &lt;width&gt; [&lt;init&gt;]</span><br><span class="line">  --inputmenu    &lt;text&gt; &lt;height&gt; &lt;width&gt; &lt;menu height&gt; &lt;tag1&gt; &lt;item1&gt;...</span><br><span class="line">  --menu         &lt;text&gt; &lt;height&gt; &lt;width&gt; &lt;menu height&gt; &lt;tag1&gt; &lt;item1&gt;...</span><br><span class="line">  --mixedform    &lt;text&gt; &lt;height&gt; &lt;width&gt; &lt;form height&gt; &lt;label1&gt; &lt;l_y1&gt; &lt;l_x1&gt; &lt;item1&gt; &lt;i_y1&gt; &lt;i_x1&gt; &lt;flen1&gt; &lt;ilen1&gt; &lt;itype&gt;...</span><br><span class="line">  --mixedgauge   &lt;text&gt; &lt;height&gt; &lt;width&gt; &lt;percent&gt; &lt;tag1&gt; &lt;item1&gt;...</span><br><span class="line">  --msgbox       &lt;text&gt; &lt;height&gt; &lt;width&gt;</span><br><span class="line">  --passwordbox  &lt;text&gt; &lt;height&gt; &lt;width&gt; [&lt;init&gt;]</span><br><span class="line">  --passwordform &lt;text&gt; &lt;height&gt; &lt;width&gt; &lt;form height&gt; &lt;label1&gt; &lt;l_y1&gt; &lt;l_x1&gt; &lt;item1&gt; &lt;i_y1&gt; &lt;i_x1&gt; &lt;flen1&gt; &lt;ilen1&gt;...</span><br><span class="line">  --pause        &lt;text&gt; &lt;height&gt; &lt;width&gt; &lt;seconds&gt;</span><br><span class="line">  --prgbox       &lt;text&gt; &lt;command&gt; &lt;height&gt; &lt;width&gt;</span><br><span class="line">  --programbox   &lt;text&gt; &lt;height&gt; &lt;width&gt;</span><br><span class="line">  --progressbox  &lt;text&gt; &lt;height&gt; &lt;width&gt;</span><br><span class="line">  --radiolist    &lt;text&gt; &lt;height&gt; &lt;width&gt; &lt;list height&gt; &lt;tag1&gt; &lt;item1&gt; &lt;status1&gt;...</span><br><span class="line">  --rangebox     &lt;text&gt; &lt;height&gt; &lt;width&gt; &lt;min-value&gt; &lt;max-value&gt; &lt;default-value&gt;</span><br><span class="line">  --tailbox      &lt;file&gt; &lt;height&gt; &lt;width&gt;</span><br><span class="line">  --tailboxbg    &lt;file&gt; &lt;height&gt; &lt;width&gt;</span><br><span class="line">  --textbox      &lt;file&gt; &lt;height&gt; &lt;width&gt;</span><br><span class="line">  --timebox      &lt;text&gt; &lt;height&gt; &lt;width&gt; &lt;hour&gt; &lt;minute&gt; &lt;second&gt;</span><br><span class="line">  --treeview     &lt;text&gt; &lt;height&gt; &lt;width&gt; &lt;list-height&gt; &lt;tag1&gt; &lt;item1&gt; &lt;status1&gt; &lt;depth1&gt;...</span><br><span class="line">  --yesno        &lt;text&gt; &lt;height&gt; &lt;width&gt;</span><br><span class="line">Auto-size with height and width = 0. Maximize with height and width = -1.</span><br><span class="line">Global-auto-size if also menu_height/list_height = 0.</span><br></pre></td></tr></table></figure>
-
-<h4 id="dialog-命令选项-option"><a href="#dialog-命令选项-option" class="headerlink" title="dialog 命令选项(option)"></a>dialog 命令选项(option)</h4><blockquote>
-<p><strong>–add-widget</strong> 继续下个对话框,直到按下Esc或Cancel按钮<br><strong>–aspect ratio</strong> 指定窗口宽度和高度的宽高比<br><strong>–backtitle title</strong> 指定显示在屏幕顶部背景上的标题<br><strong>–begin x y</strong> 指定窗口左上角的起始位置<br><strong>–cancel-label label</strong> 指定Cancel按钮的替代标签<br><strong>–clear</strong> 用默认的对话背景色来清空屏幕内容<br><strong>–colors</strong> 在对话文本中嵌入ANSI色彩编码<br><strong>–cr-wrap</strong> 在对话文本中允许使用换行符并强制换行<br><strong>–create-rc file</strong> 将示例配置文件的内容复制到指定的file文件中 1<br><strong>–defaultno</strong> 将yes/no对话框的默认答案设为No<br><strong>–default-item string</strong> 设定复选列表、表单或菜单对话中的默认项<br><strong>–exit-label label</strong> 指定Exit按钮的替代标签<br><strong>–extra-button</strong> 在OK按钮和Cancel按钮之间显示一个额外按钮<br><strong>–extra-label label</strong> 指定额外按钮的替代标签<br><strong>–help</strong> 显示dialog命令的帮助信息<br><strong>–help-button</strong> 在OK按钮和Cancel按钮后显示一个Help按钮<br><strong>–help-label label</strong> 指定Help按钮的替代标签<br><strong>–help-status</strong> 当选定Help按钮后,在帮助信息后写入多选列表、单选列表或表单信息<br><strong>–ignore</strong> 忽略dialog不能识别的选项<br><strong>–input-fd fd</strong> 指定 STDIN 之外的另一个文件描述符<br><strong>–insecure</strong> 在password部件中键入内容时显示星号<br><strong>–item-help</strong> 为多选列表、单选列表或菜单中的每个标号在屏幕的底部添加一个帮助栏<br><strong>–keep-window</strong> 不要清除屏幕上显示过的部件<br><strong>–max-input size</strong> 指定输入的最大字符串长度。默认为2048<br><strong>–nocancel</strong> 隐藏Cancel按钮<br><strong>–no-collapse</strong> 不要将对话文本中的制表符转换成空格<br><strong>–no-kill</strong> 将tailboxbg对话放到后台,并禁止该进程的 SIGHUP 信号<br><strong>–no-label label</strong> 为No按钮指定替代标签<br><strong>–no-shadow</strong> 不要显示对话窗口的阴影效果<br><strong>–ok-label label</strong> 指定OK按钮的替代标签</p>
+<h4 id="dialog-命令选项option"><a class="markdownIt-Anchor" href="#dialog-命令选项option"></a> dialog 命令选项(option)</h4>
+<blockquote>
+<p><strong>–add-widget</strong> 继续下个对话框,直到按下Esc或Cancel按钮<br>
+<strong>–aspect ratio</strong> 指定窗口宽度和高度的宽高比<br>
+<strong>–backtitle title</strong> 指定显示在屏幕顶部背景上的标题<br>
+<strong>–begin x y</strong> 指定窗口左上角的起始位置<br>
+<strong>–cancel-label label</strong> 指定Cancel按钮的替代标签<br>
+<strong>–clear</strong> 用默认的对话背景色来清空屏幕内容<br>
+<strong>–colors</strong> 在对话文本中嵌入ANSI色彩编码<br>
+<strong>–cr-wrap</strong> 在对话文本中允许使用换行符并强制换行<br>
+<strong>–create-rc file</strong> 将示例配置文件的内容复制到指定的file文件中 1<br>
+<strong>–defaultno</strong> 将yes/no对话框的默认答案设为No<br>
+<strong>–default-item string</strong> 设定复选列表、表单或菜单对话中的默认项<br>
+<strong>–exit-label label</strong> 指定Exit按钮的替代标签<br>
+<strong>–extra-button</strong> 在OK按钮和Cancel按钮之间显示一个额外按钮<br>
+<strong>–extra-label label</strong> 指定额外按钮的替代标签<br>
+<strong>–help</strong> 显示dialog命令的帮助信息<br>
+<strong>–help-button</strong> 在OK按钮和Cancel按钮后显示一个Help按钮<br>
+<strong>–help-label label</strong> 指定Help按钮的替代标签<br>
+<strong>–help-status</strong> 当选定Help按钮后,在帮助信息后写入多选列表、单选列表或表单信息<br>
+<strong>–ignore</strong> 忽略dialog不能识别的选项<br>
+<strong>–input-fd fd</strong> 指定 STDIN 之外的另一个文件描述符<br>
+<strong>–insecure</strong> 在password部件中键入内容时显示星号<br>
+<strong>–item-help</strong> 为多选列表、单选列表或菜单中的每个标号在屏幕的底部添加一个帮助栏<br>
+<strong>–keep-window</strong> 不要清除屏幕上显示过的部件<br>
+<strong>–max-input size</strong> 指定输入的最大字符串长度。默认为2048<br>
+<strong>–nocancel</strong> 隐藏Cancel按钮<br>
+<strong>–no-collapse</strong> 不要将对话文本中的制表符转换成空格<br>
+<strong>–no-kill</strong> 将tailboxbg对话放到后台,并禁止该进程的 SIGHUP 信号<br>
+<strong>–no-label label</strong> 为No按钮指定替代标签<br>
+<strong>–no-shadow</strong> 不要显示对话窗口的阴影效果<br>
+<strong>–ok-label label</strong> 指定OK按钮的替代标签</p>
 </blockquote>
-<p><strong>注意: dialog 默认是重定向到标准错误(stderr).</strong><br>不过可以改变输出到标准输出 <strong>–stdout</strong> .这样用脚本也就能很快获取返回的文本了</p>
-<h4 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h4><blockquote>
+<p><strong>注意: dialog 默认是重定向到标准错误(stderr).</strong><br>
+不过可以改变输出到标准输出 <strong>–stdout</strong> .这样用脚本也就能很快获取返回的文本了</p>
+<h4 id="例子"><a class="markdownIt-Anchor" href="#例子"></a> 例子</h4>
+<blockquote>
 <p>$ dialog –timeout 5 <strong>–stdout</strong> –menu ‘Choose a job: ‘ 30 10 25 ‘Programmer’ 1 ‘Teacher’ 2 ‘Worker’ 3</p>
 </blockquote>
-<p>example.sh</p>
+<p><a href="http://example.sh" target="_blank" rel="noopener">example.sh</a></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">name=$(dialog --max-input 5 --timeout 5 --inputbox 'Please enter your name: ' 10 10 'root' --stdout)</span><br><span class="line">job=$(dialog  --timeout 5 --stdout --menu  'Choose a job: ' 30 10 25 'Programmer' 1 'Teacher' 2 'Worker' 3)</span><br><span class="line">clear</span><br><span class="line">if [ -n "$name" ];then</span><br><span class="line">    echo "Your name is: [$name]"</span><br><span class="line">else</span><br><span class="line"><span class="meta">	#</span><span class="bash"><span class="keyword">do</span> something...</span></span><br><span class="line">fi</span><br><span class="line">echo -e "You are a :"$job"\t:)"</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-whiptail"><a href="#2-whiptail" class="headerlink" title="2.whiptail"></a>2.whiptail</h3><p>对比dialog,这个工具参数就少了一点,功能也就少了点,但基本的还是<br>要有的</p>
+<h3 id="2whiptail"><a class="markdownIt-Anchor" href="#2whiptail"></a> 2.whiptail</h3>
+<p>对比dialog,这个工具参数就少了一点,功能也就少了点,但基本的还是<br>
+要有的</p>
 <blockquote>
 <p>There are visual differences which are not addressed by command-line options:</p>
-<p><strong>dialog</strong> centers lists within the window. whiptail typically puts lists against<br>the left margin.</p>
-<p><strong>whiptail</strong> uses angle brackets (“&lt;” and “&gt;”) for marking buttons. dialog uses<br>square brackets.</p>
-<p><strong>whiptail</strong> marks the limits of subtitles with vertical bars. dialog does not<br>mark the limits.</p>
-<p><strong>whiptail</strong> attempts to mark the top/bottom cells of a scrollbar with up/down ar‐<br>rows. When it cannot do this, it fills those cells with the background color<br>of the scrollbar and confusing the user. dialog uses the entire scrollbar<br>space, thereby getting better resolution.</p>
+<p><strong>dialog</strong> centers lists within the window. whiptail typically puts lists against<br>
+the left margin.</p>
+<p><strong>whiptail</strong> uses angle brackets (“&lt;” and “&gt;”) for marking buttons. dialog uses<br>
+square brackets.</p>
+<p><strong>whiptail</strong> marks the limits of subtitles with vertical bars. dialog does not<br>
+mark the limits.</p>
+<p><strong>whiptail</strong> attempts to mark the top/bottom cells of a scrollbar with up/down ar‐<br>
+rows. When it cannot do this, it fills those cells with the background color<br>
+of the scrollbar and confusing the user. dialog uses the entire scrollbar<br>
+space, thereby getting better resolution.</p>
 </blockquote>
-<h4 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h4><p><strong>Most whiptail scripts write tostandard error, but error messages may also be written there, depend‐ing on your script.</strong></p>
+<h4 id="注意"><a class="markdownIt-Anchor" href="#注意"></a> 注意</h4>
+<p><strong>Most whiptail scripts write tostandard error, but error messages may also be written there, depend‐ing on your script.</strong></p>
 <p>help</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">Box options: </span><br><span class="line">	--msgbox &lt;text&gt; &lt;height&gt; &lt;width&gt;</span><br><span class="line">	--yesno  &lt;text&gt; &lt;height&gt; &lt;width&gt;</span><br><span class="line">	--infobox &lt;text&gt; &lt;height&gt; &lt;width&gt;</span><br><span class="line">	--inputbox &lt;text&gt; &lt;height&gt; &lt;width&gt; [init] </span><br><span class="line">	--passwordbox &lt;text&gt; &lt;height&gt; &lt;width&gt; [init] </span><br><span class="line">	--textbox &lt;file&gt; &lt;height&gt; &lt;width&gt;</span><br><span class="line">	--menu &lt;text&gt; &lt;height&gt; &lt;width&gt; &lt;listheight&gt; [tag item] ...</span><br><span class="line">	--checklist &lt;text&gt; &lt;height&gt; &lt;width&gt; &lt;listheight&gt; [tag item status]...</span><br><span class="line">	--radiolist &lt;text&gt; &lt;height&gt; &lt;width&gt; &lt;listheight&gt; [tag item status]...</span><br><span class="line">	--gauge &lt;text&gt; &lt;height&gt; &lt;width&gt; &lt;percent&gt;</span><br><span class="line">Options: (depend on box-option)</span><br><span class="line">	--clear				clear screen on exit</span><br><span class="line">	--defaultno			default no button</span><br><span class="line">	--default-item &lt;string&gt;		set default string</span><br><span class="line">	--fb, --fullbuttons		use full buttons</span><br><span class="line">	--nocancel			no cancel button</span><br><span class="line">	--yes-button &lt;text&gt;		set text of yes button</span><br><span class="line">	--no-button &lt;text&gt;		set text of no button</span><br><span class="line">	--ok-button &lt;text&gt;		set text of ok button</span><br><span class="line">	--cancel-button &lt;text&gt;		set text of cancel button</span><br><span class="line">	--noitem			don&apos;t display items</span><br><span class="line">	--notags			don&apos;t display tags</span><br><span class="line">	--separate-output		output one line at a time</span><br><span class="line">	--output-fd &lt;fd&gt;		output to fd, not stdout</span><br><span class="line">	--title &lt;title&gt;			display title</span><br><span class="line">	--backtitle &lt;backtitle&gt;		display backtitle</span><br><span class="line">	--scrolltext			force vertical scrollbars</span><br><span class="line">	--topleft			put window in top-left corner</span><br><span class="line">	-h, --help			print this message</span><br><span class="line">	-v, --version			print version information</span><br></pre></td></tr></table></figure>
-
-<h4 id="例子-1"><a href="#例子-1" class="headerlink" title="例子"></a>例子</h4><blockquote>
-<p>$ whiptail –title ‘Message’ –msgbox ‘Hi man~’ 10 20 –ok-button ‘OK’<br>$ whiptail –title ‘Login’ –output-fd 1 –inputbox ‘Please enter username: ‘ 10 20 ‘root’</p>
+<h4 id="例子-2"><a class="markdownIt-Anchor" href="#例子-2"></a> 例子</h4>
+<blockquote>
+<p>$ whiptail –title ‘Message’ –msgbox ‘Hi man~’ 10 20 –ok-button ‘OK’<br>
+$ whiptail –title ‘Login’ –output-fd 1 –inputbox ‘Please enter username: ‘ 10 20 ‘root’</p>
 </blockquote>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">echo "" &gt; .tmp_username</span><br><span class="line">echo "" &gt; .tmp_passphras</span><br><span class="line">username=$(whiptail --title 'Login' --inputbox 'Please enter username: ' 10 20 'root' 1&gt;&amp;2 2&gt;.tmp_username)</span><br><span class="line">if [ "$?" -eq 0 ];then</span><br><span class="line">    username=$(cat .tmp_username)</span><br><span class="line">    if [[ -n $username  ]];then</span><br><span class="line">        echo "==&gt;"$username</span><br><span class="line">    else</span><br><span class="line">        echo 'Null Username!'</span><br><span class="line">    fi</span><br><span class="line">else</span><br><span class="line">    echo "ERROR=&gt; "$?</span><br><span class="line">    exit</span><br><span class="line">fi</span><br><span class="line">passphras=$(whiptail --title 'Login' --passwordbox 'Please enter password: ' 10 20 1&gt;&amp;2 2&gt;.tmp_passphras)</span><br><span class="line">if [ "$?" -eq 0 ];then</span><br><span class="line">    passphras=$(cat .tmp_passphras)</span><br><span class="line">    if [[ -n $passphras  ]];then</span><br><span class="line">        echo "==&gt;"$passphras</span><br><span class="line">    else</span><br><span class="line">        echo 'Null Passphras!'</span><br><span class="line">    fi</span><br><span class="line">else</span><br><span class="line">    echo "ERROR=&gt; "$?</span><br><span class="line">    exit</span><br><span class="line">fi</span><br><span class="line">rm .tmp_username</span><br><span class="line">rm .tmp_passphras</span><br></pre></td></tr></table></figure>
-
-<h3 id="3-Zenity"><a href="#3-Zenity" class="headerlink" title="3.Zenity"></a>3.Zenity</h3><p>适用于 GNOME环境 的图形化界面包</p>
+<h3 id="3zenity"><a class="markdownIt-Anchor" href="#3zenity"></a> 3.Zenity</h3>
+<p>适用于 GNOME环境 的图形化界面包</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">zenity --help</span><br><span class="line">用法：</span><br><span class="line">  zenity [OPTION…]</span><br><span class="line">帮助选项：</span><br><span class="line">  -h, --help                               显示帮助选项</span><br><span class="line">  --help-all                               显示全部帮助选项</span><br><span class="line">  --help-general                           显示常规选项</span><br><span class="line">  --help-calendar                          显示日历选项</span><br><span class="line">  --help-entry                             显示文字输入选项</span><br><span class="line">  --help-error                             显示错误选项</span><br><span class="line">  --help-info                              显示信息选项</span><br><span class="line">  --help-file-selection                    显示文件选择选项</span><br><span class="line">  --help-list                              显示列表选项</span><br><span class="line">  --help-notification                      显示通知图标选项</span><br><span class="line">  --help-progress                          显示进度选项</span><br><span class="line">  --help-question                          显示问题选项</span><br><span class="line">  --help-warning                           显示警告选项</span><br><span class="line">  --help-scale                             显示范围选项</span><br><span class="line">  --help-text-info                         显示文本信息选项</span><br><span class="line">  --help-color-selection                   显示颜色选择选项</span><br><span class="line">  --help-password                          显示口令对话框选项</span><br><span class="line">  --help-forms                             显示表单对话框选项</span><br><span class="line">  --help-misc                              显示杂类选项</span><br><span class="line">  --help-gtk                               显示 GTK+ 选项</span><br><span class="line">应用程序选项：</span><br><span class="line">  --calendar                               显示日历对话框</span><br><span class="line">  --entry                                  显示文本输入对话框</span><br><span class="line">  --error                                  显示错误对话框</span><br><span class="line">  --info                                   显示信息对话框</span><br><span class="line">  --file-selection                         显示文件选择对话框</span><br><span class="line">  --list                                   显示列表对话框</span><br><span class="line">  --notification                           显示通知</span><br><span class="line">  --progress                               显示进度指示对话框</span><br><span class="line">  --question                               显示问题对话框</span><br><span class="line">  --warning                                显示警告对话框</span><br><span class="line">  --scale                                  显示范围对话框</span><br><span class="line">  --text-info                              显示文本信息对话框</span><br><span class="line">  --color-selection                        显示颜色选择对话框</span><br><span class="line">  --password                               显示口令对话框</span><br><span class="line">  --forms                                  显示表单对话框</span><br><span class="line">  --display=DISPLAY                        X display to use</span><br></pre></td></tr></table></figure>
-
 <blockquote>
-<p>$ zenity –help-info<br>用法：<br>zenity [OPTION…]</p>
-<p>信息选项<br>–info 显示信息对话框<br>–text=文字 设置对话框文字<br>–icon-name=图标名 设置对话框图标<br>–no-wrap 不启用文本自动换行<br>–no-markup 不启用 pango 标记<br>–ellipsize 在对话框文本中启用简略显示。这可以修复带有长文本的窗口的尺寸过大。</p>
+<p>$ zenity –help-info<br>
+用法：<br>
+zenity [OPTION…]</p>
+<p>信息选项<br>
+–info 显示信息对话框<br>
+–text=文字 设置对话框文字<br>
+–icon-name=图标名 设置对话框图标<br>
+–no-wrap 不启用文本自动换行<br>
+–no-markup 不启用 pango 标记<br>
+–ellipsize 在对话框文本中启用简略显示。这可以修复带有长文本的窗口的尺寸过大。</p>
 </blockquote>
 <p>更多信息 man</p>
 <blockquote>
-<p>$ zenity –info –text=’Hello World’ –title=’Messge’ –width=30 –height=30 –timeout=3<br>$ find . -name ‘<em>’ | zenity –progress –pulsate<br>$ find . -name ‘</em>’ | zenity –list –title “Search Results” –text “Finding all header files..” –column “Files”</p>
+<p>$ zenity –info –text=’Hello World’ –title=’Messge’ –width=30 –height=30 –timeout=3<br>
+$ find . -name ‘<em>’ | zenity –progress –pulsate<br>
+$ find . -name ‘</em>’ | zenity –list –title “Search Results” –text “Finding all header files…” –column “Files”</p>
 </blockquote>
-<h3 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h3><p>现在，给出一个例子来实现MySQL数据库插入数据，用到了 <strong>dialog</strong></p>
+<h3 id="结尾"><a class="markdownIt-Anchor" href="#结尾"></a> 结尾</h3>
+<p>现在，给出一个例子来实现MySQL数据库插入数据，用到了 <strong>dialog</strong></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">exit_code=0</span><br><span class="line">is_reg_ok=0</span><br><span class="line">trap "echo;echo Have fun!;" EXIT</span><br><span class="line"><span class="meta">#</span><span class="bash"> get datetime</span></span><br><span class="line">get_datenow()&#123;</span><br><span class="line">    local now=$(date +'%Y-%m-%d %H:%M:%S')</span><br><span class="line">    echo $now</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#</span><span class="bash"> start MYSQL server</span></span><br><span class="line">start_MYSQL_server()&#123;</span><br><span class="line">    echo 'Starting MYSQL Server...'</span><br><span class="line">    service mysql start</span><br><span class="line">    echo 'MHSQL Started!'</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#</span><span class="bash"> showed user information when registered successfully</span></span><br><span class="line">show_user_info()&#123;</span><br><span class="line">    if [[ $is_reg_ok -eq 1 ]];then</span><br><span class="line">        echo</span><br><span class="line">        #shift</span><br><span class="line">        echo -e "UserName: [ \033[1;33m$1\033[0m ]"</span><br><span class="line">        echo -e "PassWord: [ \033[1;33m$2\033[0m ]"</span><br><span class="line">        echo -e "ID Name: [ \033[1;33m$3\033[0m ]"</span><br><span class="line">        echo -e "Register Date: [ \033[1;33m$4\033[0m ]"</span><br><span class="line">        echo</span><br><span class="line">    fi</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">###########################################</span></span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span><span class="bash">       this is a bash script that </span></span><br><span class="line"><span class="meta">#</span><span class="bash">       quickly inset user data to mysql server database</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">###########################################</span></span></span><br><span class="line">echo</span><br><span class="line">echo -e "Welcome to here ,you can register the account quickly...so let 's go!'"</span><br><span class="line">echo</span><br><span class="line">read -p 'Your username: ' -t 8 -r reg_user</span><br><span class="line">if [ -z $reg_user ];then echo;echo 'Empty!'; exit;fi</span><br><span class="line">read -p 'Your password: ' -t 8 -r reg_pass</span><br><span class="line">if [ -z $reg_pass ];then echo;echo 'Empty!'; exit;fi</span><br><span class="line">read -p 'Your password[confirm]: ' -s -t 8 -r reg_pass_confirm</span><br><span class="line">if [ -z $reg_pass_confirm ];then echo;echo 'Password not same!'; exit;fi</span><br><span class="line">echo</span><br><span class="line">read -p 'Your ID name: ' -t 8 -r reg_idname</span><br><span class="line">if [ -z $reg_idname ];then echo;echo 'Empty!'; exit;fi</span><br><span class="line">start_MYSQL_server</span><br><span class="line"><span class="meta">#</span><span class="bash"> here append a --stdout instead of default --stderr,so we can get the result....</span></span><br><span class="line">username=$(dialog --max-input 8 --timeout 8 --inputbox 'Please enter MYSQL username: ' 10 10 'root' --stdout)</span><br><span class="line">exit_code=$?</span><br><span class="line">password=$(dialog --max-input 15 --timeout 8 --passwordbox 'Please enter MYSQL password: ' 10 10 --stdout)</span><br><span class="line">clear</span><br><span class="line"><span class="meta">#</span><span class="bash"> check the username is empty</span></span><br><span class="line">if [ "$exit_code" -eq 0 ];then</span><br><span class="line">    if [ -z "$username" ] ;then</span><br><span class="line">        echo -e "\033[1;31mNot Empty Username!\033[0m"</span><br><span class="line">        exit</span><br><span class="line">    fi</span><br><span class="line">else</span><br><span class="line">    exit</span><br><span class="line">fi</span><br><span class="line">mysql_string="mysql -u$&#123;username&#125; -p$&#123;password&#125;" </span><br><span class="line">now_string=$(get_datenow)</span><br><span class="line"><span class="meta">#</span><span class="bash"> register ==&gt; insert data to mysql</span></span><br><span class="line"><span class="meta">$</span><span class="bash">&#123;mysql_string&#125; --execute=<span class="string">"INSERT INTO db_info.tb_users (username,password,idname,reg_datetime) values ('<span class="variable">$&#123;reg_user&#125;</span>','<span class="variable">$&#123;reg_pass_confirm&#125;</span>','<span class="variable">$&#123;reg_idname&#125;</span>','<span class="variable">$&#123;now_string&#125;</span>');"</span></span></span><br><span class="line">if [ "$?" -eq 0 ];then</span><br><span class="line">    echo -e "\033[1;32mRegister successfully!\033[0m"</span><br><span class="line">    let is_reg_ok=1 </span><br><span class="line">    show_user_info $reg_user $reg_pass_confirm $reg_idname $now_string</span><br><span class="line">    exit 0</span><br><span class="line">else</span><br><span class="line">    echo -e "\033[1;31mRegister failed!\033[0m"</span><br><span class="line">    exit 1</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
-
 
       
     </div>
@@ -732,7 +781,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -838,9 +887,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -908,7 +955,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Dialog"><span class="nav-number">1.</span> <span class="nav-text">1.Dialog</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#dialog-命令选项-option"><span class="nav-number">1.1.</span> <span class="nav-text">dialog 命令选项(option)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#例子"><span class="nav-number">1.2.</span> <span class="nav-text">例子</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-whiptail"><span class="nav-number">2.</span> <span class="nav-text">2.whiptail</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#注意"><span class="nav-number">2.1.</span> <span class="nav-text">注意</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#例子-1"><span class="nav-number">2.2.</span> <span class="nav-text">例子</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Zenity"><span class="nav-number">3.</span> <span class="nav-text">3.Zenity</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结尾"><span class="nav-number">4.</span> <span class="nav-text">结尾</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1dialog"><span class="nav-number">1.</span> <span class="nav-text"> 1.Dialog</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#dialog-命令选项option"><span class="nav-number">1.1.</span> <span class="nav-text"> dialog 命令选项(option)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#例子"><span class="nav-number">1.2.</span> <span class="nav-text"> 例子</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2whiptail"><span class="nav-number">2.</span> <span class="nav-text"> 2.whiptail</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#注意"><span class="nav-number">2.1.</span> <span class="nav-text"> 注意</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#例子-2"><span class="nav-number">2.2.</span> <span class="nav-text"> 例子</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3zenity"><span class="nav-number">3.</span> <span class="nav-text"> 3.Zenity</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结尾"><span class="nav-number">4.</span> <span class="nav-text"> 结尾</span></a></li></ol></div>
             
 
           </div>
@@ -941,7 +988,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1048,10 +1095,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

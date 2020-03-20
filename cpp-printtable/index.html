@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -209,7 +209,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -342,6 +342,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -378,9 +381,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -525,46 +525,48 @@
       
         <p>其实在很早之前，我就对MySQL的表格输出很感兴趣并想用C++实现，主要是因为它支持中文输出。因此前一段时间我实现了第一版的MyPrettyTable(简化版的Python的库PrettyTable?)，然而令人失望的是它在含有中文汉字的情况下会发生混乱而无法对齐，于是我放弃了。不过昨天在写代码时偶然看到之前那个被搁置的project，于是不甘心的我再次重新实现了这个功能…其实就是利用的setw和left</p>
 <a id="more"></a>
-
-<h2 id="Python中的PrettyTable"><a href="#Python中的PrettyTable" class="headerlink" title="Python中的PrettyTable"></a>Python中的PrettyTable</h2><p>用C++写MyPrettyTable的代码格式是按照Python中的PrettyTable。因此MyPrettyTable相对来说比较简单</p>
-<h2 id="中文汉字处理问题"><a href="#中文汉字处理问题" class="headerlink" title="中文汉字处理问题"></a>中文汉字处理问题</h2><p>由于UTF-8编码是变长编码，通常汉字占三个字节，而英文占一个字节<br>在终端下显示汉字占两个字符宽，而英文字母只占一个字符宽</p>
-<p>比如 <code>string s = &quot;好&quot;;</code><br>在Linux下 s.size() = 3  在Windows下 s.size() = 2<br>再比如下面的代码</p>
+<h2 id="python中的prettytable"><a class="markdownIt-Anchor" href="#python中的prettytable"></a> Python中的PrettyTable</h2>
+<p>用C++写MyPrettyTable的代码格式是按照Python中的PrettyTable。因此MyPrettyTable相对来说比较简单</p>
+<h2 id="中文汉字处理问题"><a class="markdownIt-Anchor" href="#中文汉字处理问题"></a> 中文汉字处理问题</h2>
+<p>由于UTF-8编码是变长编码，通常汉字占三个字节，而英文占一个字节<br>
+在终端下显示汉字占两个字符宽，而英文字母只占一个字符宽</p>
+<p>比如 <code>string s = &quot;好&quot;;</code><br>
+在Linux下 s.size() = 3  在Windows下 s.size() = 2<br>
+再比如下面的代码</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">string</span> s1 = <span class="string">"你好世界"</span>;</span><br><span class="line"><span class="built_in">string</span> s2 = <span class="string">"你好世"</span>;</span><br><span class="line"><span class="built_in">string</span> s3 = <span class="string">"你好"</span>;</span><br><span class="line"><span class="keyword">int</span> size = s1.size();</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; size &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">cout</span>.fill(<span class="string">'.'</span>);</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; left &lt;&lt; setw(size) &lt;&lt; <span class="string">""</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; left &lt;&lt; setw(size) &lt;&lt; s1 &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; left &lt;&lt; setw(size) &lt;&lt; s2 &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; left &lt;&lt; setw(size) &lt;&lt; s3 &lt;&lt; <span class="built_in">endl</span>;</span><br></pre></td></tr></table></figure>
-
 <p>在Windows下</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">8</span><br><span class="line">........    //8  </span><br><span class="line">你好世界    // 2x4=8</span><br><span class="line">你好世..    // 2x3+2=8</span><br><span class="line">你好....	 // 2x2+4=8</span><br></pre></td></tr></table></figure>
-
 <p>然而在Linux下面却是</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">12</span><br><span class="line">............ //12</span><br><span class="line">你好世界xxxx  // 3x4=12</span><br><span class="line">你好世...xxx  // 3x3+3=12</span><br><span class="line">你好......xx   // 3x2+6=12</span><br></pre></td></tr></table></figure>
-
-<p>因此在Windows下，输出中文能够很好的对齐，但在Linux下就不是这样了。<br>Windows下的显示中文字符宽恰好是两个英文字母，而Linux下显示中文字符宽等于两个英文字母，但是编码时却是占3个字节！</p>
-<p>当我将上面Linux下没有对齐的内容用 x 填充后发现  <strong>不足的填充 x 的个数等于中文汉字的个数</strong>！<br>于是为了解决这个不对齐问题，我在处理setw()是采用了WIN32/__linux__宏区分不同的平台</p>
+<p>因此在Windows下，输出中文能够很好的对齐，但在Linux下就不是这样了。<br>
+Windows下的显示中文字符宽恰好是两个英文字母，而Linux下显示中文字符宽等于两个英文字母，但是编码时却是占3个字节！</p>
+<p>当我将上面Linux下没有对齐的内容用 x 填充后发现  <strong>不足的填充 x 的个数等于中文汉字的个数</strong>！<br>
+于是为了解决这个不对齐问题，我在处理setw()是采用了WIN32/__linux__宏区分不同的平台</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">padding_left(<span class="keyword">this</span>-&gt;m_ColumnsContent_max_len[i] + _get_Chinese_len(str));</span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> WIN32</span></span><br><span class="line">        padding_left(<span class="keyword">this</span>-&gt;m_ColumnsContent_max_len[i]);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">elif</span> __linux__</span></span><br><span class="line">        padding_left(<span class="keyword">this</span>-&gt;m_ColumnsContent_max_len[i] + _get_Chinese_len(str));</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
-
 <p>此时中文汉字的处理问题得以解决，但是如果还有其他一些中文标点符号呢？或者说怎么判断是否存在中文或中文标点符号呢？</p>
 <p>因此我定义一个Sign.h头文件用于存放那些特殊的符号，以下为对应中文标点符号的unicode码</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> PRETTYTABLE_SIGN_H</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> PRETTYTABLE_SIGN_H</span></span><br><span class="line"><span class="comment">// special punctuation character</span></span><br><span class="line"><span class="keyword">enum</span>&#123;</span><br><span class="line">    PC1=<span class="number">0x3002</span>u,</span><br><span class="line">    PC2=<span class="number">0xFF1F</span>u,</span><br><span class="line">    PC3=<span class="number">0xFF01</span>u,</span><br><span class="line">    PC4=<span class="number">0xFF0C</span>u,</span><br><span class="line">    PC5=<span class="number">0x3001</span>u,</span><br><span class="line">    PC6=<span class="number">0xFF1B</span>u,</span><br><span class="line">    PC7=<span class="number">0xFF1A</span>u,</span><br><span class="line">    PC8=<span class="number">0x300C</span>u,</span><br><span class="line">    PC9=<span class="number">0x300D</span>u,</span><br><span class="line">    PC10=<span class="number">0x2018</span>u,</span><br><span class="line">    PC11=<span class="number">0x2019</span>u,</span><br><span class="line">    PC12=<span class="number">0xFF08</span>u,</span><br><span class="line">    PC13=<span class="number">0xFF09</span>u,</span><br><span class="line">    PC14=<span class="number">0x3014</span>u,</span><br><span class="line">    PC15=<span class="number">0x3015</span>u,</span><br><span class="line">    PC16=<span class="number">0x3010</span>u,</span><br><span class="line">    PC17=<span class="number">0x3011</span>u,</span><br><span class="line">    PC18=<span class="number">0x2014</span>u,</span><br><span class="line">    PC19=<span class="number">0x2026</span>u,</span><br><span class="line">    PC20=<span class="number">0x2013</span>u,</span><br><span class="line">    PC21=<span class="number">0xFF0E</span>u,</span><br><span class="line">    PC22=<span class="number">0x300A</span>u,</span><br><span class="line">    PC23=<span class="number">0x300B</span>u,</span><br><span class="line">    PC24=<span class="number">0x3008</span>u,</span><br><span class="line">    PC25=<span class="number">0x3009</span>u,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">enum</span> <span class="class"><span class="keyword">class</span> <span class="title">Sign</span>&#123;</span></span><br><span class="line">    PT_PLUS=<span class="string">'+'</span>, </span><br><span class="line">    PT_H =<span class="string">'-'</span>, </span><br><span class="line">    PT_V =<span class="string">'|'</span>, </span><br><span class="line">    PT_DOT= <span class="string">'.'</span>, </span><br><span class="line">    PT_EQUAL= <span class="string">'='</span> ,</span><br><span class="line">    PT_SIG_1= <span class="string">'@'</span> ,</span><br><span class="line">    PT_SIG_2= <span class="string">'#'</span> ,</span><br><span class="line">    PT_SIG_3= <span class="string">'$'</span>, </span><br><span class="line">    PT_SIG_4= <span class="string">'%'</span>, </span><br><span class="line">    PT_SIG_5= <span class="string">'\\'</span>, </span><br><span class="line">    PT_SIG_6=<span class="string">'*'</span>, </span><br><span class="line">    PT_SIG_7=<span class="string">'/'</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
-
 <p>判断一个字符串中是否存在中文且存在多少个中文汉字或标点符号，我们需要将其转化为wchar_t 指针类型的字符串，函数StringToWString讲一个string类型字符串转化为wstring类型字符串。需要注意的是在Windows下mbstowcs是不安全的，需要替换为mbstowcs_s，不过这里我简单的禁止了该错误</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> WIN32</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> <span class="meta-keyword">warning</span>(disable:4996)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="built_in">wstring</span> <span class="title">PrettyTable::StringToWString</span><span class="params">(<span class="keyword">const</span> <span class="built_in">string</span> &amp; str)</span></span>&#123;</span><br><span class="line">    <span class="keyword">size_t</span> nLen=str.length()*<span class="number">2</span>;</span><br><span class="line">    setlocale(LC_CTYPE,<span class="string">""</span>);</span><br><span class="line">    <span class="keyword">wchar_t</span> *wcs=<span class="keyword">new</span> <span class="keyword">wchar_t</span>[nLen];</span><br><span class="line">    wmemset(wcs,<span class="number">0</span>,nLen);</span><br><span class="line">    <span class="keyword">size_t</span> s;</span><br><span class="line">    mbstowcs(wcs,str.c_str(),nLen);</span><br><span class="line">    <span class="built_in">wstring</span> w=wcs;</span><br><span class="line">    <span class="keyword">delete</span>[]wcs;</span><br><span class="line">    <span class="keyword">return</span> w;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>判断字符串中中文汉字和标点符号数目</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> PrettyTable::_get_Chinese_len(<span class="keyword">const</span> <span class="built_in">string</span>&amp; str)&#123;</span><br><span class="line">    <span class="built_in">wstring</span> ss=StringToWString(str);</span><br><span class="line">    <span class="keyword">int</span> sum=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;ss.length() ; ++i) &#123;</span><br><span class="line">        <span class="keyword">wchar_t</span> wcs=ss.c_str()[i];</span><br><span class="line">        <span class="keyword">if</span>((wcs&gt;=<span class="number">0x4E00</span>u&amp;&amp;wcs&lt;=<span class="number">0x9FFF</span>u)</span><br><span class="line"> ||wcs==PC1||wcs==PC2||wcs==PC3||wcs==PC4||wcs==PC5||wcs==PC6||wcs==PC7||wcs==PC8||wcs==PC9  ||wcs==PC10||wcs==PC11||wcs==PC12||wcs==PC13||wcs==PC14||wcs==PC15||wcs==PC16||wcs==PC17</span><br><span class="line"> ||wcs==PC18||wcs==PC19||wcs==PC20||wcs==PC21||wcs==PC22||wcs==PC23||wcs==PC24||wcs==PC25)&#123;</span><br><span class="line">            sum++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="添加Header-amp-draw-header"><a href="#添加Header-amp-draw-header" class="headerlink" title="添加Header &amp;  _draw_header"></a>添加Header &amp;  _draw_header</h2><p>在添加一个Header时，我就获取其表头(列)的数目，并添加到 <code>this-&gt;m_multiColumns</code> 中，后续再每添加一行row时同时还要将row转化为column并在添加到<code>this-&gt;m_multiColumns</code>中，为的是 <strong>获取每一列中字符串的最大宽度</strong> 使得整个表格对齐。</p>
-<p>比如我要画一个表格头，我是按照一行一行去输出相应的数据并重定向到内部的 <code>stringstream m_innerOss</code><br>注意的是，每个表头内边距为1个空格，因此我还定义了一个</p>
+<h2 id="添加header-_draw_header"><a class="markdownIt-Anchor" href="#添加header-_draw_header"></a> 添加Header &amp;  _draw_header</h2>
+<p>在添加一个Header时，我就获取其表头(列)的数目，并添加到 <code>this-&gt;m_multiColumns</code> 中，后续再每添加一行row时同时还要将row转化为column并在添加到<code>this-&gt;m_multiColumns</code>中，为的是 <strong>获取每一列中字符串的最大宽度</strong> 使得整个表格对齐。</p>
+<p>比如我要画一个表格头，我是按照一行一行去输出相应的数据并重定向到内部的 <code>stringstream m_innerOss</code><br>
+注意的是，每个表头内边距为1个空格，因此我还定义了一个</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#define PADDING_LEFT_RIGHT 2</span><br></pre></td></tr></table></figure>
-
 <p>表示内边距的大小</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">+----+------------------+----------+----------+---------------------+</span><br><span class="line">| xx | xx               | xx       | xx       | xx                  |</span><br><span class="line">+----+------------------+----------+----------+---------------------+</span><br></pre></td></tr></table></figure>
-
-<h2 id="添加Rows-amp-draw-rows"><a href="#添加Rows-amp-draw-rows" class="headerlink" title="添加Rows &amp;  _draw_rows"></a>添加Rows &amp;  _draw_rows</h2><p>这里我想说的是<br>set()中可以有两种写法</p>
+<h2 id="添加rows-_draw_rows"><a class="markdownIt-Anchor" href="#添加rows-_draw_rows"></a> 添加Rows &amp;  _draw_rows</h2>
+<p>这里我想说的是<br>
+set()中可以有两种写法</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">setw() = MaxSizeStr + String.Size() - StringCapacity(String)</span><br><span class="line">setw() = MaxSizeStr + Length(Chinese hans)</span><br></pre></td></tr></table></figure>
-
-<p>也就是说 setw()应该设置的值为 <strong>每一个this-&gt;m_multiColumns 中最大字符串宽度+中文汉字/标点符号数目</strong><br>这个 StringCapacity 函数就是获取字符串中显示的字符宽度 &lt;= string.size()</p>
+<p>也就是说 setw()应该设置的值为 <strong>每一个this-&gt;m_multiColumns 中最大字符串宽度+中文汉字/标点符号数目</strong><br>
+这个 StringCapacity 函数就是获取字符串中显示的字符宽度 &lt;= string.size()</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">PrettyTable::StringCapacity</span><span class="params">(<span class="keyword">const</span> <span class="built_in">string</span> &amp; raw_str)</span></span>&#123;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> WIN32</span></span><br><span class="line">    <span class="keyword">return</span> raw_str.size();</span><br><span class="line"><span class="meta">#<span class="meta-keyword">elif</span> __linux__</span></span><br><span class="line">    <span class="keyword">return</span> raw_str.size() - <span class="keyword">this</span>-&gt;_get_Chinese_len(raw_str);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h2><p>我已经把代码放在 <a href="https://github.com/josexy/MyPrettyTable/" target="_blank" rel="noopener">Github</a> 上了，可以去看看代码，虽然写得有点糟…… 不过核心部分还是利用C++的setw和left。<br>这个project算是到此结束了吧，不过以后有没有可能再继续添加一些东西就不知道了……</p>
+<h2 id="结尾"><a class="markdownIt-Anchor" href="#结尾"></a> 结尾</h2>
+<p>我已经把代码放在 <a href="https://github.com/josexy/MyPrettyTable/" target="_blank" rel="noopener">Github</a> 上了，可以去看看代码，虽然写得有点糟… 不过核心部分还是利用C++的setw和left。<br>
+这个project算是到此结束了吧，不过以后有没有可能再继续添加一些东西就不知道了…</p>
 <p>图片展示如下</p>
 <p><img src="/uploads/images/cpp_table/photo_linux.png" alt="image"></p>
 <p><img src="/uploads/images/cpp_table/photo_windows.png" alt="image"></p>
@@ -721,7 +723,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -827,9 +829,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -897,7 +897,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Python中的PrettyTable"><span class="nav-number">1.</span> <span class="nav-text">Python中的PrettyTable</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#中文汉字处理问题"><span class="nav-number">2.</span> <span class="nav-text">中文汉字处理问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加Header-amp-draw-header"><span class="nav-number">3.</span> <span class="nav-text">添加Header &amp;  _draw_header</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加Rows-amp-draw-rows"><span class="nav-number">4.</span> <span class="nav-text">添加Rows &amp;  _draw_rows</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结尾"><span class="nav-number">5.</span> <span class="nav-text">结尾</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#python中的prettytable"><span class="nav-number">1.</span> <span class="nav-text"> Python中的PrettyTable</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#中文汉字处理问题"><span class="nav-number">2.</span> <span class="nav-text"> 中文汉字处理问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加header-_draw_header"><span class="nav-number">3.</span> <span class="nav-text"> 添加Header &amp;  _draw_header</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加rows-_draw_rows"><span class="nav-number">4.</span> <span class="nav-text"> 添加Rows &amp;  _draw_rows</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结尾"><span class="nav-number">5.</span> <span class="nav-text"> 结尾</span></a></li></ol></div>
             
 
           </div>
@@ -930,7 +930,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1037,10 +1037,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

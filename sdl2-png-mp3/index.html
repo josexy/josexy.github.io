@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -206,7 +206,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -339,6 +339,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -375,9 +378,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -532,44 +532,52 @@
       
         <p>在使用SDL时，发现就算编译安装了SDL2_image和SDL_mixer也无法显示png格式图片和播放MP3音频文件。在网上搜索许久，这里总结一下编译过程。。。</p>
 <a id="more"></a>
-
-<h3 id="SDL2-image"><a href="#SDL2-image" class="headerlink" title="SDL2_image"></a>SDL2_image</h3><p>首先，我是用一下函数获取错误的信息的</p>
+<h3 id="sdl2_image"><a class="markdownIt-Anchor" href="#sdl2_image"></a> SDL2_image</h3>
+<p>首先，我是用一下函数获取错误的信息的</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">_texture=IMG_LoadTexture(_renderer,filename.c_str());</span><br><span class="line"><span class="built_in">cout</span>&lt;&lt; SDL_GetError()&lt;&lt;<span class="built_in">endl</span>;</span><br></pre></td></tr></table></figure>
-
-<p>错误信息如下：<br>Failed loading <strong>png_set_longjmp_fn</strong>: /lib/x86_64-linux-gnu/libpng12.so.0: <strong>undefined symbol</strong>: <strong>_png_set_longjmp_fn</strong></p>
-<p>可看到，libpng12.so 这个库文件位定义函数符号 <strong>png_set_longjmp_fn</strong></p>
-<p>接着我查找 <strong>libpng12.so</strong> 这个库文件</p>
+<p>错误信息如下：<br>
+Failed loading <strong>png_set_longjmp_fn</strong>: /lib/x86_64-linux-gnu/libpng12.so.0: <strong>undefined symbol</strong>: <strong>_png_set_longjmp_fn</strong></p>
+<p>可看到，<a href="http://libpng12.so" target="_blank" rel="noopener">libpng12.so</a> 这个库文件位定义函数符号 <strong>png_set_longjmp_fn</strong></p>
+<p>接着我查找 <strong><a href="http://libpng12.so" target="_blank" rel="noopener">libpng12.so</a></strong> 这个库文件</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ locate libpng|grep &quot;so&quot;</span><br><span class="line">/lib/x86_64-linux-gnu/libpng12.so.0</span><br><span class="line">/lib/x86_64-linux-gnu/libpng12.so.0.49.0</span><br><span class="line">/usr/lib/x86_64-linux-gnu/libpng.so</span><br><span class="line">/usr/lib/x86_64-linux-gnu/libpng16.so</span><br><span class="line">/usr/lib/x86_64-linux-gnu/libpng16.so.16</span><br><span class="line">/usr/lib/x86_64-linux-gnu/libpng16.so.16.34.0</span><br></pre></td></tr></table></figure>
-
-<p>可看到系统存在两个版本的 <strong>libpng</strong> 库 。如果只存在一个，那么可以自行下载libpng最新版本编译安装，并继续以下操作。<br>其中 <strong>libpng12.so.0.49.0</strong> 是一个比较老的版本了。所以与最新的SDL2可能不兼容，才会出现上面的那个错误。知道的问题后，解决起来似乎也变得简单了。。。</p>
+<p>可看到系统存在两个版本的 <strong>libpng</strong> 库 。如果只存在一个，那么可以自行下载libpng最新版本编译安装，并继续以下操作。<br>
+其中 <strong>libpng12.so.0.49.0</strong> 是一个比较老的版本了。所以与最新的SDL2可能不兼容，才会出现上面的那个错误。知道的问题后，解决起来似乎也变得简单了。。。</p>
 <ul>
-<li><p>显示12版本 dynamic symbols</p>
+<li>
+<p>显示12版本 dynamic symbols</p>
 <blockquote>
 <p>$ nm -D /lib/x86_64-linux-gnu/libpng12.so.0|grep png_set_longjmp_fn</p>
 </blockquote>
 </li>
-<li><p>显示16版本 dynamic symbols</p>
+<li>
+<p>显示16版本 dynamic symbols</p>
 <blockquote>
-<p>$ nm -D /usr/lib/x86_64-linux-gnu/libpng.so|grep png_set_longjmp_fn<br>结果：000000000000a840 T <strong>png_set_longjmp_fn</strong></p>
+<p>$ nm -D /usr/lib/x86_64-linux-gnu/libpng.so|grep png_set_longjmp_fn<br>
+结果：000000000000a840 T <strong>png_set_longjmp_fn</strong></p>
 </blockquote>
 </li>
 </ul>
 <p>所以，解决方法很简单，删除旧的库文件，替换成新的。不过最后我发现了一个奇怪的问题，那就是在从 /lib/x86_64-linux-gnu 路径去除libpng12.so.0这个旧版本的库时，virtualbox虚拟机启动显示 <strong>创建COM对象失败</strong> 。最后重新编译安装了libpng12.so.0并复制到 /lib/x86_64-linux-gnu 目录下才可以！</p>
 <blockquote>
-<p>cp /usr/lib/x86_64-linux-gnu/<strong>libpng16.so.16.34.0</strong> /lib/x86_64-linux-gnu/<br>ln -s /lib/x86_64-linux-gnu/<strong>libpng16.so.16.34.0</strong> /lib/x86_64-linux-gnu/<strong>libpng16.so</strong> #添加软链接</p>
+<p>cp /usr/lib/x86_64-linux-gnu/<strong>libpng16.so.16.34.0</strong> /lib/x86_64-linux-gnu/<br>
+ln -s /lib/x86_64-linux-gnu/<strong>libpng16.so.16.34.0</strong> /lib/x86_64-linux-gnu/<strong><a href="http://libpng16.so" target="_blank" rel="noopener">libpng16.so</a></strong> #添加软链接</p>
 </blockquote>
 <p>之后重新编译 SDL2_image</p>
 <blockquote>
-<p>./configure<br>make<br>make install</p>
+<p>./configure<br>
+make<br>
+make install</p>
 </blockquote>
-<h3 id="SDL-mixer"><a href="#SDL-mixer" class="headerlink" title="SDL_mixer"></a>SDL_mixer</h3><p>通过 ./configure –help 查看配置选项。要想支持播放MP3格式，只需添加以下配置参数</p>
+<h3 id="sdl_mixer"><a class="markdownIt-Anchor" href="#sdl_mixer"></a> SDL_mixer</h3>
+<p>通过 ./configure --help 查看配置选项。要想支持播放MP3格式，只需添加以下配置参数</p>
 <blockquote>
-<p>./configure –<strong>enable-music-mp3</strong> –<strong>enable-music-mp3-mad-gpl</strong><br>make<br>make insatll</p>
+<p>./configure –<strong>enable-music-mp3</strong> –<strong>enable-music-mp3-mad-gpl</strong><br>
+make<br>
+make insatll</p>
 </blockquote>
 <p>ldd build/.libs/libSDL2_mixer.so</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">linux-vdso.so.1 (0x00007ffc71f8d000)</span><br><span class="line">libSDL2-2.0.so.0 =&gt; /usr/local/lib/libSDL2-2.0.so.0 (0x00007f07ed821000)</span><br><span class="line">libdl.so.2 =&gt; /lib/x86_64-linux-gnu/libdl.so.2 (0x00007f07ed5f2000)</span><br><span class="line">libpthread.so.0 =&gt; /lib/x86_64-linux-gnu/libpthread.so.0 (0x00007f07ed3d4000)</span><br><span class="line">librt.so.1 =&gt; /lib/x86_64-linux-gnu/librt.so.1 (0x00007f07ed1cc000)</span><br><span class="line">libmad.so.0 =&gt; /usr/lib/x86_64-linux-gnu/libmad.so.0 (0x00007f07ecfac000)</span><br><span class="line">libm.so.6 =&gt; /lib/x86_64-linux-gnu/libm.so.6 (0x00007f07ecc99000)</span><br><span class="line">libc.so.6 =&gt; /lib/x86_64-linux-gnu/libc.so.6 (0x00007f07ec8f4000)</span><br><span class="line">/lib64/ld-linux-x86-64.so.2 (0x0000557697c43000)</span><br></pre></td></tr></table></figure>
-
-<p>这样就OK了 :)</p>
+<p>这样就OK了 😃</p>
 
       
     </div>
@@ -729,7 +737,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -835,9 +843,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -905,7 +911,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#SDL2-image"><span class="nav-number">1.</span> <span class="nav-text">SDL2_image</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SDL-mixer"><span class="nav-number">2.</span> <span class="nav-text">SDL_mixer</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#sdl2_image"><span class="nav-number">1.</span> <span class="nav-text"> SDL2_image</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sdl_mixer"><span class="nav-number">2.</span> <span class="nav-text"> SDL_mixer</span></a></li></ol></div>
             
 
           </div>
@@ -938,7 +944,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1045,10 +1051,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

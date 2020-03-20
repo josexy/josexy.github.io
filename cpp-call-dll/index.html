@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -125,19 +125,19 @@
   };
 </script>
 
-  <meta name="description" content="前言 动态链接提供了一种方法，使进程可以调用不属于其可执行代码的函数。函数的可执行代码位于一个 DLL 文件中，该 DLL 包含一个或多个已被编译、链接并与使用它们的进程分开存储的函数。DLL 还有助于共享数据和资源。多个应用程序可同时访问内存中单个 DLL 副本的内容。使用动态链接库可以更为容易地将更新应用于各个模块，而不会影响该程序的其他部分。例如，您有一个大型网络游戏，如果把整个数百MB甚至">
+  <meta name="description" content="前言  动态链接提供了一种方法，使进程可以调用不属于其可执行代码的函数。函数的可执行代码位于一个 DLL 文件中，该 DLL 包含一个或多个已被编译、链接并与使用它们的进程分开存储的函数。DLL 还有助于共享数据和资源。多个应用程序可同时访问内存中单个 DLL 副本的内容。 使用动态链接库可以更为容易地将更新应用于各个模块，而不会影响该程序的其他部分。例如，您有一个大型网络游戏，如果把整个数百M">
 <meta name="keywords" content="C++,Windows">
 <meta property="og:type" content="article">
 <meta property="og:title" content="C++编写动态链接库Dll+调用Dll">
 <meta property="og:url" content="http://www.joxrays.com/cpp-call-dll/index.html">
 <meta property="og:site_name" content="JoXrays&#39;s Blog">
-<meta property="og:description" content="前言 动态链接提供了一种方法，使进程可以调用不属于其可执行代码的函数。函数的可执行代码位于一个 DLL 文件中，该 DLL 包含一个或多个已被编译、链接并与使用它们的进程分开存储的函数。DLL 还有助于共享数据和资源。多个应用程序可同时访问内存中单个 DLL 副本的内容。使用动态链接库可以更为容易地将更新应用于各个模块，而不会影响该程序的其他部分。例如，您有一个大型网络游戏，如果把整个数百MB甚至">
+<meta property="og:description" content="前言  动态链接提供了一种方法，使进程可以调用不属于其可执行代码的函数。函数的可执行代码位于一个 DLL 文件中，该 DLL 包含一个或多个已被编译、链接并与使用它们的进程分开存储的函数。DLL 还有助于共享数据和资源。多个应用程序可同时访问内存中单个 DLL 副本的内容。 使用动态链接库可以更为容易地将更新应用于各个模块，而不会影响该程序的其他部分。例如，您有一个大型网络游戏，如果把整个数百M">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://www.joxrays.com/uploads/images/cpp/0.png">
 <meta property="og:updated_time" content="2019-07-20T13:11:22.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C++编写动态链接库Dll+调用Dll">
-<meta name="twitter:description" content="前言 动态链接提供了一种方法，使进程可以调用不属于其可执行代码的函数。函数的可执行代码位于一个 DLL 文件中，该 DLL 包含一个或多个已被编译、链接并与使用它们的进程分开存储的函数。DLL 还有助于共享数据和资源。多个应用程序可同时访问内存中单个 DLL 副本的内容。使用动态链接库可以更为容易地将更新应用于各个模块，而不会影响该程序的其他部分。例如，您有一个大型网络游戏，如果把整个数百MB甚至">
+<meta name="twitter:description" content="前言  动态链接提供了一种方法，使进程可以调用不属于其可执行代码的函数。函数的可执行代码位于一个 DLL 文件中，该 DLL 包含一个或多个已被编译、链接并与使用它们的进程分开存储的函数。DLL 还有助于共享数据和资源。多个应用程序可同时访问内存中单个 DLL 副本的内容。 使用动态链接库可以更为容易地将更新应用于各个模块，而不会影响该程序的其他部分。例如，您有一个大型网络游戏，如果把整个数百M">
 <meta name="twitter:image" content="http://www.joxrays.com/uploads/images/cpp/0.png">
 
 
@@ -208,7 +208,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -341,6 +341,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -377,9 +380,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -532,35 +532,38 @@
       
 
       
-        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><blockquote>
-<p>动态链接提供了一种方法，使进程可以调用不属于其可执行代码的函数。函数的可执行代码位于一个 DLL 文件中，该 DLL 包含一个或多个已被编译、链接并与使用它们的进程分开存储的函数。DLL 还有助于共享数据和资源。多个应用程序可同时访问内存中单个 DLL 副本的内容。<br>使用动态链接库可以更为容易地将更新应用于各个模块，而不会影响该程序的其他部分。例如，您有一个大型网络游戏，如果把整个数百MB甚至数GB的游戏的代码都放在一个应用程序里，日后的修改工作将会十分费时，而如果把不同功能的代码分别放在数个动态链接库中，您无需重新生成或安装整个程序就可以应用更新</p>
+        <h3 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h3>
+<blockquote>
+<p>动态链接提供了一种方法，使进程可以调用不属于其可执行代码的函数。函数的可执行代码位于一个 DLL 文件中，该 DLL 包含一个或多个已被编译、链接并与使用它们的进程分开存储的函数。DLL 还有助于共享数据和资源。多个应用程序可同时访问内存中单个 DLL 副本的内容。<br>
+使用动态链接库可以更为容易地将更新应用于各个模块，而不会影响该程序的其他部分。例如，您有一个大型网络游戏，如果把整个数百MB甚至数GB的游戏的代码都放在一个应用程序里，日后的修改工作将会十分费时，而如果把不同功能的代码分别放在数个动态链接库中，您无需重新生成或安装整个程序就可以应用更新</p>
 </blockquote>
 <a id="more"></a>
-
-
-
-<h3 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h3><p>本文就Windows下创建一个dll动态库并调用</p>
+<h3 id="正文"><a class="markdownIt-Anchor" href="#正文"></a> 正文</h3>
+<p>本文就Windows下创建一个dll动态库并调用</p>
 <ul>
 <li>打开VS2013，新建一个C++工程（不是MFC！），命名为 “mydll”，接着选中 “DLL”，”导出符号”，直接完成</li>
-<li>这时，看到的是默认初始化好了的代码，我们把一些不必要的删掉（其实那些是用来参考的，实际编写时删掉也无大碍）。<br>然后在“mydll.h”头文件里添加 下列代码：</li>
+<li>这时，看到的是默认初始化好了的代码，我们把一些不必要的删掉（其实那些是用来参考的，实际编写时删掉也无大碍）。<br>
+然后在“mydll.h”头文件里添加 下列代码：</li>
 </ul>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span> <span class="function">MYDLL_API  <span class="keyword">int</span>  _stdcall <span class="title">GetMaxNumber</span><span class="params">(<span class="keyword">int</span>, <span class="keyword">int</span>)</span></span>;</span><br><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span> <span class="function">MYDLL_API <span class="keyword">void</span>  _stdcall <span class="title">ShowMsg</span><span class="params">(<span class="keyword">char</span> *, <span class="keyword">char</span>*)</span></span>;</span><br></pre></td></tr></table></figure>
-
 <p>在“mydll.cpp”源文件添加 如下图所示的功能实现代码：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span> <span class="function">MYDLL_API  <span class="keyword">int</span>  _stdcall <span class="title">GetMaxNumber</span><span class="params">(<span class="keyword">int</span>, <span class="keyword">int</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> a&gt;b?a*<span class="number">100</span>:b;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span> <span class="function">MYDLL_API <span class="keyword">void</span>  _stdcall <span class="title">ShowMsg</span><span class="params">(<span class="keyword">char</span> * <span class="built_in">text</span>, <span class="keyword">char</span>* title)</span></span></span><br><span class="line"><span class="function"></span>&#123;	</span><br><span class="line">	MessageBoxA(<span class="literal">NULL</span>,<span class="built_in">text</span>,title,MB_OK);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>OK!现在代码简简单单的写完了，那如何编译成 .dll 文件呢？<br>单击菜单栏 &gt;”生成”&gt;”生成 mydll”，编译成功。（注意，不是 调试下的开始执行…）<br>然后找到工程的目录所在路径，DeBug目录下找到 那个生成的 “mydll.dll”（现在是不是很激动呢 :)</p>
-<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><ul>
-<li>在重新创建一个工程，这次是一个C++下的控制台应用程序来测试编写的dll是否成功运行！！<br>工程名为“test_mydll”</li>
-<li>添加一个.cpp源文件，添加如下代码：<br><strong>（注意，要把 mydll.dll 放到 生成的.exe 同一目录下）</strong></li>
+<p>OK!现在代码简简单单的写完了，那如何编译成 .dll 文件呢？<br>
+单击菜单栏 &gt;”生成”&gt;”生成 mydll”，编译成功。（注意，不是 调试下的开始执行…）<br>
+然后找到工程的目录所在路径，DeBug目录下找到 那个生成的 “mydll.dll”（现在是不是很激动呢 😃</p>
+<h3 id="测试"><a class="markdownIt-Anchor" href="#测试"></a> 测试</h3>
+<ul>
+<li>在重新创建一个工程，这次是一个C++下的控制台应用程序来测试编写的dll是否成功运行！！<br>
+工程名为“test_mydll”</li>
+<li>添加一个.cpp源文件，添加如下代码：<br>
+<strong>（注意，要把 mydll.dll 放到 生成的.exe 同一目录下）</strong></li>
 </ul>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;windows.h&gt;</span></span></span><br><span class="line"><span class="comment">//全局...</span></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">int</span><span class="params">(_stdcall *pGetMaxN)</span><span class="params">(<span class="keyword">int</span>, <span class="keyword">int</span>)</span></span>;	<span class="comment">//定义一个函数指针类型</span></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">void</span><span class="params">(_stdcall *pShowMsg)</span><span class="params">(<span class="keyword">char</span> *, <span class="keyword">char</span> *)</span></span>;</span><br><span class="line">main()...</span><br><span class="line"><span class="comment">//动态加载 dll</span></span><br><span class="line">HMODULE hModule = LoadLibrary(<span class="string">L"mydll.dll"</span>);</span><br><span class="line"><span class="keyword">if</span> (!hModule)</span><br><span class="line">&#123;</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; <span class="string">"Error!"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//获取函数 GetMaxNumber 的地址</span></span><br><span class="line">pGetMaxN pgetm = (pGetMaxN)GetProcAddress(hModule, <span class="string">"GetMaxNumber"</span>);</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; pgetm(<span class="number">10</span>, <span class="number">5</span>) &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line"><span class="comment">//获取函数 ShowMsg 的地址</span></span><br><span class="line">pShowMsg pshowm = (pShowMsg)GetProcAddress(hModule, <span class="string">"ShowMsg"</span>);</span><br><span class="line">pshowm(<span class="string">"内容"</span>, <span class="string">"标题"</span>);</span><br><span class="line"><span class="comment">//释放</span></span><br><span class="line">FreeLibrary(hModule);</span><br></pre></td></tr></table></figure>
-
-<p>这里要提醒一下哦，上面的是动态加载dll的，所以，就也是说，我们一直都没有使用原来的dll工程生成了那个“mydll.lib”的文件！<br>那么现在以静态调用dll 也是可行的，但 要把那个.lib文件和 .h头文件放到 与.cpp 同一个目录下（注意，这个不是.dll文件，所以可以放在 与.cpp同一个目录下！！！！）</p>
+<p>这里要提醒一下哦，上面的是动态加载dll的，所以，就也是说，我们一直都没有使用原来的dll工程生成了那个“mydll.lib”的文件！<br>
+那么现在以静态调用dll 也是可行的，但 要把那个.lib文件和 .h头文件放到 与.cpp 同一个目录下（注意，这个不是.dll文件，所以可以放在 与.cpp同一个目录下！！！！）</p>
 <p><img src="/uploads/images/cpp/0.png" alt="img"></p>
 <p>然后，可以放心的吧以前动态调用的代码注释掉啦，添加新代码</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//	动态</span></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">int</span><span class="params">( _stdcall *pGetMaxN)</span><span class="params">(<span class="keyword">int</span>, <span class="keyword">int</span>)</span></span>; <span class="comment">//定义一个函数指针类型</span></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">void</span><span class="params">( _stdcall *pShowMsg)</span><span class="params">(<span class="keyword">char</span> *, <span class="keyword">char</span> *)</span></span>;</span><br><span class="line"><span class="comment">//	静态</span></span><br><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span> __declspec(dllimport) <span class="function"><span class="keyword">int</span> _stdcall <span class="title">GetMaxNumber</span><span class="params">(<span class="keyword">int</span>, <span class="keyword">int</span>)</span></span>;</span><br><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span> __declspec(dllimport) <span class="function"><span class="keyword">void</span> _stdcall <span class="title">ShowMsg</span><span class="params">(<span class="keyword">char</span> *, <span class="keyword">char</span>*)</span></span>;</span><br></pre></td></tr></table></figure>
-
 <p>Bye~</p>
 
       
@@ -717,7 +720,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -823,9 +826,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -893,7 +894,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#正文"><span class="nav-number">2.</span> <span class="nav-text">正文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试"><span class="nav-number">3.</span> <span class="nav-text">测试</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text"> 前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#正文"><span class="nav-number">2.</span> <span class="nav-text"> 正文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试"><span class="nav-number">3.</span> <span class="nav-text"> 测试</span></a></li></ol></div>
             
 
           </div>
@@ -926,7 +927,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1033,10 +1034,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

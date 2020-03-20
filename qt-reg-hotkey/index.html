@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -206,7 +206,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -339,6 +339,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -375,9 +378,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -532,33 +532,39 @@
       
         <p>要想在Qt支持全局注册热键，Windows下方法很简单RegisterHotKey函数可以满足。当然，这只能在Windows下操作，那么，是否有一个跨平台的全局注册热键库方便使用呢？</p>
 <a id="more"></a>
-
-<h3 id="QHotkey"><a href="#QHotkey" class="headerlink" title="QHotkey"></a>QHotkey</h3><p><a href="https://www.qpm.io/packages/de.skycoder42.qhotkey/index.html" target="_blank" rel="noopener">官网</a></p>
+<h3 id="qhotkey"><a class="markdownIt-Anchor" href="#qhotkey"></a> QHotkey</h3>
+<p><a href="https://www.qpm.io/packages/de.skycoder42.qhotkey/index.html" target="_blank" rel="noopener">官网</a></p>
 <p><a href="https://github.com/Skycoder42/QHotkey" target="_blank" rel="noopener">Github</a></p>
 <p><a href="https://skycoder42.github.io/QHotkey/class_q_hotkey.html" target="_blank" rel="noopener">QHotkey类参考</a></p>
 <p><strong>PS: QHotkey适用于 Windows, Mac ， X11</strong></p>
 <p>从github上获取源文件，自行编译(无需安装)</p>
 <blockquote>
-<p>git clone <a href="https://github.com/Skycoder42/QHotkey.git" target="_blank" rel="noopener">https://github.com/Skycoder42/QHotkey.git</a><br>cd QHotkey<br>qmake<br>make</p>
+<p>git clone <a href="https://github.com/Skycoder42/QHotkey.git" target="_blank" rel="noopener">https://github.com/Skycoder42/QHotkey.git</a><br>
+cd QHotkey<br>
+qmake<br>
+make</p>
 </blockquote>
-<p>之后就可以使用了。使用方法如下<br>创建一个Qt项目，在 .pro 中添加</p>
-<p>include(QHotkey/qhotkey.pri)<br>LIBS += -L$$PWD/QHotkey/QHotkey -lQHotkey<br>INCLUDEPATH += $$PWD/QHotkey/QHotkey</p>
-<p>注意，我把 QHotkey 文件夹复制到项目目录下，并且要include <strong>qhotkey.pri</strong><br>LIBS 和 INCLUDEPATH不能直接写成，否则出现 <strong>No such file or directory</strong>：<br>LIBS += -LQHotkey/QHotkey -lQHotkey<br>INCLUDEPATH += QHotkey/QHotkey</p>
+<p>之后就可以使用了。使用方法如下<br>
+创建一个Qt项目，在 .pro 中添加</p>
+<p>include(QHotkey/qhotkey.pri)<br>
+LIBS += -L$$PWD/QHotkey/QHotkey -lQHotkey<br>
+INCLUDEPATH += $$PWD/QHotkey/QHotkey</p>
+<p>注意，我把 QHotkey 文件夹复制到项目目录下，并且要include <strong>qhotkey.pri</strong><br>
+LIBS 和 INCLUDEPATH不能直接写成，否则出现 <strong>No such file or directory</strong>：<br>
+LIBS += -LQHotkey/QHotkey -lQHotkey<br>
+INCLUDEPATH += QHotkey/QHotkey</p>
 <p>主要代码实例</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"QHotkey"</span></span></span><br><span class="line"><span class="keyword">bool</span> ispressed=<span class="literal">false</span>;</span><br><span class="line">Widget::Widget(QWidget *parent) :</span><br><span class="line">    QWidget(parent),</span><br><span class="line">    ui(<span class="keyword">new</span> Ui::Widget)</span><br><span class="line">&#123;</span><br><span class="line">    ui-&gt;setupUi(<span class="keyword">this</span>);</span><br><span class="line">    <span class="comment">// 过滤警告</span></span><br><span class="line">    QLoggingCategory::setFilterRules(QStringLiteral(<span class="string">"QHotkey.warning=false"</span>));</span><br><span class="line">	<span class="comment">// Ctrl+P 之间不能有空格</span></span><br><span class="line">    QHotkey *hotkey = <span class="keyword">new</span> QHotkey&#123;QKeySequence(<span class="string">"Ctrl+P"</span>),<span class="literal">true</span>&#125;; </span><br><span class="line">    <span class="built_in">connect</span>(hotkey, &amp;QHotkey::activated, [<span class="keyword">this</span>]()&#123;</span><br><span class="line">        <span class="comment">//这里进行判断,只允许按下一次</span></span><br><span class="line">        <span class="keyword">if</span>(ispressed==<span class="literal">false</span>)&#123;</span><br><span class="line">            ispressed=<span class="literal">true</span>;</span><br><span class="line">            QMessageBox::information(<span class="keyword">this</span>,<span class="string">"Hello"</span>,<span class="string">"Hello"</span>);</span><br><span class="line">            ispressed=<span class="literal">false</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            ispressed=<span class="literal">true</span>;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">     &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>默认的，QHotkey会打印一些警告信息，不过可以用 <strong>QLoggingCategory::setFilterRules</strong> 过滤掉这些信息。</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">QHotkey (QObject *parent=Q_NULLPTR)</span><br><span class="line">QHotkey (<span class="keyword">const</span> QKeySequence &amp;shortcut, <span class="keyword">bool</span> autoRegister=<span class="literal">false</span>, QObject *parent=Q_NULLPTR)</span><br><span class="line">QHotkey (Qt::Key key, Qt::KeyboardModifiers modifiers, <span class="keyword">bool</span> autoRegister=<span class="literal">false</span>, QObject *parent=Q_NULLPTR)</span><br><span class="line">QHotkey (<span class="keyword">const</span> NativeShortcut &amp;shortcut, <span class="keyword">bool</span> autoRegister=<span class="literal">false</span>, QObject *parent=Q_NULLPTR)</span><br><span class="line"><span class="function"><span class="keyword">bool</span> 	<span class="title">setRegistered</span> <span class="params">(<span class="keyword">bool</span> registered)</span></span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> 	<span class="title">setShortcut</span> <span class="params">(<span class="keyword">const</span> QKeySequence &amp;shortcut, <span class="keyword">bool</span> autoRegister=<span class="literal">false</span>)</span></span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> 	<span class="title">setShortcut</span> <span class="params">(Qt::Key key, Qt::KeyboardModifiers modifiers, <span class="keyword">bool</span> autoRegister=<span class="literal">false</span>)</span></span></span><br></pre></td></tr></table></figure>
-
 <p>有两种方法构造一个 QHotkey 对象：</p>
 <p>1.提供一个 <strong>QKeySequence</strong> 对象，如果 QHotkey 构造函数第二个参数为 <strong>false</strong>，则必须调用 <strong>bool setRegistered (bool registered)</strong> 注册热键</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QHotkey *hotkey = new QHotkey&#123;QKeySequence(&quot;Ctrl+P&quot;),true&#125;;</span><br></pre></td></tr></table></figure>
-
 <p>2.提供<strong>Qt::Key和Qt::KeyboardModifiers</strong>，不过是通过<strong>setShortcut</strong>设置。如下</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QHotkey *hotkey =new QHotkey(this);hotkey-&gt;setShortcut(Qt::Key_A,Qt::ControlModifier,true);</span><br></pre></td></tr></table></figure>
-
 <p>注册热键成功后就可以在槽函数<strong>QHotkey::activated</strong>中进行处理了</p>
-<h3 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h3><p>是不是很简单呢？</p>
+<h3 id="结尾"><a class="markdownIt-Anchor" href="#结尾"></a> 结尾</h3>
+<p>是不是很简单呢？</p>
 
       
     </div>
@@ -714,7 +720,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -820,9 +826,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -890,7 +894,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#QHotkey"><span class="nav-number">1.</span> <span class="nav-text">QHotkey</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结尾"><span class="nav-number">2.</span> <span class="nav-text">结尾</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#qhotkey"><span class="nav-number">1.</span> <span class="nav-text"> QHotkey</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结尾"><span class="nav-number">2.</span> <span class="nav-text"> 结尾</span></a></li></ol></div>
             
 
           </div>
@@ -923,7 +927,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1030,10 +1034,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

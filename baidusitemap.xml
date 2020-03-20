@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>http://www.joxrays.com/linux-rdp-windows/</loc>
-    <lastmod>2020-03-11</lastmod>
+    <loc>http://www.joxrays.com/avl-tree-cpp/</loc>
+    <lastmod>2020-03-20</lastmod>
   </url>  <url>
     <loc>http://www.joxrays.com/huffman-encode-decode/</loc>
     <lastmod>2020-03-02</lastmod>
@@ -24,9 +24,6 @@
   </url>  <url>
     <loc>http://www.joxrays.com/rb-tree-cpp/</loc>
     <lastmod>2020-02-03</lastmod>
-  </url>  <url>
-    <loc>http://www.joxrays.com/avl-tree-cpp/</loc>
-    <lastmod>2020-01-31</lastmod>
   </url>  <url>
     <loc>http://www.joxrays.com/bst-cpp/</loc>
     <lastmod>2020-01-20</lastmod>

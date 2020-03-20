@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -206,7 +206,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -339,6 +339,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -375,9 +378,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -520,24 +520,40 @@
       
 
       
-        <p>一般来说，VirtualBox成功安装manjaro后可以在 [设备] -&gt; [安装增强功能]。然而有时却事与愿违的怎么也无法安装，那么这时我们就可以在manjaro里自行安装 VBoxGuestAdditions，let’s go! </p>
+        <p>一般来说，VirtualBox成功安装manjaro后可以在 [设备] -&gt; [安装增强功能]。然而有时却事与愿违的怎么也无法安装，那么这时我们就可以在manjaro里自行安装 VBoxGuestAdditions，let’s go!</p>
 <a id="more"></a>
-
-<h2 id="virtualbox-guest-iso"><a href="#virtualbox-guest-iso" class="headerlink" title="virtualbox-guest-iso"></a>virtualbox-guest-iso</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S virtualbox-guest-iso</span><br></pre></td></tr></table></figure>
-
-<p>这是必须的，如此之外还可以访问官网 <a href="https://download.virtualbox.org/virtualbox/6.0.10/" target="_blank" rel="noopener">https://download.virtualbox.org/virtualbox/6.0.10/</a> 下载。<br>目前我的版本是6.0.10。下载后的iso文件存放路径为 <strong>/usr/lib/virtualbox/additions/VBoxGuestAdditions.iso</strong></p>
-<h2 id="linux-header"><a href="#linux-header" class="headerlink" title="linux header"></a>linux header</h2><p>这时就能够挂载iso镜像文件(root权限)</p>
+<h2 id="virtualbox-guest-iso"><a class="markdownIt-Anchor" href="#virtualbox-guest-iso"></a> virtualbox-guest-iso</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S virtualbox-guest-iso</span><br></pre></td></tr></table></figure>
+<p>这是必须的，如此之外还可以访问官网 <a href="https://download.virtualbox.org/virtualbox/6.0.10/" target="_blank" rel="noopener">https://download.virtualbox.org/virtualbox/6.0.10/</a> 下载。<br>
+目前我的版本是6.0.10。下载后的iso文件存放路径为 <strong>/usr/lib/virtualbox/additions/VBoxGuestAdditions.iso</strong></p>
+<h2 id="linux-header"><a class="markdownIt-Anchor" href="#linux-header"></a> linux header</h2>
+<p>这时就能够挂载iso镜像文件(root权限)</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo mount /usr/lib/virtualbox/additions/VBoxGuestAdditions.iso /mnt</span><br><span class="line"><span class="built_in">cd</span> /mnt</span><br></pre></td></tr></table></figure>
-
 <p>我们只需关心 <strong>VBoxLinuxAdditions.run</strong> ，若直接 <code>sudo sh VBoxLinuxAdditions.run</code> ，可能会导致安装不成功，如下消息</p>
 <blockquote>
-<p>ifying archive integrity… All good.<br>Uncompressing VirtualBox 6.0.10 Guest Additions for Linux……..<br>VirtualBox Guest Additions installer<br>Removing installed version 6.0.10 of VirtualBox Guest Additions…<br>Copying additional installer modules …<br>Installing additional modules …<br>VirtualBox Guest Additions: Starting.<br>VirtualBox Guest Additions: Building the VirtualBox Guest Additions kernel<br>modules.  This may take a while.<br>VirtualBox Guest Additions: To build modules for other installed kernels, run<br>VirtualBox Guest Additions:   /sbin/rcvboxadd quicksetup <version><br>VirtualBox Guest Additions: or<br>VirtualBox Guest Additions:   /sbin/rcvboxadd quicksetup all<br>VirtualBox Guest Additions: Building the modules for kernel 4.19.62-1-MANJARO.</version></p>
-<p><font color="red">This system is currently not set up to build kernel modules.<br>Please install the Linux kernel “header” files matching the current kernel<br>for adding new hardware support to the system.</font><br>VirtualBox Guest Additions: Running kernel modules will not be replaced until<br>the system is restarted</p>
+<p>ifying archive integrity… All good.<br>
+Uncompressing VirtualBox 6.0.10 Guest Additions for Linux…<br>
+VirtualBox Guest Additions installer<br>
+Removing installed version 6.0.10 of VirtualBox Guest Additions…<br>
+Copying additional installer modules …<br>
+Installing additional modules …<br>
+VirtualBox Guest Additions: Starting.<br>
+VirtualBox Guest Additions: Building the VirtualBox Guest Additions kernel<br>
+modules.  This may take a while.<br>
+VirtualBox Guest Additions: To build modules for other installed kernels, run<br>
+VirtualBox Guest Additions:   /sbin/rcvboxadd quicksetup <version><br>
+VirtualBox Guest Additions: or<br>
+VirtualBox Guest Additions:   /sbin/rcvboxadd quicksetup all<br>
+VirtualBox Guest Additions: Building the modules for kernel 4.19.62-1-MANJARO.</version></p>
+<p><font color="red">This system is currently not set up to build kernel modules.<br>
+Please install the Linux kernel “header” files matching the current kernel<br>
+for adding new hardware support to the system.</font><br>
+VirtualBox Guest Additions: Running kernel modules will not be replaced until<br>
+the system is restarted</p>
 </blockquote>
 <p>这表明目前系统没有安装 linux header 文件，解决方法如下(<strong>注意内核版本</strong>)：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">uname -r</span><br><span class="line">4.19.62-1-MANJARO</span><br><span class="line">sudo pacman -S linux419-headers</span><br><span class="line">sudo pacman -S linux419-virtualbox-guest-modules</span><br></pre></td></tr></table></figure>
-
-<p>PS： 若 <code>sudo pacman -S linux-headers</code> ，我这manjaro默认安装为 <code>linux316-headers-3.16.71-1</code>。相反 archlinux安装的是最新版本……</p>
+<p>PS： 若 <code>sudo pacman -S linux-headers</code> ，我这manjaro默认安装为 <code>linux316-headers-3.16.71-1</code>。相反 archlinux安装的是最新版本…</p>
 <p>接着就可以执行 <code>sudo sh VBoxLinuxAdditions.run</code> 来安装 VirtualBox Guest Additions，该过程可能需要一些时间来构建内核模块。若没有出现<font color="red">红字</font>部分，则表明安装成功，重启即可使用该功能</p>
 
       
@@ -694,7 +710,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -800,9 +816,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -870,7 +884,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#virtualbox-guest-iso"><span class="nav-number">1.</span> <span class="nav-text">virtualbox-guest-iso</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#linux-header"><span class="nav-number">2.</span> <span class="nav-text">linux header</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#virtualbox-guest-iso"><span class="nav-number">1.</span> <span class="nav-text"> virtualbox-guest-iso</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#linux-header"><span class="nav-number">2.</span> <span class="nav-text"> linux header</span></a></li></ol></div>
             
 
           </div>
@@ -903,7 +917,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1010,10 +1024,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

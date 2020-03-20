@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -206,7 +206,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -339,6 +339,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -375,9 +378,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -532,19 +532,28 @@
       
         <p>在Linux上Qt使用network时出现错误:</p>
 <blockquote>
-<p>qt.network.ssl: QSslSocket: cannot resolve TLSv1_1_client_method<br> qt.network.ssl: QSslSocket: cannot resolve TLSv1_2_client_method<br> qt.network.ssl: QSslSocket: cannot resolve TLSv1_1_server_method<br> qt.network.ssl: QSslSocket: cannot resolve TLSv1_2_server_method<br> qt.network.ssl: QSslSocket: cannot resolve SSL_select_next_proto<br> qt.network.ssl: QSslSocket: cannot resolve SSL_CTX_set_next_proto_select_cb<br> qt.network.ssl: QSslSocket: cannot resolve SSL_get0_next_proto_negotiated<br> qt.network.ssl: QSslSocket: cannot call unresolved function SSL_get0_next_proto_negotiated</p>
+<p>qt.network.ssl: QSslSocket: cannot resolve TLSv1_1_client_method<br>
+qt.network.ssl: QSslSocket: cannot resolve TLSv1_2_client_method<br>
+qt.network.ssl: QSslSocket: cannot resolve TLSv1_1_server_method<br>
+qt.network.ssl: QSslSocket: cannot resolve TLSv1_2_server_method<br>
+qt.network.ssl: QSslSocket: cannot resolve SSL_select_next_proto<br>
+qt.network.ssl: QSslSocket: cannot resolve SSL_CTX_set_next_proto_select_cb<br>
+qt.network.ssl: QSslSocket: cannot resolve SSL_get0_next_proto_negotiated<br>
+qt.network.ssl: QSslSocket: cannot call unresolved function SSL_get0_next_proto_negotiated</p>
 </blockquote>
 <a id="more"></a>
-
-
-
-<p>经网上查阅,大概知道了原因,就是要自己重新编译openssl.第一次用的是1.1版本的,发现还是解决不了,于是下了1.0.1的.<br><a href="https://www.openssl.org/source/old/1.0.1/" target="_blank" rel="noopener">&gt;&gt;链接</a></p>
+<p>经网上查阅,大概知道了原因,就是要自己重新编译openssl.第一次用的是1.1版本的,发现还是解决不了,于是下了1.0.1的.<br>
+<a href="https://www.openssl.org/source/old/1.0.1/" target="_blank" rel="noopener">&gt;&gt;链接</a></p>
 <blockquote>
-<p>wget <a href="https://www.openssl.org/source/old/1.0.1/openssl-1.0.1.tar.gz" target="_blank" rel="noopener">https://www.openssl.org/source/old/1.0.1/openssl-1.0.1.tar.gz</a><br>tar zxvf openssl-1.0.1.tar.gz<br>cd openssl-1.0.1/<br>./config enable-shared<br>make</p>
+<p>wget <a href="https://www.openssl.org/source/old/1.0.1/openssl-1.0.1.tar.gz" target="_blank" rel="noopener">https://www.openssl.org/source/old/1.0.1/openssl-1.0.1.tar.gz</a><br>
+tar zxvf openssl-1.0.1.tar.gz<br>
+cd openssl-1.0.1/<br>
+./config enable-shared<br>
+make</p>
 </blockquote>
 <p>在 openssl-1.0.1 目录下生成了so文件,复制到Qt安装目录lib下</p>
 <blockquote>
-<p>cp libcrypto.so libcrypto.so.1.0.0 libssl.so libssl.so.1.0.0 /opt/Qt5.6.2/5.6/gcc_64/lib</p>
+<p>cp <a href="http://libcrypto.so" target="_blank" rel="noopener">libcrypto.so</a> libcrypto.so.1.0.0 <a href="http://libssl.so" target="_blank" rel="noopener">libssl.so</a> libssl.so.1.0.0 /opt/Qt5.6.2/5.6/gcc_64/lib</p>
 </blockquote>
 <p>然后ok</p>
 
@@ -691,7 +700,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -797,9 +806,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -883,7 +890,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -990,10 +997,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -209,7 +209,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -342,6 +342,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -378,9 +381,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -535,31 +535,43 @@
       
         <p>最近安装了新版本的Qt,当连接MySQL数据库时,又出现那个似曾相识的错误 <strong>QSqlDatabase: QMYSQL driver not loaded</strong>.知道后就赶紧去编译源码.然而你以为真的就那么一帆风顺吗?</p>
 <a id="more"></a>
-
-<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>测试环境:</p>
+<h3 id="问题"><a class="markdownIt-Anchor" href="#问题"></a> 问题</h3>
+<p>测试环境:</p>
 <ul>
 <li>Linux</li>
 <li>Qt 5.10.0</li>
 <li>MariaDB 10.1.29</li>
 </ul>
-<p>出现问题:<br>我是新换成了MariaDB,比起之前传统MySQL,相应的文件路径也发生了变化.而其结果时导致后面一连串的问题.<br>现在网上大部分都是以前的MySQL驱动编译教程,关于MariaDB数据库(本质上也是MySQL)的资料很少,所以这里就总结一下期间遇到的问题……</p>
-<p>终端下输入: <code>$ locate mysql.h</code><br>在我这里输出</p>
+<p>出现问题:<br>
+我是新换成了MariaDB,比起之前传统MySQL,相应的文件路径也发生了变化.而其结果时导致后面一连串的问题.<br>
+现在网上大部分都是以前的MySQL驱动编译教程,关于MariaDB数据库(本质上也是MySQL)的资料很少,所以这里就总结一下期间遇到的问题……</p>
+<p>终端下输入: <code>$ locate mysql.h</code><br>
+在我这里输出</p>
 <blockquote>
-<p><strong>/usr/include/mariadb/mysql.h</strong><br>/usr/include/qt4/Qt/qsql_mysql.h<br>/usr/include/qt4/QtSql/qsql_mysql.h</p>
+<p><strong>/usr/include/mariadb/mysql.h</strong><br>
+/usr/include/qt4/Qt/qsql_mysql.h<br>
+/usr/include/qt4/QtSql/qsql_mysql.h</p>
 </blockquote>
 <p>注意了没,就这里注定编译MySQL驱动会失败!因为默认的搜索路径为 <strong>/usr/include/mysql.h</strong></p>
-<p>接下来我们来看看 <strong>libqsqlmysql.so</strong> 这个库文件<br><code>$ ldd libqsqlmysql.so</code><br><img src="/uploads/images/linux/file_001_qt1.png" alt="img"></p>
+<p>接下来我们来看看 <strong><a href="http://libqsqlmysql.so" target="_blank" rel="noopener">libqsqlmysql.so</a></strong> 这个库文件<br>
+<code>$ ldd libqsqlmysql.so</code><br>
+<img src="/uploads/images/linux/file_001_qt1.png" alt="img"></p>
 <p>他说 libqsqlmysql.so.18 这个库文件没有找到,那么就只能重新编译了…</p>
-<h3 id="尝试成功"><a href="#尝试成功" class="headerlink" title="尝试成功"></a>尝试成功</h3><p>但是这里我还是讲一下我第一次尝试的方法(就是把 <strong>mariadb</strong> 的库链接到 libqsqlmysql.so.18)</p>
+<h3 id="尝试成功"><a class="markdownIt-Anchor" href="#尝试成功"></a> 尝试成功</h3>
+<p>但是这里我还是讲一下我第一次尝试的方法(就是把 <strong>mariadb</strong> 的库链接到 libqsqlmysql.so.18)</p>
 <p><code>$ locate libmariadb|grep so</code> 查看 mariadb库文件的路径</p>
 <blockquote>
-<p>/usr/lib/x86_64-linux-gnu/libmariadb.so<br>/usr/lib/x86_64-linux-gnu/libmariadb.so.2<br>/usr/lib/x86_64-linux-gnu/libmariadbclient.so.18<br><strong>/usr/lib/x86_64-linux-gnu/libmariadbclient.so.18.0.0</strong></p>
+<p>/usr/lib/x86_64-linux-gnu/libmariadb.so<br>
+/usr/lib/x86_64-linux-gnu/libmariadb.so.2<br>
+/usr/lib/x86_64-linux-gnu/libmariadbclient.so.18<br>
+<strong>/usr/lib/x86_64-linux-gnu/libmariadbclient.so.18.0.0</strong></p>
 </blockquote>
-<p>接着我再找下是否还存在之前的 <strong>libmysqlclient.so</strong><br><code>$ locate libmysqlclient.so</code></p>
+<p>接着我再找下是否还存在之前的 <strong><a href="http://libmysqlclient.so" target="_blank" rel="noopener">libmysqlclient.so</a></strong><br>
+<code>$ locate libmysqlclient.so</code></p>
 <blockquote>
 <p>/usr/lib/libmysqlclient.so</p>
 </blockquote>
-<p><code>$ ls -l /usr/lib/libmysqlclient.so</code> 发现 libmysqlclient.so 是个软链接</p>
+<p><code>$ ls -l /usr/lib/libmysqlclient.so</code> 发现 <a href="http://libmysqlclient.so" target="_blank" rel="noopener">libmysqlclient.so</a> 是个软链接</p>
 <blockquote>
 <p>lrwxrwxrwx 1 root root 43 9月 17 08:01 /usr/lib/libmysqlclient.so -&gt; /usr/lib/x86_64-linux-gnu/libmysqlclient.so</p>
 </blockquote>
@@ -568,46 +580,60 @@
 <p>ls: 无法访问’/usr/lib/x86_64-linux-gnu/libmysqlclient.so’: 没有那个文件或目录</p>
 </blockquote>
 <p>what!居然不存在!?所以赶紧把那链接删了</p>
-<p>那么接下来就是给 <strong>libmariadbclient.so</strong> 设个软链接</p>
+<p>那么接下来就是给 <strong><a href="http://libmariadbclient.so" target="_blank" rel="noopener">libmariadbclient.so</a></strong> 设个软链接</p>
 <blockquote>
-<p>ln -s /usr/lib/x86_64-linux-gnu/libmariadbclient.so.18 /usr/lib/libmysqlclient.so<br><strong>ln -s /usr/lib/x86_64-linux-gnu/libmariadbclient.so.18 /usr/lib/libmysqlclient.so.18</strong></p>
+<p>ln -s /usr/lib/x86_64-linux-gnu/libmariadbclient.so.18 /usr/lib/libmysqlclient.so<br>
+<strong>ln -s /usr/lib/x86_64-linux-gnu/libmariadbclient.so.18 /usr/lib/libmysqlclient.so.18</strong></p>
 </blockquote>
 <p>最后看看 <code>$ ldd libqsqlmysql.so</code></p>
 <blockquote>
 <p>libmysqlclient.so.18 =&gt; /usr/lib/libmysqlclient.so.18 (0x00007fdf1a1df000)</p>
 </blockquote>
 <p>……居然成功了!!那还用编译个毛啊??然而这不是本文重点蛤……</p>
-<h3 id="重点-编译MySQL驱动"><a href="#重点-编译MySQL驱动" class="headerlink" title="重点(编译MySQL驱动)"></a>重点(编译MySQL驱动)</h3><p>这里所说的驱动其实也不过就是一个链接库罢了……</p>
+<h3 id="重点编译mysql驱动"><a class="markdownIt-Anchor" href="#重点编译mysql驱动"></a> 重点(编译MySQL驱动)</h3>
+<p>这里所说的驱动其实也不过就是一个链接库罢了……</p>
 <p>首先进入该源代码目录下 <code>$ cd ${QTDIR}/5.10.0/Src/qtbase/src/plugins/sqldrivers/mysql</code></p>
-<p>一般正常来讲接下来就是 <code>qmake mysql.pro</code>,<code>make</code><br>不过这里会出现一个错误<br><img src="/uploads/images/linux/file_002_qt2.png" alt="img"></p>
-<p>这就要修改 <strong>mysql.pro</strong></p>
+<p>一般正常来讲接下来就是 <code>qmake mysql.pro</code>,<code>make</code><br>
+不过这里会出现一个错误<br>
+<img src="/uploads/images/linux/file_002_qt2.png" alt="img"></p>
+<p>这就要修改 <strong><a href="http://mysql.pro" target="_blank" rel="noopener">mysql.pro</a></strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">TARGET = qsqlmysql</span><br><span class="line">HEADERS += $$PWD/qsql_mysql_p.h</span><br><span class="line">SOURCES += $$PWD/qsql_mysql.cpp $$PWD/main.cpp</span><br><span class="line">QMAKE_USE += mysql</span><br><span class="line">OTHER_FILES += mysql.json</span><br><span class="line">INCLUDEPATH += /usr/include/mariadb</span><br><span class="line">PLUGIN_CLASS_NAME = QMYSQLDriverPlugin</span><br><span class="line">include(../qsqldriverbase.pri)</span><br></pre></td></tr></table></figure>
-
 <p>注意我添加了 <strong>INCLUDEPATH += /usr/include/mariadb</strong></p>
 <p>接着 <code>qmake;make</code> 恭喜,特么的又出现了个错误.不急找找看那出了问题…</p>
 <blockquote>
-<p>/opt/Qt5.10.0/5.10.0/gcc_64/bin/qmake -o Makefile mysql.pro<br>rm -f libqsqlmysql.so<br>g++ -Wl,–no-undefined -Wl,-O1 -Wl,–enable-new-dtags -Wl,-z,origin -Wl,-rpath,$ORIGIN/../../lib -Wl,-rpath,$ORIGIN/../../lib -shared -o libqsqlmysql.so .obj/qsql_mysql.o .obj/main.o .obj/moc_qsql_mysql_p.o -L/opt/Qt5.10.0/5.10.0/gcc_64/lib -lQt5Sql -lQt5Core <strong>-lmariadbclient</strong> -lpthread -lz -lm -ldl<br><strong>/usr/bin/ld: 找不到 -lmariadbclient</strong><br>collect2: error: ld returned 1 exit status<br>Makefile:80: recipe for target ‘../plugins/sqldrivers/libqsqlmysql.so’ failed<br>make: *** [../plugins/sqldrivers/libqsqlmysql.so] Error 1</p>
+<p>/opt/Qt5.10.0/5.10.0/gcc_64/bin/qmake -o Makefile <a href="http://mysql.pro" target="_blank" rel="noopener">mysql.pro</a><br>
+rm -f <a href="http://libqsqlmysql.so" target="_blank" rel="noopener">libqsqlmysql.so</a><br>
+g++ -Wl,–no-undefined -Wl,-O1 -Wl,–enable-new-dtags -Wl,-z,origin -Wl,-rpath,$ORIGIN/…/…/lib -Wl,-rpath,$ORIGIN/…/…/lib -shared -o <a href="http://libqsqlmysql.so" target="_blank" rel="noopener">libqsqlmysql.so</a> .obj/qsql_mysql.o .obj/main.o .obj/moc_qsql_mysql_p.o -L/opt/Qt5.10.0/5.10.0/gcc_64/lib -lQt5Sql -lQt5Core <strong>-lmariadbclient</strong> -lpthread -lz -lm -ldl<br>
+<strong>/usr/bin/ld: 找不到 -lmariadbclient</strong><br>
+collect2: error: ld returned 1 exit status<br>
+Makefile:80: recipe for target ‘…/plugins/sqldrivers/libqsqlmysql.so’ failed<br>
+make: *** […/plugins/sqldrivers/libqsqlmysql.so] Error 1</p>
 </blockquote>
-<p>其实问题很简单,就是一个链接名字.在链接库时,默认匹配的为 libxxx.so ; 而后面的数字,如: libxxx.so.<strong>1.1.1</strong> 表示库的版本.</p>
-<p><code>$ locate libmariadbclient.so</code> 看到,少了一个 libmariadbclient.so</p>
+<p>其实问题很简单,就是一个链接名字.在链接库时,默认匹配的为 <a href="http://libxxx.so" target="_blank" rel="noopener">libxxx.so</a> ; 而后面的数字,如: <a href="http://libxxx.so" target="_blank" rel="noopener">libxxx.so</a>.<strong>1.1.1</strong> 表示库的版本.</p>
+<p><code>$ locate libmariadbclient.so</code> 看到,少了一个 <a href="http://libmariadbclient.so" target="_blank" rel="noopener">libmariadbclient.so</a></p>
 <blockquote>
-<p>/usr/lib/x86_64-linux-gnu/libmariadbclient.so.18<br>/usr/lib/x86_64-linux-gnu/libmariadbclient.so.18.0.0</p>
+<p>/usr/lib/x86_64-linux-gnu/libmariadbclient.so.18<br>
+/usr/lib/x86_64-linux-gnu/libmariadbclient.so.18.0.0</p>
 </blockquote>
 <p>瞬间问题简单化了,so,直接添加一个软链接就行了</p>
 <blockquote>
-<p>ln -s /usr/lib/x86_64-linux-gnu/libmariadbclient.so.18.0.0 /usr/lib/x86_64-linux-gnu/<strong>libmariadbclient.so</strong></p>
+<p>ln -s /usr/lib/x86_64-linux-gnu/libmariadbclient.so.18.0.0 /usr/lib/x86_64-linux-gnu/<strong><a href="http://libmariadbclient.so" target="_blank" rel="noopener">libmariadbclient.so</a></strong></p>
 </blockquote>
 <p>再一次 <code>qmake;make</code>……</p>
 <blockquote>
-<p>rm -f libqsqlmysql.so<br>g++ -Wl,–no-undefined -Wl,-O1 -Wl,–enable-new-dtags -Wl,-z,origin -Wl,-rpath,$ORIGIN/../../lib -Wl,-rpath,$ORIGIN/../../lib -shared -o libqsqlmysql.so .obj/qsql_mysql.o .obj/main.o .obj/moc_qsql_mysql_p.o -L/opt/Qt5.10.0/5.10.0/gcc_64/lib -lQt5Sql -lQt5Core -lmariadbclient -lpthread -lz -lm -ldl<br>mv -f libqsqlmysql.so <strong>../plugins/sqldrivers/</strong></p>
+<p>rm -f <a href="http://libqsqlmysql.so" target="_blank" rel="noopener">libqsqlmysql.so</a><br>
+g++ -Wl,–no-undefined -Wl,-O1 -Wl,–enable-new-dtags -Wl,-z,origin -Wl,-rpath,$ORIGIN/…/…/lib -Wl,-rpath,$ORIGIN/…/…/lib -shared -o <a href="http://libqsqlmysql.so" target="_blank" rel="noopener">libqsqlmysql.so</a> .obj/qsql_mysql.o .obj/main.o .obj/moc_qsql_mysql_p.o -L/opt/Qt5.10.0/5.10.0/gcc_64/lib -lQt5Sql -lQt5Core -lmariadbclient -lpthread -lz -lm -ldl<br>
+mv -f <a href="http://libqsqlmysql.so" target="_blank" rel="noopener">libqsqlmysql.so</a> <strong>…/plugins/sqldrivers/</strong></p>
 </blockquote>
 <p>成功编译!</p>
-<p>现在 <code>$ ../plugins/sqldrivers</code><br><code>$ ldd libqsqlmysql.so</code></p>
+<p>现在 <code>$ ../plugins/sqldrivers</code><br>
+<code>$ ldd libqsqlmysql.so</code></p>
 <blockquote>
 <p><strong>libmariadbclient.so.18</strong> =&gt; /usr/lib/x86_64-linux-gnu/libmariadbclient.so.18 (0x00007f1bf7414000)</p>
 </blockquote>
 <p>现在可以把这个文件复制到 /opt/Qt5.10.0/5.10.0/gcc_64/plugins/sqldrivers 目录下了</p>
-<h3 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h3><p>基本上到此为止了吧…..顺带提下,用C写的程序链接MySQL数据库时,传统的做法就是</p>
+<h3 id="结束语"><a class="markdownIt-Anchor" href="#结束语"></a> 结束语</h3>
+<p>基本上到此为止了吧……顺带提下,用C写的程序链接MySQL数据库时,传统的做法就是</p>
 <blockquote>
 <p>gcc xxx.c -o xxx <strong>-lmysqlclient</strong></p>
 </blockquote>
@@ -774,7 +800,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -880,9 +906,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -950,7 +974,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#尝试成功"><span class="nav-number">2.</span> <span class="nav-text">尝试成功</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重点-编译MySQL驱动"><span class="nav-number">3.</span> <span class="nav-text">重点(编译MySQL驱动)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结束语"><span class="nav-number">4.</span> <span class="nav-text">结束语</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">1.</span> <span class="nav-text"> 问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#尝试成功"><span class="nav-number">2.</span> <span class="nav-text"> 尝试成功</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重点编译mysql驱动"><span class="nav-number">3.</span> <span class="nav-text"> 重点(编译MySQL驱动)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结束语"><span class="nav-number">4.</span> <span class="nav-text"> 结束语</span></a></li></ol></div>
             
 
           </div>
@@ -983,7 +1007,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1090,10 +1114,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

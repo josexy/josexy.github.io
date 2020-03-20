@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -125,13 +125,13 @@
   };
 </script>
 
-  <meta name="description" content="前言最近在网上看到一篇博客,讲的是二维码的生成和识别">
+  <meta name="description" content="前言 最近在网上看到一篇博客,讲的是二维码的生成和识别">
 <meta name="keywords" content="Qt">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Qt&amp;QZXing识别二维码">
 <meta property="og:url" content="http://www.joxrays.com/linux-qzxing/index.html">
 <meta property="og:site_name" content="JoXrays&#39;s Blog">
-<meta property="og:description" content="前言最近在网上看到一篇博客,讲的是二维码的生成和识别">
+<meta property="og:description" content="前言 最近在网上看到一篇博客,讲的是二维码的生成和识别">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://www.joxrays.com/uploads/images/file4_qt/qr.png">
 <meta property="og:image" content="http://www.joxrays.com/uploads/images/file4_qt/qt1.png">
@@ -139,7 +139,7 @@
 <meta property="og:updated_time" content="2019-07-20T12:21:52.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Qt&amp;QZXing识别二维码">
-<meta name="twitter:description" content="前言最近在网上看到一篇博客,讲的是二维码的生成和识别">
+<meta name="twitter:description" content="前言 最近在网上看到一篇博客,讲的是二维码的生成和识别">
 <meta name="twitter:image" content="http://www.joxrays.com/uploads/images/file4_qt/qr.png">
 
 
@@ -210,7 +210,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -343,6 +343,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -379,9 +382,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -534,38 +534,57 @@
       
 
       
-        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>最近在网上看到一篇博客,讲的是二维码的生成和识别</p>
+        <h3 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h3>
+<p>最近在网上看到一篇博客,讲的是二维码的生成和识别</p>
 <a id="more"></a>
-
 <p>借用一下</p>
 <blockquote>
-<p>ZXing<br>ZXing是一个开放源码的，用Java实现的多种格式的1D/2D条码图像处理库，包含了联系到其他语言的端口。<br>网址：<a href="https://code.google.com/p/zxing" target="_blank" rel="noopener">https://code.google.com/p/zxing</a>.</p>
-<p>Libqrencode<br>Libqrencode(QRencode)是一个用C语言编写的用来解析二维条形码(QR Code)的程序库，Libqrencode通过手机的CCD摄像头来扫描二维条形码。二维码容量可达7000个数字或4000个字符，是非常强大的。<br>网址：<a href="http://fukuchi.org/works/qrencode/" target="_blank" rel="noopener">http://fukuchi.org/works/qrencode/</a>.</p>
-<p>ZBar<br>ZBar是款桌面电脑用条形码/二维码扫描工具，支持摄像头及图片扫描，支持多平台包括iPhone手机。同时 ZBar提供了二维码扫描的API开发包。<br>网址：<a href="http://zbar.sourceforge.net" target="_blank" rel="noopener">http://zbar.sourceforge.net</a>.<br>更多参考：<a href="http://sourceforge.net/apps/mediawiki/zbar/index.php" target="_blank" rel="noopener">http://sourceforge.net/apps/mediawiki/zbar/index.php</a>.</p>
-<p>Open Source QR Code Library<br>二维码编码/解码的Java库（J2SE, J2ME MIDP2.0/CLDC1.0）。<br>网址：<a href="http://qrcode.sourceforge.jp/index.html.en" target="_blank" rel="noopener">http://qrcode.sourceforge.jp/index.html.en</a>.</p>
-<p>QZXing<br>Qt包装ZXing的解码库。<br>网址：<a href="http://sourceforge.net/projects/qzxing" target="_blank" rel="noopener">http://sourceforge.net/projects/qzxing</a>.<br>更多参考：<a href="https://projects.developer.nokia.com/QZXing" target="_blank" rel="noopener">https://projects.developer.nokia.com/QZXing</a>.</p>
+<p>ZXing<br>
+ZXing是一个开放源码的，用Java实现的多种格式的1D/2D条码图像处理库，包含了联系到其他语言的端口。<br>
+网址：<a href="https://code.google.com/p/zxing" target="_blank" rel="noopener">https://code.google.com/p/zxing</a>.</p>
+<p>Libqrencode<br>
+Libqrencode(QRencode)是一个用C语言编写的用来解析二维条形码(QR Code)的程序库，Libqrencode通过手机的CCD摄像头来扫描二维条形码。二维码容量可达7000个数字或4000个字符，是非常强大的。<br>
+网址：<a href="http://fukuchi.org/works/qrencode/" target="_blank" rel="noopener">http://fukuchi.org/works/qrencode/</a>.</p>
+<p>ZBar<br>
+ZBar是款桌面电脑用条形码/二维码扫描工具，支持摄像头及图片扫描，支持多平台包括iPhone手机。同时 ZBar提供了二维码扫描的API开发包。<br>
+网址：<a href="http://zbar.sourceforge.net" target="_blank" rel="noopener">http://zbar.sourceforge.net</a>.<br>
+更多参考：<a href="http://sourceforge.net/apps/mediawiki/zbar/index.php" target="_blank" rel="noopener">http://sourceforge.net/apps/mediawiki/zbar/index.php</a>.</p>
+<p>Open Source QR Code Library<br>
+二维码编码/解码的Java库（J2SE, J2ME MIDP2.0/CLDC1.0）。<br>
+网址：<a href="http://qrcode.sourceforge.jp/index.html.en" target="_blank" rel="noopener">http://qrcode.sourceforge.jp/index.html.en</a>.</p>
+<p>QZXing<br>
+Qt包装ZXing的解码库。<br>
+网址：<a href="http://sourceforge.net/projects/qzxing" target="_blank" rel="noopener">http://sourceforge.net/projects/qzxing</a>.<br>
+更多参考：<a href="https://projects.developer.nokia.com/QZXing" target="_blank" rel="noopener">https://projects.developer.nokia.com/QZXing</a>.</p>
 </blockquote>
 <p>然而本人能力有限,这里只选取了 <strong>QZXing</strong> 解码库,以后有时间在慢慢琢磨…</p>
-<p>example:<br><img src="/uploads/images/file4_qt/qr.png" alt="img"></p>
-<h3 id="QZXing"><a href="#QZXing" class="headerlink" title="QZXing"></a>QZXing</h3><p>首先到github获取到源码 </p>
+<p>example:<br>
+<img src="/uploads/images/file4_qt/qr.png" alt="img"></p>
+<h3 id="qzxing"><a class="markdownIt-Anchor" href="#qzxing"></a> QZXing</h3>
+<p>首先到github获取到源码</p>
 <blockquote>
 <p>git clone <a href="https://github.com/ftylitak/qzxing.git" target="_blank" rel="noopener">https://github.com/ftylitak/qzxing.git</a></p>
 </blockquote>
 <p>当然也可以下zip压缩包</p>
-<h3 id="How-to-include"><a href="#How-to-include" class="headerlink" title="How to include"></a>How to include</h3><p>qzxing上讲的还比较清楚…怎么使用<img src="/uploads/images/file4_qt/qt1.png" alt="img"></p>
+<h3 id="how-to-include"><a class="markdownIt-Anchor" href="#how-to-include"></a> How to include</h3>
+<p>qzxing上讲的还比较清楚…怎么使用<img src="/uploads/images/file4_qt/qt1.png" alt="img"></p>
 <ul>
-<li><p>把QZXing目录直接复制到项目的根目录下,并且在项目的 .pro 中加入 <code>include(../../src/QZXing.pri)</code></p>
+<li>
+<p>把QZXing目录直接复制到项目的根目录下,并且在项目的 .pro 中加入 <code>include(../../src/QZXing.pri)</code></p>
 </li>
-<li><p>或者把源码编译成动态库(dynamic library)</p>
+<li>
+<p>或者把源码编译成动态库(dynamic library)</p>
 <blockquote>
-<p>qmake src/QZXing.pro<br>make</p>
+<p>qmake src/QZXing.pro<br>
+make</p>
 </blockquote>
 </li>
 </ul>
-<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p><img src="/uploads/images/file4_qt/qt2.png" alt="img"></p>
+<h3 id="使用"><a class="markdownIt-Anchor" href="#使用"></a> 使用</h3>
+<p><img src="/uploads/images/file4_qt/qt2.png" alt="img"></p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"widget.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ui_widget.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;QZXing.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;QPixmap&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;QDebug&gt;</span></span></span><br><span class="line">Widget::Widget(QWidget *parent) :</span><br><span class="line">    QWidget(parent),</span><br><span class="line">    ui(<span class="keyword">new</span> Ui::Widget)&#123;</span><br><span class="line">    ui-&gt;setupUi(<span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br><span class="line">Widget::~Widget()&#123;</span><br><span class="line">    <span class="keyword">delete</span> ui;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FILE_PATH <span class="meta-string">"/root/Desktop/l.png"</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Widget::on_pushButton_clicked</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="function">QPixmap <span class="title">pixmap</span><span class="params">(FILE_PATH)</span></span>;</span><br><span class="line">    ui-&gt;label-&gt;setPixmap(pixmap.scaled(ui-&gt;label-&gt;<span class="built_in">size</span>()));</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Widget::on_pushButton_2_clicked</span><span class="params">()</span></span>&#123;</span><br><span class="line">    QZXing *decoder=<span class="keyword">new</span> QZXing(<span class="keyword">this</span>);</span><br><span class="line">    <span class="comment">//设置解码格式</span></span><br><span class="line">    decoder-&gt;setDecoder(QZXing::DecoderFormat_QR_CODE);</span><br><span class="line">    <span class="comment">//start decode</span></span><br><span class="line">    QString str= decoder-&gt;decodeImage(ui-&gt;label-&gt;pixmap()-&gt;toImage());</span><br><span class="line">    <span class="keyword">if</span> (!str.isEmpty())&#123;</span><br><span class="line">        ui-&gt;textEdit-&gt;setText(str);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        ui-&gt;textEdit-&gt;setText(<span class="string">"Failed!!"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="尾"><a href="#尾" class="headerlink" title="尾"></a>尾</h3><p>当然,感兴趣的可以去看源码有解码就有编码,网上有很多库可以用,也可以自己写一个出来…不过这要技术到家…不过目前我正在学习使用 libqrencode ,可以到官网瞧瞧<a href="https://fukuchi.org/works/qrencode/" target="_blank" rel="noopener">https://fukuchi.org/works/qrencode/</a></p>
+<h3 id="尾"><a class="markdownIt-Anchor" href="#尾"></a> 尾</h3>
+<p>当然,感兴趣的可以去看源码有解码就有编码,网上有很多库可以用,也可以自己写一个出来…不过这要技术到家…不过目前我正在学习使用 libqrencode ,可以到官网瞧瞧https://fukuchi.org/works/qrencode/</p>
 
       
     </div>
@@ -719,7 +738,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -825,9 +844,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -895,7 +912,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#QZXing"><span class="nav-number">2.</span> <span class="nav-text">QZXing</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#How-to-include"><span class="nav-number">3.</span> <span class="nav-text">How to include</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用"><span class="nav-number">4.</span> <span class="nav-text">使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#尾"><span class="nav-number">5.</span> <span class="nav-text">尾</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text"> 前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#qzxing"><span class="nav-number">2.</span> <span class="nav-text"> QZXing</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#how-to-include"><span class="nav-number">3.</span> <span class="nav-text"> How to include</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用"><span class="nav-number">4.</span> <span class="nav-text"> 使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#尾"><span class="nav-number">5.</span> <span class="nav-text"> 尾</span></a></li></ol></div>
             
 
           </div>
@@ -928,7 +945,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1035,10 +1052,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

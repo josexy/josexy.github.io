@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -206,7 +206,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -339,6 +339,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -375,9 +378,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -532,15 +532,14 @@
       
         <p>最近发现了一个函数 <strong>popen()/pclose()</strong> ,所以现在打算理清下思路…</p>
 <a id="more"></a>
-
-<h4 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h4><p>linux下的 <strong>popen</strong> 函数,大概就是通过 <strong>fork</strong> 一个子进程来执行命令并返回执行的结果给父进程.</p>
+<h4 id="正文"><a class="markdownIt-Anchor" href="#正文"></a> 正文</h4>
+<p>linux下的 <strong>popen</strong> 函数,大概就是通过 <strong>fork</strong> 一个子进程来执行命令并返回执行的结果给父进程.</p>
 <blockquote>
 <p>The popen() function shall <strong>execute the command</strong> specified by the string command. It shall <strong>create a pipe</strong> between the calling program and the executed command, and shall return a pointer to a stream that can be used to either read from or write to the pipe.</p>
 <p><a href="http://pubs.opengroup.org/onlinepubs/009695399/functions/popen.html" target="_blank" rel="noopener">http://pubs.opengroup.org/onlinepubs/009695399/functions/popen.html</a></p>
 </blockquote>
 <p>函数声明如下</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="comment">/* Create a new stream connected to a pipe running the given command.</span></span><br><span class="line"><span class="comment">   This function is a possible cancellation point and therefore not</span></span><br><span class="line"><span class="comment">   marked with __THROW.  */</span></span><br><span class="line"><span class="function"><span class="keyword">extern</span> FILE *<span class="title">popen</span> <span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *__command, <span class="keyword">const</span> <span class="keyword">char</span> *__modes)</span> __wur</span>;</span><br><span class="line"><span class="comment">/* Close a stream opened by popen and return the status of its child.</span></span><br><span class="line"><span class="comment">   This function is a possible cancellation point and therefore not</span></span><br><span class="line"><span class="comment">   marked with __THROW.  */</span></span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="keyword">int</span> <span class="title">pclose</span> <span class="params">(FILE *__stream)</span></span>;</span><br></pre></td></tr></table></figure>
-
 <p>当然了,更重要的是要知道该函数内部是怎么实现的,大概步骤如下:<strong>(此处仅讨论子进程返回结果给父进程!)</strong></p>
 <ol>
 <li>父进程通过 <strong>pipe()</strong> 创建 <strong>读/写匿名管道</strong> ,并关闭写管道pfd[1]</li>
@@ -552,13 +551,11 @@
 </ol>
 <p>简单实现代码如下:</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">FILE* <span class="title">mypopen</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span>*cmd)</span></span>&#123;</span><br><span class="line">    <span class="comment">//管道文件描述符</span></span><br><span class="line">    <span class="keyword">int</span> pfd[<span class="number">2</span>];</span><br><span class="line">    <span class="keyword">if</span>(pipe(pfd)!=<span class="number">0</span>)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"error: %s\n"</span>,strerror(errno));</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//创建子进程</span></span><br><span class="line">    <span class="keyword">pid_t</span>  pid=fork();</span><br><span class="line">    <span class="keyword">if</span>(pid==<span class="number">0</span>)&#123;</span><br><span class="line">        <span class="built_in">close</span>(pfd[<span class="number">0</span>]);</span><br><span class="line">        </span><br><span class="line">         <span class="comment">//重定向 标准输出 到 写管道</span></span><br><span class="line">        <span class="built_in">close</span>(STDOUT_FILENO);</span><br><span class="line">        dup(pfd[<span class="number">1</span>]);</span><br><span class="line">        <span class="keyword">char</span> _cmd[<span class="number">50</span>]&#123;<span class="number">0</span>&#125;;</span><br><span class="line">        <span class="built_in">sprintf</span>(_cmd,<span class="string">"%s"</span>,cmd);</span><br><span class="line">        execl(<span class="string">"/bin/sh"</span>,<span class="string">"sh"</span>,<span class="string">"-c"</span>,_cmd,<span class="literal">NULL</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//关闭写管道</span></span><br><span class="line">    <span class="built_in">close</span>(pfd[<span class="number">1</span>]);</span><br><span class="line">    <span class="comment">//等待子进程退出</span></span><br><span class="line">    <span class="keyword">int</span> p= wait(<span class="number">0</span>);</span><br><span class="line">   <span class="comment">//printf("%d terminal\n",p);</span></span><br><span class="line">    <span class="comment">//直接读取数据</span></span><br><span class="line">    <span class="comment">//char buffer[1024*2]=&#123;0&#125;;</span></span><br><span class="line">    <span class="comment">//read(pfd[0],buffer,1024*2);</span></span><br><span class="line">    FILE* pfile =fdopen(pfd[<span class="number">0</span>],<span class="string">"r"</span>);</span><br><span class="line">    <span class="keyword">if</span>(!pfile) <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">return</span> pfile;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    FILE *file= mypopen(<span class="string">"ls -lSah"</span>);</span><br><span class="line">    <span class="keyword">char</span> <span class="built_in">buffer</span>[<span class="number">1024</span>];</span><br><span class="line">    <span class="keyword">while</span>(fgets(<span class="built_in">buffer</span>,<span class="number">1024</span>,file))&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%s"</span>,<span class="built_in">buffer</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//close pfd[0]!</span></span><br><span class="line">    fclose(file);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>其中,较重要的是在子进程中重定向标准输出,这里给出其他方法重定向标准输出到管道描述符</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//方法1</span></span><br><span class="line"><span class="comment">//重定向 标准输出 到 写管道</span></span><br><span class="line"><span class="built_in">close</span>(STDOUT_FILENO);</span><br><span class="line">dup(pfd[<span class="number">1</span>]);</span><br><span class="line"><span class="comment">//方法2,相当于先close(STDOUT_FILENO) ,再dup(pfd[1])</span></span><br><span class="line">dup2(pfd[<span class="number">1</span>],STDOUT_FILENO);</span><br><span class="line"><span class="comment">//方法3</span></span><br><span class="line"><span class="built_in">close</span>(STDOUT_FILENO);</span><br><span class="line"><span class="keyword">int</span> fd=fcntl(pfd[<span class="number">1</span>],F_DUPFD);</span><br></pre></td></tr></table></figure>
-
-<h4 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h4><p>参考文章: <a href="http://blog.csdn.net/litingli/article/details/5891726" target="_blank" rel="noopener">http://blog.csdn.net/litingli/article/details/5891726</a></p>
+<h4 id="结尾"><a class="markdownIt-Anchor" href="#结尾"></a> 结尾</h4>
+<p>参考文章: <a href="http://blog.csdn.net/litingli/article/details/5891726" target="_blank" rel="noopener">http://blog.csdn.net/litingli/article/details/5891726</a></p>
 
       
     </div>
@@ -716,7 +713,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -822,9 +819,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -892,7 +887,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#正文"><span class="nav-number">1.</span> <span class="nav-text">正文</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#结尾"><span class="nav-number">2.</span> <span class="nav-text">结尾</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#正文"><span class="nav-number">1.</span> <span class="nav-text"> 正文</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#结尾"><span class="nav-number">2.</span> <span class="nav-text"> 结尾</span></a></li></ol></div>
             
 
           </div>
@@ -925,7 +920,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1032,10 +1027,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

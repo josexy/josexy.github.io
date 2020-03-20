@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -125,13 +125,13 @@
   };
 </script>
 
-  <meta name="description" content="前言今天好好的，突然来了这个，还以为我原来分的扩展分区不能用了。所以赶紧百度，百度不行Google，果然，还是Googl牛！然而英文，只好硬着头皮去看。。。  原文: https://askubuntu.com/questions/156994/partition-does-not-start-on-physical-sector-boundary">
+  <meta name="description" content="前言 今天好好的，突然来了这个，还以为我原来分的扩展分区不能用了。所以赶紧百度，百度不行Google，果然，还是Googl牛！然而英文，只好硬着头皮去看。。。  原文: https://askubuntu.com/questions/156994/partition-does-not-start-on-physical-sector-boundary">
 <meta name="keywords" content="Linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Partition X does not start on physical sector boundary">
 <meta property="og:url" content="http://www.joxrays.com/linux-partition-x/index.html">
 <meta property="og:site_name" content="JoXrays&#39;s Blog">
-<meta property="og:description" content="前言今天好好的，突然来了这个，还以为我原来分的扩展分区不能用了。所以赶紧百度，百度不行Google，果然，还是Googl牛！然而英文，只好硬着头皮去看。。。  原文: https://askubuntu.com/questions/156994/partition-does-not-start-on-physical-sector-boundary">
+<meta property="og:description" content="前言 今天好好的，突然来了这个，还以为我原来分的扩展分区不能用了。所以赶紧百度，百度不行Google，果然，还是Googl牛！然而英文，只好硬着头皮去看。。。  原文: https://askubuntu.com/questions/156994/partition-does-not-start-on-physical-sector-boundary">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://www.joxrays.com/uploads/images/files/0.png">
 <meta property="og:image" content="http://www.joxrays.com/uploads/images/files/1.png">
@@ -141,7 +141,7 @@
 <meta property="og:updated_time" content="2019-07-20T12:24:36.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Partition X does not start on physical sector boundary">
-<meta name="twitter:description" content="前言今天好好的，突然来了这个，还以为我原来分的扩展分区不能用了。所以赶紧百度，百度不行Google，果然，还是Googl牛！然而英文，只好硬着头皮去看。。。  原文: https://askubuntu.com/questions/156994/partition-does-not-start-on-physical-sector-boundary">
+<meta name="twitter:description" content="前言 今天好好的，突然来了这个，还以为我原来分的扩展分区不能用了。所以赶紧百度，百度不行Google，果然，还是Googl牛！然而英文，只好硬着头皮去看。。。  原文: https://askubuntu.com/questions/156994/partition-does-not-start-on-physical-sector-boundary">
 <meta name="twitter:image" content="http://www.joxrays.com/uploads/images/files/0.png">
 
 
@@ -212,7 +212,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -345,6 +345,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -381,9 +384,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -536,24 +536,35 @@
       
 
       
-        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>今天好好的，突然来了这个，还以为我原来分的扩展分区不能用了。所以赶紧百度，百度不行Google，果然，还是Googl牛！然而英文，只好硬着头皮去看。。。</p>
+        <h3 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h3>
+<p>今天好好的，突然来了这个，还以为我原来分的扩展分区不能用了。所以赶紧百度，百度不行Google，果然，还是Googl牛！然而英文，只好硬着头皮去看。。。</p>
 <blockquote>
 <p>原文: <a href="https://askubuntu.com/questions/156994/partition-does-not-start-on-physical-sector-boundary" target="_blank" rel="noopener">https://askubuntu.com/questions/156994/partition-does-not-start-on-physical-sector-boundary</a></p>
 </blockquote>
 <a id="more"></a>
-
-<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>错误情况图<img src="/uploads/images/files/0.png" alt="img"></p>
-<p>红色那个错误提示：<code>Partition 3 does not start on physical sector boundary.</code><br>我第一次是把那个 /dev/sda5 删除在新建格式化，结果还是不行，最后我看到老外用 <strong>gparted</strong></p>
+<h3 id="解决方案"><a class="markdownIt-Anchor" href="#解决方案"></a> 解决方案</h3>
+<p>错误情况图<img src="/uploads/images/files/0.png" alt="img"></p>
+<p>红色那个错误提示：<code>Partition 3 does not start on physical sector boundary.</code><br>
+我第一次是把那个 /dev/sda5 删除在新建格式化，结果还是不行，最后我看到老外用 <strong>gparted</strong></p>
 <ul>
-<li><p>我把以前的拓展分区全部删除，结果如图【未分配】<br><img src="/uploads/images/files/1.png" alt="img"></p>
+<li>
+<p>我把以前的拓展分区全部删除，结果如图【未分配】<br>
+<img src="/uploads/images/files/1.png" alt="img"></p>
 </li>
-<li><p>新建<code>扩展分区</code>，<code>之前的空余空间</code>为 <code>1MB</code><br><img src="/uploads/images/files/2.png" alt="img"></p>
+<li>
+<p>新建<code>扩展分区</code>，<code>之前的空余空间</code>为 <code>1MB</code><br>
+<img src="/uploads/images/files/2.png" alt="img"></p>
 </li>
-<li><p>然后在新建的扩展分区那新建一个<code>逻辑分区</code>，同样也是<code>1MB</code><br><img src="/uploads/images/files/3.png" alt="img"></p>
+<li>
+<p>然后在新建的扩展分区那新建一个<code>逻辑分区</code>，同样也是<code>1MB</code><br>
+<img src="/uploads/images/files/3.png" alt="img"></p>
 </li>
-<li><p>全部应用，完成<br><img src="/uploads/images/files/4.png" alt="img"></p>
+<li>
+<p>全部应用，完成<br>
+<img src="/uploads/images/files/4.png" alt="img"></p>
 </li>
-<li><p>这时在终端下输入 <code>fdisk -l</code>应该可以看到 没有错误了</p>
+<li>
+<p>这时在终端下输入 <code>fdisk -l</code>应该可以看到 没有错误了</p>
 </li>
 </ul>
 
@@ -709,7 +720,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -815,9 +826,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -885,7 +894,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决方案"><span class="nav-number">2.</span> <span class="nav-text">解决方案</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text"> 前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决方案"><span class="nav-number">2.</span> <span class="nav-text"> 解决方案</span></a></li></ol></div>
             
 
           </div>
@@ -918,7 +927,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1025,10 +1034,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

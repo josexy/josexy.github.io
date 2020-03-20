@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -125,18 +125,18 @@
   };
 </script>
 
-  <meta name="description" content="前言说到加载库,第一个方法就是包含库的头文件,在编译时通过  加载链接库.第二种方法在运行时用函数来加载链接库,获取其中的函数地址并调用.本文讲述后者">
+  <meta name="description" content="前言 说到加载库,第一个方法就是包含库的头文件,在编译时通过  加载链接库.第二种方法在运行时用函数来加载链接库,获取其中的函数地址并调用.本文讲述后者">
 <meta name="keywords" content="C++,Linux,C">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux dlopen 加载动态链接库">
 <meta property="og:url" content="http://www.joxrays.com/linux-dlopen/index.html">
 <meta property="og:site_name" content="JoXrays&#39;s Blog">
-<meta property="og:description" content="前言说到加载库,第一个方法就是包含库的头文件,在编译时通过  加载链接库.第二种方法在运行时用函数来加载链接库,获取其中的函数地址并调用.本文讲述后者">
+<meta property="og:description" content="前言 说到加载库,第一个方法就是包含库的头文件,在编译时通过  加载链接库.第二种方法在运行时用函数来加载链接库,获取其中的函数地址并调用.本文讲述后者">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2019-07-20T14:13:02.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux dlopen 加载动态链接库">
-<meta name="twitter:description" content="前言说到加载库,第一个方法就是包含库的头文件,在编译时通过  加载链接库.第二种方法在运行时用函数来加载链接库,获取其中的函数地址并调用.本文讲述后者">
+<meta name="twitter:description" content="前言 说到加载库,第一个方法就是包含库的头文件,在编译时通过  加载链接库.第二种方法在运行时用函数来加载链接库,获取其中的函数地址并调用.本文讲述后者">
 
 
 
@@ -206,7 +206,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -339,6 +339,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -375,9 +378,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -530,37 +530,32 @@
       
 
       
-        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>说到加载库,第一个方法就是包含库的头文件,在编译时通过  加载链接库.第二种方法在运行时用函数来加载链接库,获取其中的函数地址并调用.本文讲述后者</p>
+        <h3 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h3>
+<p>说到加载库,第一个方法就是包含库的头文件,在编译时通过  加载链接库.第二种方法在运行时用函数来加载链接库,获取其中的函数地址并调用.本文讲述后者</p>
 <a id="more"></a>
-
-
-
-<h3 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h3><p>接触过WindowsAPI的应该知道,静态库后缀为,动态链接库后缀,而主要用到函数</p>
+<h3 id="正文"><a class="markdownIt-Anchor" href="#正文"></a> 正文</h3>
+<p>接触过WindowsAPI的应该知道,静态库后缀为,动态链接库后缀,而主要用到函数</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">HMODULE WINAPI <span class="title">LoadLibrary</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  _In_ LPCTSTR lpFileName</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
-
 <p>获取函数地址则是</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">FARPROC WINAPI <span class="title">GetProcAddress</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  _In_ HMODULE hModule,</span></span></span><br><span class="line"><span class="function"><span class="params">  _In_ LPCSTR  lpProcName</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
-
 <p>MSDN上的例子</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//声明函数指针</span></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">void</span> <span class="params">(WINAPI *PGNSI)</span><span class="params">(LPSYSTEM_INFO)</span></span>;</span><br><span class="line"><span class="comment">// Call GetNativeSystemInfo if supported or GetSystemInfo otherwise.</span></span><br><span class="line">   PGNSI pGNSI;</span><br><span class="line">   SYSTEM_INFO si;</span><br><span class="line">   ZeroMemory(&amp;si, <span class="keyword">sizeof</span>(SYSTEM_INFO));</span><br><span class="line">   </span><br><span class="line">   pGNSI = (PGNSI) GetProcAddress(</span><br><span class="line">      GetModuleHandle(TEXT(<span class="string">"kernel32.dll"</span>)), </span><br><span class="line">      <span class="string">"GetNativeSystemInfo"</span>);</span><br><span class="line">   <span class="keyword">if</span>(<span class="literal">NULL</span> != pGNSI)</span><br><span class="line">   &#123;</span><br><span class="line">      pGNSI(&amp;si);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">else</span> </span><br><span class="line">   &#123;</span><br><span class="line">       GetSystemInfo(&amp;si);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-
-<p>由此可看,Windows也实现了对库文件的调用,那么Linux下怎么调用呢?<br>关于Linux调用库的头文件可以参考 <a href="https://linux.die.net/man/3/dlopen" target="_blank" rel="noopener">https://linux.die.net/man/3/dlopen</a></p>
-<p>必须包含的头文件 <code>dlfcn.h</code><br>常用函数:</p>
+<p>由此可看,Windows也实现了对库文件的调用,那么Linux下怎么调用呢?<br>
+关于Linux调用库的头文件可以参考 <a href="https://linux.die.net/man/3/dlopen" target="_blank" rel="noopener">https://linux.die.net/man/3/dlopen</a></p>
+<p>必须包含的头文件 <code>dlfcn.h</code><br>
+常用函数:</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//加载链接库</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> *<span class="title">dlopen</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *filename, <span class="keyword">int</span> flag)</span></span>;</span><br><span class="line"><span class="comment">//返回获取的错误</span></span><br><span class="line"><span class="function"><span class="keyword">char</span> *<span class="title">dlerror</span><span class="params">(<span class="keyword">void</span>)</span></span>;</span><br><span class="line"><span class="comment">//获取链接库函数地址</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> *<span class="title">dlsym</span><span class="params">(<span class="keyword">void</span> *handle, <span class="keyword">const</span> <span class="keyword">char</span> *symbol)</span></span>;</span><br><span class="line"><span class="comment">//卸载链接库</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">dlclose</span><span class="params">(<span class="keyword">void</span> *handle)</span></span>;</span><br></pre></td></tr></table></figure>
-
 <p>注意,在编译时,要指明 <strong>-ldl</strong></p>
 <p>除此之外,还有连个也比较有用的函数<strong>dladdr() dlvsym()</strong></p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//获取函数的信息</span></span><br><span class="line"><span class="comment">//dladdr() returns 0 on error, and nonzero on success</span></span><br><span class="line"><span class="comment">//If no symbol matching addr could be found, then dli_sname and dli_saddr are set to NULL</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">dladdr</span><span class="params">(<span class="keyword">void</span> *addr, Dl_info *info)</span></span>;</span><br><span class="line">The function dladdr() takes a function pointer and tries to resolve name and file where it is located. Information is stored in the Dl_info structure:</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *dli_fname;  <span class="comment">/* Pathname of shared object that</span></span><br><span class="line"><span class="comment">                               contains address */</span></span><br><span class="line">    <span class="keyword">void</span>       *dli_fbase;  <span class="comment">/* Address at which shared object</span></span><br><span class="line"><span class="comment">                               is loaded */</span></span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *dli_sname;  <span class="comment">/* Name of nearest symbol with address</span></span><br><span class="line"><span class="comment">                               lower than addr */</span></span><br><span class="line">    <span class="keyword">void</span>       *dli_saddr;  <span class="comment">/* Exact address of symbol named</span></span><br><span class="line"><span class="comment">                               in dli_sname */</span></span><br><span class="line">&#125; Dl_info;</span><br><span class="line"><span class="comment">//类似dlsym()</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> *<span class="title">dlvsym</span><span class="params">(<span class="keyword">void</span> *handle, <span class="keyword">char</span> *symbol, <span class="keyword">char</span> *version)</span></span>;</span><br></pre></td></tr></table></figure>
-
 <p>下面以一个简单的例子说明</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;dlfcn.h&gt; //包含的头文件</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LIB_PATH <span class="meta-string">"./libtest.so"</span></span></span><br><span class="line"><span class="comment">//声明函数指针</span></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">int</span> <span class="params">(*PFUN)</span><span class="params">(<span class="keyword">int</span> ,<span class="keyword">int</span> )</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    PFUN pf=<span class="literal">NULL</span>;</span><br><span class="line">    <span class="comment">//加载链接库</span></span><br><span class="line">    <span class="keyword">void</span> *handle=dlopen(LIB_PATH,RTLD_LAZY);</span><br><span class="line">    <span class="keyword">if</span>(handle==<span class="literal">NULL</span>)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"load library failed!\n"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">//dlvsym(handle,"add","1.0.0"); </span></span><br><span class="line">    <span class="comment">//获取链接库里函数地址</span></span><br><span class="line">    <span class="comment">//方法1,参考网站上的写法</span></span><br><span class="line">    <span class="comment">//*(void**)(&amp;pf)=dlsym(handle,"add");</span></span><br><span class="line">   </span><br><span class="line">    <span class="comment">//方法2,相当与Windows下的 GetProcAddress() 函数.</span></span><br><span class="line">    pf=(PFUN)dlsym(handle,<span class="string">"sub"</span>);</span><br><span class="line">    <span class="keyword">if</span>(pf!=<span class="literal">NULL</span>)&#123;</span><br><span class="line">        <span class="comment">//获取函数地址信息</span></span><br><span class="line">        Dl_info info;</span><br><span class="line">       <span class="keyword">int</span> r= dladdr((<span class="keyword">void</span>*)pf,&amp;info);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"library filepath:%s\n"</span>\</span><br><span class="line">                <span class="string">"address1:0x%08x\n"</span>\</span><br><span class="line">                <span class="string">"funciton name:%s\n"</span>\</span><br><span class="line">                <span class="string">"address2:0x%08x\n\n"</span>,</span><br><span class="line">                info.dli_fname,info.dli_fbase,</span><br><span class="line">                info.dli_sname,info.dli_saddr);</span><br><span class="line">        <span class="comment">//0 表示失败</span></span><br><span class="line">        <span class="keyword">if</span>(r==<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"can not get the dl info...\n"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"get the function address...\n"</span>);</span><br><span class="line">        <span class="comment">//调用函数</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"result: %d \n"</span>,pf(<span class="number">50</span>,<span class="number">15</span>));</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"can not get the function address...\n"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//卸载链接库</span></span><br><span class="line">    dlclose(handle);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>生成:<code>g++ test.cpp -o out_test -ldl -rdynamic</code><br>运行<code>./out_test</code><br>输出结果如下</p>
+<p>生成:<code>g++ test.cpp -o out_test -ldl -rdynamic</code><br>
+运行<code>./out_test</code><br>
+输出结果如下</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">library filepath:./libtest.so</span><br><span class="line">address1:<span class="number">0xeabfa000</span></span><br><span class="line">funciton name:sub</span><br><span class="line">address2:<span class="number">0xeabfa7f4</span></span><br><span class="line"><span class="built_in">get</span> the function address...</span><br><span class="line">result: <span class="number">35</span></span><br></pre></td></tr></table></figure>
-
-<p>注意上面的库文件<strong>libtest.so</strong>在当前程序目录下的,代码如下</p>
+<p>注意上面的库文件<strong><a href="http://libtest.so" target="_blank" rel="noopener">libtest.so</a></strong>在当前程序目录下的,代码如下</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> _TEST_H</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> _TEST_H</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span> <span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a+b;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span> <span class="function"><span class="keyword">int</span> <span class="title">sub</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a-b;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span> <span class="function"><span class="keyword">int</span> <span class="title">maxnum</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a&gt;b?a:b;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
-
 <p>然后 <code>g++ -fPIC -shared test.cpp -o libtest.so</code>即可生成动态链接库</p>
 
       
@@ -719,7 +714,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -825,9 +820,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -895,7 +888,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#正文"><span class="nav-number">2.</span> <span class="nav-text">正文</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text"> 前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#正文"><span class="nav-number">2.</span> <span class="nav-text"> 正文</span></a></li></ol></div>
             
 
           </div>
@@ -928,7 +921,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1035,10 +1028,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

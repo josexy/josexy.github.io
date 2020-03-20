@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -125,19 +125,19 @@
   };
 </script>
 
-  <meta name="description" content="由于之前不小心把vim的配置删了，致使之前的那篇文章无法访问，但为了回应有关网友的回复，特此重新编辑了vim的ycm配置。:) YCM全称 YouCompleteMe，是一个vim插件，但是却是一个能够使代码自动补全的工具。虽然如此，但也还是无法与专用IDE相媲美，不过对于vim党来说却是一个十分有趣的插件。">
+  <meta name="description" content="由于之前不小心把vim的配置删了，致使之前的那篇文章无法访问，但为了回应有关网友的回复，特此重新编辑了vim的ycm配置。😃 YCM全称 YouCompleteMe，是一个vim插件，但是却是一个能够使代码自动补全的工具。虽然如此，但也还是无法与专用IDE相媲美，不过对于vim党来说却是一个十分有趣的插件。">
 <meta name="keywords" content="Linux,Vim,YCM">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux Vim YCM配置">
 <meta property="og:url" content="http://www.joxrays.com/linux-ycm-vim/index.html">
 <meta property="og:site_name" content="JoXrays&#39;s Blog">
-<meta property="og:description" content="由于之前不小心把vim的配置删了，致使之前的那篇文章无法访问，但为了回应有关网友的回复，特此重新编辑了vim的ycm配置。:) YCM全称 YouCompleteMe，是一个vim插件，但是却是一个能够使代码自动补全的工具。虽然如此，但也还是无法与专用IDE相媲美，不过对于vim党来说却是一个十分有趣的插件。">
+<meta property="og:description" content="由于之前不小心把vim的配置删了，致使之前的那篇文章无法访问，但为了回应有关网友的回复，特此重新编辑了vim的ycm配置。😃 YCM全称 YouCompleteMe，是一个vim插件，但是却是一个能够使代码自动补全的工具。虽然如此，但也还是无法与专用IDE相媲美，不过对于vim党来说却是一个十分有趣的插件。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://www.joxrays.com/uploads/images/ycm_vim/ycm_vim.png">
 <meta property="og:updated_time" content="2020-01-12T14:49:02.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux Vim YCM配置">
-<meta name="twitter:description" content="由于之前不小心把vim的配置删了，致使之前的那篇文章无法访问，但为了回应有关网友的回复，特此重新编辑了vim的ycm配置。:) YCM全称 YouCompleteMe，是一个vim插件，但是却是一个能够使代码自动补全的工具。虽然如此，但也还是无法与专用IDE相媲美，不过对于vim党来说却是一个十分有趣的插件。">
+<meta name="twitter:description" content="由于之前不小心把vim的配置删了，致使之前的那篇文章无法访问，但为了回应有关网友的回复，特此重新编辑了vim的ycm配置。😃 YCM全称 YouCompleteMe，是一个vim插件，但是却是一个能够使代码自动补全的工具。虽然如此，但也还是无法与专用IDE相媲美，不过对于vim党来说却是一个十分有趣的插件。">
 <meta name="twitter:image" content="http://www.joxrays.com/uploads/images/ycm_vim/ycm_vim.png">
 
 
@@ -208,7 +208,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -341,6 +341,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -377,9 +380,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -532,56 +532,53 @@
       
 
       
-        <p>由于之前不小心把vim的配置删了，致使之前的那篇文章无法访问，但为了回应有关网友的回复，特此重新编辑了vim的ycm配置。:)</p>
+        <p>由于之前不小心把vim的配置删了，致使之前的那篇文章无法访问，但为了回应有关网友的回复，特此重新编辑了vim的ycm配置。😃</p>
 <p>YCM全称 YouCompleteMe，是一个vim插件，但是却是一个能够使代码自动补全的工具。虽然如此，但也还是无法与专用IDE相媲美，不过对于vim党来说却是一个十分有趣的插件。</p>
 <a id="more"></a>
-
-<h2 id="安装前"><a href="#安装前" class="headerlink" title="安装前"></a>安装前</h2><p>要使VIM配置YCM，则必须确保Vim支持Python2和Python3，可以用 <code>vim --version</code> 查看是否支持。否则请自行从源代码安装vim。</p>
+<h2 id="安装前"><a class="markdownIt-Anchor" href="#安装前"></a> 安装前</h2>
+<p>要使VIM配置YCM，则必须确保Vim支持Python2和Python3，可以用 <code>vim --version</code> 查看是否支持。否则请自行从源代码安装vim。</p>
 <p>我的系统是archlinux，vim版本为8.2</p>
-<h2 id="安装YCM-Vundle"><a href="#安装YCM-Vundle" class="headerlink" title="安装YCM(Vundle)"></a>安装YCM(Vundle)</h2><p>YCM github： <a href="https://github.com/ycm-core/YouCompleteMe" target="_blank" rel="noopener">https://github.com/ycm-core/YouCompleteMe</a></p>
+<h2 id="安装ycmvundle"><a class="markdownIt-Anchor" href="#安装ycmvundle"></a> 安装YCM(Vundle)</h2>
+<p>YCM github： <a href="https://github.com/ycm-core/YouCompleteMe" target="_blank" rel="noopener">https://github.com/ycm-core/YouCompleteMe</a></p>
 <p>推荐通过 <strong>Vundle</strong> 安装 YCM，在此之前，需要安装 Vundle： <a href="https://github.com/VundleVim/Vundle.vim" target="_blank" rel="noopener">https://github.com/VundleVim/Vundle.vim</a></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim</span><br></pre></td></tr></table></figure>
-
 <p>之后可以编辑 ~/.vimrc 文件</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> nocompatible</span><br><span class="line">filetype off </span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> rtp+=~/.vim/bundle/Vundle.vim</span><br><span class="line">call vundle<span class="comment">#begin()</span></span><br><span class="line">...</span><br><span class="line">Plugin <span class="string">'VundleVim/Vundle.vim'</span></span><br><span class="line">...</span><br><span class="line">call vundle<span class="comment">#end()</span></span><br><span class="line">filetype plugin indent on</span><br></pre></td></tr></table></figure>
-
 <p>一般来说，vundle常用用法如下</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">:PluginList       - 列举配置插件</span><br><span class="line">:PluginInstall    - 安装 ‘Plugin’ 之后的插件</span><br><span class="line">:PluginUpdate	  - 更新插件</span><br><span class="line">:PluginSearch foo - 寻找插件 foo并添加的本地配置</span><br><span class="line">:PluginClean      - 删除未被使用的插件</span><br></pre></td></tr></table></figure>
-
-<h2 id="支持C-C"><a href="#支持C-C" class="headerlink" title="支持C/C++"></a>支持C/C++</h2><p>要使YCM支持C语言的自动补全，还需要配置YCM，首先在 .vimrc 添加一行</p>
+<h2 id="支持cc"><a class="markdownIt-Anchor" href="#支持cc"></a> 支持C/C++</h2>
+<p>要使YCM支持C语言的自动补全，还需要配置YCM，首先在 .vimrc 添加一行</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">call vundle<span class="comment">#begin()</span></span><br><span class="line">. . . </span><br><span class="line">Plugin <span class="string">'Valloric/YouCompleteMe’</span></span><br><span class="line"><span class="string">. . .</span></span><br><span class="line"><span class="string">call vundle#end()</span></span><br></pre></td></tr></table></figure>
-
-<p>进入vim后 <code>:PluginInstall</code> ，然后在进行编译YCM，当然还有 ./install.sh –all ，不过我就不怎么配置了。 注意还要安装 <code>cmake</code></p>
+<p>进入vim后 <code>:PluginInstall</code> ，然后在进行编译YCM，当然还有 ./install.sh --all ，不过我就不怎么配置了。 注意还要安装 <code>cmake</code></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/.vim/bundle/YouCompleteMe</span><br><span class="line">./install.sh --clang-completer</span><br></pre></td></tr></table></figure>
-
 <p>如果是Git YCM的，那么还需要在该目录下执行</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/ycm-core/YouCompleteMe.git</span><br><span class="line">git submodule update --init --recursive</span><br></pre></td></tr></table></figure>
-
-<h2 id="下载安装libclang"><a href="#下载安装libclang" class="headerlink" title="下载安装libclang"></a>下载安装libclang</h2><p>由于我的系统是archlinux，所以可以直接 </p>
+<h2 id="下载安装libclang"><a class="markdownIt-Anchor" href="#下载安装libclang"></a> 下载安装libclang</h2>
+<p>由于我的系统是archlinux，所以可以直接</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S clang boost llvm-libs</span><br></pre></td></tr></table></figure>
-
 <p>其他linux系统比如Ubuntu，需要安装 llvm，clang，libclang，libboost。</p>
-<h2 id="编译构建-ycm-core-库"><a href="#编译构建-ycm-core-库" class="headerlink" title="编译构建 ycm_core 库"></a>编译构建 ycm_core 库</h2><p>编译构建ycm_core库需要安装 cmake和python3-dev<br>创建一个用于存放编译过程的产生的文件</p>
+<h2 id="编译构建-ycm_core-库"><a class="markdownIt-Anchor" href="#编译构建-ycm_core-库"></a> 编译构建 ycm_core 库</h2>
+<p>编译构建ycm_core库需要安装 cmake和python3-dev<br>
+创建一个用于存放编译过程的产生的文件</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mkdir ~/ycm_build</span></span><br><span class="line"><span class="comment"># cd ~/ycm_build</span></span><br><span class="line"><span class="comment"># cmake -G "Unix Makefiles" -DUSE_SYSTEM_BOOST=ON -DUSE_SYSTEM_LIBCLANG=ON . ~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp</span></span><br><span class="line"></span><br><span class="line">输出：</span><br><span class="line">-- The C compiler identification is GNU 9.1.0</span><br><span class="line">-- The CXX compiler identification is GNU 9.1.0</span><br><span class="line">-- Check <span class="keyword">for</span> working C compiler: /usr/bin/cc</span><br><span class="line">-- Check <span class="keyword">for</span> working C compiler: /usr/bin/cc -- works</span><br><span class="line">-- Detecting C compiler ABI info</span><br><span class="line">-- Detecting C compiler ABI info - <span class="keyword">done</span></span><br><span class="line">-- Detecting C compile features</span><br><span class="line">-- Detecting C compile features - <span class="keyword">done</span></span><br><span class="line">-- Check <span class="keyword">for</span> working CXX compiler: /usr/bin/c++</span><br><span class="line">-- Check <span class="keyword">for</span> working CXX compiler: /usr/bin/c++ -- works</span><br><span class="line">-- Detecting CXX compiler ABI info</span><br><span class="line">-- Detecting CXX compiler ABI info - <span class="keyword">done</span></span><br><span class="line">-- Detecting CXX compile features</span><br><span class="line">-- Detecting CXX compile features - <span class="keyword">done</span></span><br><span class="line">-- Found PythonLibs: /usr/lib/libpython2.7.so (found suitable version <span class="string">"2.7.16"</span>, minimum required is <span class="string">"2.7"</span>) </span><br><span class="line">-- Using libclang to provide semantic completion <span class="keyword">for</span> C/C++/ObjC</span><br><span class="line">-- Found Boost: /usr/include (found version <span class="string">"1.69.0"</span>) found components:  filesystem regex </span><br><span class="line">-- Using external libclang: /usr/lib/libclang.so.8</span><br><span class="line">-- NOT using clang-tidy <span class="keyword">for</span> static analysis.</span><br><span class="line">-- Configuring <span class="keyword">done</span></span><br><span class="line">-- Generating <span class="keyword">done</span></span><br><span class="line">-- Build files have been written to: /home/joxrays/ycm_build</span><br><span class="line"></span><br><span class="line"><span class="comment"># cmake --build . --target ycm_core --config Release</span></span><br><span class="line">	--config Release 针对 Windows，对于Linux/Unix忽略</span><br><span class="line">若无错误之后可看到 `Linking CXX shared library /home/joxrays/.vim/bundle/YouCompleteMe/third_party/ycmd/ycm_core.so`</span><br></pre></td></tr></table></figure>
-
 <p>至此YCM_CORE编译完成，接下来就可以</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp ~/.vim/bundle/YouCompleteMe/third_party/ycmd/examples/.ycm_extra_conf.py ~/.vim/</span><br></pre></td></tr></table></figure>
-
-<h2 id="vim配置文件-插件"><a href="#vim配置文件-插件" class="headerlink" title="vim配置文件+插件"></a>vim配置文件+插件</h2><p>我先把我的vimrc配置文件贴出了</p>
+<h2 id="vim配置文件插件"><a class="markdownIt-Anchor" href="#vim配置文件插件"></a> vim配置文件+插件</h2>
+<p>我先把我的vimrc配置文件贴出了</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="built_in">set</span> nocp</span><br><span class="line"><span class="built_in">set</span> modelines=0</span><br><span class="line"><span class="built_in">set</span> backspace=2</span><br><span class="line">syntax on </span><br><span class="line">autocmd InsertLeave * se nocul</span><br><span class="line">autocmd InsertEnter * se cul</span><br><span class="line"><span class="built_in">set</span> smartindent </span><br><span class="line"><span class="built_in">set</span> autoindent</span><br><span class="line"><span class="built_in">set</span> confirm </span><br><span class="line"><span class="built_in">set</span> tabstop=4 </span><br><span class="line"><span class="built_in">set</span> softtabstop=4</span><br><span class="line"><span class="built_in">set</span> shiftwidth=4 </span><br><span class="line"><span class="built_in">set</span> expandtab </span><br><span class="line"><span class="built_in">set</span> number</span><br><span class="line"><span class="built_in">set</span> <span class="built_in">history</span>=50  </span><br><span class="line"><span class="built_in">set</span> hlsearch</span><br><span class="line"><span class="built_in">set</span> incsearch</span><br><span class="line"><span class="built_in">set</span> gdefault</span><br><span class="line"><span class="built_in">set</span> encoding=utf-8</span><br><span class="line"><span class="built_in">set</span> fileencodings=utf-8,ucs-bom,<span class="built_in">shift</span>-jis,gb18030,gbk,gb2312,cp936,utf-16,big5,euc-jp,latin1</span><br><span class="line"><span class="built_in">set</span> guifont=Menlo:h16:cANSI </span><br><span class="line"><span class="built_in">set</span> langmenu=zn_CN.UTF-8</span><br><span class="line"><span class="built_in">set</span> helplang=cn </span><br><span class="line"><span class="built_in">set</span> ruler </span><br><span class="line"><span class="built_in">set</span> laststatus=1 </span><br><span class="line"><span class="built_in">set</span> showcmd </span><br><span class="line"><span class="built_in">set</span> scrolloff=3</span><br><span class="line"><span class="built_in">set</span> showmatch </span><br><span class="line"><span class="built_in">set</span> matchtime=5</span><br><span class="line"><span class="built_in">set</span> autowrite </span><br><span class="line"><span class="built_in">set</span> wildmenu  </span><br><span class="line"><span class="built_in">set</span> linespace=2 </span><br><span class="line"><span class="built_in">set</span> whichwrap=b,s,&lt;,&gt;,[,] </span><br><span class="line"><span class="built_in">set</span> foldenable  </span><br><span class="line"><span class="built_in">set</span> cursorline </span><br><span class="line"><span class="built_in">set</span> magic  </span><br><span class="line"><span class="built_in">set</span> ignorecase</span><br><span class="line"><span class="built_in">set</span> background=dark</span><br><span class="line"><span class="built_in">set</span> t_Co=256   </span><br><span class="line"><span class="built_in">set</span> mouse=i </span><br><span class="line"><span class="built_in">set</span> backspace=indent,eol,start</span><br><span class="line"><span class="built_in">set</span> nocompatible</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> rtp+=~/.vim/bundle/Vundle.vim</span><br><span class="line">call vundle<span class="comment">#begin()</span></span><br><span class="line">Plugin <span class="string">'VundleVim/Vundle.vim'</span></span><br><span class="line">Plugin <span class="string">'Valloric/YouCompleteMe'</span></span><br><span class="line">Plugin <span class="string">'altercation/vim-colors-solarized'</span></span><br><span class="line">Plugin <span class="string">'scrooloose/nerdtree'</span></span><br><span class="line">Plugin <span class="string">'scrooloose/nerdcommenter'</span></span><br><span class="line">Plugin <span class="string">'majutsushi/tagbar'</span></span><br><span class="line">Plugin <span class="string">'whatyouhide/vim-gotham'</span></span><br><span class="line">Plugin <span class="string">'vim-airline/vim-airline'</span></span><br><span class="line">Plugin <span class="string">'vim-airline/vim-airline-themes'</span></span><br><span class="line"></span><br><span class="line">call vundle<span class="comment">#end()</span></span><br><span class="line"></span><br><span class="line">filetype plugin indent on</span><br><span class="line"></span><br><span class="line">autocmd CursorMovedI,InsertLeave * <span class="keyword">if</span> pumvisible() == 0|silent! pclose|endif</span><br><span class="line">autocmd InsertLeave * <span class="keyword">if</span> pumvisible() == 0|pclose|endif</span><br><span class="line"><span class="built_in">set</span> completeopt=longest,menu</span><br><span class="line">highlight Pmenu    guibg=darkgrey  guifg=black</span><br><span class="line">highlight PmenuSel guibg=lightgrey guifg=black</span><br><span class="line">inoremap &lt;expr&gt; &lt;Down&gt;     pumvisible() ? <span class="string">"\&lt;C-n&gt;"</span> : <span class="string">"\&lt;Down&gt;"</span></span><br><span class="line">inoremap &lt;expr&gt; &lt;Up&gt;       pumvisible() ? <span class="string">"\&lt;C-p&gt;"</span> : <span class="string">"\&lt;Up&gt;"</span></span><br><span class="line">inoremap &lt;expr&gt; &lt;PageDown&gt; pumvisible() ? <span class="string">"\&lt;PageDown&gt;\&lt;C-p&gt;\&lt;C-n&gt;"</span> : <span class="string">"\&lt;PageDown&gt;"</span></span><br><span class="line">inoremap &lt;expr&gt; &lt;PageUp&gt;   pumvisible() ? <span class="string">"\&lt;PageUp&gt;\&lt;C-p&gt;\&lt;C-n&gt;"</span> : <span class="string">"\&lt;PageUp&gt;"</span></span><br><span class="line">inoremap &lt;expr&gt; &lt;CR&gt;       pumvisible() ? <span class="string">"\&lt;C-y&gt;"</span> : <span class="string">"\&lt;CR&gt;"</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">let</span> g:ycm_key_list_select_completion = [<span class="string">'&lt;Down&gt;'</span>]</span><br><span class="line"><span class="built_in">let</span> g:ycm_key_list_previous_completion = [<span class="string">'&lt;Up&gt;'</span>]</span><br><span class="line"></span><br><span class="line"><span class="built_in">let</span> g:ycm_goto_buffer_command = <span class="string">'horizontal-split'</span></span><br><span class="line"><span class="built_in">let</span> g:ycm_server_python_interpreter=<span class="string">'/usr/bin/python2'</span></span><br><span class="line"><span class="built_in">let</span> g:ycm_global_ycm_extra_conf = <span class="string">'~/.vim/.ycm_extra_conf.py'</span></span><br><span class="line"><span class="built_in">let</span> g:airline<span class="comment">#extensions#tabline#enabled = 1</span></span><br><span class="line"><span class="built_in">let</span> g:ycm_seed_identifiers_with_syntax = 1</span><br><span class="line"><span class="built_in">let</span> g:ycm_complete_in_strings = 1</span><br><span class="line"><span class="built_in">let</span> g:ycm_collect_identifiers_from_tags_files = 1</span><br><span class="line"><span class="built_in">let</span> g:ycm_complete_in_comments = 1</span><br><span class="line"><span class="built_in">let</span> g:ycm_min_num_of_chars_for_completion = 2</span><br><span class="line"><span class="built_in">let</span> g:ycm_cache_omnifunc=0</span><br><span class="line"><span class="built_in">let</span> g:ycm_confirm_extra_conf=0</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">syntax <span class="built_in">enable</span></span><br><span class="line"><span class="string">"colorscheme solarized</span></span><br><span class="line"><span class="string">"</span>colorscheme gotham</span><br><span class="line">colorscheme jellybeans</span><br><span class="line"><span class="built_in">let</span> g:solarized_termcolors=256</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">let</span> g:NERDTreeDirArrowExpandable = <span class="string">'▸'</span></span><br><span class="line"><span class="built_in">let</span> g:NERDTreeDirArrowCollapsible = <span class="string">'▾'</span></span><br><span class="line">map &lt;C-b&gt; :NERDTreeToggle&lt;CR&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">map &lt;C-m&gt; :Tagbar&lt;CR&gt;</span><br><span class="line"><span class="built_in">let</span> g:tagbar_ctags_bin=<span class="string">'ctags'</span></span><br><span class="line"><span class="built_in">let</span> g:tagbar_width=30</span><br></pre></td></tr></table></figure>
-
 <p>之后只需在 vim 中  <strong>:PluginInstall</strong> 安装插件，可能需要点时间…</p>
 <p>taglist是一个用于显示定位程序中各种符号的插件。这里我使用的是tagbar，它是一个taglist的替代品，要是有tagbar还需要生成 tags 文件，生成方法可以参考 <a href="https://www.vim.org/scripts/script.php?script_id=2358" target="_blank" rel="noopener">https://www.vim.org/scripts/script.php?script_id=2358</a> 。</p>
 <p>首先要从该网站下载  <code>cpp_src.tar.bz2</code> ，解压后是一个 cpp_src目录，然后执行一下命令</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ctags -R --c++-kinds=+p --fields=+iaS --extra=+q --language-force=C++ cpp_src</span><br><span class="line">mv tags ~/.vim</span><br></pre></td></tr></table></figure>
-
 <p>而对于Vim颜色配置，比如本例中 jellybeans，则</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p ~/.vim/colors</span><br><span class="line"><span class="built_in">cd</span> ~/.vim/colors</span><br><span class="line">curl -O https://raw.githubusercontent.com/nanotech/jellybeans.vim/master/colors/jellybeans.vim</span><br><span class="line">然后在 .vimrc 中设置 colorscheme jellybeans</span><br></pre></td></tr></table></figure>
-
-<p>注意，如果 <code>let g:ycm_global_ycm_extra_conf = &#39;~/.vim/.ycm_extra_conf.py&#39;</code> 中 默认的 .ycm_extra_conf.py ，可能会出现一些莫名其妙的错误，那么可以下载该文件替换原有的 *<em>.ycm_extra_conf.py *</em><br><a href="https://raw.githubusercontent.com/theodelrieu/dotfiles/master/.ycm_extra_conf.py" target="_blank" rel="noopener">https://raw.githubusercontent.com/theodelrieu/dotfiles/master/.ycm_extra_conf.py</a></p>
+<p>注意，如果 <code>let g:ycm_global_ycm_extra_conf = '~/.vim/.ycm_extra_conf.py'</code> 中 默认的 .ycm_extra_conf.py ，可能会出现一些莫名其妙的错误，那么可以下载该文件替换原有的 **.ycm_extra_conf.py **<br>
+<a href="https://raw.githubusercontent.com/theodelrieu/dotfiles/master/.ycm_extra_conf.py" target="_blank" rel="noopener">https://raw.githubusercontent.com/theodelrieu/dotfiles/master/.ycm_extra_conf.py</a></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/.vim/</span><br><span class="line">curl -O  https://raw.githubusercontent.com/theodelrieu/dotfiles/master/.ycm_extra_conf.py</span><br></pre></td></tr></table></figure>
-
-<h2 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h2><p>基本上YCM配置到此结束了，也没有想象中的那么难啦～<br>现在vim支持Python和C/C++代码补全了<br>最后贴一张测试图：</p>
+<h2 id="结尾"><a class="markdownIt-Anchor" href="#结尾"></a> 结尾</h2>
+<p>基本上YCM配置到此结束了，也没有想象中的那么难啦～<br>
+现在vim支持Python和C/C++代码补全了<br>
+最后贴一张测试图：</p>
 <p><img src="/uploads/images/ycm_vim/ycm_vim.png" alt="YCM VIM"></p>
 <p>有啥问题可联系我哈~</p>
 <p>bye</p>
@@ -742,7 +739,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -848,9 +845,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -918,7 +913,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装前"><span class="nav-number">1.</span> <span class="nav-text">安装前</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装YCM-Vundle"><span class="nav-number">2.</span> <span class="nav-text">安装YCM(Vundle)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#支持C-C"><span class="nav-number">3.</span> <span class="nav-text">支持C/C++</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下载安装libclang"><span class="nav-number">4.</span> <span class="nav-text">下载安装libclang</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编译构建-ycm-core-库"><span class="nav-number">5.</span> <span class="nav-text">编译构建 ycm_core 库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vim配置文件-插件"><span class="nav-number">6.</span> <span class="nav-text">vim配置文件+插件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结尾"><span class="nav-number">7.</span> <span class="nav-text">结尾</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装前"><span class="nav-number">1.</span> <span class="nav-text"> 安装前</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装ycmvundle"><span class="nav-number">2.</span> <span class="nav-text"> 安装YCM(Vundle)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#支持cc"><span class="nav-number">3.</span> <span class="nav-text"> 支持C/C++</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下载安装libclang"><span class="nav-number">4.</span> <span class="nav-text"> 下载安装libclang</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编译构建-ycm_core-库"><span class="nav-number">5.</span> <span class="nav-text"> 编译构建 ycm_core 库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vim配置文件插件"><span class="nav-number">6.</span> <span class="nav-text"> vim配置文件+插件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结尾"><span class="nav-number">7.</span> <span class="nav-text"> 结尾</span></a></li></ol></div>
             
 
           </div>
@@ -951,7 +946,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1058,10 +1053,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -206,7 +206,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -339,6 +339,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -375,9 +378,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -522,36 +522,33 @@
       
         <p>由于本人笔记本是双显卡的，曾几度尝试安装闭源NVIDIA驱动（为了hashcat），然而每次以失败告终，而系统自带的开源nouveau驱动实在太坑了，系统总是会出现一些莫名其妙的bug，忍无可忍之下干脆禁掉独显，只用核显得了。</p>
 <a id="more"></a>
-
-<h3 id="bbswitch"><a href="#bbswitch" class="headerlink" title="bbswitch"></a>bbswitch</h3><p>首先需要安装bbswitch模块，用于切换显卡</p>
+<h3 id="bbswitch"><a class="markdownIt-Anchor" href="#bbswitch"></a> bbswitch</h3>
+<p>首先需要安装bbswitch模块，用于切换显卡</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">pacman bbswitch</span><br><span class="line"></span><br><span class="line"><span class="comment"># 加载模块</span></span><br><span class="line">modprobe bbswitch</span><br><span class="line"><span class="comment"># 卸载模块</span></span><br><span class="line">rmmod bbswitch</span><br></pre></td></tr></table></figure>
-
-<h3 id="禁用独显"><a href="#禁用独显" class="headerlink" title="禁用独显"></a>禁用独显</h3><p>首先查看当前系统是否已经禁用独显</p>
+<h3 id="禁用独显"><a class="markdownIt-Anchor" href="#禁用独显"></a> 禁用独显</h3>
+<p>首先查看当前系统是否已经禁用独显</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat /proc/acpi/bbswitch</span><br><span class="line">0000:01:00.0 OFF</span><br></pre></td></tr></table></figure>
-
 <p>OFF说明目前已经禁掉独显了，如果不为OFF，那么需要将其关闭</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 关闭独显</span></span><br><span class="line">tee /proc/acpi/bbswitch &lt;&lt;&lt; OFF</span><br><span class="line"><span class="comment"># 打开独显</span></span><br><span class="line">tee /proc/acpi/bbswitch &lt;&lt;&lt; ON</span><br></pre></td></tr></table></figure>
-
 <p>之后还需要告诉系统：modprobe加载bbswitch时关闭独显(load_state=0)，卸载bbswitch时打开独显(unload_state=1)</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nano /etc/modprobe.d/bbswitch.conf</span><br><span class="line">options bbswitch load_state=0 unload_state=1</span><br></pre></td></tr></table></figure>
-
-<h3 id="nouveau列入blacklist"><a href="#nouveau列入blacklist" class="headerlink" title="nouveau列入blacklist"></a>nouveau列入blacklist</h3><p>执行<code>tee /proc/acpi/bbswitch &lt;&lt;&lt; OFF</code>后还需要将nouveau列入黑名单，防止它后台运行。<br>在<code>blacklist.conf</code>添加<code>blacklist nouveau</code>禁用nouveau</p>
+<h3 id="nouveau列入blacklist"><a class="markdownIt-Anchor" href="#nouveau列入blacklist"></a> nouveau列入blacklist</h3>
+<p>执行<code>tee /proc/acpi/bbswitch &lt;&lt;&lt; OFF</code>后还需要将nouveau列入黑名单，防止它后台运行。<br>
+在<code>blacklist.conf</code>添加<code>blacklist nouveau</code>禁用nouveau</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nano /etc/modprobe.d/blacklist.conf</span><br><span class="line">blacklist nouveau</span><br></pre></td></tr></table></figure>
-
 <p>在下一次重启<code>lspci</code>就可以看到<code>rev ff</code>表示独显已经关闭了，或者<code>dmesg|grep -i nouveau</code>查看是否含有nouveau的内容</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">01:00.0 3D controller: NVIDIA Corporation GP108BM [GeForce MX250] (rev ff)</span><br></pre></td></tr></table></figure>
-
-<h3 id="rc-local"><a href="#rc-local" class="headerlink" title="rc.local"></a>rc.local</h3><p>将以上操作设置一个系统启动服务，这样在每次开机时就能够关闭独显了。基于Archlinux systemd写一个服务</p>
+<h3 id="rclocal"><a class="markdownIt-Anchor" href="#rclocal"></a> rc.local</h3>
+<p>将以上操作设置一个系统启动服务，这样在每次开机时就能够关闭独显了。基于Archlinux systemd写一个服务</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">nano /etc/systemd/system/rc-local.service</span><br><span class="line">[Unit]</span><br><span class="line">Description=<span class="string">"/etc/rc.local Compatibility"</span> </span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=forking</span><br><span class="line">ExecStart=/etc/rc.local start</span><br><span class="line">TimeoutSec=0</span><br><span class="line">StandardInput=tty</span><br><span class="line">RemainAfterExit=yes</span><br><span class="line">SysVStartPriority=99</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
-
 <p>其中<code>/etc/rc.local</code>就是要执行shell的启动脚步，开机时让modprobe加载bbswitch</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line">modprobe bbswitch</span><br></pre></td></tr></table></figure>
-
 <p>注意一定要赋予rc.local执行权限 <code>chmod +x /etc/rc.local</code>，最后将服务<code>rc-local</code>设置为开机启动 <code>systemctl enable rc-local.service</code>。</p>
 <p>重启计算机后<code>systemctl status rc-local.service</code> 查看rc-local服务状态。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">● rc-local.service - &quot;/etc/rc.local Compatibility&quot;</span><br><span class="line">   Loaded: loaded (/etc/systemd/system/rc-local.service; enabled; vendor preset: disabled)</span><br><span class="line">   Active: active (exited) since Fri 2020-02-14 09:55:13 CST; 4h 35min ago</span><br><span class="line">    Tasks: 0 (limit: 4915)</span><br><span class="line">   Memory: 0B</span><br><span class="line">   CGroup: /system.slice/rc-local.service</span><br><span class="line"></span><br><span class="line">2月 14 09:55:13 system systemd[1]: Starting &quot;/etc/rc.local Compatibility&quot;...</span><br><span class="line">2月 14 09:55:13 system systemd[1]: Started &quot;/etc/rc.local Compatibility&quot;.</span><br><span class="line">2月 14 10:07:31 system systemd[1]: /etc/systemd/system/rc-local.service:10: Support for option SysVStartPriority= has bee&gt;</span><br><span class="line">lines 1-10/10 (END)</span><br></pre></td></tr></table></figure>
-
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="https://xuchen.wang/archives/archbbswitch.html" target="_blank" rel="noopener">Arch下使用bbswitch彻底禁用双显卡笔记本的独立显卡</a><br><a href="https://superuser.com/questions/278396/systemd-does-not-run-etc-rc-local" target="_blank" rel="noopener">systemd does not run /etc/rc.local?</a></p>
+<h3 id="参考"><a class="markdownIt-Anchor" href="#参考"></a> 参考</h3>
+<p><a href="https://xuchen.wang/archives/archbbswitch.html" target="_blank" rel="noopener">Arch下使用bbswitch彻底禁用双显卡笔记本的独立显卡</a><br>
+<a href="https://superuser.com/questions/278396/systemd-does-not-run-etc-rc-local" target="_blank" rel="noopener">systemd does not run /etc/rc.local?</a></p>
 
       
     </div>
@@ -705,7 +702,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -811,9 +808,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -881,7 +876,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#bbswitch"><span class="nav-number">1.</span> <span class="nav-text">bbswitch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#禁用独显"><span class="nav-number">2.</span> <span class="nav-text">禁用独显</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nouveau列入blacklist"><span class="nav-number">3.</span> <span class="nav-text">nouveau列入blacklist</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rc-local"><span class="nav-number">4.</span> <span class="nav-text">rc.local</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#bbswitch"><span class="nav-number">1.</span> <span class="nav-text"> bbswitch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#禁用独显"><span class="nav-number">2.</span> <span class="nav-text"> 禁用独显</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nouveau列入blacklist"><span class="nav-number">3.</span> <span class="nav-text"> nouveau列入blacklist</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rclocal"><span class="nav-number">4.</span> <span class="nav-text"> rc.local</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text"> 参考</span></a></li></ol></div>
             
 
           </div>
@@ -914,7 +909,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1021,10 +1016,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

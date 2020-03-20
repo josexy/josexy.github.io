@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -125,18 +125,18 @@
   };
 </script>
 
-  <meta name="description" content="在登录MySQL时显示错误 mysql &amp;quot;ERROR 1524 (HY000): Plugin &amp;#39;unix_socket&amp;#39; is not loaded&amp;quot;">
+  <meta name="description" content="在登录MySQL时显示错误 mysql &amp;quot;ERROR 1524 (HY000): Plugin &apos;unix_socket&apos; is not loaded&amp;quot;">
 <meta name="keywords" content="MySQL">
 <meta property="og:type" content="article">
 <meta property="og:title" content="mysql error 1524-unix_socket">
 <meta property="og:url" content="http://www.joxrays.com/mysql-error-unix-socket/index.html">
 <meta property="og:site_name" content="JoXrays&#39;s Blog">
-<meta property="og:description" content="在登录MySQL时显示错误 mysql &amp;quot;ERROR 1524 (HY000): Plugin &amp;#39;unix_socket&amp;#39; is not loaded&amp;quot;">
+<meta property="og:description" content="在登录MySQL时显示错误 mysql &amp;quot;ERROR 1524 (HY000): Plugin &apos;unix_socket&apos; is not loaded&amp;quot;">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2019-07-20T12:37:14.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mysql error 1524-unix_socket">
-<meta name="twitter:description" content="在登录MySQL时显示错误 mysql &amp;quot;ERROR 1524 (HY000): Plugin &amp;#39;unix_socket&amp;#39; is not loaded&amp;quot;">
+<meta name="twitter:description" content="在登录MySQL时显示错误 mysql &amp;quot;ERROR 1524 (HY000): Plugin &apos;unix_socket&apos; is not loaded&amp;quot;">
 
 
 
@@ -206,7 +206,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -339,6 +339,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -375,9 +378,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -530,13 +530,23 @@
       
 
       
-        <p>在登录MySQL时显示错误 <code>mysql &quot;ERROR 1524 (HY000): Plugin &#39;unix_socket&#39; is not loaded&quot;</code></p>
+        <p>在登录MySQL时显示错误 <code>mysql &quot;ERROR 1524 (HY000): Plugin 'unix_socket' is not loaded&quot;</code></p>
 <a id="more"></a>
-
 <p>参考原文: <a href="https://askubuntu.com/questions/705458/ubuntu-15-10-mysql-error-1524-unix-socket" target="_blank" rel="noopener">https://askubuntu.com/questions/705458/ubuntu-15-10-mysql-error-1524-unix-socket</a></p>
 <p>解决办法</p>
 <blockquote>
-<p>/etc/init.d/mysql stop<br>sudo killall mysqld_safe<br>sudo killall mysqld<br>sudo mysqld_safe –skip-grant-tables &amp;<br>mysql -u root<br>use mysql;<br>update user set password=<strong>PASSWORD(“MySQL密码”)</strong> where User=’root’;<br>update user set plugin=”<strong>mysql_native_password</strong>“;<br>quit;<br>/etc/init.d/mysql stop<br>sudo kill -9 $(pgrep mysql)<br>/etc/init.d/mysql start</p>
+<p>/etc/init.d/mysql stop<br>
+sudo killall mysqld_safe<br>
+sudo killall mysqld<br>
+sudo mysqld_safe –skip-grant-tables &amp;<br>
+mysql -u root<br>
+use mysql;<br>
+update user set password=<strong>PASSWORD(“MySQL密码”)</strong> where User=’root’;<br>
+update user set plugin=”<strong>mysql_native_password</strong>“;<br>
+quit;<br>
+/etc/init.d/mysql stop<br>
+sudo kill -9 $(pgrep mysql)<br>
+/etc/init.d/mysql start</p>
 </blockquote>
 <p>这是原文，挺详细的…</p>
 <p>The “<strong>unix_socket</strong>” has been called by mysql authentication process (maybe related to a partial migration of database to mariadb, now removed). To get all stuff back working go su:</p>
@@ -545,7 +555,9 @@
 </blockquote>
 <p>then follow:</p>
 <blockquote>
-<p>/etc/init.d/mysql stop<br>mysqld_safe –skip-grant-tables &amp;<br>mysql -uroot</p>
+<p>/etc/init.d/mysql stop<br>
+mysqld_safe –skip-grant-tables &amp;<br>
+mysql -uroot</p>
 </blockquote>
 <p>This will completely stop mysql, bypass user authentication (no password needed) and connect to mysql with user “root”.</p>
 <p>Now, in mysql console, go using mysql administrative db:</p>
@@ -566,7 +578,10 @@
 </blockquote>
 <p>Stop and start everything related to mysql:</p>
 <blockquote>
-<p>/etc/init.d/mysql stop<br>kill -9 $(pgrep mysql)<br>/etc/init.d/mysql start<br>Don’t forget to exit the su mode.</p>
+<p>/etc/init.d/mysql stop<br>
+kill -9 $(pgrep mysql)<br>
+/etc/init.d/mysql start<br>
+Don’t forget to exit the su mode.</p>
 </blockquote>
 <p>Now mySQL server is up and running. You can login it with root:</p>
 <blockquote>
@@ -718,7 +733,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -824,9 +839,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -910,7 +923,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1017,10 +1030,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

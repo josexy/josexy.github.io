@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -125,18 +125,18 @@
   };
 </script>
 
-  <meta name="description" content="前言在连接MySQL之前，确保系统安装了MySQL，并且安装了对应的库文件。可以到官网下载不同版本的MySQL（自行编译安装）传送门&amp;gt;&amp;gt;具体安装方法不再多说">
+  <meta name="description" content="前言 在连接MySQL之前，确保系统安装了MySQL，并且安装了对应的库文件。可以到官网下载不同版本的MySQL（自行编译安装）传送门&amp;gt;&amp;gt;具体安装方法不再多说">
 <meta name="keywords" content="C++,Linux,C">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux下C++连接Mysql">
 <meta property="og:url" content="http://www.joxrays.com/linux-cpp-connect-mysql/index.html">
 <meta property="og:site_name" content="JoXrays&#39;s Blog">
-<meta property="og:description" content="前言在连接MySQL之前，确保系统安装了MySQL，并且安装了对应的库文件。可以到官网下载不同版本的MySQL（自行编译安装）传送门&amp;gt;&amp;gt;具体安装方法不再多说">
+<meta property="og:description" content="前言 在连接MySQL之前，确保系统安装了MySQL，并且安装了对应的库文件。可以到官网下载不同版本的MySQL（自行编译安装）传送门&amp;gt;&amp;gt;具体安装方法不再多说">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2020-01-13T04:34:30.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux下C++连接Mysql">
-<meta name="twitter:description" content="前言在连接MySQL之前，确保系统安装了MySQL，并且安装了对应的库文件。可以到官网下载不同版本的MySQL（自行编译安装）传送门&amp;gt;&amp;gt;具体安装方法不再多说">
+<meta name="twitter:description" content="前言 在连接MySQL之前，确保系统安装了MySQL，并且安装了对应的库文件。可以到官网下载不同版本的MySQL（自行编译安装）传送门&amp;gt;&amp;gt;具体安装方法不再多说">
 
 
 
@@ -206,7 +206,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -339,6 +339,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -375,9 +378,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -530,22 +530,27 @@
       
 
       
-        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>在连接MySQL之前，确保系统安装了MySQL，并且安装了对应的库文件。可以到官网下载不同版本的MySQL（自行编译安装）<a href="https://dev.mysql.com/downloads/mysql/" target="_blank" rel="noopener">传送门&gt;&gt;</a>具体安装方法不再多说</p>
+        <h3 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h3>
+<p>在连接MySQL之前，确保系统安装了MySQL，并且安装了对应的库文件。可以到官网下载不同版本的MySQL（自行编译安装）<a href="https://dev.mysql.com/downloads/mysql/" target="_blank" rel="noopener">传送门&gt;&gt;</a>具体安装方法不再多说</p>
 <a id="more"></a>
-
-<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;mysql/mysql.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">connMYSQL</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">//mysql_server_init(NULL,NULL,NULL);</span></span><br><span class="line">    MYSQL mysql;</span><br><span class="line">    mysql_init(&amp;mysql);</span><br><span class="line">    <span class="comment">//设置字符集 方法1</span></span><br><span class="line">    <span class="keyword">int</span> r=mysql_options(&amp;mysql,MYSQL_SET_CHARSET_NAME,<span class="string">"utf8"</span>);</span><br><span class="line">    <span class="keyword">if</span>(r==<span class="number">0</span>)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"设置字符集 utf8 ok\n"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//连接mysql</span></span><br><span class="line">    MYSQL *m= mysql_real_connect(&amp;mysql, <span class="string">"127.0.0.1"</span>,<span class="string">"root"</span>,<span class="string">"123456"</span>,<span class="string">"db_0"</span>, <span class="number">3306</span>,<span class="number">0</span>,<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span>(!m)&#123;</span><br><span class="line">        <span class="keyword">unsigned</span> <span class="keyword">int</span> errorCode=mysql_errno(&amp;mysql);</span><br><span class="line">        <span class="keyword">const</span> <span class="keyword">char</span> *errorString=mysql_error(&amp;mysql);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"连接数据库失败 : %s\n"</span>,errorString);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//设置字符集 方法2</span></span><br><span class="line">    mysql_query(&amp;mysql,<span class="string">"set names 'utf8';"</span>);</span><br><span class="line">    mysql_query(&amp;mysql,<span class="string">"select *from tb_0;"</span>);</span><br><span class="line">    <span class="comment">//获取资源结果集</span></span><br><span class="line">    MYSQL_RES *result=mysql_store_result(&amp;mysql);</span><br><span class="line">    <span class="comment">//返回查询受影响的行</span></span><br><span class="line">    <span class="keyword">int</span> affectedRows=mysql_affected_rows(&amp;mysql);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"affected rows: %d \n"</span>,affectedRows);</span><br><span class="line">    <span class="comment">//获取记录数</span></span><br><span class="line">    <span class="keyword">int</span> rowcount=mysql_num_rows(result);</span><br><span class="line">    <span class="comment">//获取字段数</span></span><br><span class="line">    <span class="keyword">int</span> fieldcount=mysql_num_fields(result);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"rowCount:%d fieldCount:%d \n"</span>,rowcount,fieldcount);</span><br><span class="line">    MYSQL_FIELD *field=<span class="literal">NULL</span>;</span><br><span class="line">     <span class="comment">//遍历字段</span></span><br><span class="line">    <span class="keyword">while</span> (field=mysql_fetch_field(result))&#123;</span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span>&lt;&lt;<span class="string">"--&gt;"</span>&lt;&lt;field-&gt;name&lt;&lt;<span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//field= mysql_fetch_field_direct(result,0);</span></span><br><span class="line">    <span class="comment">//field= mysql_fetch_field_direct(result,1);</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"——————————————————————————————\n"</span>);</span><br><span class="line">    <span class="comment">//char ** = MYSQL_ROW</span></span><br><span class="line">    MYSQL_ROW row=<span class="literal">NULL</span>;</span><br><span class="line">     <span class="comment">//遍历行</span></span><br><span class="line">    <span class="keyword">while</span>(row=mysql_fetch_row(result))&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%s\t%s\t%s\t%s\t%s\n"</span>,row[<span class="number">0</span>],row[<span class="number">1</span>],row[<span class="number">2</span>],row[<span class="number">3</span>],row[<span class="number">4</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"——————————————————————————————\n"</span>);</span><br><span class="line">    <span class="comment">//释放结果集</span></span><br><span class="line">    mysql_free_result(result);</span><br><span class="line">    <span class="comment">//关闭连接</span></span><br><span class="line">    mysql_close(&amp;mysql);</span><br><span class="line">    <span class="comment">//mysql_server_end();</span></span><br><span class="line">    <span class="comment">//mysql_library_end();</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      connMYSQL();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>由于我使用的是CLion，所以当我写出来的源文件是无法直接编译的，这时候可以在<br><strong><font color="red">CMakeLists.txt</font> *<em>内添加 *</em>target_link_libraries(mysqlconn /usr/lib/libmysqlclient.so)</strong><br>其中 mysqlconn 为项目名，/usr/lib/libmysqlclient.so 为库文件路径<br>如 /usr/lib/ 不存在 libmysqlclient.so 文件，那么可以用</p>
+<h3 id="代码"><a class="markdownIt-Anchor" href="#代码"></a> 代码</h3>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;mysql/mysql.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">connMYSQL</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">//mysql_server_init(NULL,NULL,NULL);</span></span><br><span class="line">    MYSQL mysql;</span><br><span class="line">    mysql_init(&amp;mysql);</span><br><span class="line">    <span class="comment">//设置字符集 方法1</span></span><br><span class="line">    <span class="keyword">int</span> r=mysql_options(&amp;mysql,MYSQL_SET_CHARSET_NAME,<span class="string">"utf8"</span>);</span><br><span class="line">    <span class="keyword">if</span>(r==<span class="number">0</span>)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"设置字符集 utf8 ok\n"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//连接mysql</span></span><br><span class="line">    MYSQL *m= mysql_real_connect(&amp;mysql, <span class="string">"127.0.0.1"</span>,<span class="string">"root"</span>,<span class="string">"123456"</span>,<span class="string">"db_0"</span>, <span class="number">3306</span>,<span class="number">0</span>,<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span>(!m)&#123;</span><br><span class="line">        <span class="keyword">unsigned</span> <span class="keyword">int</span> errorCode=mysql_errno(&amp;mysql);</span><br><span class="line">        <span class="keyword">const</span> <span class="keyword">char</span> *errorString=mysql_error(&amp;mysql);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"连接数据库失败 : %s\n"</span>,errorString);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//设置字符集 方法2</span></span><br><span class="line">    mysql_query(&amp;mysql,<span class="string">"set names 'utf8';"</span>);</span><br><span class="line">    mysql_query(&amp;mysql,<span class="string">"select *from tb_0;"</span>);</span><br><span class="line">    <span class="comment">//获取资源结果集</span></span><br><span class="line">    MYSQL_RES *result=mysql_store_result(&amp;mysql);</span><br><span class="line">    <span class="comment">//返回查询受影响的行</span></span><br><span class="line">    <span class="keyword">int</span> affectedRows=mysql_affected_rows(&amp;mysql);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"affected rows: %d \n"</span>,affectedRows);</span><br><span class="line">    <span class="comment">//获取记录数</span></span><br><span class="line">    <span class="keyword">int</span> rowcount=mysql_num_rows(result);</span><br><span class="line">    <span class="comment">//获取字段数</span></span><br><span class="line">    <span class="keyword">int</span> fieldcount=mysql_num_fields(result);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"rowCount:%d fieldCount:%d \n"</span>,rowcount,fieldcount);</span><br><span class="line">    MYSQL_FIELD *field=<span class="literal">NULL</span>;</span><br><span class="line">     <span class="comment">//遍历字段</span></span><br><span class="line">    <span class="keyword">while</span> (field=mysql_fetch_field(result))&#123;</span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span>&lt;&lt;<span class="string">"--&gt;"</span>&lt;&lt;field-&gt;name&lt;&lt;<span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//field= mysql_fetch_field_direct(result,0);</span></span><br><span class="line">    <span class="comment">//field= mysql_fetch_field_direct(result,1);</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"——————————————————————————————\n"</span>);</span><br><span class="line">    <span class="comment">//char ** = MYSQL_ROW</span></span><br><span class="line">    MYSQL_ROW row=<span class="literal">NULL</span>;</span><br><span class="line">     <span class="comment">//遍历行</span></span><br><span class="line">    <span class="keyword">while</span>(row=mysql_fetch_row(result))&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%s\t%s\t%s\t%s\t%s\n"</span>,row[<span class="number">0</span>],row[<span class="number">1</span>],row[<span class="number">2</span>],row[<span class="number">3</span>],row[<span class="number">4</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"——————————————————————————————\n"</span>);</span><br><span class="line">    <span class="comment">//释放结果集</span></span><br><span class="line">    mysql_free_result(result);</span><br><span class="line">    <span class="comment">//关闭连接</span></span><br><span class="line">    mysql_close(&amp;mysql);</span><br><span class="line">    <span class="comment">//mysql_server_end();</span></span><br><span class="line">    <span class="comment">//mysql_library_end();</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      connMYSQL();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由于我使用的是CLion，所以当我写出来的源文件是无法直接编译的，这时候可以在<br>
+**<font color="red">CMakeLists.txt</font> **内添加 <strong>target_link_libraries(mysqlconn /usr/lib/libmysqlclient.so)</strong><br>
+其中 mysqlconn 为项目名，/usr/lib/libmysqlclient.so 为库文件路径<br>
+如 /usr/lib/ 不存在 <a href="http://libmysqlclient.so" target="_blank" rel="noopener">libmysqlclient.so</a> 文件，那么可以用</p>
 <blockquote>
 <p>locate libmysqlclient</p>
 </blockquote>
-<p>找到系统内存在的 libmysqlclient库文件。<br>比如我的本来是 /usr/lib/x86_64-linux-gnu/libmysqlclient.so ，那么我就可以设置个软链接</p>
+<p>找到系统内存在的 libmysqlclient库文件。<br>
+比如我的本来是 /usr/lib/x86_64-linux-gnu/libmysqlclient.so ，那么我就可以设置个软链接</p>
 <blockquote>
 <p>ln -s /usr/lib/x86_64-linux-gnu/libmysqlclient.so /usr/lib/libmysqlclient.so</p>
 </blockquote>
 <p>或者简单点也可以直接</p>
 <blockquote>
-<p>g++ main.cpp -o test -lmysqlclient<br>./test</p>
+<p>g++ main.cpp -o test -lmysqlclient<br>
+./test</p>
 </blockquote>
 
       
@@ -704,7 +709,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -810,9 +815,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -880,7 +883,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码"><span class="nav-number">2.</span> <span class="nav-text">代码</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text"> 前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码"><span class="nav-number">2.</span> <span class="nav-text"> 代码</span></a></li></ol></div>
             
 
           </div>
@@ -913,7 +916,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1020,10 +1023,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

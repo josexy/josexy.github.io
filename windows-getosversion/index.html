@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -206,7 +206,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -339,6 +339,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -375,9 +378,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -532,31 +532,26 @@
       
         <p>列举了一些目前所知道的方法来获取Windows操作系统版本号</p>
 <a id="more"></a>
-
 <ul>
 <li>方法1 <strong>RtlGetNtVersionNumbers</strong></li>
 </ul>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//定义函数指针</span></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">void</span><span class="params">(__stdcall*NTPROC)</span><span class="params">(DWORD*, DWORD*, DWORD*)</span></span>;</span><br><span class="line"><span class="comment">//载入模块</span></span><br><span class="line">HMODULE hmod= LoadLibraryA(<span class="string">"ntdll.dll"</span>);</span><br><span class="line"><span class="comment">//获取函数地址</span></span><br><span class="line">NTPROC RtlGetNtVersionNumbers = (NTPROC)GetProcAddress(hmod, <span class="string">"RtlGetNtVersionNumbers"</span>);</span><br><span class="line">	DWORD dwMajor, dwMin, dwOpt;</span><br><span class="line">	RtlGetNtVersionNumbers(&amp;dwMajor, &amp;dwMin, &amp;dwOpt);</span><br><span class="line">	<span class="comment">//卸载模块</span></span><br><span class="line">	FreeLibrary(hmod);</span><br></pre></td></tr></table></figure>
-
 <ul>
 <li>方法2 <strong>GetVersion</strong></li>
 </ul>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">DWORD dwVersion= GetVersion();</span><br><span class="line"><span class="comment">//低16位</span></span><br><span class="line">WORD lwo = LOWORD(dwVersion);</span><br><span class="line">BYTE minor = HIBYTE(lwo);	<span class="comment">//次版本号</span></span><br><span class="line">BYTE major = LOBYTE(lwo);   <span class="comment">//主版本号</span></span><br><span class="line"><span class="keyword">if</span> (major ==<span class="number">10</span>)  SetWindowText(<span class="string">L"Windows 10"</span>);</span><br><span class="line"><span class="keyword">if</span> (major ==<span class="number">6</span>)  SetWindowText(<span class="string">L"Windows 7"</span>);</span><br></pre></td></tr></table></figure>
-
 <ul>
 <li>方法3 <strong>GetVersionEx</strong></li>
 </ul>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL <span class="title">GetVersionEx</span><span class="params">(POSVERSIONINFO pVersionInformation)</span></span>;</span><br><span class="line">	 </span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span> </span><br><span class="line">	DWORD dwOSVersionInfoSize;       <span class="comment">//在使用GetVersionEx之前要将此初始化为结构的大小 </span></span><br><span class="line">	DWORD dwMajorVersion;               <span class="comment">//系统主版本号 </span></span><br><span class="line">	DWORD dwMinorVersion;               <span class="comment">//系统次版本号 </span></span><br><span class="line">	DWORD dwBuildNumber;               <span class="comment">//系统构建号 </span></span><br><span class="line">	DWORD dwPlatformId;                  <span class="comment">//系统支持的平台 </span></span><br><span class="line">	TCHAR szCSDVersion[<span class="number">128</span>];          <span class="comment">//系统补丁包的名称 </span></span><br><span class="line">	WORD wServicePackMajor;            <span class="comment">//系统补丁包的主版本 </span></span><br><span class="line">	WORD wServicePackMinor;            <span class="comment">//系统补丁包的次版本 </span></span><br><span class="line">	WORD wSuiteMask;                      <span class="comment">//标识系统上的程序组 </span></span><br><span class="line">	BYTE wProductType;                    <span class="comment">//标识系统类型 </span></span><br><span class="line">	BYTE wReserved;                         <span class="comment">//保留,未使用 </span></span><br><span class="line">&#125;OSVERSIONINFOEX, *POSVERSIONINFOEX;</span><br></pre></td></tr></table></figure>
-
-<p>注意,使用该函数在Windows8和Windows10之间获取的是同一个主次版本号,所以,要在项目添加一个清单文件(manifest)<br><strong>配置属性-&gt;清单工具-&gt;输入和输出-附加清单文件,填写manifest.xml</strong></p>
+<p>注意,使用该函数在Windows8和Windows10之间获取的是同一个主次版本号,所以,要在项目添加一个清单文件(manifest)<br>
+<strong>配置属性-&gt;清单工具-&gt;输入和输出-附加清单文件,填写manifest.xml</strong></p>
 <p><strong>manifest.xml文件内容</strong></p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span> </span><br><span class="line"><span class="tag">&lt;<span class="name">assembly</span> <span class="attr">xmlns</span>=<span class="string">"urn:schemas-microsoft-com:asm.v1"</span> <span class="attr">manifestVersion</span>=<span class="string">"1.0"</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="name">compatibility</span> <span class="attr">xmlns</span>=<span class="string">"urn:schemas-microsoft-com:compatibility.v1"</span>&gt;</span> </span><br><span class="line">        <span class="tag">&lt;<span class="name">application</span>&gt;</span>   </span><br><span class="line">            <span class="comment">&lt;!-- Windows 10 --&gt;</span>   </span><br><span class="line">            <span class="tag">&lt;<span class="name">supportedOS</span> <span class="attr">Id</span>=<span class="string">"&#123;8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a&#125;"</span>/&gt;</span>  </span><br><span class="line">            <span class="comment">&lt;!-- Windows 8.1 --&gt;</span>  </span><br><span class="line">            <span class="tag">&lt;<span class="name">supportedOS</span> <span class="attr">Id</span>=<span class="string">"&#123;1f676c76-80e1-4239-95bb-83d0f6d0da78&#125;"</span>/&gt;</span>  </span><br><span class="line">            <span class="comment">&lt;!-- Windows Vista --&gt;</span>  </span><br><span class="line">            <span class="tag">&lt;<span class="name">supportedOS</span> <span class="attr">Id</span>=<span class="string">"&#123;e2011457-1546-43c5-a5fe-008deee3d3f0&#125;"</span>/&gt;</span>   </span><br><span class="line">            <span class="comment">&lt;!-- Windows 7 --&gt;</span>  </span><br><span class="line">            <span class="tag">&lt;<span class="name">supportedOS</span> <span class="attr">Id</span>=<span class="string">"&#123;35138b9a-5d96-4fbd-8e2d-a2440225f93a&#125;"</span>/&gt;</span>  </span><br><span class="line">            <span class="comment">&lt;!-- Windows 8 --&gt;</span>  </span><br><span class="line">            <span class="tag">&lt;<span class="name">supportedOS</span> <span class="attr">Id</span>=<span class="string">"&#123;4a2f28e3-53b9-4441-ba9c-d69d4a4a6e38&#125;"</span>/&gt;</span>  </span><br><span class="line">        <span class="tag">&lt;/<span class="name">application</span>&gt;</span>   </span><br><span class="line">    <span class="tag">&lt;/<span class="name">compatibility</span>&gt;</span> </span><br><span class="line"><span class="tag">&lt;/<span class="name">assembly</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
 <ul>
 <li>法4 <strong>PsGetVersion,在内核驱动程序中调用该函数</strong></li>
 </ul>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOLEAN <span class="title">PsGetVersion</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">	PULONG MajorVersion OPTIONAL,</span></span></span><br><span class="line"><span class="function"><span class="params">	PULONG MinorVersion OPTIONAL,</span></span></span><br><span class="line"><span class="function"><span class="params">	PULONG BuildNumber OPTIONAL,</span></span></span><br><span class="line"><span class="function"><span class="params">	PUNICODE_STRING CSDVersion OPTIONAL</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br><span class="line">MajorVersion 是主版本号</span><br><span class="line">MinorVersion 是副版本号</span><br><span class="line">BuildNumber 是build版本号，如<span class="number">7600</span>等</span><br><span class="line">CSDVersion 存放着SP1、SP2等信息</span><br></pre></td></tr></table></figure>
-
 
       
     </div>
@@ -703,7 +698,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -809,9 +804,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -895,7 +888,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1002,10 +995,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

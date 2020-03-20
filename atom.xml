@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.joxrays.com/"/>
-  <updated>2020-03-11T15:21:44.386Z</updated>
+  <updated>2020-03-02T16:47:16.000Z</updated>
   <id>http://www.joxrays.com/</id>
   
   <author>
@@ -17,30 +17,6 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Linux RDP远程桌面连接Windows</title>
-    <link href="http://www.joxrays.com/linux-rdp-windows/"/>
-    <id>http://www.joxrays.com/linux-rdp-windows/</id>
-    <published>2020-03-10T16:00:00.000Z</published>
-    <updated>2020-03-11T15:21:44.386Z</updated>
-    
-    <summary type="html">
-    
-      &lt;p&gt;远程桌面协议RDP（Remote Desktop Protocol）是Microsoft开发的专有协议，它为用户提供图形界面，以通过网络连接连接到另一台计算机。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Linux" scheme="http://www.joxrays.com/categories/Linux/"/>
-    
-    
-      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
-    
-      <category term="Windows" scheme="http://www.joxrays.com/tags/Windows/"/>
-    
-      <category term="RDP" scheme="http://www.joxrays.com/tags/RDP/"/>
-    
-  </entry>
-  
-  <entry>
     <title>哈夫曼编码实现解压缩文本文件</title>
     <link href="http://www.joxrays.com/huffman-encode-decode/"/>
     <id>http://www.joxrays.com/huffman-encode-decode/</id>
@@ -49,7 +25,7 @@
     
     <summary type="html">
     
-      &lt;p&gt;之前已经简单地介绍了LZW 编码实现的原理，它由一个初始字典在编码/解码的过程中不断的扩增字典内容，从而在下一次编码/解码遇到重复的文本串时从字典中找出之前的代码并写入文本文件，这样就避免了重复的文本而达到文本文件空间缩小的目的。本文主要从&lt;del&gt;简单介绍&lt;/del&gt;哈夫曼树过渡到编码解码内容。&lt;/p&gt;
+      &lt;p&gt;之前已经简单地介绍了LZW 编码实现的原理，它由一个初始字典在编码/解码的过程中不断的扩增字典内容，从而在下一次编码/解码遇到重复的文本串时从字典中找出之前的代码并写入文本文件，这样就避免了重复的文本而达到文本文件空间缩小的目的。本文主要从&lt;s&gt;简单介绍&lt;/s&gt;哈夫曼树过渡到编码解码内容。&lt;/p&gt;
     
     </summary>
     
@@ -99,7 +75,7 @@
     
     <summary type="html">
     
-      &lt;p&gt;本文将利用CentOS、TinyProxy、Stunnel搭建一个正向代理服务器……&lt;/p&gt;
+      &lt;p&gt;本文将利用CentOS、TinyProxy、Stunnel搭建一个正向代理服务器…&lt;/p&gt;
     
     </summary>
     
@@ -147,7 +123,7 @@
     
     <summary type="html">
     
-      &lt;p&gt;堆是实现&lt;strong&gt;优先级队列&lt;/strong&gt;效率很高的数据结构，如C++STL priority_queue、Python PriorityQueue。堆的变体很多，二叉堆、斐波那契堆……由堆实现的一种高效排序算法为堆排序。&lt;/p&gt;
+      &lt;p&gt;堆是实现&lt;strong&gt;优先级队列&lt;/strong&gt;效率很高的数据结构，如C++STL priority_queue、Python PriorityQueue。堆的变体很多，二叉堆、斐波那契堆…由堆实现的一种高效排序算法为堆排序。&lt;/p&gt;
     
     </summary>
     
@@ -171,7 +147,7 @@
     
     <summary type="html">
     
-      &lt;p&gt;红黑树（Red–Black Tree）是一种自平衡二叉查找树，用于实现&lt;strong&gt;关联数组&lt;/strong&gt;。它在1972年由鲁道夫·贝尔（Rudolf Bayer）发明，被称为”对称二叉B树”。&lt;/p&gt;
+      &lt;p&gt;红黑树（Red–Black Tree）是一种自平衡二叉查找树，用于实现&lt;strong&gt;关联数组&lt;/strong&gt;。它在1972年由鲁道夫·贝尔（Rudolf Bayer）发明，被称为&amp;quot;对称二叉B树&amp;quot;。&lt;/p&gt;
     
     </summary>
     
@@ -193,11 +169,11 @@
     <link href="http://www.joxrays.com/avl-tree-cpp/"/>
     <id>http://www.joxrays.com/avl-tree-cpp/</id>
     <published>2020-01-20T16:00:00.000Z</published>
-    <updated>2020-01-31T07:17:20.000Z</updated>
+    <updated>2020-03-20T02:30:38.220Z</updated>
     
     <summary type="html">
     
-      &lt;p&gt;AVL树是最早被发明的&lt;strong&gt;自平衡二叉查找树&lt;/strong&gt;。其查找、插入和删除在&lt;strong&gt;平均&lt;/strong&gt;和&lt;strong&gt;最坏&lt;/strong&gt;情况下的时间复杂度都是 $O(\log n)$。AVL树由&lt;strong&gt;G. M. Adelson-Velsky&lt;/strong&gt;和&lt;strong&gt;Evgenii Landis&lt;/strong&gt;发明，AVL树的名称取自他们名字中的字母。&lt;/p&gt;
+      &lt;p&gt;AVL树是最早被发明的&lt;strong&gt;自平衡二叉查找树&lt;/strong&gt;。其查找、插入和删除在&lt;strong&gt;平均&lt;/strong&gt;和&lt;strong&gt;最坏&lt;/strong&gt;情况下的时间复杂度都是 &lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-mathml&quot;&gt;&lt;math&gt;&lt;semantics&gt;&lt;mrow&gt;&lt;mi&gt;O&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;(&lt;/mo&gt;&lt;mi&gt;log&lt;/mi&gt;&lt;mo&gt;⁡&lt;/mo&gt;&lt;mi&gt;n&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;)&lt;/mo&gt;&lt;/mrow&gt;&lt;annotation encoding=&quot;application/x-tex&quot;&gt;O(\log n)&lt;/annotation&gt;&lt;/semantics&gt;&lt;/math&gt;&lt;/span&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:1em;vertical-align:-0.25em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot; style=&quot;margin-right:0.02778em;&quot;&gt;O&lt;/span&gt;&lt;span class=&quot;mopen&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mop&quot;&gt;lo&lt;span style=&quot;margin-right:0.01389em;&quot;&gt;g&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.16666666666666666em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;mclose&quot;&gt;)&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;。AVL树由&lt;strong&gt;G. M. Adelson-Velsky&lt;/strong&gt;和&lt;strong&gt;Evgenii Landis&lt;/strong&gt;发明，AVL树的名称取自他们名字中的字母。&lt;/p&gt;
     
     </summary>
     
@@ -221,7 +197,8 @@
     
     <summary type="html">
     
-      &lt;p&gt;在计算机科学中，树是一种&lt;strong&gt;非线性数据结构&lt;/strong&gt;，树的种类有大致分为两类:&lt;strong&gt;无序树&lt;/strong&gt;和&lt;strong&gt;有序树&lt;/strong&gt;。有序树又分为二叉查找树、堆、左高树、AVL树、红黑树等。树是一种非常重要的数据结构，如C++ STL中的map底层实现原理是红黑树，Java (jdk1.8) HashMap更是采用了散列表+链表+红黑树。&lt;br&gt;不过在讨论二叉查找树之前，我们需要了解树的一些基本知识。&lt;/p&gt;
+      &lt;p&gt;在计算机科学中，树是一种&lt;strong&gt;非线性数据结构&lt;/strong&gt;，树的种类有大致分为两类:&lt;strong&gt;无序树&lt;/strong&gt;和&lt;strong&gt;有序树&lt;/strong&gt;。有序树又分为二叉查找树、堆、左高树、AVL树、红黑树等。树是一种非常重要的数据结构，如C++ STL中的map底层实现原理是红黑树，Java (jdk1.8) HashMap更是采用了散列表+链表+红黑树。&lt;br&gt;
+不过在讨论二叉查找树之前，我们需要了解树的一些基本知识。&lt;/p&gt;
     
     </summary>
     
@@ -245,7 +222,8 @@
     
     <summary type="html">
     
-      &lt;p&gt;跳跃表/跳表(SkipList)&lt;br&gt;In computer science, a skip list is a data structure that allows $O(\log n)$ search complexity as well as $O(\log n)$ insertion complexity within an ordered sequence of $n$ elements.  —— 维基百科&lt;/p&gt;
+      &lt;p&gt;跳跃表/跳表(SkipList)&lt;br&gt;
+In computer science, a skip list is a data structure that allows &lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-mathml&quot;&gt;&lt;math&gt;&lt;semantics&gt;&lt;mrow&gt;&lt;mi&gt;O&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;(&lt;/mo&gt;&lt;mi&gt;log&lt;/mi&gt;&lt;mo&gt;⁡&lt;/mo&gt;&lt;mi&gt;n&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;)&lt;/mo&gt;&lt;/mrow&gt;&lt;annotation encoding=&quot;application/x-tex&quot;&gt;O(\log n)&lt;/annotation&gt;&lt;/semantics&gt;&lt;/math&gt;&lt;/span&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:1em;vertical-align:-0.25em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot; style=&quot;margin-right:0.02778em;&quot;&gt;O&lt;/span&gt;&lt;span class=&quot;mopen&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mop&quot;&gt;lo&lt;span style=&quot;margin-right:0.01389em;&quot;&gt;g&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.16666666666666666em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;mclose&quot;&gt;)&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt; search complexity as well as &lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-mathml&quot;&gt;&lt;math&gt;&lt;semantics&gt;&lt;mrow&gt;&lt;mi&gt;O&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;(&lt;/mo&gt;&lt;mi&gt;log&lt;/mi&gt;&lt;mo&gt;⁡&lt;/mo&gt;&lt;mi&gt;n&lt;/mi&gt;&lt;mo stretchy=&quot;false&quot;&gt;)&lt;/mo&gt;&lt;/mrow&gt;&lt;annotation encoding=&quot;application/x-tex&quot;&gt;O(\log n)&lt;/annotation&gt;&lt;/semantics&gt;&lt;/math&gt;&lt;/span&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:1em;vertical-align:-0.25em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot; style=&quot;margin-right:0.02778em;&quot;&gt;O&lt;/span&gt;&lt;span class=&quot;mopen&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mop&quot;&gt;lo&lt;span style=&quot;margin-right:0.01389em;&quot;&gt;g&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;mspace&quot; style=&quot;margin-right:0.16666666666666666em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;mclose&quot;&gt;)&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt; insertion complexity within an ordered sequence of &lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-mathml&quot;&gt;&lt;math&gt;&lt;semantics&gt;&lt;mrow&gt;&lt;mi&gt;n&lt;/mi&gt;&lt;/mrow&gt;&lt;annotation encoding=&quot;application/x-tex&quot;&gt;n&lt;/annotation&gt;&lt;/semantics&gt;&lt;/math&gt;&lt;/span&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:0.43056em;vertical-align:0em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathdefault&quot;&gt;n&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt; elements.  —— 维基百科&lt;/p&gt;
     
     </summary>
     
@@ -337,7 +315,7 @@
     
     <summary type="html">
     
-      &lt;p&gt;计算机内部实现数据的加减乘除运算是通过对二进制位运算来实现的，基本运算” + - × ÷ “ 均可转换为位运算。&lt;/p&gt;
+      &lt;p&gt;计算机内部实现数据的加减乘除运算是通过对二进制位运算来实现的，基本运算&amp;quot; + - × ÷ &amp;quot; 均可转换为位运算。&lt;/p&gt;
     
     </summary>
     
@@ -357,7 +335,7 @@
     
     <summary type="html">
     
-      &lt;p&gt;由于之前不小心把vim的配置删了，致使之前的那篇文章无法访问，但为了回应有关网友的回复，特此重新编辑了vim的ycm配置。:)&lt;/p&gt;
+      &lt;p&gt;由于之前不小心把vim的配置删了，致使之前的那篇文章无法访问，但为了回应有关网友的回复，特此重新编辑了vim的ycm配置。😃&lt;/p&gt;
 &lt;p&gt;YCM全称 YouCompleteMe，是一个vim插件，但是却是一个能够使代码自动补全的工具。虽然如此，但也还是无法与专用IDE相媲美，不过对于vim党来说却是一个十分有趣的插件。&lt;/p&gt;
     
     </summary>
@@ -446,7 +424,7 @@
     
     <summary type="html">
     
-      &lt;p&gt;一般来说，VirtualBox成功安装manjaro后可以在 [设备] -&amp;gt; [安装增强功能]。然而有时却事与愿违的怎么也无法安装，那么这时我们就可以在manjaro里自行安装 VBoxGuestAdditions，let’s go! &lt;/p&gt;
+      &lt;p&gt;一般来说，VirtualBox成功安装manjaro后可以在 [设备] -&amp;gt; [安装增强功能]。然而有时却事与愿违的怎么也无法安装，那么这时我们就可以在manjaro里自行安装 VBoxGuestAdditions，let’s go!&lt;/p&gt;
     
     </summary>
     
@@ -478,6 +456,28 @@
       <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
     
       <category term="Archlinux" scheme="http://www.joxrays.com/tags/Archlinux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>配置Vsftpd遇到的问题</title>
+    <link href="http://www.joxrays.com/vsftp-configure/"/>
+    <id>http://www.joxrays.com/vsftp-configure/</id>
+    <published>2019-07-29T16:00:00.000Z</published>
+    <updated>2019-08-17T06:58:28.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;目前我用的系统是archlinux，所以在配置vsftpd是不是一帆风顺的，这里将安装配置过程记录下来，也无法确保是否还有其他错误。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Linux" scheme="http://www.joxrays.com/categories/Linux/"/>
+    
+    
+      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
+    
+      <category term="vsftpd" scheme="http://www.joxrays.com/tags/vsftpd/"/>
     
   </entry>
   

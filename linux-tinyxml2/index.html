@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -206,7 +206,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -339,6 +339,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -375,9 +378,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -532,12 +532,13 @@
       
         <p>上次介绍了用 <strong>libxml2</strong> 解析XML文档，用起来也挺“痛苦”的，不过这次即将介绍的同为开源 <strong>tinyxml2</strong> 可再简单不够了。。。</p>
 <a id="more"></a>
-
-<h3 id="TinyXML2"><a href="#TinyXML2" class="headerlink" title="TinyXML2"></a>TinyXML2</h3><p>TinyXML2是什么？</p>
+<h3 id="tinyxml2"><a class="markdownIt-Anchor" href="#tinyxml2"></a> TinyXML2</h3>
+<p>TinyXML2是什么？</p>
 <blockquote>
 <p>TinyXML-2 is a simple, small, efficient, C++ XML parser that can be easily integrated into other programs.</p>
 </blockquote>
-<p>与 <strong>面向过程</strong> 的libxml2相比，TinyXML2是 <strong>面向对象</strong> 的，所有的操作都被封装在 <strong>类</strong> 里面，因此变得极其简单。<br>而且 tinyxml2 实现的代码文件为 tinyxml2.h tinyxml2.cpp，而 tinyxml2.cpp 仅大约2800行代码实现了xml解析，实在令人佩服。</p>
+<p>与 <strong>面向过程</strong> 的libxml2相比，TinyXML2是 <strong>面向对象</strong> 的，所有的操作都被封装在 <strong>类</strong> 里面，因此变得极其简单。<br>
+而且 tinyxml2 实现的代码文件为 tinyxml2.h tinyxml2.cpp，而 tinyxml2.cpp 仅大约2800行代码实现了xml解析，实在令人佩服。</p>
 <blockquote>
 <p>Simply compile and run. There is a visual studio 2015 project included, a simple Makefile, an Xcode project, a Code::Blocks project, and a cmake CMakeLists.txt included to help you.</p>
 </blockquote>
@@ -550,7 +551,8 @@
 <th>Class</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>XMLAttribute</td>
 <td>XMLComment</td>
 </tr>
@@ -574,48 +576,39 @@
 <td>XMLUnknown</td>
 <td>XMLVisitor</td>
 </tr>
-</tbody></table>
-<p>顾名思义，这些类的功能直接从名字就知道了。其中 <strong>XMLNode</strong> 为大多数类的基类，即一个节点对象。 <code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</code> 也是一个节点<br>注释（Comment）也是一个节点对象，但属性（Attribute）却不是，因为它没有从 XMLNode类 派生出来</p>
+</tbody>
+</table>
+<p>顾名思义，这些类的功能直接从名字就知道了。其中 <strong>XMLNode</strong> 为大多数类的基类，即一个节点对象。 <code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</code> 也是一个节点<br>
+注释（Comment）也是一个节点对象，但属性（Attribute）却不是，因为它没有从 XMLNode类 派生出来</p>
 <p>要解析一个XML文档，一般可通过 <strong>XMLDocument</strong> 加载XML文档</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">XMLError tinyxml2::XMLDocument::LoadFile(<span class="keyword">const</span> <span class="keyword">char</span> * filename)	</span><br><span class="line">XMLError tinyxml2::XMLDocument::LoadFile(FILE * )</span><br></pre></td></tr></table></figure>
-
 <p>相反，tinyxml2::XMLDocument::SaveFile 可保存XML文档</p>
 <p>下面的例子以解析XML文档所以节点信息</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;tinyxml2.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> tinyxml2; </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">ParserXMLFile</span><span class="params">(<span class="keyword">int</span> &amp;depth,XMLNode *pNode)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> index=<span class="number">0</span>;</span><br><span class="line">    <span class="comment">// 根节点</span></span><br><span class="line">    XMLNode *node=pNode;</span><br><span class="line">    <span class="keyword">do</span>&#123;</span><br><span class="line">        <span class="comment">// 如果是节点是元素</span></span><br><span class="line">        <span class="keyword">if</span>(node-&gt;ToElement())&#123;</span><br><span class="line">            index++;</span><br><span class="line">            XMLElement *element=node-&gt;ToElement();</span><br><span class="line">            <span class="built_in">cout</span>.<span class="built_in">width</span>(depth);</span><br><span class="line">            <span class="built_in">cout</span>&lt;&lt;index&lt;&lt;<span class="string">"."</span>&lt;&lt;element-&gt;Name();</span><br><span class="line">            <span class="comment">// 获取元素的文本</span></span><br><span class="line">            <span class="keyword">if</span>(element-&gt;GetText())&#123;</span><br><span class="line">                <span class="built_in">cout</span>&lt;&lt;<span class="string">"--&gt;"</span>&lt;&lt;element-&gt;GetText();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="built_in">cout</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">            <span class="comment">// 解析属性</span></span><br><span class="line">            <span class="keyword">const</span> XMLAttribute *attribute=element-&gt;FirstAttribute();</span><br><span class="line">            <span class="keyword">bool</span> ishas_attr=<span class="literal">false</span>;</span><br><span class="line">            <span class="keyword">if</span>(attribute) &#123;</span><br><span class="line">                ishas_attr=<span class="literal">true</span>;</span><br><span class="line">                <span class="built_in">cout</span>.<span class="built_in">width</span>(depth);</span><br><span class="line">                <span class="built_in">cout</span>&lt;&lt;<span class="string">"=&gt; "</span>;</span><br><span class="line">                <span class="keyword">while</span> (attribute)&#123;</span><br><span class="line">                    <span class="built_in">cout</span>&lt;&lt;attribute-&gt;Name()&lt;&lt;<span class="string">":"</span>&lt;&lt;attribute-&gt;Value()&lt;&lt;<span class="string">" | "</span>;</span><br><span class="line">                    attribute=attribute-&gt;Next();</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span>(ishas_attr)<span class="built_in">cout</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 当前节点node的下一个子节点</span></span><br><span class="line">            <span class="keyword">if</span>(node-&gt;FirstChild())&#123;</span><br><span class="line">                depth+=<span class="number">10</span>;</span><br><span class="line">                ParserXMLFile(depth,node-&gt;FirstChild());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        node=node-&gt;NextSibling();</span><br><span class="line">    &#125;<span class="keyword">while</span>(node);</span><br><span class="line">    <span class="keyword">if</span>(depth&gt;<span class="number">0</span>)&#123;</span><br><span class="line">        depth-=<span class="number">10</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">testParserXML</span><span class="params">()</span></span>&#123;</span><br><span class="line">    XMLDocument document;</span><br><span class="line">    XMLError xmlError;</span><br><span class="line">    <span class="keyword">if</span>((xmlError= document.LoadFile(<span class="string">"test1.xml"</span>))==XML_SUCCESS)&#123;</span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;<span class="string">"Load xml file ok!"</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;document.ErrorStr()&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// &lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line">    <span class="keyword">if</span>(document.FirstChild()-&gt;ToDeclaration())&#123;</span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;document.FirstChild()-&gt;ToDeclaration()-&gt;Value()&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// &lt;!--This is a comment...--&gt;</span></span><br><span class="line">    <span class="keyword">if</span>(document.FirstChild()-&gt;NextSibling()-&gt;ToComment())&#123;</span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;document.FirstChild()-&gt;NextSibling()-&gt;ToComment()-&gt;Value()&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"Root Element: "</span>&lt;&lt; document.RootElement()-&gt;Name()&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">int</span> depth=<span class="number">0</span>;</span><br><span class="line">    <span class="comment">// 根节点下的第一个子节点</span></span><br><span class="line">    ParserXMLFile(depth,document.RootElement()-&gt;FirstChild());</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc,<span class="keyword">char</span> **argv)</span> </span>&#123;</span><br><span class="line">    testParserXML();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>上面的代码是不是很熟悉？</p>
 <p>test.xml</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="comment">&lt;!--This is a comment...--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Theme</span> <span class="attr">version</span>=<span class="string">"2.0"</span> <span class="attr">magnet</span>=<span class="string">"9"</span> <span class="attr">alpha</span>=<span class="string">"255"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Bitmap</span> <span class="attr">id</span>=<span class="string">"main"</span> <span class="attr">file</span>=<span class="string">"main.bmp"</span> <span class="attr">alphacolor</span>=<span class="string">"#FF0001"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Font</span> <span class="attr">id</span>=<span class="string">"playlist_font"</span> <span class="attr">file</span>=<span class="string">"FreeSansBold.ttf"</span> <span class="attr">size</span>=<span class="string">"11"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">BitmapFont</span> <span class="attr">id</span>=<span class="string">"digits_font"</span> <span class="attr">file</span>=<span class="string">"nums_ex.bmp"</span> <span class="attr">type</span>=<span class="string">"digits"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Window</span> <span class="attr">id</span>=<span class="string">"playlist_window"</span> <span class="attr">x</span>=<span class="string">"100"</span> <span class="attr">y</span>=<span class="string">"332"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">Layout</span> <span class="attr">id</span>=<span class="string">"pl_small_layout"</span> <span class="attr">width</span>=<span class="string">"275"</span> <span class="attr">height</span>=<span class="string">"116"</span> <span class="attr">minwidth</span>=<span class="string">"275"</span> <span class="attr">minheight</span>=<span class="string">"116"</span> <span class="attr">maxwidth</span>=<span class="string">"1000"</span> <span class="attr">maxheight</span>=<span class="string">"800"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">Group</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">Text</span> <span class="attr">font</span>=<span class="string">"text_font"</span> <span class="attr">x</span>=<span class="string">"4"</span> <span class="attr">y</span>=<span class="string">"4"</span> <span class="attr">width</span>=<span class="string">"239"</span> <span class="attr">text</span>=<span class="string">"$N"</span> /&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">Group</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">Layout</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">Layout</span> <span class="attr">id</span>=<span class="string">"pl_big_layout"</span> <span class="attr">width</span>=<span class="string">"275"</span> <span class="attr">height</span>=<span class="string">"116"</span> <span class="attr">minwidth</span>=<span class="string">"275"</span> <span class="attr">minheight</span>=<span class="string">"116"</span> <span class="attr">maxwidth</span>=<span class="string">"1000"</span> <span class="attr">maxheight</span>=<span class="string">"800"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">Group</span> <span class="attr">x</span>=<span class="string">"0"</span> <span class="attr">y</span>=<span class="string">"0"</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">Anchor</span> <span class="attr">x</span>=<span class="string">"0"</span> <span class="attr">y</span>=<span class="string">"116"</span> <span class="attr">priority</span>=<span class="string">"30"</span> <span class="attr">range</span>=<span class="string">"15"</span> /&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">Group</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">Layout</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">Window</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Theme</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
 <p>最后的结果就不显示出来了。。。思路也很简单，通过递归获取每个子节点的信息。官网也有类文档可参考，这里就不在详细介绍了。不过有个地方的确要注意</p>
 <p>const char* tinyxml2::XMLNode::Value()const</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Document:   empty (NULL is returned,not an empty string)</span><br><span class="line">Element:    name of the element</span><br><span class="line">Comment:    the comment text</span><br><span class="line">Unknown:    the tag contents</span><br><span class="line">Text:       the text string</span><br></pre></td></tr></table></figure>
-
 <p>这是基类XMLNode的Value成员函数，而文档（Document）对象，返回确实一个 <strong>NULL</strong>，不是空字符串！文档对象是一个特殊的节点对象。</p>
 <p>而生成XML则时更加简单了</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">GenerateXMLFile</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *filename)</span></span>&#123;</span><br><span class="line">    XMLDocument document;</span><br><span class="line">    <span class="comment">// 添加 &lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line">    document.InsertFirstChild(document.NewDeclaration());</span><br><span class="line">    <span class="comment">// 添加注释</span></span><br><span class="line">    document.InsertEndChild(document.NewComment(<span class="string">"Hello World!"</span>));</span><br><span class="line">    <span class="comment">// 添加根节点</span></span><br><span class="line">    XMLElement *root= document.NewElement(<span class="string">"People"</span>);</span><br><span class="line">    document.InsertEndChild(root);</span><br><span class="line">    <span class="comment">// 添加一个新元素</span></span><br><span class="line">    XMLElement *student=document.NewElement(<span class="string">"Student"</span>);</span><br><span class="line">    <span class="comment">// 设置元素属性</span></span><br><span class="line">    student-&gt;SetAttribute(<span class="string">"name"</span>,<span class="string">"XiaoMing"</span>);</span><br><span class="line">    student-&gt;SetAttribute(<span class="string">"age"</span>,<span class="number">16</span>);</span><br><span class="line">    XMLElement *stu_0=document.NewElement(<span class="string">"Hobby"</span>);</span><br><span class="line">    stu_0-&gt;SetText(<span class="string">"Play Football"</span>);</span><br><span class="line">    <span class="comment">// 插入子节点</span></span><br><span class="line">    student-&gt;InsertFirstChild(stu_0);</span><br><span class="line">    XMLElement *teacher=document.NewElement(<span class="string">"Teacher"</span>);</span><br><span class="line">    teacher-&gt;SetText(<span class="string">"I am a teacher"</span>);</span><br><span class="line">    <span class="comment">// 删除属性</span></span><br><span class="line">    student-&gt;DeleteAttribute(<span class="string">"age"</span>);</span><br><span class="line">    root-&gt;InsertFirstChild(student);</span><br><span class="line">    root-&gt;InsertEndChild(teacher);</span><br><span class="line">    <span class="comment">// 保存文件</span></span><br><span class="line">    document.SaveFile(filename);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>要打印XML文档的内容到标准输出，可以用 <strong>XMLPrinter</strong> 类，其构造函数为</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** Construct the printer. If the FILE* is specified,</span></span><br><span class="line"><span class="comment">    	this will print to the FILE. Else it will print</span></span><br><span class="line"><span class="comment">    	to memory, and the result is available in CStr().</span></span><br><span class="line"><span class="comment">    	If 'compact' is set to true, then output is created</span></span><br><span class="line"><span class="comment">    	with only required whitespace and newlines.</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    XMLPrinter( FILE* file=<span class="number">0</span>, <span class="keyword">bool</span> compact = <span class="literal">false</span>, <span class="keyword">int</span> depth = <span class="number">0</span> );</span><br></pre></td></tr></table></figure>
-
 <p>调用如下</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">XMLPrinter printer;</span><br><span class="line">document.Print( &amp;printer );</span><br><span class="line"><span class="built_in">cout</span>&lt;&lt;printer.CStr()&lt;&lt;<span class="built_in">endl</span>;</span><br></pre></td></tr></table></figure>
-
 <p>关于 XMLHandle 的作用，官网也说得很清楚，假如有一下xml</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Document</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Element</span> <span class="attr">attributeA</span> = <span class="string">"valueA"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">Child</span> <span class="attr">attributeB</span> = <span class="string">"value1"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">Child</span> <span class="attr">attributeB</span> = <span class="string">"value2"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">Element</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Document</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
 <p>如果要获取 attributeB 属性的值 “value2”，一般情况下，通过如下方法获取最终的值</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">XMLElement* root = document.FirstChildElement( <span class="string">"Document"</span> );</span><br><span class="line"><span class="keyword">if</span> ( root )</span><br><span class="line">&#123;</span><br><span class="line">    XMLElement* element = root-&gt;FirstChildElement( <span class="string">"Element"</span> );</span><br><span class="line">    <span class="keyword">if</span> ( element )</span><br><span class="line">    &#123;</span><br><span class="line">        XMLElement* child = element-&gt;FirstChildElement( <span class="string">"Child"</span> );</span><br><span class="line">        <span class="keyword">if</span> ( child )</span><br><span class="line">        &#123;</span><br><span class="line">            XMLElement* child2 = child-&gt;NextSiblingElement( <span class="string">"Child"</span> );</span><br><span class="line">            <span class="keyword">if</span> ( child2 )</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">// Finally do something useful.</span></span><br></pre></td></tr></table></figure>
-
-<p>每一步都必须判断是否为空指针，这样的话代码就显得十分繁琐，<br>于是 XMLHandle 提供了这样一种方法</p>
+<p>每一步都必须判断是否为空指针，这样的话代码就显得十分繁琐，<br>
+于是 XMLHandle 提供了这样一种方法</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">XMLHandle <span class="title">docHandle</span><span class="params">( &amp;document )</span></span>;</span><br><span class="line">XMLElement* child2 = docHandle.FirstChildElement( <span class="string">"Document"</span> ).FirstChildElement( <span class="string">"Element"</span> ).FirstChildElement().NextSiblingElement();</span><br><span class="line"><span class="keyword">if</span> ( child2 )</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// do something useful</span></span><br></pre></td></tr></table></figure>
-
 <p>这样的话，就不用每步都进行一次判断了。如果在这中间过程中返回了空指针，那么结果就是空指针，只有每一步都正确，结果才正确。</p>
 <p>思考以下代码，看看那个代码写法正确？</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(document.FirstChildElement(<span class="string">"notPeople"</span>)-&gt;FirstChildElement(<span class="string">"Student"</span>))&#123;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;document.FirstChildElement(<span class="string">"People"</span>)-&gt;FirstChildElement(<span class="string">"Student"</span>)-&gt;Value()&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">XMLHandle <span class="title">handle</span><span class="params">(&amp;document)</span></span>; </span><br><span class="line"> <span class="keyword">if</span>(handle.FirstChildElement(<span class="string">"notPeople"</span>).FirstChildElement(<span class="string">"Student"</span>).ToElement())&#123;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;document.FirstChildElement(<span class="string">"People"</span>)-&gt;FirstChildElement(<span class="string">"Student"</span>)-&gt;Value()&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>Bye~</p>
 
       
@@ -772,7 +765,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -878,9 +871,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -948,7 +939,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#TinyXML2"><span class="nav-number">1.</span> <span class="nav-text">TinyXML2</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#tinyxml2"><span class="nav-number">1.</span> <span class="nav-text"> TinyXML2</span></a></li></ol></div>
             
 
           </div>
@@ -981,7 +972,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1088,10 +1079,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

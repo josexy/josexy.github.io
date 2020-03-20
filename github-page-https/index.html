@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -216,7 +216,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -349,6 +349,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -385,9 +388,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -542,25 +542,41 @@
       
         <p>正常来讲在阿里云注册了一个域名，默认时支持HTTP，要想让自己的域名在<code>Github Page</code>支持HTTPS，那么可以用 <code>Cloudflare</code></p>
 <a id="more"></a>
-
-<h3 id="Cloudflare"><a href="#Cloudflare" class="headerlink" title="Cloudflare"></a>Cloudflare</h3><blockquote>
+<h3 id="cloudflare"><a class="markdownIt-Anchor" href="#cloudflare"></a> Cloudflare</h3>
+<blockquote>
 <p>Cloudflare是一家美国的跨国科技企业，总部位于旧金山，在英国伦敦亦设有办事处。Cloudflare以向客户提供网站安全管理、性能优化及相关的技术支持为主要业务。通过基于反向代理的内容传递网络(ContentDeliveryNetwork,CDN)及分布式域名解析服务(DistributedDomainNameServer)，Cloudflare可以帮助受保护站点抵御包括拒绝服务攻击(DenialofService)在内的大多数网络攻击，确保该网站长期在线，同时提升网站的性能、访问速度以改善访客体验</p>
 </blockquote>
-<h4 id="Cloudflare配置"><a href="#Cloudflare配置" class="headerlink" title="Cloudflare配置"></a>Cloudflare配置</h4><p>首先需要登录 <a href="https://www.cloudflare.com/" target="_blank" rel="noopener">官网</a> 注册一个账号，新注册账户登录后弹出对话框要求添加一个站点。可以是从阿里云注册的域名。<br><img src="/uploads/images/hexo/file_001.png" alt="img"></p>
+<h4 id="cloudflare配置"><a class="markdownIt-Anchor" href="#cloudflare配置"></a> Cloudflare配置</h4>
+<p>首先需要登录 <a href="https://www.cloudflare.com/" target="_blank" rel="noopener">官网</a> 注册一个账号，新注册账户登录后弹出对话框要求添加一个站点。可以是从阿里云注册的域名。<br>
+<img src="/uploads/images/hexo/file_001.png" alt="img"></p>
 <p>这里添加一条DNS记录。我在阿里云域名解析中添加了CNAME记录，指向github服务器，所以这里我也直接添加一条CNAME DNS记录。</p>
 <blockquote>
-<p>在“DNS记录”下朝上，从下拉列表中选择 <strong>CNAME</strong>。<br><strong>Name</strong> 输入 <strong>@</strong><br><strong>Domain name</strong> 输入 <strong>域名</strong>，如 josexy.github.io<br>将其保留为 自动TTL(<strong>Automatic TTL</strong>)。<br>点击<strong>橙色云</strong>将其变成<strong>灰色</strong>。<br>点击“添加记录”(<strong>Add Record</strong>)。</p>
+<p>在“DNS记录”下朝上，从下拉列表中选择 <strong>CNAME</strong>。<br>
+<strong>Name</strong> 输入 <strong>@</strong><br>
+<strong>Domain name</strong> 输入 <strong>域名</strong>，如 <a href="http://josexy.github.io" target="_blank" rel="noopener">josexy.github.io</a><br>
+将其保留为 自动TTL(<strong>Automatic TTL</strong>)。<br>
+点击<strong>橙色云</strong>将其变成<strong>灰色</strong>。<br>
+点击“添加记录”(<strong>Add Record</strong>)。</p>
 </blockquote>
-<p>之后我们还需要修改原域名的DNS服务器为Cloudflare提供的DNS服务器。要根据自己的来设置。<br><img src="/uploads/images/hexo/file_003.png" alt="img"></p>
-<p>修改Cloudflare提供的DNS服务器之后，可以看到变成了这样子。<br><img src="/uploads/images/hexo/file_004.png" alt="img"></p>
-<p>最后看到这个表示一切正常<br><img src="/uploads/images/hexo/file_009.png" alt="img"></p>
-<h4 id="SSL"><a href="#SSL" class="headerlink" title="SSL"></a>SSL</h4><p>选择 <code>Crypto</code> ，修改 <strong>SSL</strong> 为 <strong>Flexible</strong>(这里我建议选择 <strong>Full/Full(strict)</strong>，也是为了避免 <strong>ERR_TOO_MANY_REDIRECTS</strong> )，表示支持HTTPS<br><img src="/uploads/images/hexo/file_005.png" alt="img"></p>
-<h4 id="重定向"><a href="#重定向" class="headerlink" title="重定向"></a>重定向</h4><p>选择 <code>Page Rules</code> ,添加规则，跳转到HTTPS。比如访问有人访问 <code>http://josephxy.com</code> ，那么我们就需要强制跳转（重定向）到 <code>https://josephxy.com</code>。</p>
-<p>这里添加了两条规则<br><img src="/uploads/images/hexo/file_006.png" alt="img"></p>
+<p>之后我们还需要修改原域名的DNS服务器为Cloudflare提供的DNS服务器。要根据自己的来设置。<br>
+<img src="/uploads/images/hexo/file_003.png" alt="img"></p>
+<p>修改Cloudflare提供的DNS服务器之后，可以看到变成了这样子。<br>
+<img src="/uploads/images/hexo/file_004.png" alt="img"></p>
+<p>最后看到这个表示一切正常<br>
+<img src="/uploads/images/hexo/file_009.png" alt="img"></p>
+<h4 id="ssl"><a class="markdownIt-Anchor" href="#ssl"></a> SSL</h4>
+<p>选择 <code>Crypto</code> ，修改 <strong>SSL</strong> 为 <strong>Flexible</strong>(这里我建议选择 <strong>Full/Full(strict)</strong>，也是为了避免 <strong>ERR_TOO_MANY_REDIRECTS</strong> )，表示支持HTTPS<br>
+<img src="/uploads/images/hexo/file_005.png" alt="img"></p>
+<h4 id="重定向"><a class="markdownIt-Anchor" href="#重定向"></a> 重定向</h4>
+<p>选择 <code>Page Rules</code> ,添加规则，跳转到HTTPS。比如访问有人访问 <code>http://josephxy.com</code> ，那么我们就需要强制跳转（重定向）到 <code>https://josephxy.com</code>。</p>
+<p>这里添加了两条规则<br>
+<img src="/uploads/images/hexo/file_006.png" alt="img"></p>
 <p><img src="/uploads/images/hexo/file_007.png" alt="img"></p>
 <p><img src="/uploads/images/hexo/file_008.png" alt="img"></p>
-<p>最后我们可以看到小绿锁，表示支持HTTPS :)<br><img src="/uploads/images/hexo/file_010.png" alt="img"></p>
-<h3 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h3><blockquote>
+<p>最后我们可以看到小绿锁，表示支持HTTPS 😃<br>
+<img src="/uploads/images/hexo/file_010.png" alt="img"></p>
+<h3 id="结尾"><a class="markdownIt-Anchor" href="#结尾"></a> 结尾</h3>
+<blockquote>
 <p>参考文章：</p>
 <ol>
 <li><a href="https://blog.cloudflare.com/secure-and-fast-github-pages-with-cloudflare/" target="_blank" rel="noopener">https://blog.cloudflare.com/secure-and-fast-github-pages-with-cloudflare/</a></li>
@@ -725,7 +741,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -831,9 +847,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -901,7 +915,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Cloudflare"><span class="nav-number">1.</span> <span class="nav-text">Cloudflare</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Cloudflare配置"><span class="nav-number">1.1.</span> <span class="nav-text">Cloudflare配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SSL"><span class="nav-number">1.2.</span> <span class="nav-text">SSL</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#重定向"><span class="nav-number">1.3.</span> <span class="nav-text">重定向</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结尾"><span class="nav-number">2.</span> <span class="nav-text">结尾</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#cloudflare"><span class="nav-number">1.</span> <span class="nav-text"> Cloudflare</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#cloudflare配置"><span class="nav-number">1.1.</span> <span class="nav-text"> Cloudflare配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ssl"><span class="nav-number">1.2.</span> <span class="nav-text"> SSL</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#重定向"><span class="nav-number">1.3.</span> <span class="nav-text"> 重定向</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结尾"><span class="nav-number">2.</span> <span class="nav-text"> 结尾</span></a></li></ol></div>
             
 
           </div>
@@ -934,7 +948,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1041,10 +1055,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

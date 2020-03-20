@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -206,7 +206,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -339,6 +339,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -375,9 +378,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -489,7 +489,7 @@
               
                 <span class="post-meta-item-text">本文字数：</span>
               
-              <span title="本文字数">2.7k</span>
+              <span title="本文字数">2.6k</span>
             </span>
           
 
@@ -522,38 +522,41 @@
       
         <p>在很久之前我用Windows时一直使用 <strong>SoftEther VPN</strong> 来访问外网，但现在已经转向了SS，而且仅是通过转发流量来科学上网的话，无疑SS是最合适的，因此在 hostwinds 上也买了一台centos7服务器准备搭建shadowsocks。</p>
 <a id="more"></a>
-
-<p>Shadowsocks官网： <a href="https://shadowsocks.org/en/index.html" target="_blank" rel="noopener">https://shadowsocks.org/en/index.html</a><br>Shadowsocks配置介绍： <a href="https://shadowsocks.org/en/config/quick-guide.html" target="_blank" rel="noopener">https://shadowsocks.org/en/config/quick-guide.html</a><br>Github：<a href="https://github.com/shadowsocks/" target="_blank" rel="noopener">https://github.com/shadowsocks/</a></p>
-<h2 id="SS配置服务器"><a href="#SS配置服务器" class="headerlink" title="SS配置服务器"></a>SS配置服务器</h2><p>查看python版本</p>
+<p>Shadowsocks官网： <a href="https://shadowsocks.org/en/index.html" target="_blank" rel="noopener">https://shadowsocks.org/en/index.html</a><br>
+Shadowsocks配置介绍： <a href="https://shadowsocks.org/en/config/quick-guide.html" target="_blank" rel="noopener">https://shadowsocks.org/en/config/quick-guide.html</a><br>
+Github：<a href="https://github.com/shadowsocks/" target="_blank" rel="noopener">https://github.com/shadowsocks/</a></p>
+<h2 id="ss配置服务器"><a class="markdownIt-Anchor" href="#ss配置服务器"></a> SS配置服务器</h2>
+<p>查看python版本</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@hwsrv-548851 ~]# python --version</span><br><span class="line">Python 2.7.5</span><br></pre></td></tr></table></figure>
-
 <p>我的centos服务器默认没有安装Python Pip，同时可能还需要更新pip</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@hwsrv-548851 ~]# yum install python-pip</span><br><span class="line">[root@hwsrv-548851 ~]# pip install --upgrade pip</span><br></pre></td></tr></table></figure>
-
 <p>之后就可以通过pip安装shadowsocks</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@hwsrv-548851 ~]# pip install shadowsocks</span><br></pre></td></tr></table></figure>
-
 <p>到此SS服务端安装完成，接下来还需要json格式的配置文件</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;server&quot;:&quot;my_server_ip&quot;,</span><br><span class="line">    &quot;server_port&quot;:8388,</span><br><span class="line">    &quot;local_address&quot;: &quot;127.0.0.1&quot;,</span><br><span class="line">    &quot;local_port&quot;:1080,</span><br><span class="line">    &quot;password&quot;:&quot;barfoo!&quot;,</span><br><span class="line">    &quot;timeout&quot;:600,</span><br><span class="line">    &quot;method&quot;:&quot;chacha20-ietf-poly1305&quot;</span><br><span class="line">&#125;</span><br><span class="line">server: 服务器主机IP，默认 0.0.0.0</span><br><span class="line">server_port: 服务器端口 ，默认 8388</span><br><span class="line">local_address: 一般为 127.0.0.1</span><br><span class="line">local_port: 本地端口，一般 1080</span><br><span class="line">password: 连接SS服务器的密码</span><br><span class="line">timeout: 连接超时时间/s ，默认 300</span><br><span class="line">method: 加密方式，默认 aes-256-cfb</span><br></pre></td></tr></table></figure>
-
 <p>如果要从命令行来启动服务端，则可以</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@hwsrv-548851 ~]# ssserver -p 8998 -k mypassword</span><br></pre></td></tr></table></figure>
-
-<p>一般都是从配置文件来启动ss服务端<br>类似如下 config.json </p>
+<p>一般都是从配置文件来启动ss服务端<br>
+类似如下 config.json</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;server&quot;: &quot;104.168.xxx,xxx&quot;,</span><br><span class="line">    &quot;server_port&quot;: 8998,</span><br><span class="line">    &quot;local_address&quot;: &quot;127.0.0.1&quot;,</span><br><span class="line">    &quot;local_port&quot;: &quot;1080&quot;,</span><br><span class="line">    &quot;password&quot;: &quot;mypassword&quot;,</span><br><span class="line">    &quot;timeout&quot;: 60,</span><br><span class="line">    &quot;method&quot;: &quot;aes-256-cfb&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>使用配置文件启动服务端并在后台运行： <code>ssserver -c config.json -d start</code> ，检测是否成功启动</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@hwsrv-548851 ~]# netstat -anp|grep -i 8998</span><br><span class="line">tcp        0      0 104.168.xxx,xxx:8998    0.0.0.0:*               LISTEN      27701/python2       </span><br><span class="line">udp        0      0 104.168.xxx,xxx:8998    0.0.0.0:*                           27701/python2</span><br></pre></td></tr></table></figure>
-
-<h2 id="SS配置客户端"><a href="#SS配置客户端" class="headerlink" title="SS配置客户端"></a>SS配置客户端</h2><p>SS的客户端分为Windows，MacOS，Linux，Android，iOS和OpenWRT<br>这里介绍Windows，Linux</p>
-<h3 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h3><p>对于archlinux最直接的方法： <code>sudo pacman -S shadowsocks-qt5</code> 从GUI连接ss服务器<br>也可以从pip下载shadowsocks： <code>pip install shadowsocks</code>，然后再创建一个同服务端的config.json配置文件如 <code>sslocal -c config.json -d start</code> </p>
-<h3 id="WIndows"><a href="#WIndows" class="headerlink" title="WIndows"></a>WIndows</h3><p>Windows下的 ss客户端 也可以从Python pip安装 <code>shadowsocks</code> 。也可以从 <a href="https://github.com/shadowsocks/shadowsocks-windows/releases" target="_blank" rel="noopener">https://github.com/shadowsocks/shadowsocks-windows/releases</a> 下载</p>
-<p>不过如果从pip下载 shadowsocks，那么是无法直接启动的，解决方法如下：<br>到 <a href="https://slproweb.com/products/Win32OpenSSL.html" target="_blank" rel="noopener">https://slproweb.com/products/Win32OpenSSL.html</a> 下载最新版Windows openssl安装，然后去openssl安装目录 C:\Program Files\OpenSSL-Win64 找到 <code>libcrypto-1_1-x64.dll</code> 复制到 Python <code>Scripts</code>目录并重命名为<code>libcrypto.dll</code> 。否则提示 <code>libcrypto(OpenSSL) not found</code> 错误。</p>
-<p>完成以上时运行 <code>sslocal -c config.json</code> 会提示错误 <code>AttributeError: function &#39;EVP_CIPHER_CTX_cleanup&#39; not found</code></p>
+<h2 id="ss配置客户端"><a class="markdownIt-Anchor" href="#ss配置客户端"></a> SS配置客户端</h2>
+<p>SS的客户端分为Windows，MacOS，Linux，Android，iOS和OpenWRT<br>
+这里介绍Windows，Linux</p>
+<h3 id="linux"><a class="markdownIt-Anchor" href="#linux"></a> Linux</h3>
+<p>对于archlinux最直接的方法： <code>sudo pacman -S shadowsocks-qt5</code> 从GUI连接ss服务器<br>
+也可以从pip下载shadowsocks： <code>pip install shadowsocks</code>，然后再创建一个同服务端的config.json配置文件如 <code>sslocal -c config.json -d start</code></p>
+<h3 id="windows"><a class="markdownIt-Anchor" href="#windows"></a> WIndows</h3>
+<p>Windows下的 ss客户端 也可以从Python pip安装 <code>shadowsocks</code> 。也可以从 <a href="https://github.com/shadowsocks/shadowsocks-windows/releases" target="_blank" rel="noopener">https://github.com/shadowsocks/shadowsocks-windows/releases</a> 下载</p>
+<p>不过如果从pip下载 shadowsocks，那么是无法直接启动的，解决方法如下：<br>
+到 <a href="https://slproweb.com/products/Win32OpenSSL.html" target="_blank" rel="noopener">https://slproweb.com/products/Win32OpenSSL.html</a> 下载最新版Windows openssl安装，然后去openssl安装目录 C:\Program Files\OpenSSL-Win64 找到 <code>libcrypto-1_1-x64.dll</code> 复制到 Python <code>Scripts</code>目录并重命名为<code>libcrypto.dll</code> 。否则提示 <code>libcrypto(OpenSSL) not found</code> 错误。</p>
+<p>完成以上时运行 <code>sslocal -c config.json</code> 会提示错误 <code>AttributeError: function 'EVP_CIPHER_CTX_cleanup' not found</code></p>
 <p>原因是 openssl1.1.0版本中，废弃了<code>EVP_CIPHER_CTX_cleanup</code> 函数，可以用 <code>EVP_CIPHER_CTX_reset</code> 函数替代<code>EVP_CIPHER_CTX_cleanup</code> 函数。</p>
-<p>那么我们只需打开 C:\Users\Administrator\AppData\Local\Programs\Python\Python37\Lib\site-packages\shadowsocks\crypto\openssl.py 文件(路径可能不同)，将 <code>EVP_CIPHER_CTX_cleanup</code> 全部替换为 <code>EVP_CIPHER_CTX_reset</code>，总共两处需要修改，之后保存即可。</p>
+<p>那么我们只需打开 C:\Users\Administrator\AppData\Local\Programs\Python\Python37\Lib\site-packages\shadowsocks\crypto\<a href="http://openssl.py" target="_blank" rel="noopener">openssl.py</a> 文件(路径可能不同)，将 <code>EVP_CIPHER_CTX_cleanup</code> 全部替换为 <code>EVP_CIPHER_CTX_reset</code>，总共两处需要修改，之后保存即可。</p>
 <p>执行 <code>sslocal -c config.json</code> 成功！</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<h2 id="参考"><a class="markdownIt-Anchor" href="#参考"></a> 参考</h2>
+<ul>
 <li><a href="https://shadowsocks.org/en/download/servers.html" target="_blank" rel="noopener">Shadowsocks Server</a></li>
 <li><a href="https://shadowsocks.org/en/download/clients.html" target="_blank" rel="noopener">Shadowsocks Client</a></li>
 </ul>
@@ -712,7 +715,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -818,9 +821,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -888,7 +889,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#SS配置服务器"><span class="nav-number">1.</span> <span class="nav-text">SS配置服务器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SS配置客户端"><span class="nav-number">2.</span> <span class="nav-text">SS配置客户端</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux"><span class="nav-number">2.1.</span> <span class="nav-text">Linux</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WIndows"><span class="nav-number">2.2.</span> <span class="nav-text">WIndows</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ss配置服务器"><span class="nav-number">1.</span> <span class="nav-text"> SS配置服务器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ss配置客户端"><span class="nav-number">2.</span> <span class="nav-text"> SS配置客户端</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#linux"><span class="nav-number">2.1.</span> <span class="nav-text"> Linux</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#windows"><span class="nav-number">2.2.</span> <span class="nav-text"> WIndows</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">3.</span> <span class="nav-text"> 参考</span></a></li></ol></div>
             
 
           </div>
@@ -921,7 +922,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1028,10 +1029,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

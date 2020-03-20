@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -125,13 +125,13 @@
   };
 </script>
 
-  <meta name="description" content="我是在Linux下搭建的,不过其他系统也是一样的.由于搭建FQ过程比较复杂的,所以这里列举几个工具:下载Google chrome使用lantern蓝灯创建GAE并申请appidXX-NET配置">
+  <meta name="description" content="我是在Linux下搭建的,不过其他系统也是一样的. 由于搭建FQ过程比较复杂的,所以这里列举几个工具: 下载Google chrome 使用lantern蓝灯 创建GAE并申请appid XX-NET配置">
 <meta name="keywords" content="Linux,Google">
 <meta property="og:type" content="article">
 <meta property="og:title" content="XX-NET搭建FQ环境">
 <meta property="og:url" content="http://www.joxrays.com/linux-xxnet/index.html">
 <meta property="og:site_name" content="JoXrays&#39;s Blog">
-<meta property="og:description" content="我是在Linux下搭建的,不过其他系统也是一样的.由于搭建FQ过程比较复杂的,所以这里列举几个工具:下载Google chrome使用lantern蓝灯创建GAE并申请appidXX-NET配置">
+<meta property="og:description" content="我是在Linux下搭建的,不过其他系统也是一样的. 由于搭建FQ过程比较复杂的,所以这里列举几个工具: 下载Google chrome 使用lantern蓝灯 创建GAE并申请appid XX-NET配置">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://www.joxrays.com/uploads/images/vpn/file_003.png">
 <meta property="og:image" content="http://www.joxrays.com/uploads/images/vpn/file_001.png">
@@ -156,7 +156,7 @@
 <meta property="og:updated_time" content="2019-07-20T14:18:38.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="XX-NET搭建FQ环境">
-<meta name="twitter:description" content="我是在Linux下搭建的,不过其他系统也是一样的.由于搭建FQ过程比较复杂的,所以这里列举几个工具:下载Google chrome使用lantern蓝灯创建GAE并申请appidXX-NET配置">
+<meta name="twitter:description" content="我是在Linux下搭建的,不过其他系统也是一样的. 由于搭建FQ过程比较复杂的,所以这里列举几个工具: 下载Google chrome 使用lantern蓝灯 创建GAE并申请appid XX-NET配置">
 <meta name="twitter:image" content="http://www.joxrays.com/uploads/images/vpn/file_003.png">
 
 
@@ -227,7 +227,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -360,6 +360,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -396,9 +399,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -551,18 +551,24 @@
       
 
       
-        <p>我是在Linux下搭建的,不过其他系统也是一样的.<br>由于搭建FQ过程比较复杂的,所以这里列举几个工具:<br><a href="#googlechrome">下载Google chrome</a><br><a href="#lantern">使用lantern蓝灯</a><br><a href="#gae">创建GAE并申请appid</a><br><a href="#xx_net">XX-NET配置</a></p>
+        <p>我是在Linux下搭建的,不过其他系统也是一样的.<br>
+由于搭建FQ过程比较复杂的,所以这里列举几个工具:<br>
+<a href="#googlechrome">下载Google chrome</a><br>
+<a href="#lantern">使用lantern蓝灯</a><br>
+<a href="#gae">创建GAE并申请appid</a><br>
+<a href="#xx_net">XX-NET配置</a></p>
 <a id="more"></a>
-
 <p><font color="green">PS： 以下方法可能比较旧，目前我使用的是X-Tunnel</font></p>
-<h3 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h3><table>
+<h3 id="正文"><a class="markdownIt-Anchor" href="#正文"></a> 正文</h3>
+<table>
 <thead>
 <tr>
 <th>需要</th>
 <th>作用</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>Chrome浏览器</td>
 <td>–</td>
 </tr>
@@ -582,49 +588,88 @@
 <td>SwitchOmega</td>
 <td>管理和切换多个代理设置</td>
 </tr>
-</tbody></table>
-<h4 id="下载Google-chrome"><a href="#下载Google-chrome" class="headerlink" title="下载Google chrome"></a>下载Google chrome</h4><p>建议去官网下载,所以这里就要用到lantern了<br><img src="/uploads/images/vpn/file_003.png" alt="img"><br>安装略 :)</p>
-<h4 id="使用lantern蓝灯"><a href="#使用lantern蓝灯" class="headerlink" title="使用lantern蓝灯"></a>使用lantern蓝灯</h4><p>使用lantern蓝灯</p>
+</tbody>
+</table>
+<h4 id="下载google-chrome"><a class="markdownIt-Anchor" href="#下载google-chrome"></a> 下载Google chrome</h4>
+<p>建议去官网下载,所以这里就要用到lantern了<br>
+<img src="/uploads/images/vpn/file_003.png" alt="img"><br>
+安装略 😃</p>
+<h4 id="使用lantern蓝灯"><a class="markdownIt-Anchor" href="#使用lantern蓝灯"></a> 使用lantern蓝灯</h4>
+<p>使用lantern蓝灯</p>
 <p>到github获取 <a href="https://github.com/getlantern/forum" target="_blank" rel="noopener">https://github.com/getlantern/forum</a></p>
-<p><img src="/uploads/images/vpn/file_001.png" alt="img"><br>我的是Linux系统<br><img src="/uploads/images/vpn/file_002.png" alt="img"><br>下载之后就可以 <code>dpkg -i</code>来安装了,然后可以直接 lantern 运行,并显示一个托盘图标.<br>可以 <code>netstat -ntlp |grep lantern</code> 来查看lantern进场监听的端口.</p>
+<p><img src="/uploads/images/vpn/file_001.png" alt="img"><br>
+我的是Linux系统<br>
+<img src="/uploads/images/vpn/file_002.png" alt="img"><br>
+下载之后就可以 <code>dpkg -i</code>来安装了,然后可以直接 lantern 运行,并显示一个托盘图标.<br>
+可以 <code>netstat -ntlp |grep lantern</code> 来查看lantern进场监听的端口.</p>
 <blockquote>
 <p>别说这访问速度还挺快的.不过,体验版lantern用户每个月只能用几百MB的流量,超过后就不能用了(省点用啊),所以,特么的看个视频就没了…基于此,我决定折腾一番…</p>
 </blockquote>
-<h4 id="创建GAE并申请appid"><a href="#创建GAE并申请appid" class="headerlink" title="创建GAE并申请appid"></a>创建GAE并申请appid</h4><p>其实,到了这里就是注意了,这才是最主要的.<br>GAE(Google APP Engine)是什么?<br>以下摘自百度</p>
+<h4 id="创建gae并申请appid"><a class="markdownIt-Anchor" href="#创建gae并申请appid"></a> 创建GAE并申请appid</h4>
+<p>其实,到了这里就是注意了,这才是最主要的.<br>
+GAE(Google APP Engine)是什么?<br>
+以下摘自百度</p>
 <blockquote>
 <p>Google App Engine 是一种让您可以在 Google 的基础架构上运行您的网络应用程序。Google App Engine 应用程序易于构建和维护，并可根据您的访问量和数据存储需要的增长轻松扩展。使用 Google App Engine，将不再需要维护服务器：您只需上传您的应用程序，它便可立即为您的用户提供服务。</p>
 </blockquote>
-<p><strong>PS:必须去创建一个Google账号,此处不在赘述</strong><br>gae官网: <a href="https://appengine.google.com" target="_blank" rel="noopener">https://appengine.google.com</a><br>输入Google账号密码之后就可以进去gae管理界面了<br><img src="/uploads/images/vpn/file_004.png" alt="img"></p>
-<p>之后可以直接创建项目了,注意那个<code>appid</code>就是<strong>项目名</strong><br><img src="/uploads/images/vpn/file_005.png" alt="img"></p>
-<p>等待创建完成<br><img src="/uploads/images/vpn/file_006.png" alt="img"></p>
-<p>完成之后只需吧那个<code>appid</code>记住.<br><img src="/uploads/images/vpn/file_007.png" alt="img"></p>
+<p><strong>PS:必须去创建一个Google账号,此处不在赘述</strong><br>
+gae官网: <a href="https://appengine.google.com" target="_blank" rel="noopener">https://appengine.google.com</a><br>
+输入Google账号密码之后就可以进去gae管理界面了<br>
+<img src="/uploads/images/vpn/file_004.png" alt="img"></p>
+<p>之后可以直接创建项目了,注意那个<code>appid</code>就是<strong>项目名</strong><br>
+<img src="/uploads/images/vpn/file_005.png" alt="img"></p>
+<p>等待创建完成<br>
+<img src="/uploads/images/vpn/file_006.png" alt="img"></p>
+<p>完成之后只需吧那个<code>appid</code>记住.<br>
+<img src="/uploads/images/vpn/file_007.png" alt="img"></p>
 <p><strong>PS:可以创建多个项目.在配置xx-net时也可以指定多个appid,一个appid对应1G的使用流量</strong></p>
-<h4 id="XX-NET配置"><a href="#XX-NET配置" class="headerlink" title="XX-NET配置"></a>XX-NET配置</h4><p>可以在 <a href="https://github.com/XX-net/XX-Net" target="_blank" rel="noopener">https://github.com/XX-net/XX-Net</a> 下载 <strong>XX-NET</strong><br>直接 <code>git clone https://github.com/XX-net/XX-Net.git</code><br><img src="/uploads/images/vpn/file_008.png" alt="img"></p>
-<p>或者在这里下载: <a href="https://github.com/XX-net/XX-Net/blob/master/code/default/download.md" target="_blank" rel="noopener">https://github.com/XX-net/XX-Net/blob/master/code/default/download.md</a><br><img src="/uploads/images/vpn/file_009.png" alt="img"><br>中文帮助文档: <a href="https://github.com/XX-net/XX-Net/wiki/中文文档" target="_blank" rel="noopener">https://github.com/XX-net/XX-Net/wiki/%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3</a></p>
+<h4 id="xx-net配置"><a class="markdownIt-Anchor" href="#xx-net配置"></a> XX-NET配置</h4>
+<p>可以在 <a href="https://github.com/XX-net/XX-Net" target="_blank" rel="noopener">https://github.com/XX-net/XX-Net</a> 下载 <strong>XX-NET</strong><br>
+直接 <code>git clone https://github.com/XX-net/XX-Net.git</code><br>
+<img src="/uploads/images/vpn/file_008.png" alt="img"></p>
+<p>或者在这里下载: <a href="https://github.com/XX-net/XX-Net/blob/master/code/default/download.md" target="_blank" rel="noopener">https://github.com/XX-net/XX-Net/blob/master/code/default/download.md</a><br>
+<img src="/uploads/images/vpn/file_009.png" alt="img"><br>
+中文帮助文档: <a href="https://github.com/XX-net/XX-Net/wiki/%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3" target="_blank" rel="noopener">https://github.com/XX-net/XX-Net/wiki/%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3</a></p>
 <p>下载之后</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">unzip XX-Net-3.8.0.zip</span><br><span class="line">cd XX-Net-3.8.0</span><br><span class="line">./start #后台运行</span><br></pre></td></tr></table></figure>
-
 <p><strong>PS:建议在配置XX-NET之前,后台运行lantern,因为等下部署时要登录Google账号</strong></p>
 <p>我在Linux下配置时还要开启<strong>ipv6</strong>通道 .方法如下</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">apt-get install miredo</span><br><span class="line">miredo #运行</span><br><span class="line">ifconfig可以看到多出一个`teredo`接口</span><br><span class="line"></span><br><span class="line">teredo: flags=4305 mtu 1280</span><br><span class="line">inet6 2001:0:53aa:64c:2c46:bf0:e4db:1ac5 prefixlen 32 scopeid 0x0</span><br><span class="line">inet6 fe80::707:2c4a:7df6:4104 prefixlen 64 scopeid 0x20</span><br><span class="line">inet6 fe80::ffff:ffff:ffff prefixlen 64 scopeid 0x20</span><br><span class="line">unspec 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00 txqueuelen 500 (UNSPEC)</span><br><span class="line">RX packets 2828 bytes 1820077 (1.7 MiB)</span><br><span class="line">RX errors 0 dropped 0 overruns 0 frame 0</span><br><span class="line">TX packets 3687 bytes 397036 (387.7 KiB)</span><br><span class="line">TX errors 0 dropped 0 overruns 0 carrier 0 collisions 0</span><br></pre></td></tr></table></figure>
-
-<p>XX-NET主界面<br><img src="/uploads/images/vpn/file_010.png" alt="img"></p>
+<p>XX-NET主界面<br>
+<img src="/uploads/images/vpn/file_010.png" alt="img"></p>
 <p>部署服务端–&gt;配置–&gt;查看状态</p>
 <ul>
-<li>部署服务端<br>多个appid用 “|” 分割,之后可以[开始部署],再次强调一下,那个<code>appid</code>就是<strong>项目名</strong><br><img src="/uploads/images/vpn/file_011.png" alt="img"></li>
+<li>部署服务端<br>
+多个appid用 “|” 分割,之后可以[开始部署],再次强调一下,那个<code>appid</code>就是<strong>项目名</strong><br>
+<img src="/uploads/images/vpn/file_011.png" alt="img"></li>
 </ul>
 <p>之后会跳转到登录Google账号的窗口.登录ok后<strong>等待部署完成</strong></p>
 <ul>
-<li>配置<br>之后在<code>GAE AppID</code>输入自己的appid<br><img src="/uploads/images/vpn/file_012.png" alt="img"></li>
-<li>状态<br>确保每次配置时查看是否配置成功!<br><img src="/uploads/images/vpn/file_013.png" alt="img"><br>如果出现 <code>请检查浏览器代理设置。</code>表示配置成功了,只是还需要 <strong>“设置代理，是为了让你的浏览器或者其他应用程序知道XX-Net的存在，这样他们才会通过XX-Net科学上网。”</strong></li>
-<li>解决方法<br>具体方法可以查看 <a href="https://github.com/XX-net/XX-Net/wiki/设置代理" target="_blank" rel="noopener">https://github.com/XX-net/XX-Net/wiki/%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86</a></li>
+<li>配置<br>
+之后在<code>GAE AppID</code>输入自己的appid<br>
+<img src="/uploads/images/vpn/file_012.png" alt="img"></li>
+<li>状态<br>
+确保每次配置时查看是否配置成功!<br>
+<img src="/uploads/images/vpn/file_013.png" alt="img"><br>
+如果出现 <code>请检查浏览器代理设置。</code>表示配置成功了,只是还需要 <strong>“设置代理，是为了让你的浏览器或者其他应用程序知道XX-Net的存在，这样他们才会通过XX-Net科学上网。”</strong></li>
+<li>解决方法<br>
+具体方法可以查看 <a href="https://github.com/XX-net/XX-Net/wiki/%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86" target="_blank" rel="noopener">https://github.com/XX-net/XX-Net/wiki/%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86</a></li>
 </ul>
 <p>由于我目前是Linux系统,所以 我用 <strong>Chrome+SwitchOmega(管理和切换多个代理设置)</strong></p>
-<p>可以在chrome浏览器应用商店安装SwitchOmega拓展程序<br><img src="/uploads/images/vpn/file_014.png" alt="img"></p>
-<p>然后打开<strong>SwitchOmega选项</strong>–&gt;导入/导出–&gt;从备份文件恢复<br>导入<strong>OmegaOptions.bak</strong>文件,此文件位置在 …/XX-Net-3.8.0/SwitchyOmega/ 目录下<br><img src="/uploads/images/vpn/file_015.png" alt="img"></p>
-<p>之后可以看到一下几个选项<br><img src="/uploads/images/vpn/file_016.png" alt="img"></p>
-<p>然后选择gae服务器代理.恢复正常可以切换回 <strong>[系统代理]</strong><br><img src="/uploads/images/vpn/file_017.png" alt="img"></p>
-<p>然后再看看XX-NET配置状态,成功!<br><img src="/uploads/images/vpn/file_018.png" alt="img"><br>现在可以关闭lantern了,然后再去试试看能不能打开 <a href="https://www.google.com" target="_blank" rel="noopener">https://www.google.com</a> 吧!<br><img src="/uploads/images/vpn/file_019.png" alt="img"><br><img src="/uploads/images/vpn/file_020.png" alt="img"></p>
+<p>可以在chrome浏览器应用商店安装SwitchOmega拓展程序<br>
+<img src="/uploads/images/vpn/file_014.png" alt="img"></p>
+<p>然后打开<strong>SwitchOmega选项</strong>–&gt;导入/导出–&gt;从备份文件恢复<br>
+导入<strong>OmegaOptions.bak</strong>文件,此文件位置在 …/XX-Net-3.8.0/SwitchyOmega/ 目录下<br>
+<img src="/uploads/images/vpn/file_015.png" alt="img"></p>
+<p>之后可以看到一下几个选项<br>
+<img src="/uploads/images/vpn/file_016.png" alt="img"></p>
+<p>然后选择gae服务器代理.恢复正常可以切换回 <strong>[系统代理]</strong><br>
+<img src="/uploads/images/vpn/file_017.png" alt="img"></p>
+<p>然后再看看XX-NET配置状态,成功!<br>
+<img src="/uploads/images/vpn/file_018.png" alt="img"><br>
+现在可以关闭lantern了,然后再去试试看能不能打开 <a href="https://www.google.com" target="_blank" rel="noopener">https://www.google.com</a> 吧!<br>
+<img src="/uploads/images/vpn/file_019.png" alt="img"><br>
+<img src="/uploads/images/vpn/file_020.png" alt="img"></p>
 <p>去浪吧~ :&gt;</p>
 
       
@@ -781,7 +826,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -887,9 +932,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -957,7 +1000,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#正文"><span class="nav-number">1.</span> <span class="nav-text">正文</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#下载Google-chrome"><span class="nav-number">1.1.</span> <span class="nav-text">下载Google chrome</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用lantern蓝灯"><span class="nav-number">1.2.</span> <span class="nav-text">使用lantern蓝灯</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建GAE并申请appid"><span class="nav-number">1.3.</span> <span class="nav-text">创建GAE并申请appid</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#XX-NET配置"><span class="nav-number">1.4.</span> <span class="nav-text">XX-NET配置</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#正文"><span class="nav-number">1.</span> <span class="nav-text"> 正文</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#下载google-chrome"><span class="nav-number">1.1.</span> <span class="nav-text"> 下载Google chrome</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用lantern蓝灯"><span class="nav-number">1.2.</span> <span class="nav-text"> 使用lantern蓝灯</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建gae并申请appid"><span class="nav-number">1.3.</span> <span class="nav-text"> 创建GAE并申请appid</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#xx-net配置"><span class="nav-number">1.4.</span> <span class="nav-text"> XX-NET配置</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -990,7 +1033,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1097,10 +1140,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

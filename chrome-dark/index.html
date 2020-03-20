@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -211,7 +211,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -344,6 +344,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -380,9 +383,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -537,31 +537,34 @@
       
         <p>Dark Reader 就是一个开源chrome浏览器的扩展程序，它可以让大部分网页在夜间和日间浏览。对于使用Chrome的用户来说，这是一个很好的护眼插件。目前Dark Reader支持的浏览器有Chrome，Firefox，Safari</p>
 <a id="more"></a>
-
-<h3 id="DuckduckGo和Dark-Reader"><a href="#DuckduckGo和Dark-Reader" class="headerlink" title="DuckduckGo和Dark Reader"></a>DuckduckGo和Dark Reader</h3><p>总所周知，DuckduckGo是一个保护用户隐私的搜索引擎，但它有一个好处是能够设置页面的主题</p>
+<h3 id="duckduckgo和dark-reader"><a class="markdownIt-Anchor" href="#duckduckgo和dark-reader"></a> DuckduckGo和Dark Reader</h3>
+<p>总所周知，DuckduckGo是一个保护用户隐私的搜索引擎，但它有一个好处是能够设置页面的主题</p>
 <p><img src="/uploads/images/darkreader/file_001.png" alt="img"></p>
 <p>通过Dark Reader插件后的chrome浏览器</p>
 <p><img src="/uploads/images/darkreader/file_002.png" alt="img"></p>
-<h3 id="获取Dark-Reader"><a href="#获取Dark-Reader" class="headerlink" title="获取Dark Reader"></a>获取Dark Reader</h3><blockquote>
+<h3 id="获取dark-reader"><a class="markdownIt-Anchor" href="#获取dark-reader"></a> 获取Dark Reader</h3>
+<blockquote>
 <p><a href="https://chrome.google.com/webstore/detail/dark-reader/eimadpbcbfnmbkopoojfekhnkhdbieeh?utm_source=chrome-app-launcher-info-dialog" target="_blank" rel="noopener">1. chrome网上应用店</a></p>
 <p><a href="https://github.com/darkreader/darkreader" target="_blank" rel="noopener">2. Github</a></p>
 </blockquote>
-<h3 id="安装方式"><a href="#安装方式" class="headerlink" title="安装方式"></a>安装方式</h3><p>对于第一种安装方式，这里不在多说，很简单。这里介绍下第二种安装方法。</p>
+<h3 id="安装方式"><a class="markdownIt-Anchor" href="#安装方式"></a> 安装方式</h3>
+<p>对于第一种安装方式，这里不在多说，很简单。这里介绍下第二种安装方法。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/darkreader/darkreader.git</span><br><span class="line">cd darkreader</span><br><span class="line">npm install</span><br><span class="line">npm run release</span><br></pre></td></tr></table></figure>
-
 <p>这是就会在当前目录下生成 <strong>build.zip</strong>，<strong>build-firefox.xpi</strong>，<strong>build文件夹</strong>。</p>
 <p>其中 build-firefox.xpi 用于Firefox，而build则用于chrome，可能有人会问，chrome的插件后缀不是 <strong>.crx</strong> 吗？</p>
 <p>不急，我们打开chrome-&gt;扩展程序，开启【开发者模式】后，【加载已解压的扩展程序…】后找到那个 build文件夹 后发现插件加载成功！</p>
 <p><img src="/uploads/images/darkreader/file_005.png" alt="img"></p>
-<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>功能如下</p>
+<h3 id="使用"><a class="markdownIt-Anchor" href="#使用"></a> 使用</h3>
+<p>功能如下</p>
 <ul>
 <li>通过网站列表过滤设置黑暗/明亮主题</li>
 <li>亮度，对比度，棕褐色滤镜，灰度</li>
 <li>字体，文字描边</li>
 </ul>
 <p><img src="/uploads/images/darkreader/file_004.png" alt="img"></p>
-<h3 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h3><p>总之，Dark Reader是一个非常有实用价值的开源chrome插件。但是Android Chrome没有安装插件这一功能，不过可以通过 <strong>chrome://flags</strong> 来设置chrome主题！</p>
-<p> bye~</p>
+<h3 id="结尾"><a class="markdownIt-Anchor" href="#结尾"></a> 结尾</h3>
+<p>总之，Dark Reader是一个非常有实用价值的开源chrome插件。但是Android Chrome没有安装插件这一功能，不过可以通过 <strong>chrome://flags</strong> 来设置chrome主题！</p>
+<p>bye~</p>
 
       
     </div>
@@ -717,7 +720,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -823,9 +826,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -893,7 +894,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#DuckduckGo和Dark-Reader"><span class="nav-number">1.</span> <span class="nav-text">DuckduckGo和Dark Reader</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获取Dark-Reader"><span class="nav-number">2.</span> <span class="nav-text">获取Dark Reader</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装方式"><span class="nav-number">3.</span> <span class="nav-text">安装方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用"><span class="nav-number">4.</span> <span class="nav-text">使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结尾"><span class="nav-number">5.</span> <span class="nav-text">结尾</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#duckduckgo和dark-reader"><span class="nav-number">1.</span> <span class="nav-text"> DuckduckGo和Dark Reader</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获取dark-reader"><span class="nav-number">2.</span> <span class="nav-text"> 获取Dark Reader</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装方式"><span class="nav-number">3.</span> <span class="nav-text"> 安装方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用"><span class="nav-number">4.</span> <span class="nav-text"> 使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结尾"><span class="nav-number">5.</span> <span class="nav-text"> 结尾</span></a></li></ol></div>
             
 
           </div>
@@ -926,7 +927,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1033,10 +1034,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

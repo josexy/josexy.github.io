@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -125,18 +125,18 @@
   };
 </script>
 
-  <meta name="description" content="本文讲下Windows API HOOK(钩子),主要和DLL注入联系在一起.Windows系统把每个WindowsAPI函数功能封装到了每一个DLL库文件中,从而提高程序的编译运行效率,而在应用程序运行期间动态库时,必然存在程序获取DLL中的函数地址.于是通过注入DLL来截取信息.">
+  <meta name="description" content="本文讲下Windows API HOOK(钩子),主要和DLL注入联系在一起. Windows系统把每个WindowsAPI函数功能封装到了每一个DLL库文件中,从而提高程序的编译运行效率,而在应用程序运行期间动态库时,必然存在程序获取DLL中的函数地址.于是通过注入DLL来截取信息.">
 <meta name="keywords" content="C++,C,Windows">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Windows API HOOK钩子">
 <meta property="og:url" content="http://www.joxrays.com/windows-hook/index.html">
 <meta property="og:site_name" content="JoXrays&#39;s Blog">
-<meta property="og:description" content="本文讲下Windows API HOOK(钩子),主要和DLL注入联系在一起.Windows系统把每个WindowsAPI函数功能封装到了每一个DLL库文件中,从而提高程序的编译运行效率,而在应用程序运行期间动态库时,必然存在程序获取DLL中的函数地址.于是通过注入DLL来截取信息.">
+<meta property="og:description" content="本文讲下Windows API HOOK(钩子),主要和DLL注入联系在一起. Windows系统把每个WindowsAPI函数功能封装到了每一个DLL库文件中,从而提高程序的编译运行效率,而在应用程序运行期间动态库时,必然存在程序获取DLL中的函数地址.于是通过注入DLL来截取信息.">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2020-01-13T02:41:16.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Windows API HOOK钩子">
-<meta name="twitter:description" content="本文讲下Windows API HOOK(钩子),主要和DLL注入联系在一起.Windows系统把每个WindowsAPI函数功能封装到了每一个DLL库文件中,从而提高程序的编译运行效率,而在应用程序运行期间动态库时,必然存在程序获取DLL中的函数地址.于是通过注入DLL来截取信息.">
+<meta name="twitter:description" content="本文讲下Windows API HOOK(钩子),主要和DLL注入联系在一起. Windows系统把每个WindowsAPI函数功能封装到了每一个DLL库文件中,从而提高程序的编译运行效率,而在应用程序运行期间动态库时,必然存在程序获取DLL中的函数地址.于是通过注入DLL来截取信息.">
 
 
 
@@ -206,7 +206,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -339,6 +339,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -375,9 +378,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -530,56 +530,70 @@
       
 
       
-        <p>本文讲下Windows API HOOK(钩子),主要和DLL注入联系在一起.<br>Windows系统把每个WindowsAPI函数功能封装到了每一个DLL库文件中,从而提高程序的编译运行效率,而在应用程序运行期间动态库时,必然存在程序获取DLL中的函数地址.于是通过注入DLL来截取信息.</p>
+        <p>本文讲下Windows API HOOK(钩子),主要和DLL注入联系在一起.<br>
+Windows系统把每个WindowsAPI函数功能封装到了每一个DLL库文件中,从而提高程序的编译运行效率,而在应用程序运行期间动态库时,必然存在程序获取DLL中的函数地址.于是通过注入DLL来截取信息.</p>
 <a id="more"></a>
-
-<h3 id="消息HOOK"><a href="#消息HOOK" class="headerlink" title="消息HOOK"></a>消息HOOK</h3><p>HOOK(挂钩)技术,可分为 <strong>内核层(R0)HOOK</strong> , <strong>应用层(R3)HOOK</strong> ,这两种技术实现起来虽然略相似,但是 <strong>内核层HOOK</strong> 比起 <strong>应用层HOOK</strong> 难度要高得多,而且编写的代码也要保证正确(异常机制),不然万一来个赋值给一个空指针的代码,蓝屏就呵呵了…本文主要讲解 应用层hook</p>
+<h3 id="消息hook"><a class="markdownIt-Anchor" href="#消息hook"></a> 消息HOOK</h3>
+<p>HOOK(挂钩)技术,可分为 <strong>内核层(R0)HOOK</strong> , <strong>应用层(R3)HOOK</strong> ,这两种技术实现起来虽然略相似,但是 <strong>内核层HOOK</strong> 比起 <strong>应用层HOOK</strong> 难度要高得多,而且编写的代码也要保证正确(异常机制),不然万一来个赋值给一个空指针的代码,蓝屏就呵呵了…本文主要讲解 应用层hook</p>
 <p>主要用到的WindowsAPI</p>
 <blockquote>
-<p>头文件    Winuser.h (include Windows.h)<br>库文件    User32.lib<br>DLL文件    User32.dll</p>
+<p>头文件	Winuser.h (include Windows.h)<br>
+库文件	User32.lib<br>
+DLL文件	User32.dll</p>
 </blockquote>
-<h5 id="SetWindowsHookEx"><a href="#SetWindowsHookEx" class="headerlink" title="SetWindowsHookEx"></a>SetWindowsHookEx</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">HHOOK WINAPI <span class="title">SetWindowsHookEx</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  _In_ <span class="keyword">int</span>       idHook,</span></span></span><br><span class="line"><span class="function"><span class="params">  _In_ HOOKPROC  lpfn,</span></span></span><br><span class="line"><span class="function"><span class="params">  _In_ HINSTANCE hMod,</span></span></span><br><span class="line"><span class="function"><span class="params">  _In_ DWORD     dwThreadId</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
-
-<p>其中 <strong>idHook</strong> 可选的值有很多种, 更多选项可以到 MSDN <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms644990(v=vs.85).aspx" target="_blank" rel="noopener">https://msdn.microsoft.com/en-us/library/windows/desktop/ms644990(v=vs.85).aspx</a> 查看<br>本文用到其中的 <strong>WH_GETMESSAGE</strong> 监视发送到消息队列的消息</p>
-<h5 id="GetMsgProc"><a href="#GetMsgProc" class="headerlink" title="GetMsgProc"></a>GetMsgProc</h5><p>其 <code>_In_ HOOKPROC lpfn,</code> 对应的回调函数如下</p>
+<h5 id="setwindowshookex"><a class="markdownIt-Anchor" href="#setwindowshookex"></a> SetWindowsHookEx</h5>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">HHOOK WINAPI <span class="title">SetWindowsHookEx</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  _In_ <span class="keyword">int</span>       idHook,</span></span></span><br><span class="line"><span class="function"><span class="params">  _In_ HOOKPROC  lpfn,</span></span></span><br><span class="line"><span class="function"><span class="params">  _In_ HINSTANCE hMod,</span></span></span><br><span class="line"><span class="function"><span class="params">  _In_ DWORD     dwThreadId</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>其中 <strong>idHook</strong> 可选的值有很多种, 更多选项可以到 MSDN <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms644990(v=vs.85).aspx" target="_blank" rel="noopener">https://msdn.microsoft.com/en-us/library/windows/desktop/ms644990(v=vs.85).aspx</a> 查看<br>
+本文用到其中的 <strong>WH_GETMESSAGE</strong> 监视发送到消息队列的消息</p>
+<h5 id="getmsgproc"><a class="markdownIt-Anchor" href="#getmsgproc"></a> GetMsgProc</h5>
+<p>其 <code>_In_ HOOKPROC lpfn,</code> 对应的回调函数如下</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">LRESULT CALLBACK <span class="title">GetMsgProc</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  _In_ <span class="keyword">int</span>    code,</span></span></span><br><span class="line"><span class="function"><span class="params">  _In_ WPARAM wParam,</span></span></span><br><span class="line"><span class="function"><span class="params">  _In_ LPARAM lParam</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
-
-<p><strong>lParam</strong> 参数可以转换为 <strong>MSG*</strong>结构体<br><code>MSG* pMsg = (MSG*)lParam;</code></p>
-<h5 id="CallNextHookEx"><a href="#CallNextHookEx" class="headerlink" title="CallNextHookEx"></a>CallNextHookEx</h5><p>这个函数起到传递下一个钩子函数的作用,这样的话,其他钩子才可以继续执行</p>
+<p><strong>lParam</strong> 参数可以转换为 **MSG***结构体<br>
+<code>MSG* pMsg = (MSG*)lParam;</code></p>
+<h5 id="callnexthookex"><a class="markdownIt-Anchor" href="#callnexthookex"></a> CallNextHookEx</h5>
+<p>这个函数起到传递下一个钩子函数的作用,这样的话,其他钩子才可以继续执行</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">LRESULT WINAPI <span class="title">CallNextHookEx</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  _In_opt_ HHOOK  hhk,</span></span></span><br><span class="line"><span class="function"><span class="params">  _In_     <span class="keyword">int</span>    nCode,</span></span></span><br><span class="line"><span class="function"><span class="params">  _In_     WPARAM wParam,</span></span></span><br><span class="line"><span class="function"><span class="params">  _In_     LPARAM lParam</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
-
-<p><strong>nCode,wParam,lParam</strong> 一般都是 <strong>GetMsgProc</strong> 中的参数<br>,而 <strong>hhk</strong> 则为 <strong>SetWindowsHookEx</strong> 返回的钩子句柄.</p>
-<h5 id="UnhookWindowsHookEx"><a href="#UnhookWindowsHookEx" class="headerlink" title="UnhookWindowsHookEx"></a>UnhookWindowsHookEx</h5><p>卸载钩子,与 <code>SetWindowsHookEx</code> 成对使用</p>
+<p><strong>nCode,wParam,lParam</strong> 一般都是 <strong>GetMsgProc</strong> 中的参数<br>
+,而 <strong>hhk</strong> 则为 <strong>SetWindowsHookEx</strong> 返回的钩子句柄.</p>
+<h5 id="unhookwindowshookex"><a class="markdownIt-Anchor" href="#unhookwindowshookex"></a> UnhookWindowsHookEx</h5>
+<p>卸载钩子,与 <code>SetWindowsHookEx</code> 成对使用</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL WINAPI <span class="title">UnhookWindowsHookEx</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  _In_ HHOOK hhk</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
-
 <p>下面以一个简单例子说明(<strong>MFC</strong>)</p>
 <p>Source.def文件，用于导出DLL函数</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">LIBRARY 	hookFun.dll	;dll名</span><br><span class="line">EXPORTS						;导出函数</span><br><span class="line">SetHook		@<span class="number">1</span></span><br><span class="line">UnsetHook	@<span class="number">2</span></span><br></pre></td></tr></table></figure>
-
 <p>DLL模块文件</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;windows.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> DLL_EXPORT extern <span class="meta-string">"C"</span> __declspec(dllexport)</span></span><br><span class="line"><span class="comment">//开始HOOK</span></span><br><span class="line"><span class="function">DLL_EXPORT <span class="keyword">void</span> _stdcall <span class="title">SetHook</span><span class="params">(DWORD pid)</span></span>;</span><br><span class="line"><span class="comment">//取消HOOK</span></span><br><span class="line"><span class="function">DLL_EXPORT <span class="keyword">void</span> _stdcall <span class="title">UnsetHook</span><span class="params">()</span></span>;</span><br><span class="line"><span class="comment">//全局 钩子句柄</span></span><br><span class="line">HHOOK hHook_g = <span class="literal">NULL</span>;</span><br><span class="line"><span class="comment">//全局 DLL模块句柄</span></span><br><span class="line">HINSTANCE hInstance_g = <span class="literal">NULL</span>;</span><br><span class="line"><span class="comment">//DLL 入口函数</span></span><br><span class="line"><span class="function">BOOL APIENTRY <span class="title">DllMain</span><span class="params">(_In_ <span class="keyword">void</span>* _DllHandle, _In_ <span class="keyword">unsigned</span> <span class="keyword">long</span> _Reason, _In_opt_ <span class="keyword">void</span>* _Reserved)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (_Reason==DLL_PROCESS_ATTACH)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">//保存当前 DLL模块的句柄到全局，以后要用！</span></span><br><span class="line">		hInstance_g = (HINSTANCE)_DllHandle;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> TRUE;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//自定义消息，处理钩子消息函数</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> WM_HOOKMSG WM_USER+100 </span></span><br><span class="line"><span class="comment">//过程消息处理函数</span></span><br><span class="line"><span class="function">LRESULT CALLBACK <span class="title">GetMsgProc</span><span class="params">(_In_ <span class="keyword">int</span>    code,_In_ WPARAM wParam,_In_ LPARAM lParam)</span> </span></span><br><span class="line"><span class="function"></span>&#123; </span><br><span class="line">	<span class="comment">//把 参数 lParam 转换为 MSG 结构体，获取 消息类型</span></span><br><span class="line">	MSG* pMsg = (MSG*)lParam;</span><br><span class="line">	<span class="keyword">if</span> (pMsg-&gt;message== WM_HOOKMSG)</span><br><span class="line">	&#123;</span><br><span class="line">		MessageBoxA(<span class="literal">NULL</span>, <span class="string">"HOOK MSG"</span>, <span class="literal">NULL</span>, <span class="number">0</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//继续传递下一个钩子</span></span><br><span class="line">	<span class="keyword">return</span> CallNextHookEx(hHook_g, code, wParam, lParam);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//开始HOOK，这里过于简单，没有进行其他处理...(-｡-;)</span></span><br><span class="line"><span class="comment">//参数--&gt; 线程ID </span></span><br><span class="line"><span class="function">DLL_EXPORT <span class="keyword">void</span> _stdcall <span class="title">SetHook</span><span class="params">(DWORD tid)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">//安装钩子</span></span><br><span class="line">	<span class="comment">//hInstance_g：标识 GetMsgProc 在 该模块内</span></span><br><span class="line">	<span class="comment">//tid：				标识是 全局钩子( tid=0 ) 还是指定 线程钩子</span></span><br><span class="line">	hHook_g = SetWindowsHookExW(WH_GETMESSAGE, GetMsgProc, hInstance_g, tid);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//取消HOOK</span></span><br><span class="line"><span class="function">DLL_EXPORT <span class="keyword">void</span> _stdcall <span class="title">UnsetHook</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">//卸载钩子</span></span><br><span class="line">	UnhookWindowsHookEx(hHook_g);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>调用进程主要代码如下</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//自定义消息</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>  WM_HOOKMSG WM_USER+100</span></span><br><span class="line"><span class="comment">//路径</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>  DLL_PATH <span class="meta-string">L"C:\\hookFun.dll"</span></span></span><br><span class="line"><span class="comment">//SetHook 函数地址</span></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">void</span><span class="params">(_stdcall* LPFNSETHOOK)</span><span class="params">(DWORD)</span></span>;</span><br><span class="line"><span class="comment">//UnsetHook 函数地址</span></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">void</span><span class="params">(_stdcall* LPFNUNSETHOOK)</span><span class="params">()</span></span>;</span><br><span class="line">HMODULE hMo = <span class="literal">NULL</span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">ChookMfcDlg::OnBnClickedButton1</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">//获取指定主窗口的句柄</span></span><br><span class="line">	HWND hwndMain = ::FindWindow(<span class="literal">NULL</span>, <span class="string">L"剪贴簿查看器 - [剪贴板]"</span>);</span><br><span class="line">	<span class="comment">//保存 进程ID</span></span><br><span class="line">	DWORD PID;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">char</span> szMsg[<span class="number">50</span>]=&#123; <span class="number">0</span> &#125;;</span><br><span class="line">	<span class="comment">//返回 线程ID</span></span><br><span class="line">	 DWORD TID= GetWindowThreadProcessId(hwndMain, &amp;PID);</span><br><span class="line">	 <span class="built_in">sprintf</span>(szMsg, <span class="string">"Thread ID:%08X"</span>, TID);</span><br><span class="line">	 MessageBoxA(<span class="literal">NULL</span>, szMsg, szMsg, MB_ICONINFORMATION);</span><br><span class="line">	 <span class="comment">//先动态载入 要注入的DLL，然后再把它卸载！！！</span></span><br><span class="line">	 hMo= LoadLibrary(DLL_PATH);</span><br><span class="line">	<span class="comment">//获取模块内 SetHook 函数地址</span></span><br><span class="line">	LPFNSETHOOK lpSethook = (LPFNSETHOOK)GetProcAddress(hMo, <span class="string">"SetHook"</span>);</span><br><span class="line">	<span class="comment">//调用SetHook函数</span></span><br><span class="line">	lpSethook(TID);</span><br><span class="line">	<span class="comment">//向 要注入的 进程的线程ID 投递 我自己消息</span></span><br><span class="line">	PostThreadMessageW(TID, WM_HOOKMSG, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">	<span class="comment">//获取模块内 UnsetHook 函数地址</span></span><br><span class="line">	LPFNUNSETHOOK lpUnSethook = (LPFNUNSETHOOK)GetProcAddress(hMo, <span class="string">"UnsetHook"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">ChookMfcDlg::OnBnClickedButton2</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">//获取模块内 UnsetHook 函数地址</span></span><br><span class="line">	LPFNUNSETHOOK lpUnSethook = (LPFNUNSETHOOK)GetProcAddress(hMo, <span class="string">"UnsetHook"</span>);</span><br><span class="line">	<span class="comment">// 取消HOOK！</span></span><br><span class="line">	lpUnSethook();</span><br><span class="line">	<span class="comment">//把 主调用进程  的 DLL 卸载，不然会一直存在主调用进程中！！</span></span><br><span class="line">	FreeLibrary(hMo);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>一般来说,注入DLL这项技术确实很老了,注入时可能会失败.so …</p>
-<h4 id="键盘HOOK"><a href="#键盘HOOK" class="headerlink" title="键盘HOOK"></a>键盘HOOK</h4><p>这个例子没有用到DLL,直接勾住当前程序</p>
+<p>一般来说,注入DLL这项技术确实很老了,<a href="http://xn--6oqs9cz1c48h6qs0zjkn9anlu.so" target="_blank" rel="noopener">注入时可能会失败.so</a> …</p>
+<h4 id="键盘hook"><a class="markdownIt-Anchor" href="#键盘hook"></a> 键盘HOOK</h4>
+<p>这个例子没有用到DLL,直接勾住当前程序</p>
 <ul>
 <li>KeyboardProc —- <strong>WH_KEYBOARD(2)</strong></li>
 <li>LowLevelKeyboardProc —- <strong>WH_KEYBOARD_LL(13)</strong></li>
 </ul>
 <p>注意 上面的 <strong>KeyboardProc</strong> 和 <strong>LowLevelKeyboardProc</strong> 函数，前者是<strong>普通</strong>的钩子函数，而后者是一个<strong>低级</strong>的钩子函数，这两个函数的参数不同，所以要获取的值也不同！！</p>
 <blockquote>
-<p><strong>wParam</strong> [in]<br>Type: <strong>WPARAM</strong><br><strong>The virtual-key code of the key</strong> thatgenerated the keystroke message.<br><strong>lParam</strong> [in]<br>Type: <strong>LPARAM</strong><br>The repeat count, scan code, extended-key flag, contextcode, previous key-state flag, and transition-state flag. For more informationabout thelParam parameter, seeKeystroke Message Flags. The following table describes the bits of this value.<br><strong>由此可看出 ，wparam主要是键盘的虚拟键代码，lparam主要是：</strong><br>The lParam parameter of a keystroke message containsadditional information about the keystroke that generated the message. Thisinformation includes therepeat count, the scan code, the extended-key flag, thecontext code, the previous key-state flag, and the transition-state flag.The following illustration shows the locations of these flags and values in thelParam parameter.</p>
+<p><strong>wParam</strong> [in]<br>
+Type: <strong>WPARAM</strong><br>
+<strong>The virtual-key code of the key</strong> thatgenerated the keystroke message.<br>
+<strong>lParam</strong> [in]<br>
+Type: <strong>LPARAM</strong><br>
+The repeat count, scan code, extended-key flag, contextcode, previous key-state flag, and transition-state flag. For more informationabout thelParam parameter, seeKeystroke Message Flags. The following table describes the bits of this value.<br>
+<strong>由此可看出 ，wparam主要是键盘的虚拟键代码，lparam主要是：</strong><br>
+The lParam parameter of a keystroke message containsadditional information about the keystroke that generated the message. Thisinformation includes therepeat count, the scan code, the extended-key flag, thecontext code, the previous key-state flag, and the transition-state flag.The following illustration shows the locations of these flags and values in thelParam parameter.</p>
 </blockquote>
 <p>当 <strong>SetWindowsHookEx()</strong> 参数 <strong>idHOOK</strong> 为 <strong>WH_KEYBORAD_LL</strong> 时，这个函数的参数中的 <strong>wparam</strong> 为 <strong>键盘消息</strong> ，如WM_KEYDOMN… 那么 <strong>lparam</strong> 就是一个 <strong>LPKBDLLHOOKSTRUCT结构体</strong> 了！看这个结构体的名字就知道这是一个用于 低级键盘钩子的，“LL”-&gt;”LowLevel“，呵呵~这个结构体中 包括了 <strong>虚拟键代码 和 扫描码</strong>!</p>
 <p>别忘了还有那个 SetWindowsHookEx() 函数，现在在回忆一下那个函数原型：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">HHOOK WINAPI <span class="title">SetWindowsHookEx</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  _In_ <span class="keyword">int</span>       idHook,</span></span></span><br><span class="line"><span class="function"><span class="params">  _In_ HOOKPROC  lpfn,</span></span></span><br><span class="line"><span class="function"><span class="params">  _In_ HINSTANCE hMod,</span></span></span><br><span class="line"><span class="function"><span class="params">  _In_ DWORD    dwThreadId</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>;</span><br></pre></td></tr></table></figure>
-
 <ul>
-<li><p>当<strong>IdHook为WH_KEYBOARD</strong>时，lpfn为KeyboardProc(名字自定义)，<strong>hMod为当前程序实例句柄</strong>，MFC 有多种方法获取，如: <code>AfxGetInstanceHandle()</code><br>最后一个 <strong>dwThreadId为0</strong></p>
+<li>
+<p>当<strong>IdHook为WH_KEYBOARD</strong>时，lpfn为KeyboardProc(名字自定义)，<strong>hMod为当前程序实例句柄</strong>，MFC 有多种方法获取，如: <code>AfxGetInstanceHandle()</code><br>
+最后一个 <strong>dwThreadId为0</strong></p>
 </li>
-<li><p>当idHook为WH_KEYBOARD_LL时，dwThreadid必须为当前模块的线程ID！<br>如下表:</p>
+<li>
+<p>当idHook为WH_KEYBOARD_LL时，dwThreadid必须为当前模块的线程ID！<br>
+如下表:</p>
 <table>
 <thead>
 <tr>
@@ -589,7 +603,8 @@
 <th>dwThreadId</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>WH_KEYBOARD</td>
 <td>KeyboardProc</td>
 <td>当前程序实例句柄</td>
@@ -601,14 +616,13 @@
 <td>当前程序实例句柄</td>
 <td>当前程序线程ID</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 </li>
 </ul>
 <p>代码如下:</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">HHOOK hHook2;</span><br><span class="line"><span class="function">LRESULT CALLBACK <span class="title">KeyBoradProc</span><span class="params">(intcode,WPARAMwp,LPARAMlp)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">         <span class="keyword">if</span> (code&lt;<span class="number">0</span>)</span><br><span class="line">         &#123;</span><br><span class="line">                   <span class="keyword">return</span> CallNextHookEx(hHook2,code,wp, lp);</span><br><span class="line">         &#125;</span><br><span class="line">         WCHAR szkeyValue[<span class="number">20</span>]=&#123; <span class="number">0</span> &#125;;</span><br><span class="line">         <span class="comment">//wsprintf(szkeyValue, L"%c", wp);  //虚拟键代码</span></span><br><span class="line">            <span class="comment">//获取按键的名称          </span></span><br><span class="line">         GetKeyNameText(lp,szkeyValue, <span class="number">50</span>);</span><br><span class="line">         AfxGetMainWnd()-&gt;SetDlgItemText(IDC_EDIT1,szkeyValue);</span><br><span class="line">         <span class="keyword">return</span> CallNextHookEx(hHook2,code,wp, lp);</span><br><span class="line">&#125;</span><br><span class="line">       <span class="comment">//安装键盘钩子</span></span><br><span class="line">         hHook2 = SetWindowsHookEx(WH_KEYBOARD,KeyBoradProc,AfxGetInstanceHandle(),GetCurrentThreadId());      <span class="comment">//注意这里的线程ID为当前程序的线程ID！</span></span><br><span class="line">      </span><br><span class="line">         <span class="comment">//卸载钩子</span></span><br><span class="line">UnhookWindowsHookEx(hHook2);</span><br><span class="line">下面是关于低级键盘钩子的代码；</span><br><span class="line">         <span class="comment">//低级的键盘钩子</span></span><br><span class="line">         hHook= ::SetWindowsHookEx(WH_KEYBOARD_LL,myLowLevelKeyboardProc,AfxGetInstanceHandle(),<span class="number">0</span>);<span class="comment">//注意这里TID为 0</span></span><br><span class="line"> </span><br><span class="line">         <span class="comment">//卸载低级钩子</span></span><br><span class="line">UnhookWindowsHookEx(hHook)</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//低级钩子函数处理过程</span></span><br><span class="line"><span class="function">LRESULT CALLBACK <span class="title">LowLevelKeyboardProc</span><span class="params">(_In_int   code,_In_WPARAMwParam,_In_LPARAMlParam)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">                   <span class="keyword">if</span> (code &lt; <span class="number">0</span>)</span><br><span class="line">                   &#123;</span><br><span class="line">                            returnCallNextHookEx(hHook,code,wParam, lParam);</span><br><span class="line">                   &#125;</span><br><span class="line"> </span><br><span class="line">                  <span class="comment">// 低级键盘钩子时，wparam参数为 WM键盘消息！！！</span></span><br><span class="line"> </span><br><span class="line">                   <span class="comment">//按下的</span></span><br><span class="line">                   <span class="keyword">if</span> (code ==HC_ACTION&amp;&amp;wParam==WM_KEYDOWN)</span><br><span class="line">                   &#123;</span><br><span class="line">                            LPKBDLLHOOKSTRUCTpKbs = (LPKBDLLHOOKSTRUCT)lParam;</span><br><span class="line">                            WCHARszlMsg[<span class="number">100</span>] = &#123; <span class="number">0</span> &#125;;</span><br><span class="line">                            wsprintf(szMsg,<span class="string">L"vkCode:%c-scanCode:%02X"</span>,pKbs-&gt;vkCode,pKbs-&gt;scanCode);</span><br><span class="line"> </span><br><span class="line">							<span class="comment">//ESC键扫描码</span></span><br><span class="line">                            <span class="keyword">if</span> (pKbs-&gt;scanCode==<span class="number">0x01</span>)</span><br><span class="line">                            &#123;                         </span><br><span class="line">                                     returnTRUE;</span><br><span class="line">                            &#125;</span><br><span class="line">                   &#125;</span><br><span class="line">                   <span class="keyword">return</span> CallNextHookEx(hHook,code,wParam, lParam);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 
       
     </div>
@@ -762,7 +776,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -868,9 +882,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -938,7 +950,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#消息HOOK"><span class="nav-number">1.</span> <span class="nav-text">消息HOOK</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#SetWindowsHookEx"><span class="nav-number">1.0.1.</span> <span class="nav-text">SetWindowsHookEx</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#GetMsgProc"><span class="nav-number">1.0.2.</span> <span class="nav-text">GetMsgProc</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#CallNextHookEx"><span class="nav-number">1.0.3.</span> <span class="nav-text">CallNextHookEx</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#UnhookWindowsHookEx"><span class="nav-number">1.0.4.</span> <span class="nav-text">UnhookWindowsHookEx</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#键盘HOOK"><span class="nav-number">1.1.</span> <span class="nav-text">键盘HOOK</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#消息hook"><span class="nav-number">1.</span> <span class="nav-text"> 消息HOOK</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#setwindowshookex"><span class="nav-number">1.0.1.</span> <span class="nav-text"> SetWindowsHookEx</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#getmsgproc"><span class="nav-number">1.0.2.</span> <span class="nav-text"> GetMsgProc</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#callnexthookex"><span class="nav-number">1.0.3.</span> <span class="nav-text"> CallNextHookEx</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#unhookwindowshookex"><span class="nav-number">1.0.4.</span> <span class="nav-text"> UnhookWindowsHookEx</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#键盘hook"><span class="nav-number">1.1.</span> <span class="nav-text"> 键盘HOOK</span></a></li></ol></div>
             
 
           </div>
@@ -971,7 +983,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1078,10 +1090,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 

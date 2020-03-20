@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,9 +100,9 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Gemini',
+    scheme: 'Muse',
     version: '7.2.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":true},
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":true},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
     copycode: {"enable":true,"show_result":true,"style":"mac"},
     fancybox: true,
@@ -125,18 +125,18 @@
   };
 </script>
 
-  <meta name="description" content="不知怎么,在Qt5以上版本没有了QFtp,不过可以用QNetworkAccessManager.我在网上也找了些资料,最后还是决定先暂时用QFtp..这篇博客讲解的很详细http://blog.csdn.net/liang19890820/article/details/53304049">
+  <meta name="description" content="不知怎么,在Qt5以上版本没有了QFtp,不过可以用QNetworkAccessManager.我在网上也找了些资料,最后还是决定先暂时用QFtp… 这篇博客讲解的很详细 http://blog.csdn.net/liang19890820/article/details/53304049">
 <meta name="keywords" content="Linux,Qt">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Qt5调用QFtp函数">
 <meta property="og:url" content="http://www.joxrays.com/linux-qt-qftp/index.html">
 <meta property="og:site_name" content="JoXrays&#39;s Blog">
-<meta property="og:description" content="不知怎么,在Qt5以上版本没有了QFtp,不过可以用QNetworkAccessManager.我在网上也找了些资料,最后还是决定先暂时用QFtp..这篇博客讲解的很详细http://blog.csdn.net/liang19890820/article/details/53304049">
+<meta property="og:description" content="不知怎么,在Qt5以上版本没有了QFtp,不过可以用QNetworkAccessManager.我在网上也找了些资料,最后还是决定先暂时用QFtp… 这篇博客讲解的很详细 http://blog.csdn.net/liang19890820/article/details/53304049">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2019-07-20T14:42:56.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Qt5调用QFtp函数">
-<meta name="twitter:description" content="不知怎么,在Qt5以上版本没有了QFtp,不过可以用QNetworkAccessManager.我在网上也找了些资料,最后还是决定先暂时用QFtp..这篇博客讲解的很详细http://blog.csdn.net/liang19890820/article/details/53304049">
+<meta name="twitter:description" content="不知怎么,在Qt5以上版本没有了QFtp,不过可以用QNetworkAccessManager.我在网上也找了些资料,最后还是决定先暂时用QFtp… 这篇博客讲解的很详细 http://blog.csdn.net/liang19890820/article/details/53304049">
 
 
 
@@ -206,7 +206,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -339,6 +339,9 @@
   
 
   
+    
+
+  
 
   
     <div class="site-search">
@@ -375,9 +378,6 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          
-            
-
           
           <div id="content" class="content">
             
@@ -530,32 +530,51 @@
       
 
       
-        <p>不知怎么,在Qt5以上版本没有了QFtp,不过可以用QNetworkAccessManager.我在网上也找了些资料,最后还是决定先暂时用QFtp..<br>这篇博客讲解的很详细<br><a href="http://blog.csdn.net/liang19890820/article/details/53304049" target="_blank" rel="noopener">http://blog.csdn.net/liang19890820/article/details/53304049</a></p>
+        <p>不知怎么,在Qt5以上版本没有了QFtp,不过可以用QNetworkAccessManager.我在网上也找了些资料,最后还是决定先暂时用QFtp…<br>
+这篇博客讲解的很详细<br>
+<a href="http://blog.csdn.net/liang19890820/article/details/53304049" target="_blank" rel="noopener">http://blog.csdn.net/liang19890820/article/details/53304049</a></p>
 <a id="more"></a>
-
-<h4 id="下载QFtp源码"><a href="#下载QFtp源码" class="headerlink" title="下载QFtp源码"></a>下载QFtp源码</h4><blockquote>
+<h4 id="下载qftp源码"><a class="markdownIt-Anchor" href="#下载qftp源码"></a> 下载QFtp源码</h4>
+<blockquote>
 <p>git clone <a href="https://github.com/qt/qtftp.git" target="_blank" rel="noopener">https://github.com/qt/qtftp.git</a></p>
 </blockquote>
-<h4 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h4><ul>
-<li>进入qtftp/src/qftp,有个</li>
-</ul>
-<p>  qftp.pro</p>
-<p>  ,修改为</p>
+<h4 id="修改配置"><a class="markdownIt-Anchor" href="#修改配置"></a> 修改配置</h4>
+<ul>
+<li>
+<p>进入qtftp/src/qftp,有个</p>
+<p><a href="http://qftp.pro" target="_blank" rel="noopener">qftp.pro</a></p>
+<p>,修改为</p>
 <blockquote>
-<p>CONFIG += static #生成 .a静态链接库<br>CONFIG += shared #生成.so动态链接库</p>
+<p>CONFIG += static #生成 .a静态链接库<br>
+CONFIG += shared #生成.so动态链接库</p>
 </blockquote>
-<h4 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h4><p>进入qtftp根目录,编译生成库文件</p>
+</li>
+</ul>
+<h4 id="编译"><a class="markdownIt-Anchor" href="#编译"></a> 编译</h4>
+<p>进入qtftp根目录,编译生成库文件</p>
 <blockquote>
-<p>cd qtftp<br>qmake<br>make</p>
+<p>cd qtftp<br>
+qmake<br>
+make</p>
 </blockquote>
 <p>然后在 qtftp/lib 下生成了一些目录文件,大概是这样</p>
 <blockquote>
-<p>cmake/ libQt5Ftp.la libQt5Ftp.so <strong>libQt5Ftp.so.5.0</strong> pkgconfig/<br>libQt5Ftp.a libQt5Ftp.prl libQt5Ftp.so.5 libQt5Ftp.so.5.0.0</p>
+<p>cmake/ <a href="http://libQt5Ftp.la" target="_blank" rel="noopener">libQt5Ftp.la</a> <a href="http://libQt5Ftp.so" target="_blank" rel="noopener">libQt5Ftp.so</a> <strong>libQt5Ftp.so.5.0</strong> pkgconfig/<br>
+libQt5Ftp.a libQt5Ftp.prl libQt5Ftp.so.5 libQt5Ftp.so.5.0.0</p>
 </blockquote>
-<h4 id="整合文件"><a href="#整合文件" class="headerlink" title="整合文件"></a>整合文件</h4><p>把这些零散的文件整合成一个便于调用的库,还是非常有必要的<br>这里我创建一个 <strong>libqtftp</strong> 文件夹,用来存放所需要的文件</p>
-<p>然后在刚才在 <strong>qtftp</strong> 目录下的 <code>lib</code> , <code>include</code> , <code>src</code><br>文件夹复制到 libqtftp 目录</p>
+<h4 id="整合文件"><a class="markdownIt-Anchor" href="#整合文件"></a> 整合文件</h4>
+<p>把这些零散的文件整合成一个便于调用的库,还是非常有必要的<br>
+这里我创建一个 <strong>libqtftp</strong> 文件夹,用来存放所需要的文件</p>
+<p>然后在刚才在 <strong>qtftp</strong> 目录下的 <code>lib</code> , <code>include</code> , <code>src</code><br>
+文件夹复制到 libqtftp 目录</p>
 <ul>
-<li>进入 include/QtFtp 文件夹,删除 headers.pri,同时把 src 文件夹内:<br>qftp.cpp<br>qftp.h<br>qurlinfo.cpp<br>qurlinfo.h<br>.moc文件夹内<strong>3个文件</strong>复制到<strong>上一层文件夹</strong> (隐藏文件夹)<br>.obj + .pch (隐藏文件夹)</li>
+<li>进入 include/QtFtp 文件夹,删除 headers.pri,同时把 src 文件夹内:<br>
+qftp.cpp<br>
+qftp.h<br>
+qurlinfo.cpp<br>
+qurlinfo.h<br>
+.moc文件夹内<strong>3个文件</strong>复制到<strong>上一层文件夹</strong> (隐藏文件夹)<br>
+.obj + .pch (隐藏文件夹)</li>
 </ul>
 <p>一并复制到 <strong>include/QtFtp</strong> 文件夹,这时可删除 <strong>src</strong> 文件夹</p>
 <ul>
@@ -564,24 +583,24 @@
 </ul>
 <p>qtftp.pri:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#QT += network</span><br><span class="line">HEADERS += $$PWD/include/QtFtp/\</span><br><span class="line">		$$PWD/include/QtFtp/QFtp\</span><br><span class="line">		$$PWD/include/QtFtp/QUrlInfo\</span><br><span class="line">		$$PWD/include/QtFtp/QtFtpVersion</span><br><span class="line">SOURCES += $$PWD/include/QtFtp/qftp.cpp\</span><br><span class="line">		$$PWD/include/QtFtp/qurlinfo.cpp</span><br><span class="line">INCLUDEPATH += $$PWD/include/</span><br></pre></td></tr></table></figure>
-
-<h4 id="引用库"><a href="#引用库" class="headerlink" title="引用库"></a>引用库</h4><p>首先,新建一个Qt项目,把 <strong>libqtftp</strong> 文件夹放到 Qt项目下.<br>然后在修改 项目.pro 文件</p>
+<h4 id="引用库"><a class="markdownIt-Anchor" href="#引用库"></a> 引用库</h4>
+<p>首先,新建一个Qt项目,把 <strong>libqtftp</strong> 文件夹放到 Qt项目下.<br>
+然后在修改 <a href="http://xn--i0yn92e.pro" target="_blank" rel="noopener">项目.pro</a> 文件</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">QT       += core gui network</span><br><span class="line">greaterThan(QT_MAJOR_VERSION, 4): QT += widgets</span><br><span class="line">TARGET = MyFtp</span><br><span class="line">TEMPLATE = app</span><br><span class="line">include($$PWD/libqtftp/qtftp.pri)</span><br><span class="line">SOURCES += main.cpp\</span><br><span class="line">        mainwindow.cpp</span><br><span class="line">HEADERS  += mainwindow.h</span><br><span class="line">FORMS    += mainwindow.ui</span><br><span class="line">INCLUDEPATH += $$PWD/libqtftp/include/</span><br><span class="line">LIBS += -L$$PWD/libqtftp/lib/ -lQt5Ftp</span><br></pre></td></tr></table></figure>
-
 <p>要注意那个配置:</p>
 <ul>
 <li><code>QT += network</code></li>
 <li><code>include($$PWD/libqtftp/qtftp.pri)</code></li>
 <li><code>INCLUDEPATH += $$PWD/libqtftp/include/</code></li>
-<li><code>LIBS += -L$$PWD/libqtftp/lib/ -lQt5Ftp</code><br>链接<strong>libQt5Ftp.so</strong>动态链接库</li>
+<li><code>LIBS += -L$$PWD/libqtftp/lib/ -lQt5Ftp</code><br>
+链接<strong><a href="http://libQt5Ftp.so" target="_blank" rel="noopener">libQt5Ftp.so</a></strong>动态链接库</li>
 </ul>
 <p>之后 重新构建项目</p>
-<h4 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h4><p>使用前需要包含头文件</p>
+<h4 id="例子"><a class="markdownIt-Anchor" href="#例子"></a> 例子</h4>
+<p>使用前需要包含头文件</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">"QtFtp/QFtp"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;QtFtp/QUrlInfo&gt;</span></span></span><br></pre></td></tr></table></figure>
-
 <p>如：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// do something ...</span></span><br><span class="line">	QFtp * ftp =<span class="keyword">new</span> QFtp(<span class="keyword">this</span>);</span><br><span class="line">	<span class="built_in">connect</span>(ftp,&amp;QFtp::listInfo,<span class="keyword">this</span>,[=](<span class="keyword">const</span> QUrlInfo u)&#123;</span><br><span class="line">	<span class="comment">// do something ...</span></span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="built_in">connect</span>(ftp,&amp;QFtp::dataTransferProgress,[=](qint64 _t1, qint64 _t2)&#123;</span><br><span class="line">	<span class="comment">// do something ...</span></span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="built_in">connect</span>(ftp,&amp;QFtp::readyRead,<span class="keyword">this</span>,[=]()&#123;</span><br><span class="line">	<span class="comment">// do something ...</span></span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">int</span> id=ftp-&gt;connectToHost(<span class="string">""</span>);</span><br><span class="line">    ftp-&gt;login(<span class="string">""</span>,<span class="string">""</span>);</span><br><span class="line">    ftp-&gt;cd(<span class="string">""</span>);</span><br><span class="line">    ftp-&gt;<span class="built_in">list</span>();</span><br><span class="line">	ftp-&gt;<span class="built_in">close</span>();</span><br><span class="line">	<span class="comment">// do something ...</span></span><br></pre></td></tr></table></figure>
-
 
       
     </div>
@@ -737,7 +756,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -843,9 +862,7 @@
         
           
         
-          
-        
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">29</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -913,7 +930,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#下载QFtp源码"><span class="nav-number">1.</span> <span class="nav-text">下载QFtp源码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改配置"><span class="nav-number">2.</span> <span class="nav-text">修改配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#编译"><span class="nav-number">3.</span> <span class="nav-text">编译</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#整合文件"><span class="nav-number">4.</span> <span class="nav-text">整合文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#引用库"><span class="nav-number">5.</span> <span class="nav-text">引用库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#例子"><span class="nav-number">6.</span> <span class="nav-text">例子</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#下载qftp源码"><span class="nav-number">1.</span> <span class="nav-text"> 下载QFtp源码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改配置"><span class="nav-number">2.</span> <span class="nav-text"> 修改配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#编译"><span class="nav-number">3.</span> <span class="nav-text"> 编译</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#整合文件"><span class="nav-number">4.</span> <span class="nav-text"> 整合文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#引用库"><span class="nav-number">5.</span> <span class="nav-text"> 引用库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#例子"><span class="nav-number">6.</span> <span class="nav-text"> 例子</span></a></li></ol></div>
             
 
           </div>
@@ -946,7 +963,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="站点总字数">302k</span>
+    <span title="站点总字数">303k</span>
   
 
   
@@ -1053,10 +1070,7 @@
   
 
 
-  <script src="/js/affix.js?v=7.2.0"></script>
-
-  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
-
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
 
 
 
