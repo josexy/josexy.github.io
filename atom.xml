@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.joxrays.com/"/>
-  <updated>2020-03-02T16:47:16.000Z</updated>
+  <updated>2020-03-20T03:03:20.428Z</updated>
   <id>http://www.joxrays.com/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux RDP远程桌面连接Windows</title>
+    <link href="http://www.joxrays.com/linux-rdp-windows/"/>
+    <id>http://www.joxrays.com/linux-rdp-windows/</id>
+    <published>2020-03-10T16:00:00.000Z</published>
+    <updated>2020-03-20T03:03:20.428Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;远程桌面协议RDP（Remote Desktop Protocol）是Microsoft开发的专有协议，它为用户提供图形界面以通过网络连接到另一台计算机。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Linux" scheme="http://www.joxrays.com/categories/Linux/"/>
+    
+    
+      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
+    
+      <category term="Windows" scheme="http://www.joxrays.com/tags/Windows/"/>
+    
+      <category term="RDP" scheme="http://www.joxrays.com/tags/RDP/"/>
+    
+  </entry>
   
   <entry>
     <title>哈夫曼编码实现解压缩文本文件</title>
@@ -456,28 +480,6 @@ In computer science, a skip list is a data structure that allows &lt;span class=
       <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
     
       <category term="Archlinux" scheme="http://www.joxrays.com/tags/Archlinux/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>配置Vsftpd遇到的问题</title>
-    <link href="http://www.joxrays.com/vsftp-configure/"/>
-    <id>http://www.joxrays.com/vsftp-configure/</id>
-    <published>2019-07-29T16:00:00.000Z</published>
-    <updated>2019-08-17T06:58:28.000Z</updated>
-    
-    <summary type="html">
-    
-      &lt;p&gt;目前我用的系统是archlinux，所以在配置vsftpd是不是一帆风顺的，这里将安装配置过程记录下来，也无法确保是否还有其他错误。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Linux" scheme="http://www.joxrays.com/categories/Linux/"/>
-    
-    
-      <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
-    
-      <category term="vsftpd" scheme="http://www.joxrays.com/tags/vsftpd/"/>
     
   </entry>
   
