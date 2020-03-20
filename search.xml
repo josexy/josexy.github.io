@@ -2718,8 +2718,8 @@ db.test.update({‘age’:{‘<span class="katex-error" title="ParseError: KaTeX
       </categories>
       <tags>
         <tag>C++</tag>
-        <tag>Linux</tag>
         <tag>C</tag>
+        <tag>Linux</tag>
         <tag>MongoDB</tag>
       </tags>
   </entry>
@@ -2908,8 +2908,8 @@ configure默认prefix为 /usr/local，libmongoc-1.0，libbson-1.0头文件安装
         <category>MongoDB</category>
       </categories>
       <tags>
-        <tag>Linux</tag>
         <tag>C</tag>
+        <tag>Linux</tag>
         <tag>MongoDB</tag>
       </tags>
   </entry>
@@ -3292,8 +3292,8 @@ $ find . -name ‘</em>’ | zenity –list –title “Search Results” –tex
       </categories>
       <tags>
         <tag>C++</tag>
-        <tag>Linux</tag>
         <tag>C</tag>
+        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
@@ -4719,8 +4719,8 @@ make insatll</p>
       </categories>
       <tags>
         <tag>C++</tag>
-        <tag>Linux</tag>
         <tag>C</tag>
+        <tag>Linux</tag>
         <tag>SDL2</tag>
       </tags>
   </entry>
@@ -5142,8 +5142,8 @@ INCLUDEPATH += QHotkey/QHotkey</p>
       </categories>
       <tags>
         <tag>C++</tag>
-        <tag>Linux</tag>
         <tag>C</tag>
+        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
@@ -5246,8 +5246,8 @@ INCLUDEPATH += QHotkey/QHotkey</p>
       </categories>
       <tags>
         <tag>C++</tag>
-        <tag>Linux</tag>
         <tag>C</tag>
+        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
