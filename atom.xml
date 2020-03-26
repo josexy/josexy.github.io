@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.joxrays.com/"/>
-  <updated>2020-03-26T07:07:07.850Z</updated>
+  <updated>2020-03-26T07:32:44.351Z</updated>
   <id>http://www.joxrays.com/</id>
   
   <author>
@@ -21,18 +21,11 @@
     <link href="http://www.joxrays.com/kde-panel-transparency/"/>
     <id>http://www.joxrays.com/kde-panel-transparency/</id>
     <published>2020-03-25T16:00:00.000Z</published>
-    <updated>2020-03-26T07:07:07.850Z</updated>
+    <updated>2020-03-26T07:32:44.351Z</updated>
     
     <summary type="html">
     
-      
-      
-        
-        
-          &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
-&lt;p&gt;KDE Plasma主题一般位于 &lt;code&gt;/usr/share/plasma/desktoptheme&lt;/code&gt; 和
-        
-      
+      &lt;p&gt;KDE的面板默认是不透明的，可以通过其他的主题达到半透明效果，然而这样还是不美观，因此…&lt;/p&gt;
     
     </summary>
     
@@ -40,6 +33,8 @@
     
     
       <category term="Linux" scheme="http://www.joxrays.com/tags/Linux/"/>
+    
+      <category term="Manjaro" scheme="http://www.joxrays.com/tags/Manjaro/"/>
     
       <category term="KDE" scheme="http://www.joxrays.com/tags/KDE/"/>
     
@@ -65,11 +60,11 @@
     
       <category term="Windows" scheme="http://www.joxrays.com/tags/Windows/"/>
     
+      <category term="KDE" scheme="http://www.joxrays.com/tags/KDE/"/>
+    
       <category term="GNOME" scheme="http://www.joxrays.com/tags/GNOME/"/>
     
       <category term="Proxy" scheme="http://www.joxrays.com/tags/Proxy/"/>
-    
-      <category term="KDE" scheme="http://www.joxrays.com/tags/KDE/"/>
     
   </entry>
   
