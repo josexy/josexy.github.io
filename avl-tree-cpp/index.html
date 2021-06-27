@@ -1,0 +1,561 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="AVL树是最早被发明的自平衡二叉查找树。其查找、插入和删除在平均和最坏情况下的时间复杂度都是 O(log⁡n)O(\log n)O(logn)。AVL树由G. M. Adelson-Velsky和Evgenii Landis发明，AVL树的名称取自他们名字中的字母。">
+  <meta name="author" content="Joseph XRays">
+  <meta name="keywords" content="">
+  
+  <title>数据结构-AVL树 - JoXrays&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/monokai.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.joxrays.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>JoXrays's Blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="数据结构-AVL树">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-01-21 00:00" pubdate>
+        2020年1月21日 凌晨
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.2k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      33
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">数据结构-AVL树</h1>
+            
+            <div class="markdown-body">
+              <p>AVL树是最早被发明的<strong>自平衡二叉查找树</strong>。其查找、插入和删除在<strong>平均</strong>和<strong>最坏</strong>情况下的时间复杂度都是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(\log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span>。AVL树由<strong>G. M. Adelson-Velsky</strong>和<strong>Evgenii Landis</strong>发明，AVL树的名称取自他们名字中的字母。</p>
+<span id="more"></span>
+<h3 id="avl树"><a class="markdownIt-Anchor" href="#avl树"></a> AVL树</h3>
+<p>在讨论AVL树之前先来看一下这张表</p>
+<table>
+   <tr>
+        <td rowspan="2" align="center">方法</td>
+        <td colspan="3" align="center">最坏情况</td>
+        <td colspan="3" align="center">平均情况</td>
+   </tr>
+   <tr>
+   <td>查找</td><td>插入</td><td>删除</td><td>查找</td><td>插入</td><td>删除</td></tr>
+   <tr>
+   <td align="center">有序数组</td>
+   <td>logn</td><td>n</td><td>n</td><td>logn</td><td>n</td><td>n</td></tr>
+   <tr><td align="center">有序链表</td>
+   <td>n</td><td>n</td><td>n</td><td>n</td><td>n</td><td>n</td></tr>
+   <tr><td align="center">跳表</td>
+   <td>n</td><td>n</td><td>n</td><td>logn</td><td>logn</td><td>logn</td></tr>
+   <tr><td align="center">哈希表</td>
+   <td>n</td><td>n</td><td>n</td><td>1</td><td>1</td><td>1</td></tr>
+   <tr><td align="center">BST</td>
+   <td>n</td><td>n</td><td>n</td><td>logn</td><td>logn</td><td>logn</td></tr>
+   <tr><td align="center">AVL树</td>
+   <td>logn</td><td>logn</td><td>logn</td><td>logn</td><td>logn</td><td>logn</td></tr>
+   <tr><td align="center">红黑树</td>
+   <td>logn</td><td>logn</td><td>logn</td><td>logn</td><td>logn</td><td>logn</td></tr>
+</table>
+<p>在最坏情况下二叉查找树的复杂度为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span>，这种情况下BST出现严重“畸形”，或者退化成单链表。<br />
+<img src="/uploads/images/data_structure/avlTree_cpp/01.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>这些情况确实存在，那么如何保证不会出现“一边倒”情况呢？这时AVL树就该登场了。</p>
+<p>首先来回顾之前的文章，了解到二叉查找树的性质3：</p>
+<blockquote>
+<p>一棵二叉树有<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span>个元素，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">n&gt;0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span></span></span></span>，它的高度最大为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span>，最小高度为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">⌈</mo><mi>l</mi><mi>o</mi><msub><mi>g</mi><mn>2</mn></msub><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo stretchy="false">⌉</mo></mrow><annotation encoding="application/x-tex">\lceil log_2(n+1) \rceil</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">⌈</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">o</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span><span class="mclose">⌉</span></span></span></span>。</p>
+</blockquote>
+<p>AVL树要做的就是将 高度最大为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span> 的情况尽可能的转化为 最小高度为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">⌈</mo><mi>l</mi><mi>o</mi><msub><mi>g</mi><mn>2</mn></msub><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo stretchy="false">⌉</mo></mrow><annotation encoding="application/x-tex">\lceil log_2(n+1) \rceil</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">⌈</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">o</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span><span class="mclose">⌉</span></span></span></span> 。</p>
+<p><strong>AVL树也是二叉查找树！！！</strong></p>
+<h4 id="特征"><a class="markdownIt-Anchor" href="#特征"></a> 特征</h4>
+<ul>
+<li>一棵n个元素的AVL树高度为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(\log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span></li>
+<li>对一棵n个元素的AVL树，在<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>H</mi><mi>e</mi><mi>i</mi><mi>g</mi><mi>h</mi><mi>t</mi><mo stretchy="false">)</mo><mo>=</mo><mi>O</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(Height)=O(\log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="mord mathdefault">e</span><span class="mord mathdefault">i</span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mord mathdefault">h</span><span class="mord mathdefault">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span> 时间内可以实现查找操作</li>
+<li>对一棵n个元素的AVL树插入和删除，时间复杂度为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(\log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span></li>
+</ul>
+<h4 id="平衡因子bf"><a class="markdownIt-Anchor" href="#平衡因子bf"></a> 平衡因子bf</h4>
+<p>AVL树是通过平衡因子来调整二叉查找树结构使其平衡,且AVL树的平衡因子只能是 <strong>1、-1、0</strong>，否则该树不是AVL树<br />
+节点<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">x</span></span></span></span>的平衡因子<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>b</mi><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">bf(x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">b</span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathdefault">x</span><span class="mclose">)</span></span></span></span>=<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">x</span></span></span></span>的左子树高度-<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">x</span></span></span></span>的右子树高度<br />
+由于平衡因子bf的限定，使得AVL树变成<strong>严格平衡</strong>二叉查找树</p>
+<p><img src="/uploads/images/data_structure/avlTree_cpp/02.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<h3 id="avl树的旋转"><a class="markdownIt-Anchor" href="#avl树的旋转"></a> AVL树的旋转</h3>
+<p>造成二叉查找树的不平衡来自于插入和删除操作，在插入或删除一个节点时有几种不平衡状态，分别为“左左/LL”、“左右/LR”、“右右/RR”、“右左/RL”。AVL树要做的，就是处理这些不平衡结构。<br />
+<img src="/uploads/images/data_structure/avlTree_cpp/03.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>插入或删除一个节点后，导致根节点的 <strong>平衡因子=左子树的高度-右子树的高度=2</strong>，结果AVL树失去了平衡</p>
+<h4 id="ll"><a class="markdownIt-Anchor" href="#ll"></a> LL</h4>
+<p>旋转过程：<br />
+将<strong>平衡因子=2</strong>的根节点X的<strong>左节点L</strong>作为旋转后的根节点，同时将L的右孩子调整为X的左孩子。<br />
+最后更新各个节点的bf</p>
+<p><img src="/uploads/images/data_structure/avlTree_cpp/04.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<h4 id="rr"><a class="markdownIt-Anchor" href="#rr"></a> RR</h4>
+<p>旋转过程：<br />
+将<strong>平衡因子=2</strong>的根节点X的<strong>右节点R</strong>作为旋转后的根节点，同时将R的左孩子调整为X的右孩子。<br />
+最后更新各个节点的bf</p>
+<p><img src="/uploads/images/data_structure/avlTree_cpp/05.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<h4 id="lr"><a class="markdownIt-Anchor" href="#lr"></a> LR</h4>
+<p>LR型旋转需要两次旋转，即先左旋(RR)后右旋(LL)<br />
+首先围绕不平衡根节点bf=2的<strong>左孩子</strong>进行左旋，再围绕<strong>根节点</strong>进行右旋</p>
+<p><img src="/uploads/images/data_structure/avlTree_cpp/06.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<h4 id="rl"><a class="markdownIt-Anchor" href="#rl"></a> RL</h4>
+<p>RL型旋转也需要两次旋转，即先右旋(LL)后左旋(RR)<br />
+首先围绕不平衡根节点bf=2的<strong>右孩子</strong>进行右旋，再围绕<strong>根节点</strong>进行左旋</p>
+<p><img src="/uploads/images/data_structure/avlTree_cpp/07.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<h3 id="c代码"><a class="markdownIt-Anchor" href="#c代码"></a> C++代码</h3>
+<p>首先定义一个节点结构体</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-keyword">template</span>&lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">T</span>&gt;</span><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">AVLNodeEntry</span>&#123;</span><br>    <span class="hljs-keyword">int</span> key;<br>    T data;<br>    <span class="hljs-keyword">int</span> height;<br>    AVLNodeEntry *parent;<br>    AVLNodeEntry *left_nodes;<br>    AVLNodeEntry *right_nodes;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+<p>AVL树模板类</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-keyword">template</span>&lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">T</span>&gt;</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AVLTree</span> &#123;</span><br><span class="hljs-keyword">private</span>:<br>    AVLNodeEntry&lt;T&gt;* m_NodeRoot;<br>    <span class="hljs-keyword">int</span> m_binaryTree_length;<br>    <span class="hljs-keyword">int</span> m_m_binaryTree_maxKey;<br>    <span class="hljs-keyword">int</span> m_m_binaryTree_minKey;<br>    <span class="hljs-keyword">bool</span> m_isClear;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-built_in">AVLTree</span>();<br>    <span class="hljs-built_in">AVLTree</span>(<span class="hljs-keyword">int</span>  k,<span class="hljs-keyword">const</span> T&amp; v);<br>    ~<span class="hljs-built_in">AVLTree</span>();<br><br>    <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">Height</span><span class="hljs-params">(AVLNodeEntry&lt;T&gt;* pNode)</span></span>;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Insert</span><span class="hljs-params">(AVLNodeEntry&lt;T&gt;* &amp; pNode,AVLNodeEntry&lt;T&gt;* pNodeParent,<span class="hljs-keyword">int</span> key,<span class="hljs-keyword">const</span> T&amp; value)</span></span>;<br>    <span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">Remove</span><span class="hljs-params">(AVLNodeEntry&lt;T&gt;* pNode,<span class="hljs-keyword">int</span> key)</span></span>;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Delete</span><span class="hljs-params">(AVLNodeEntry&lt;T&gt;* &amp; pNode,<span class="hljs-keyword">int</span> key)</span></span>;<br>    <span class="hljs-function">AVLNodeEntry&lt;T&gt;* &amp; <span class="hljs-title">GetRootNoder</span><span class="hljs-params">()</span></span>;<br>    <br>    <span class="hljs-function">AVLNodeEntry&lt;T&gt;* <span class="hljs-title">Search</span><span class="hljs-params">(AVLNodeEntry&lt;T&gt;* pNode,<span class="hljs-keyword">int</span> key)</span></span>;<br>    <span class="hljs-function">AVLNodeEntry&lt;T&gt;* <span class="hljs-title">GetMaxNode</span><span class="hljs-params">()</span></span>;<br>    <span class="hljs-function">AVLNodeEntry&lt;T&gt;* <span class="hljs-title">GetMinNode</span><span class="hljs-params">()</span></span>;<br>    <span class="hljs-function">AVLNodeEntry&lt;T&gt;* <span class="hljs-title">predecessor</span><span class="hljs-params">(AVLNodeEntry&lt;T&gt;* cur_node)</span></span>;<br>    <span class="hljs-function">AVLNodeEntry&lt;T&gt;* <span class="hljs-title">successor</span><span class="hljs-params">(AVLNodeEntry&lt;T&gt;* cur_node)</span></span>;<br><br>    <span class="hljs-function"><span class="hljs-keyword">static</span> AVLNodeEntry&lt;T&gt;* <span class="hljs-title">CreateElementBy</span><span class="hljs-params">(<span class="hljs-keyword">int</span>  key,<span class="hljs-keyword">const</span> T&amp; value,AVLNodeEntry&lt;T&gt;* pParent= <span class="hljs-literal">nullptr</span>)</span></span>;<br>   <br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">ClearAll</span><span class="hljs-params">(AVLNodeEntry&lt;T&gt;* &amp; pNode)</span></span>;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">PreOrder</span><span class="hljs-params">(AVLNodeEntry&lt;T&gt;* pRootNode)</span></span>;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">InOrder</span><span class="hljs-params">(AVLNodeEntry&lt;T&gt;* pRootNode)</span></span>;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">PostOrder</span><span class="hljs-params">(AVLNodeEntry&lt;T&gt;* pRootNode)</span></span>;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">LevelOrder</span><span class="hljs-params">(AVLNodeEntry&lt;T&gt;* pRootNode)</span></span>;<br><br>    <span class="hljs-comment">// 计算节点的高度</span><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">CalcHeight</span><span class="hljs-params">(AVLNodeEntry&lt;T&gt;* pNode)</span></span>&#123;<br>        <span class="hljs-keyword">if</span>(!pNode)<span class="hljs-keyword">return</span>;<br>        pNode-&gt;height=std::<span class="hljs-built_in">max</span>(<span class="hljs-built_in">Height</span>(pNode-&gt;left_nodes),<span class="hljs-built_in">Height</span>(pNode-&gt;right_nodes))+<span class="hljs-number">1</span>;<br>    &#125;<br><br>    <span class="hljs-function">AVLNodeEntry&lt;T&gt;* <span class="hljs-title">LLRotation</span><span class="hljs-params">(AVLNodeEntry&lt;T&gt;* &amp;pRootNode)</span></span>;<br>    <span class="hljs-function">AVLNodeEntry&lt;T&gt;* <span class="hljs-title">RRRotation</span><span class="hljs-params">(AVLNodeEntry&lt;T&gt;* &amp;pRootNode)</span></span>;<br>    <span class="hljs-function">AVLNodeEntry&lt;T&gt;* <span class="hljs-title">LRRotation</span><span class="hljs-params">(AVLNodeEntry&lt;T&gt;* &amp;pRootNode)</span></span>;<br>    <span class="hljs-function">AVLNodeEntry&lt;T&gt;* <span class="hljs-title">RLRotation</span><span class="hljs-params">(AVLNodeEntry&lt;T&gt;* &amp;pRootNode)</span></span>;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+<h4 id="旋转"><a class="markdownIt-Anchor" href="#旋转"></a> 旋转</h4>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-keyword">template</span>&lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">T</span>&gt;</span><br>AVLNodeEntry&lt;T&gt;* AVLTree&lt;T&gt;::<span class="hljs-built_in">LLRotation</span>(AVLNodeEntry&lt;T&gt;* &amp;pRootNode)&#123;<br>    <span class="hljs-keyword">if</span>(!pRootNode)<span class="hljs-keyword">return</span> pRootNode;<br>    AVLNodeEntry&lt;T&gt;*  leftChild=pRootNode-&gt;left_nodes;<br>    pRootNode-&gt;left_nodes=leftChild-&gt;right_nodes;<br>    <span class="hljs-keyword">if</span>(leftChild-&gt;right_nodes!=<span class="hljs-literal">nullptr</span>)&#123;<br>        leftChild-&gt;right_nodes-&gt;parent=pRootNode;<br>    &#125;<br>    leftChild-&gt;right_nodes=pRootNode;<br>    <br>    leftChild-&gt;parent=pRootNode-&gt;parent;<br>    pRootNode-&gt;parent=leftChild;<br><br>    <span class="hljs-built_in">CalcHeight</span>(pRootNode);<br>    <span class="hljs-built_in">CalcHeight</span>(leftChild);<br><br>    pRootNode=leftChild;<br>    <span class="hljs-keyword">if</span>(pRootNode-&gt;parent==<span class="hljs-literal">nullptr</span>)<br>        <span class="hljs-keyword">this</span>-&gt;m_NodeRoot=pRootNode;<br>    <span class="hljs-keyword">return</span> leftChild;<br>&#125;<br><br><span class="hljs-keyword">template</span>&lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">T</span>&gt;</span><br>AVLNodeEntry&lt;T&gt;* AVLTree&lt;T&gt;::<span class="hljs-built_in">RRRotation</span>(AVLNodeEntry&lt;T&gt;* &amp;pRootNode)&#123;<br>    <span class="hljs-keyword">if</span>(!pRootNode)<span class="hljs-keyword">return</span> pRootNode;<br>    AVLNodeEntry&lt;T&gt;*  rightChild=pRootNode-&gt;right_nodes;<br>    pRootNode-&gt;right_nodes=rightChild-&gt;left_nodes;<br>    <span class="hljs-keyword">if</span>(rightChild-&gt;left_nodes!=<span class="hljs-literal">nullptr</span>)&#123;<br>        rightChild-&gt;left_nodes-&gt;parent=pRootNode;<br>    &#125;<br>    rightChild-&gt;left_nodes=pRootNode;<br><br>    rightChild-&gt;parent=pRootNode-&gt;parent;<br>    pRootNode-&gt;parent=rightChild; <br><br>    <span class="hljs-built_in">CalcHeight</span>(pRootNode);<br>    <span class="hljs-built_in">CalcHeight</span>(rightChild);<br><br>    pRootNode=rightChild;<br>    <span class="hljs-keyword">if</span>(pRootNode-&gt;parent==<span class="hljs-literal">nullptr</span>)<br>        <span class="hljs-keyword">this</span>-&gt;m_NodeRoot=pRootNode;<br>    <span class="hljs-keyword">return</span> rightChild;<br>&#125;<br><br><span class="hljs-keyword">template</span>&lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">T</span>&gt;</span><br>AVLNodeEntry&lt;T&gt;* AVLTree&lt;T&gt;::<span class="hljs-built_in">LRRotation</span>(AVLNodeEntry&lt;T&gt;* &amp;pRootNode)&#123;<br>    <span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">RRRotation</span>(pRootNode-&gt;left_nodes);<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">LLRotation</span>(pRootNode);<br>&#125;<br><br><span class="hljs-keyword">template</span>&lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">T</span>&gt;</span><br>AVLNodeEntry&lt;T&gt;* AVLTree&lt;T&gt;::<span class="hljs-built_in">RLRotation</span>(AVLNodeEntry&lt;T&gt;* &amp;pRootNode)&#123;<br>    <span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">LLRotation</span>(pRootNode-&gt;right_nodes);<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">RRRotation</span>(pRootNode);<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h4 id="插入"><a class="markdownIt-Anchor" href="#插入"></a> 插入</h4>
+<p>插入一个新节点后，可能导致AVL树不平衡，因此需要判断平衡因子bf，若bf为2或-2说明需要进行旋转操作。不过只需要判断bf是否为2即可，这是由遍历的顺序决定的。<br />
+每次插入完成都需要更新节点的高度</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><br><span class="hljs-keyword">template</span>&lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">T</span>&gt;</span><br><span class="hljs-keyword">void</span> AVLTree&lt;T&gt;::<span class="hljs-built_in">Insert</span>(AVLNodeEntry&lt;T&gt;* &amp; pNode,AVLNodeEntry&lt;T&gt;* pNodeParent,<span class="hljs-keyword">int</span> key,<span class="hljs-keyword">const</span> T&amp; value) &#123;<br>    <span class="hljs-keyword">if</span>(pNode == <span class="hljs-literal">nullptr</span>)&#123;<br>        pNode=<span class="hljs-keyword">new</span> AVLNodeEntry&lt;T&gt;;<br>        pNode-&gt;key=key;<br>        pNode-&gt;left_nodes= <span class="hljs-literal">nullptr</span>;<br>        pNode-&gt;right_nodes= <span class="hljs-literal">nullptr</span>;<br>        pNode-&gt;data=value;<br>        pNode-&gt;parent=pNodeParent;<br>        pNode-&gt;height=<span class="hljs-number">1</span>;<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br>    <span class="hljs-comment">// 遍历左子树</span><br>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(key &lt; pNode-&gt;key)&#123;<br>        <span class="hljs-built_in">Insert</span>(pNode-&gt;left_nodes,pNode,key,value);<br>        <span class="hljs-comment">// 插入完成后检查是否平衡了</span><br>        <span class="hljs-comment">// 若平衡因子为2表示不平衡</span><br>        <span class="hljs-comment">// 只需要判断左右两边树的高度之差</span><br>        <span class="hljs-keyword">if</span>(<span class="hljs-built_in">Height</span>(pNode-&gt;left_nodes)-<span class="hljs-built_in">Height</span>(pNode-&gt;right_nodes)==<span class="hljs-number">2</span>)&#123;<br>            <span class="hljs-keyword">if</span>(key &lt; pNode-&gt;left_nodes-&gt;key)&#123;<br>                <span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">LLRotation</span>(pNode);<br>            &#125;<span class="hljs-keyword">else</span>&#123;<br>                <span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">LRRotation</span>(pNode);<br>            &#125;<br>        &#125;<br><br>    &#125;<span class="hljs-comment">// 否则右子树</span><br>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(key &gt; pNode-&gt;key)&#123;<br>        <span class="hljs-built_in">Insert</span>(pNode-&gt;right_nodes,pNode,key,value);<br>        <span class="hljs-comment">// 插入完成后检查是否平衡了</span><br>        <span class="hljs-keyword">if</span>(<span class="hljs-built_in">Height</span>(pNode-&gt;right_nodes)-<span class="hljs-built_in">Height</span>(pNode-&gt;left_nodes)==<span class="hljs-number">2</span>)&#123;<br>            <span class="hljs-keyword">if</span>(key &gt; pNode-&gt;right_nodes-&gt;key)&#123;<br>                <span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">RRRotation</span>(pNode);<br>            &#125;<span class="hljs-keyword">else</span>&#123;<br>                <span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">RLRotation</span>(pNode);<br>            &#125;<br>        &#125;<br>    &#125;<span class="hljs-comment">//如果已经存在了</span><br>    <span class="hljs-keyword">else</span>&#123;<br>        <span class="hljs-comment">//cout&lt;&lt;&quot;Already exist!&quot;&lt;&lt;endl;</span><br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br>    <span class="hljs-comment">// 插入完成后更新高度!</span><br>    <span class="hljs-comment">// 从 0 开始计数，因此需要加1</span><br>    <span class="hljs-built_in">CalcHeight</span>(pNode); <span class="hljs-comment">// +1表示包括当前根节点</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h4 id="删除"><a class="markdownIt-Anchor" href="#删除"></a> 删除</h4>
+<p>删除操作类似二叉查找树的删除操作，同样需要找到一个前驱/后继节点。<br />
+不过此处删除操作是在一个递归函数中进行的</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-keyword">template</span>&lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">T</span>&gt;</span><br><span class="hljs-keyword">void</span> AVLTree&lt;T&gt;::<span class="hljs-built_in">Delete</span>(AVLNodeEntry&lt;T&gt;* &amp; pNode,<span class="hljs-keyword">int</span> key) &#123;<br>    <span class="hljs-keyword">if</span>(!pNode)<span class="hljs-keyword">return</span>;<br>    <span class="hljs-keyword">if</span> (key &lt; pNode-&gt;key)&#123;<br>        <span class="hljs-comment">// 在左子树中删除一个节点</span><br>        <span class="hljs-built_in">Delete</span>(pNode-&gt;left_nodes,key);<br>        <span class="hljs-comment">// 删除后重新平衡</span><br>        <span class="hljs-keyword">if</span>(<span class="hljs-built_in">Height</span>(pNode-&gt;right_nodes)-<span class="hljs-built_in">Height</span>(pNode-&gt;left_nodes)==<span class="hljs-number">2</span>)&#123; <br>            <span class="hljs-keyword">if</span>(<span class="hljs-built_in">Height</span>(pNode-&gt;right_nodes-&gt;left_nodes)&gt;=<span class="hljs-built_in">Height</span>(pNode-&gt;right_nodes-&gt;right_nodes))&#123;<br>                <span class="hljs-built_in">RLRotation</span>(pNode);<br>            &#125;<span class="hljs-keyword">else</span>&#123;<br>                <span class="hljs-built_in">RRRotation</span>(pNode);<br>            &#125;                <br>        &#125;<br>    &#125;<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (key &gt; pNode-&gt;key)&#123;<br>        <span class="hljs-comment">// 在右子树中删除一个节点</span><br>        <span class="hljs-built_in">Delete</span>(pNode-&gt;right_nodes,key);<br>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Height</span>(pNode-&gt;left_nodes)-<span class="hljs-built_in">Height</span>(pNode-&gt;right_nodes)==<span class="hljs-number">2</span>)&#123;<br>            <span class="hljs-keyword">if</span>(<span class="hljs-built_in">Height</span>(pNode-&gt;left_nodes-&gt;left_nodes)&gt;=<span class="hljs-built_in">Height</span>(pNode-&gt;left_nodes-&gt;right_nodes))&#123;<br>                <span class="hljs-built_in">LLRotation</span>(pNode);<br>            &#125;<span class="hljs-keyword">else</span>&#123;<br>                <span class="hljs-built_in">LRRotation</span>(pNode);<br>            &#125;<br>        &#125;<br>    &#125;<span class="hljs-keyword">else</span>&#123;<br>        <span class="hljs-comment">// 左右子树都存在</span><br>        <span class="hljs-keyword">if</span> (pNode-&gt;left_nodes&amp;&amp;pNode-&gt;right_nodes)&#123;<br>            <span class="hljs-comment">// 找到一个后继节点 </span><br>            AVLNodeEntry&lt;T&gt;* successor=<span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">successor</span>(pNode);<br>            pNode-&gt;key=successor-&gt;key;<br>            pNode-&gt;data=successor-&gt;data;<br>            <span class="hljs-comment">// 删除那个后继节点</span><br>            <span class="hljs-built_in">Delete</span>(pNode-&gt;right_nodes,successor-&gt;key);<br>            <span class="hljs-comment">// 然后再次重新平衡</span><br>            <span class="hljs-keyword">if</span>(<span class="hljs-built_in">Height</span>(pNode-&gt;left_nodes)-<span class="hljs-built_in">Height</span>(pNode-&gt;right_nodes)==<span class="hljs-number">2</span>)&#123;<br>                <span class="hljs-keyword">if</span>(<span class="hljs-built_in">Height</span>(pNode-&gt;left_nodes-&gt;left_nodes)&gt;=<span class="hljs-built_in">Height</span>(pNode-&gt;left_nodes-&gt;right_nodes))&#123;<br>                    <span class="hljs-built_in">LLRotation</span>(pNode);<br>                &#125;<span class="hljs-keyword">else</span>&#123;<br>                    <span class="hljs-built_in">LRRotation</span>(pNode);<br>                &#125;<br>            &#125;<br>        &#125;<span class="hljs-keyword">else</span>&#123;<br>            <span class="hljs-comment">// 删除只有一个子树和叶子情况</span><br>            <span class="hljs-keyword">auto</span> pDeleteNode=pNode;<br>             <span class="hljs-comment">// 保存其子节点，无论是否为空</span><br>            AVLNodeEntry&lt;T&gt;* childNode=<span class="hljs-literal">nullptr</span>;<br>            <span class="hljs-keyword">if</span>(pDeleteNode-&gt;left_nodes!=<span class="hljs-literal">nullptr</span>)&#123;<br>                childNode=pDeleteNode-&gt;left_nodes;<br>            &#125;<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(pDeleteNode-&gt;right_nodes!=<span class="hljs-literal">nullptr</span>)&#123;<br>                childNode=pDeleteNode-&gt;right_nodes;<br>            &#125;<br>            <span class="hljs-comment">// 如果存在子节点（不是叶子），那么修改其指向父节点</span><br>            <span class="hljs-keyword">if</span>(childNode!=<span class="hljs-literal">nullptr</span>)&#123;<br>                childNode-&gt;parent=pDeleteNode-&gt;parent;<br>            &#125;<br>            <span class="hljs-comment">// 删除的是根节点</span><br>            <span class="hljs-keyword">if</span>(pDeleteNode-&gt;parent==<span class="hljs-literal">nullptr</span>)&#123;<br>                <span class="hljs-keyword">this</span>-&gt;m_NodeRoot=childNode;<br>            &#125;<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(pDeleteNode-&gt;parent-&gt;left_nodes==pDeleteNode)&#123;<br>                <span class="hljs-comment">// 修改待删除节点的父节点指向待删除节点的子节点</span><br>                pDeleteNode-&gt;parent-&gt;left_nodes=childNode;<br>            &#125;<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (pDeleteNode-&gt;parent-&gt;right_nodes==pDeleteNode)&#123;<br>                pDeleteNode-&gt;parent-&gt;right_nodes=childNode;<br>            &#125;<br>            <span class="hljs-keyword">delete</span> pDeleteNode;<br>            pDeleteNode=<span class="hljs-literal">nullptr</span>;<br>        &#125;<br>    &#125;<br>    <span class="hljs-comment">// 跟新节点高度</span><br>    <span class="hljs-keyword">if</span>(pNode)&#123;<br>        <span class="hljs-built_in">CalcHeight</span>(pNode);<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>源码： <a target="_blank" rel="noopener" href="https://josephxrays.coding.net/p/avlTree_c/git">https://josephxrays.coding.net/p/avlTree_c/git</a></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/C/">C++</a>
+                    
+                      <a class="hover-with-bg" href="/tags/DataStructures/">DataStructures</a>
+                    
+                      <a class="hover-with-bg" href="/tags/C/">C</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/rb-tree-cpp/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">我所理解的红黑树(RBT)</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/bst-cpp/">
+                        <span class="hidden-mobile">数据结构-二叉查找树(BST)</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"AzPbImmMjm5nQc1Xm9ulWCoH-gzGzoHsz","appKey":"xJqILn8nSbhYmdkB2VVQm8vI","placeholder":"说点什么","path":"window.location.pathname","avatar":"retro","meta":["nick","mail","link"],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false,"requiredFields":[]},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- KaTeX -->
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.10/dist/katex.min.css" />
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

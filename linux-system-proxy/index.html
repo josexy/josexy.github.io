@@ -1,0 +1,541 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="linux系统代理可以通过shell修改，其效果作用于当前shell或者所有shell，对于像chrome,firefox等桌面浏览器，是不能直接走代理的，除非安装一些proxy插件。不过有时我们想在自己写的程序内设置系统代理，那么这时仅修改shell(http_proxy)之类的是毫无作用的，必须依赖于当前的桌面环境(gnome,kde?)提供的接口，就像windows修改注册表来修改系统代理。">
+  <meta name="author" content="Joseph XRays">
+  <meta name="keywords" content="">
+  
+  <title>Linux修改系统代理 - JoXrays&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/monokai.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.joxrays.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>JoXrays's Blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Linux修改系统代理">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-03-21 00:00" pubdate>
+        2020年3月21日 凌晨
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.2k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      17
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Linux修改系统代理</h1>
+            
+            <div class="markdown-body">
+              <p>linux系统代理可以通过shell修改，其效果作用于当前shell或者所有shell，对于像chrome,firefox等桌面浏览器，是不能直接走代理的，除非安装一些proxy插件。不过有时我们想在自己写的程序内设置系统代理，那么这时仅修改shell(http_proxy)之类的是毫无作用的，必须依赖于当前的桌面环境(gnome,kde?)提供的接口，就像windows修改注册表来修改系统代理。</p>
+<span id="more"></span>
+<h3 id="当前shell"><a class="markdownIt-Anchor" href="#当前shell"></a> 当前shell</h3>
+<p>这种方式仅仅对当前shell以及产生的子shell有用，普遍的方法是export导出*_proxy变量：<br />
+<code>export http_proxy=http://USERNAME:PASSWORD@SERVER:PORT/</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">export</span> http_proxy=http://127.0.0.1:8888<br><span class="hljs-built_in">export</span> https_proxy=http://127.0.0.1:8888<br></code></pre></div></td></tr></table></figure>
+<p>若希望仅仅对当前shell其作用，那么可以这样做：</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">http_proxy=http://127.0.0.1:8888 curl www.google.com --head<br></code></pre></div></td></tr></table></figure>
+<p>不过这种通过修改http_proxy等环境变量来设置代理的方法似乎不支持socks。</p>
+<h3 id="所有shell"><a class="markdownIt-Anchor" href="#所有shell"></a> 所有shell</h3>
+<p>这种情况可以修改<code>/etc/profile</code>、<code>/etc/environment</code>、<code>$HOME/.bashrc</code>、<code>$HOME/.zshrc</code>配置文件，一般来说，只需要修改<code>.bashrc</code>或<code>.zshrc</code>就可以使所有的shell走代理（除非特殊情况）。</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-comment"># set</span><br><span class="hljs-built_in">export</span> &#123;http,https&#125;_proxy=<span class="hljs-string">&quot;http://127.0.0.1:8888&quot;</span><br><span class="hljs-comment"># unset</span><br><span class="hljs-built_in">unset</span> &#123;http,https&#125;_proxy<br><span class="hljs-comment"># test</span><br>curl -v checkip.dyndns.org<br>curl --head -v www.google.com<br></code></pre></div></td></tr></table></figure>
+<p>若希望立即见效，则 <code>source $HOME/.zshrc</code> 或 <code>source $HOME/.bashrc</code>。</p>
+<h3 id="gnome"><a class="markdownIt-Anchor" href="#gnome"></a> GNOME</h3>
+<p>以上方法对于大部分命令（curl,wget,git等）来说在shell基本上可以走代理。不过我开头说了，我们希望在自己写的程序内设置系统代理，就像v2rayNG修改Windows注册表。</p>
+<p>而且这样做的另一个好处是支持socks代理。</p>
+<p>确定linux的桌面环境可以通过 <code>env |grep DESKTOP</code> 查看全局环境变量，或者直接 <code>echo $XDG_SESSION_DESKTOP</code>，比如我这里的虚拟机linux gnome3输出<code>gnome-classic</code>。</p>
+<p>gnome通过<code>gsettings</code>来管理GNOME3的配置，这样就可以修改系统代理。<br />
+一个简单的例子来获取当前gnome的系统代理信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">gsettings get org.gnome.system.proxy mode<br>gsettings get org.gnome.system.proxy.http host<br>gsettings get org.gnome.system.proxy.http port<br>gsettings get org.gnome.system.proxy.socks host<br>gsettings get org.gnome.system.proxy.socks port<br></code></pre></div></td></tr></table></figure>
+<p><code>mode</code>有三种情况：</p>
+<ul>
+<li>none 无代理</li>
+<li>manual 手动代理: 修改http,https,socks等</li>
+<li>auto 代理自动配置: PAC</li>
+</ul>
+<h4 id="一个简单的例子"><a class="markdownIt-Anchor" href="#一个简单的例子"></a> 一个简单的例子：</h4>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">gsettings <span class="hljs-built_in">set</span> org.gnome.system.proxy mode <span class="hljs-string">&quot;manual&quot;</span><br>gsettings <span class="hljs-built_in">set</span> org.gnome.system.proxy.http host <span class="hljs-string">&quot;127.0.0.1&quot;</span><br>gsettings <span class="hljs-built_in">set</span> org.gnome.system.proxy.http port 8888<br>gsettings <span class="hljs-built_in">set</span> org.gnome.system.proxy.socks host <span class="hljs-string">&quot;127.0.0.1&quot;</span><br>gsettings <span class="hljs-built_in">set</span> org.gnome.system.proxy.socks port 1088<br></code></pre></div></td></tr></table></figure>
+<p>取消系统代理:</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">gsettings <span class="hljs-built_in">set</span> org.gnome.system.proxy mode <span class="hljs-string">&quot;none&quot;</span><br></code></pre></div></td></tr></table></figure>
+<h4 id="身份验证方式"><a class="markdownIt-Anchor" href="#身份验证方式"></a> 身份验证方式：</h4>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">gsettings <span class="hljs-built_in">set</span> org.gnome.system.proxy.http use-authentication <span class="hljs-literal">true</span><br>gsettings <span class="hljs-built_in">set</span> org.gnome.system.proxy.http authentication-user <span class="hljs-string">&quot;xxx&quot;</span><br>gsettings <span class="hljs-built_in">set</span> org.gnome.system.proxy.http authentication-password <span class="hljs-string">&quot;xxx&quot;</span><br></code></pre></div></td></tr></table></figure>
+<p>除此之外，还可以设置不经过代理的主机。<br />
+不过我这里v2ray配置了路由功能，这样的话即使是manual在访问国内网站时依然不走代理。</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">gsettings get org.gnome.system.proxy ignore-hosts <br></code></pre></div></td></tr></table></figure>
+<p>默认输出 <code>['localhost', '127.0.0.0/8', '::1']</code></p>
+<h4 id="pac"><a class="markdownIt-Anchor" href="#pac"></a> PAC</h4>
+<blockquote>
+<p>代理自动配置（Proxy auto-config，简称PAC）是一种网页浏览器技术，用于定义浏览器该如何自动选择适当的代理服务器来访问一个网址。</p>
+</blockquote>
+<p>也就是国内不走代理，国外走代理，一般来说可以加快网站访问速度。<br />
+关于PAC网上有很多文章介绍，此处不再赘述。</p>
+<p>gsettings设置如下:</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">gsettings get org.gnome.system.proxy autoconfig-url <br><span class="hljs-string">&#x27;http://127.0.0.1:xxxx/pac&#x27;</span><br></code></pre></div></td></tr></table></figure>
+<h3 id="kde"><a class="markdownIt-Anchor" href="#kde"></a> KDE</h3>
+<p>对于KDE来说，通过 <code>kwriteconfig5</code> 来修改系统代理，指定的配置文件一般位于 <code>$HOME/.config/kioslaverc</code>，内容大致如下，有点类似于windows的ini配置文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">AutoResume=<span class="hljs-literal">true</span><br>ProxyUrlDisplayFlags=0<br><br>[Proxy Settings]<br>Proxy Config Script=<br>ProxyType=0<br>ReversedException=<span class="hljs-literal">false</span><br>ftpProxy=http://localhost 8888<br>httpProxy=http://localhost 8888<br>httpsProxy=http://localhost 8888<br>socksProxy=socks://localhost 1088<br></code></pre></div></td></tr></table></figure>
+<p>kwriteconfig5的help信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">kwriteconfig5<br>Usage: kwriteconfig5 [options] value<br><br>Options:<br>  -h, --<span class="hljs-built_in">help</span>       Displays <span class="hljs-built_in">help</span> on commandline options.<br>  --help-all       Displays <span class="hljs-built_in">help</span> including Qt specific options.<br>  --file &lt;file&gt;    Use &lt;file&gt; instead of global config<br>  --group &lt;group&gt;  Group to look <span class="hljs-keyword">in</span>. Use repeatedly <span class="hljs-keyword">for</span> nested groups.<br>  --key &lt;key&gt;      Key to look <span class="hljs-keyword">for</span><br>  --<span class="hljs-built_in">type</span> &lt;<span class="hljs-built_in">type</span>&gt;    Type of variable. Use <span class="hljs-string">&quot;bool&quot;</span> <span class="hljs-keyword">for</span> a boolean, otherwise it is<br>                   treated as a string<br>  --delete         Delete the designated key <span class="hljs-keyword">if</span> enabled<br><br>Arguments:<br>  value            The value to write. Mandatory, on a shell use <span class="hljs-string">&#x27;&#x27;</span> <span class="hljs-keyword">for</span> empty<br></code></pre></div></td></tr></table></figure>
+<p>于是KDE下修改系统代理变得十分简单：</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">kwriteconfig5 --file kioslaverc --group <span class="hljs-string">&quot;Proxy Settings&quot;</span> --key <span class="hljs-string">&quot;ProxyType&quot;</span> 1<br>kwriteconfig5 --file kioslaverc --group <span class="hljs-string">&quot;Proxy Settings&quot;</span> --key <span class="hljs-string">&quot;httpProxy&quot;</span> <span class="hljs-string">&quot;http://127.0.0.1 8888&quot;</span><br>kwriteconfig5 --file kioslaverc --group <span class="hljs-string">&quot;Proxy Settings&quot;</span> --key <span class="hljs-string">&quot;httpsProxy&quot;</span> <span class="hljs-string">&quot;http://127.0.0.1 8888&quot;</span><br>kwriteconfig5 --file kioslaverc --group <span class="hljs-string">&quot;Proxy Settings&quot;</span> --key <span class="hljs-string">&quot;socksProxy&quot;</span> <span class="hljs-string">&quot;socks://127.0.0.1 1088&quot;</span><br></code></pre></div></td></tr></table></figure>
+<p><code>ProxyType</code> 可以是以下几种情况：</p>
+<ul>
+<li>0 无代理</li>
+<li>1 手动配置</li>
+<li>2 代理自动配置: PAC</li>
+</ul>
+<p>PAC模式:</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">kwriteconfig5 --file kioslaverc --group <span class="hljs-string">&quot;Proxy Settings&quot;</span> --key <span class="hljs-string">&quot;ProxyType&quot;</span> 2<br>kwriteconfig5 --file kioslaverc --group <span class="hljs-string">&quot;Proxy Settings&quot;</span> --key <span class="hljs-string">&quot;Proxy Config Script&quot;</span> <span class="hljs-string">&quot;&quot;</span><br></code></pre></div></td></tr></table></figure>
+<p>取消系统代理:</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">kwriteconfig5 --file kioslaverc --group <span class="hljs-string">&quot;Proxy Settings&quot;</span> --key <span class="hljs-string">&quot;ProxyType&quot;</span> 0<br></code></pre></div></td></tr></table></figure>
+<p>至此，通过gsettings或kwriteconfig5来修改系统代理也就小菜一碟了，其余xfce等其他桌面环境我还没有测试，所以就不知道啦。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Linux/">Linux</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Linux/">Linux</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Windows/">Windows</a>
+                    
+                      <a class="hover-with-bg" href="/tags/KDE/">KDE</a>
+                    
+                      <a class="hover-with-bg" href="/tags/GNOME/">GNOME</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Proxy/">Proxy</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/kde-panel-transparency/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">KDE Panel透明</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/linux-rdp-windows/">
+                        <span class="hidden-mobile">Linux RDP远程桌面连接Windows</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"AzPbImmMjm5nQc1Xm9ulWCoH-gzGzoHsz","appKey":"xJqILn8nSbhYmdkB2VVQm8vI","placeholder":"说点什么","path":"window.location.pathname","avatar":"retro","meta":["nick","mail","link"],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false,"requiredFields":[]},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- KaTeX -->
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.10/dist/katex.min.css" />
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

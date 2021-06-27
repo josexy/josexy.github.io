@@ -1,0 +1,607 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="嗯……环境都准备好了，那么现在可以开始用我们敬爱的C++通过接口来间接操控MongoDB数据库。
+注意，要有一定的MongoDB数据库基础知识哦～">
+  <meta name="author" content="Joseph XRays">
+  <meta name="keywords" content="">
+  
+  <title>C++ 调用MongoDB C Driver - JoXrays&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/monokai.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.joxrays.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>JoXrays's Blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="C++ 调用MongoDB C Driver">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2019-06-12 00:00" pubdate>
+        2019年6月12日 凌晨
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.5k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      37
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">C++ 调用MongoDB C Driver</h1>
+            
+            <div class="markdown-body">
+              <p>嗯……环境都准备好了，那么现在可以开始用我们敬爱的C++通过接口来间接操控MongoDB数据库。<br />
+注意，要有一定的MongoDB数据库基础知识哦～</p>
+<span id="more"></span>
+<h3 id="启动mongodb服务器"><a class="markdownIt-Anchor" href="#启动mongodb服务器"></a> 启动MongoDB服务器</h3>
+<p>首先要做的，就是启动服务器</p>
+<blockquote>
+<p>mongod --config ${MONGODB}/conf.d/mongo.conf</p>
+</blockquote>
+<p>要停止服务器，不建议直接<strong>kill</strong>掉，而是加上一个 <strong>–shutdown</strong> 参数</p>
+<p>我们还要创建一个可读写指定数据库的用户，比如</p>
+<blockquote>
+<p>use admin<br />
+db.createUser({user:’user_test’,pwd:’12345’,roles:[{role:’readWrite’,db:’db_test’}]}</p>
+</blockquote>
+<p>这里创建了用户 user_test，密码 12345，只能读写数据库 db_test</p>
+<h3 id="mongoc"><a class="markdownIt-Anchor" href="#mongoc"></a> mongoc</h3>
+<p>我们只需引用头文件 libmongoc-1.0/mongoc.h<br />
+在 <strong>main</strong> 函数要调用 <strong>mongoc_init()</strong> 来初始化库以及结尾 <strong>mongoc_cleanup()</strong> 来释放</p>
+<p>要连接到MongoDB数据库，就得提供一个连接字符串，类似于</p>
+<p>mongodb://username:password@host:port/db<br />
+例如： mongodb://localhost:27017表示连接到本地回环地址127.0.0.1，以及端口27017的服务器，这个连接方式无需验证身份(没有开启 <strong>auth</strong>)。<br />
+然而，这个例子的连接字符串为： <strong>mongodb://user_test:12345@127.0.0.1:27017/db_test</strong></p>
+<p>有了连接字符串，那么我们怎么连接到服务器？可以通过 mongoc_client_get_database() 来建立一个client</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">mongoc_client_t</span> * <span class="hljs-title">mongoc_client_new</span> <span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *uri_string)</span></span>;<br></code></pre></div></td></tr></table></figure>
+<p>该函数返回一个 mongoc_client_t* 结构指针，之后的操作就是通过该指针来访问 database、collection……</p>
+<blockquote>
+<p>除了直接通过一个连接字符串来建立client，还可以‘构造’一个 <strong>uri</strong> 建立client。这一步也很简单，可以调用 <strong>mongoc_uri*</strong> 系列函数，再<br />
+mongoc_client_new_from_uri()，如：<br />
+mongoc_uri_t <em>uri=mongoc_uri_new(“mongodb://127.0.0.1:27017”);<br />
+mongoc_uri_set_database(uri,”xxxx”);<br />
+mongoc_uri_set_username(uri,”xxxx”);<br />
+mongoc_uri_set_password(uri,”xxxx”);<br />
+mongoc_client_t</em> client= mongoc_client_new_from_uri(uri);</p>
+</blockquote>
+<p>连接成功后，可以通过来获取 <strong>mongoc_client_get_default_database</strong> 来获取默认的数据库（前提是刚才连接字符串提供了一个数据库），或者 <strong>mongoc_client_get_database</strong> 来获取指定名称的数据库</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">mongoc_database_t</span> * <span class="hljs-title">mongoc_client_get_database</span> <span class="hljs-params">(<span class="hljs-keyword">mongoc_client_t</span> *client, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *name)</span></span>;<br><span class="hljs-function"><span class="hljs-keyword">mongoc_database_t</span> * <span class="hljs-title">mongoc_client_get_default_database</span> <span class="hljs-params">(<span class="hljs-keyword">mongoc_client_t</span> *client)</span></span>;<br></code></pre></div></td></tr></table></figure>
+<p>通过 mongoc_database_has_collection() 判断是否存在一个 collection</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">mongoc_database_has_collection</span> <span class="hljs-params">(<span class="hljs-keyword">mongoc_database_t</span> *database,<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *name,<span class="hljs-keyword">bson_error_t</span> *error)</span></span>;<br><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> _<span class="hljs-title">bson_error_t</span> &#123;</span><br>   <span class="hljs-keyword">uint32_t</span> domain;<br>   <span class="hljs-keyword">uint32_t</span> code;<br>   <span class="hljs-keyword">char</span> message[BSON_ERROR_BUFFER_SIZE];<br>&#125; <span class="hljs-keyword">bson_error_t</span>;<br></code></pre></div></td></tr></table></figure>
+<p>有了database，那么就可以获取某个collection，方法有两个</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">mongoc_collection_t</span> * <span class="hljs-title">mongoc_client_get_collection</span> <span class="hljs-params">(<span class="hljs-keyword">mongoc_client_t</span> *client,<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *db,<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *collection)</span></span>;<br><span class="hljs-function"><span class="hljs-keyword">mongoc_collection_t</span> *</span><br><span class="hljs-function"><span class="hljs-title">mongoc_database_get_collection</span> <span class="hljs-params">(<span class="hljs-keyword">mongoc_database_t</span> *database, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *name)</span></span>;<br></code></pre></div></td></tr></table></figure>
+<p>接下来，就是重头戏了</p>
+<h4 id="creating-bson-documents"><a class="markdownIt-Anchor" href="#creating-bson-documents"></a> Creating BSON Documents</h4>
+<p>BSON，类似与JSON，但又有点不同。通过创建BSON Document来实现与MongoDB的交互。如：</p>
+<figure class="highlight json"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs json">&gt; db.test.insert(&#123;&#x27;name&#x27;:&#x27;xiaoming&#x27;,&#x27;age&#x27;:<span class="hljs-number">10</span>,info:[&#x27;shy&#x27;,&#x27;helpful&#x27;]&#125;)<br>&gt; db.test.find().pretty()<br>&#123;<br>	<span class="hljs-attr">&quot;_id&quot;</span> : ObjectId(<span class="hljs-string">&quot;5a8e1dced077dc147db71f81&quot;</span>),<br>	<span class="hljs-attr">&quot;name&quot;</span> : <span class="hljs-string">&quot;xiaoming&quot;</span>,<br>	<span class="hljs-attr">&quot;age&quot;</span> : <span class="hljs-number">10</span>,<br>	<span class="hljs-attr">&quot;info&quot;</span> : [<br>		<span class="hljs-string">&quot;shy&quot;</span>,<br>		<span class="hljs-string">&quot;helpful&quot;</span><br>	]<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>BSON文档就有点类似与 {‘name’:’xiaoming’,’age’:10,info:[‘shy’,’helpful’]}</p>
+<p>mongoc有几种方式创建BSON文档： <strong>appending key-value pairs, using BCON, or parsing JSON</strong><br />
+其中，最简单的就是BCON，不过再次之前先了解下使用 bson**，只需引用 bson.h 即可</p>
+<h5 id="bson"><a class="markdownIt-Anchor" href="#bson"></a> bson</h5>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-comment">// 创建一个BSON文档</span><br><span class="hljs-keyword">bson_t</span> *doc=<span class="hljs-built_in">bson_new</span>();<br><span class="hljs-comment">// 添加一个 UTF-8 字符串，-1 表示该字符串长度</span><br><span class="hljs-built_in">bson_append_utf8</span>(doc,<span class="hljs-string">&quot;name&quot;</span>,<span class="hljs-number">-1</span>,<span class="hljs-string">&quot;xiaodong&quot;</span>,<span class="hljs-number">-1</span>);<br><span class="hljs-comment">// 添加一个 int32 整数</span><br><span class="hljs-built_in">bson_append_int32</span>(doc,<span class="hljs-string">&quot;age&quot;</span>,<span class="hljs-number">-1</span>,<span class="hljs-number">10</span>);<br><span class="hljs-built_in">BSON_APPEND_UTF8</span>(doc,<span class="hljs-string">&quot;name&quot;</span>,<span class="hljs-string">&quot;xiaoqiang&quot;</span>);<br><span class="hljs-built_in">BSON_APPEND_INT32</span>(doc,<span class="hljs-string">&quot;age&quot;</span>,<span class="hljs-number">11</span>);<br><span class="hljs-comment">// 返回一个 JSON 字符串</span><br><span class="hljs-keyword">char</span> *jsonstr= <span class="hljs-built_in">bson_as_canonical_extended_json</span>(doc,<span class="hljs-literal">NULL</span>);<br><span class="hljs-built_in">printf</span>(jsonstr)<br><span class="hljs-comment">// 释放由 bson_as_canonical_extended_json 返回char *</span><br><span class="hljs-built_in">bson_free</span>(jsonstr);<br><span class="hljs-comment">// 释放 bson_new 分配的内存</span><br><span class="hljs-built_in">bson_destroy</span>(doc);<br></code></pre></div></td></tr></table></figure>
+<p>结果<br />
+{ “name” : “xiaodong”, “age” : { “<span class='katex-error' title='ParseError: KaTeX parse error: Expected &#039;EOF&#039;, got &#039;}&#039; at position 19: …berInt” : “10” }̲, “name” : “xia…'>numberInt” : “10” }, “name” : “xiaoqiang”, “age” : { “</span>numberInt” : “11” } }</p>
+<p>可通过 bson** 系列函数 或者 BSON**宏 来添加BSON文档<br />
+通过 bson_t 获取 JSON 字符串，可以调用以下函数</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">char</span> * <span class="hljs-title">bson_as_canonical_extended_json</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">bson_t</span> *bson, <span class="hljs-keyword">size_t</span> *length)</span></span><br><span class="hljs-function"><span class="hljs-keyword">char</span> * <span class="hljs-title">bson_as_json</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">bson_t</span> *bson, <span class="hljs-keyword">size_t</span> *length)</span></span><br><span class="hljs-function"><span class="hljs-keyword">char</span> * <span class="hljs-title">bson_as_relaxed_extended_json</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">bson_t</span> *bson, <span class="hljs-keyword">size_t</span> *length)</span></span><br></code></pre></div></td></tr></table></figure>
+<p>必须要有对应的 <strong>bson_free()</strong> 来释放该分配的内存；<strong>bson_destroy()</strong> 来释放一个BSON文档</p>
+<h5 id="bcon"><a class="markdownIt-Anchor" href="#bcon"></a> BCON</h5>
+<p>用 BCON_* 宏来操控BSON Document我认为更简单些，而且写法也更高级。</p>
+<blockquote>
+<p>BSON C Object Notation, BCON for short, is an alternative way of constructing BSON documents in a manner closer to the intended format. <strong>It has less type-safety than BSON’s append functions but results in less code</strong></p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-keyword">bson_t</span> *bson=<span class="hljs-built_in">BCON_NEW</span>(<br>            <span class="hljs-string">&quot;name&quot;</span>,<span class="hljs-built_in">BCON_UTF8</span>(<span class="hljs-string">&quot;xiaoHong&quot;</span>),<br>            <span class="hljs-string">&quot;age&quot;</span>,<span class="hljs-built_in">BCON_INT32</span>(<span class="hljs-number">15</span>),<br>            <span class="hljs-string">&quot;info&quot;</span>,<br>            <span class="hljs-string">&quot;[&quot;</span>,<br>               <span class="hljs-string">&quot;&#123;&quot;</span>,<span class="hljs-string">&quot;country&quot;</span>,<span class="hljs-built_in">BCON_UTF8</span>(<span class="hljs-string">&quot;China&quot;</span>), <span class="hljs-string">&quot;&#125;&quot;</span>,<br>               <span class="hljs-string">&quot;&#123;&quot;</span>,<span class="hljs-string">&quot;phone&quot;</span>,<span class="hljs-built_in">BCON_UTF8</span>(<span class="hljs-string">&quot;110&quot;</span>), <span class="hljs-string">&quot;&#125;&quot;</span>,<br>            <span class="hljs-string">&quot;]&quot;</span><br>);<br></code></pre></div></td></tr></table></figure>
+<p>{ “name” : “xiaoHong”, “age” : { “$numberInt” : “15” }, “info” : [ { “country” : “China” }, { “phone” : “110” } ] }</p>
+<p>通过使用 BCON_* 函数更直观、方便简单的创建BSON文档。</p>
+<h4 id="creating-bson-from-json"><a class="markdownIt-Anchor" href="#creating-bson-from-json"></a> Creating BSON from JSON</h4>
+<p>上面介绍了创建一个BSON文档以及从BSON文档获取一个JSON字符串。<br />
+那么，我们是否可以通过JSON字符串反向解析一个BSON文档呢？答案是肯定的。不过，这好像是对于单文档而言，</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">bson_t</span> * <span class="hljs-title">bson_new_from_json</span> <span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">uint8_t</span> *data, <span class="hljs-keyword">ssize_t</span> len, <span class="hljs-keyword">bson_error_t</span> *error)</span></span>;<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *json = <span class="hljs-string">&quot;&#123;\&quot;name\&quot;:\&quot;xiaoJun\&quot;,\&quot;age\&quot;:15&#125;&quot;</span>;<br><span class="hljs-keyword">bson_t</span> *newbs= <span class="hljs-built_in">bson_new_from_json</span>((<span class="hljs-keyword">const</span> <span class="hljs-keyword">uint8_t</span>*)json,<span class="hljs-number">-1</span>,<span class="hljs-literal">NULL</span>);<br>jsonstr=<span class="hljs-built_in">bson_as_canonical_extended_json</span>(newbs,<span class="hljs-literal">NULL</span>);<br><span class="hljs-built_in">printf</span>(json);<br><span class="hljs-built_in">bson_free</span>(jsonstr);<br><span class="hljs-built_in">bson_destroy</span>(newbs);<br></code></pre></div></td></tr></table></figure>
+<p>有了这些基础后，那么接下来就不会那么吃力了</p>
+<h4 id="遍历-collections"><a class="markdownIt-Anchor" href="#遍历-collections"></a> 遍历 collections</h4>
+<p>在MongoDB交互shell中，我们可以直接通过 <code>db.test.find().pretty()</code> 来列出所有的数据。注意 find() 是可以提供参数的</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">&gt;</span><span class="bash"> db.test.find</span><br>function (query, fields, limit, skip, batchSize, options) &#123;<br>    var cursor = new DBQuery(this._mongo,<br>                             this._db,<br>                             this,<br>                             this._fullName,<br>                             this._massageObject(query),<br>                             fields,<br>                             limit,<br>                             skip,<br>                             batchSize,<br>                             options || this.getQueryOptions());<br>    &#123;<br>        const session = this.getDB().getSession();<br>        const readPreference = session._serverSession.client.getReadPreference(session);<br>        if (readPreference !== null) &#123;<br>            cursor.readPref(readPreference.mode, readPreference.tags);<br>        &#125;<br>        const readConcern = session._serverSession.client.getReadConcern(session);<br>        if (readConcern !== null) &#123;<br>            cursor.readConcern(readConcern.level);<br>        &#125;<br>    &#125;<br>    return cursor;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>mongoc提供了 <strong>mongoc_collection_find_with_opts</strong> 函数来获取一个 游标(<strong>Cursor</strong>) ，注意 <strong>mongoc_collection_find</strong> 被弃用了。</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">mongoc_cursor_t</span> * <span class="hljs-title">mongoc_collection_find_with_opts</span> <span class="hljs-params">(<span class="hljs-keyword">mongoc_collection_t</span> *collection,<span class="hljs-keyword">const</span> <span class="hljs-keyword">bson_t</span> *filter,<span class="hljs-keyword">const</span> <span class="hljs-keyword">bson_t</span> *opts,<span class="hljs-keyword">const</span> <span class="hljs-keyword">mongoc_read_prefs_t</span> *read_prefs)</span></span><br></code></pre></div></td></tr></table></figure>
+<p><strong>mongoc_collection_find_with_opts</strong> 要求4个参数，参数我们只关注前两个参数，其中 <strong>bson_t *filter</strong> 至关重要，类似于 MYSQL select <em>from tb_xxx *where id = 5</em></p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-comment">// 空BSON文档 &#123;&#125;</span><br><span class="hljs-keyword">bson_t</span> *bson=<span class="hljs-built_in">BCON_NEW</span>(<span class="hljs-literal">NULL</span>);<br><span class="hljs-keyword">mongoc_cursor_t</span> *cursor= <span class="hljs-built_in">mongoc_collection_find_with_opts</span>(coll,bson,<span class="hljs-literal">NULL</span>,<span class="hljs-literal">NULL</span>);<br><span class="hljs-comment">// 获取当前文档，注意是一个 const bson_t *，并传入 mongoc_cursor_next 第二个参数</span><br><span class="hljs-keyword">const</span> <span class="hljs-keyword">bson_t</span> *ps=<span class="hljs-built_in">mongoc_cursor_current</span>(cursor);<br><span class="hljs-keyword">while</span> (<span class="hljs-built_in">mongoc_cursor_next</span>(cursor,&amp;ps))<br>&#123;<br>       <span class="hljs-keyword">char</span> *json=<span class="hljs-built_in">bson_as_canonical_extended_json</span>(ps,&amp;size);<br>       <span class="hljs-built_in">printf</span>(json);<br>       <span class="hljs-built_in">bson_free</span>(json);<br>&#125;<br><span class="hljs-comment">// 释放 cursor</span><br><span class="hljs-built_in">mongoc_cursor_destroy</span>(cursor);<br></code></pre></div></td></tr></table></figure>
+<p>bson_t <em>bson=BCON_NEW(NULL); 等价于 db.test.find({}) 或者 db.test.find()当然，也可以这么来写bson_t</em> bson=BCON_NEW(“age”,”{“,”<span class='katex-error' title='ParseError: KaTeX parse error: Expected &#039;EOF&#039;, got &#039;}&#039; at position 21: …CON_INT32(13),”}̲”);
+这就类似于 db.te…'>gt”,BCON_INT32(13),”}”);
+这就类似于 db.test.find({‘age’:{‘</span>gt’:13}})</p>
+<h4 id="增删查改"><a class="markdownIt-Anchor" href="#增删查改"></a> 增删查改</h4>
+<p>像大多数数据库一样，增删查改是必不可少的基本步骤。</p>
+<h5 id="insert"><a class="markdownIt-Anchor" href="#insert"></a> insert</h5>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-built_in">MONGOC_EXPORT</span> (<span class="hljs-keyword">bool</span>)<br><span class="hljs-built_in">mongoc_collection_insert</span> (<span class="hljs-keyword">mongoc_collection_t</span> *collection,<br>                          <span class="hljs-keyword">mongoc_insert_flags_t</span> flags,<br>                          <span class="hljs-keyword">const</span> <span class="hljs-keyword">bson_t</span> *document,<br>                          <span class="hljs-keyword">const</span> <span class="hljs-keyword">mongoc_write_concern_t</span> *write_concern,<br>                          <span class="hljs-keyword">bson_error_t</span> *error);<br><span class="hljs-built_in">MONGOC_EXPORT</span> (<span class="hljs-keyword">bool</span>)<br><span class="hljs-built_in">mongoc_collection_insert_one</span> (<span class="hljs-keyword">mongoc_collection_t</span> *collection,<br>                              <span class="hljs-keyword">const</span> <span class="hljs-keyword">bson_t</span> *document,<br>                              <span class="hljs-keyword">const</span> <span class="hljs-keyword">bson_t</span> *opts,<br>                              <span class="hljs-keyword">bson_t</span> *reply,<br>                              <span class="hljs-keyword">bson_error_t</span> *error);<br><span class="hljs-built_in">MONGOC_EXPORT</span> (<span class="hljs-keyword">bool</span>)<br><span class="hljs-built_in">mongoc_collection_insert_many</span> (<span class="hljs-keyword">mongoc_collection_t</span> *collection,<br>                               <span class="hljs-keyword">const</span> <span class="hljs-keyword">bson_t</span> **documents,<br>                               <span class="hljs-keyword">size_t</span> n_documents,<br>                               <span class="hljs-keyword">const</span> <span class="hljs-keyword">bson_t</span> *opts,<br>                               <span class="hljs-keyword">bson_t</span> *reply,<br>                               <span class="hljs-keyword">bson_error_t</span> *error);<br></code></pre></div></td></tr></table></figure>
+<p>千万别被这么多参数给吓倒了。这里我们只需关注</p>
+<blockquote>
+<p>mongoc_collection_t *collectionconst bson_t *document<br />
+bson_error_t *error(可选，表示错误信息)</p>
+</blockquote>
+<p>下面是一个简单的例子，省略了大部分代码</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-keyword">bson_t</span> *bson=<span class="hljs-built_in">BCON_NEW</span>(<br>            <span class="hljs-string">&quot;name&quot;</span>,<span class="hljs-built_in">BCON_UTF8</span>(<span class="hljs-string">&quot;xiaoDong&quot;</span>),<br>            <span class="hljs-string">&quot;age&quot;</span>,<span class="hljs-built_in">BCON_INT32</span>(<span class="hljs-number">18</span>),<br>            <span class="hljs-string">&quot;info&quot;</span>,<br>            <span class="hljs-string">&quot;[&quot;</span>,<br>               <span class="hljs-string">&quot;&#123;&quot;</span>,<span class="hljs-string">&quot;country&quot;</span>,<span class="hljs-built_in">BCON_UTF8</span>(<span class="hljs-string">&quot;China&quot;</span>), <span class="hljs-string">&quot;&#125;&quot;</span>,<br>               <span class="hljs-string">&quot;&#123;&quot;</span>,<span class="hljs-string">&quot;phone&quot;</span>,<span class="hljs-built_in">BCON_UTF8</span>(<span class="hljs-string">&quot;150&quot;</span>), <span class="hljs-string">&quot;&#125;&quot;</span>,<br>            <span class="hljs-string">&quot;]&quot;</span><br>        );<br><span class="hljs-comment">// 插入数据</span><br>retr=<span class="hljs-built_in">mongoc_collection_insert_one</span>(coll,,<span class="hljs-literal">NULL</span>,<span class="hljs-literal">NULL</span>,&amp;error);<br><span class="hljs-keyword">if</span>(!retr)&#123;<br>     <span class="hljs-built_in">printf</span>(error.message);<br>&#125;<br><span class="hljs-built_in">bson_destroy</span>(bson);<br></code></pre></div></td></tr></table></figure>
+<h5 id="delete"><a class="markdownIt-Anchor" href="#delete"></a> delete</h5>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-built_in">MONGOC_EXPORT</span> (<span class="hljs-keyword">bool</span>)<br><span class="hljs-built_in">mongoc_collection_delete_one</span> (<span class="hljs-keyword">mongoc_collection_t</span> *collection,<br>                              <span class="hljs-keyword">const</span> <span class="hljs-keyword">bson_t</span> *selector,<br>                              <span class="hljs-keyword">const</span> <span class="hljs-keyword">bson_t</span> *opts,<br>                              <span class="hljs-keyword">bson_t</span> *reply,<br>                              <span class="hljs-keyword">bson_error_t</span> *error);<br><span class="hljs-built_in">MONGOC_EXPORT</span> (<span class="hljs-keyword">bool</span>)<br><span class="hljs-built_in">mongoc_collection_delete_many</span> (<span class="hljs-keyword">mongoc_collection_t</span> *collection,<br>                               <span class="hljs-keyword">const</span> <span class="hljs-keyword">bson_t</span> *selector,<br>                               <span class="hljs-keyword">const</span> <span class="hljs-keyword">bson_t</span> *opts,<br>                               <span class="hljs-keyword">bson_t</span> *reply,<br>                               <span class="hljs-keyword">bson_error_t</span> *error);<br></code></pre></div></td></tr></table></figure>
+<p><strong>mongoc_collection_delete</strong> 已被弃用，这里没有列出<br />
+这个类似Insert，例子就没有了哈 😃</p>
+<h5 id="find"><a class="markdownIt-Anchor" href="#find"></a> find</h5>
+<p>这个前面就是前面的 <strong>遍历collections</strong> ……</p>
+<h5 id="update"><a class="markdownIt-Anchor" href="#update"></a> update</h5>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-built_in">MONGOC_EXPORT</span> (<span class="hljs-keyword">bool</span>)<br><span class="hljs-built_in">mongoc_collection_update</span> (<span class="hljs-keyword">mongoc_collection_t</span> *collection,<br>                          <span class="hljs-keyword">mongoc_update_flags_t</span> flags,<br>                          <span class="hljs-keyword">const</span> <span class="hljs-keyword">bson_t</span> *selector,<br>                          <span class="hljs-keyword">const</span> <span class="hljs-keyword">bson_t</span> *update,<br>                          <span class="hljs-keyword">const</span> <span class="hljs-keyword">mongoc_write_concern_t</span> *write_concern,<br>                          <span class="hljs-keyword">bson_error_t</span> *error);<br><span class="hljs-built_in">MONGOC_EXPORT</span> (<span class="hljs-keyword">bool</span>)<br><span class="hljs-built_in">mongoc_collection_update_one</span> (<span class="hljs-keyword">mongoc_collection_t</span> *collection,<br>                              <span class="hljs-keyword">const</span> <span class="hljs-keyword">bson_t</span> *selector,<br>                              <span class="hljs-keyword">const</span> <span class="hljs-keyword">bson_t</span> *update,<br>                              <span class="hljs-keyword">const</span> <span class="hljs-keyword">bson_t</span> *opts,<br>                              <span class="hljs-keyword">bson_t</span> *reply,<br>                              <span class="hljs-keyword">bson_error_t</span> *error);<br><span class="hljs-built_in">MONGOC_EXPORT</span> (<span class="hljs-keyword">bool</span>)<br><span class="hljs-built_in">mongoc_collection_update_many</span> (<span class="hljs-keyword">mongoc_collection_t</span> *collection,<br>                               <span class="hljs-keyword">const</span> <span class="hljs-keyword">bson_t</span> *selector,<br>                               <span class="hljs-keyword">const</span> <span class="hljs-keyword">bson_t</span> *update,<br>                               <span class="hljs-keyword">const</span> <span class="hljs-keyword">bson_t</span> *opts,<br>                               <span class="hljs-keyword">bson_t</span> *reply,<br>                               <span class="hljs-keyword">bson_error_t</span> *error);<br></code></pre></div></td></tr></table></figure>
+<p>注意那个 <strong>mongoc_update_flags_t</strong>，这个经常用到。</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">enum</span> &#123;</span><br>   MONGOC_UPDATE_NONE = <span class="hljs-number">0</span>,<br>   MONGOC_UPDATE_UPSERT = <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">0</span>,<br>   MONGOC_UPDATE_MULTI_UPDATE = <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">1</span>,<br>&#125; <span class="hljs-keyword">mongoc_update_flags_t</span>;<br></code></pre></div></td></tr></table></figure>
+<p>现在就 <strong>mongoc_collection_update</strong> 这个函数为例，除了那个 const mongoc_write_concern_t *write_concern 参数以外，其他的似乎都挺常用。。。不过再次之前，先来看看Mongo下update数据。</p>
+<p>当前 db_test 存在如下数据</p>
+<figure class="highlight css"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs css">db<span class="hljs-selector-class">.test</span><span class="hljs-selector-class">.find</span>()<br>&#123; &quot;_id&quot; : <span class="hljs-built_in">ObjectId</span>(<span class="hljs-string">&quot;5a8e30c0d077dc147db71f83&quot;</span>), <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;xiaolong&quot;</span>, <span class="hljs-string">&quot;age&quot;</span> : <span class="hljs-number">14</span> &#125;<br>&#123; &quot;_id&quot; : <span class="hljs-built_in">ObjectId</span>(<span class="hljs-string">&quot;5a8e3102d077dc147db71f84&quot;</span>), <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;xiaoqiang&quot;</span>, <span class="hljs-string">&quot;age&quot;</span> : <span class="hljs-number">10</span> &#125;<br>&#123; &quot;_id&quot; : <span class="hljs-built_in">ObjectId</span>(<span class="hljs-string">&quot;5a8e3108d077dc147db71f85&quot;</span>), <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;xiaofeng&quot;</span>, <span class="hljs-string">&quot;age&quot;</span> : <span class="hljs-number">12</span> &#125;<br>&#123; &quot;_id&quot; : <span class="hljs-built_in">ObjectId</span>(<span class="hljs-string">&quot;5a8e38ba53d6700f027556c2&quot;</span>), <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;xiaoHong&quot;</span>, <span class="hljs-string">&quot;age&quot;</span> : <span class="hljs-number">15</span>, <span class="hljs-string">&quot;info&quot;</span> : [ &#123; <span class="hljs-string">&quot;country&quot;</span> : <span class="hljs-string">&quot;China&quot;</span> &#125;, &#123; &quot;phone&quot; : <span class="hljs-string">&quot;110&quot;</span><br></code></pre></div></td></tr></table></figure>
+<p>我要查看 age 大或等于 12 的记录，那么我可以这样做</p>
+<figure class="highlight stylus"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs stylus">db<span class="hljs-selector-class">.test</span><span class="hljs-selector-class">.find</span>(&#123;<span class="hljs-string">&#x27;age&#x27;</span>:&#123;<span class="hljs-string">&#x27;$gte&#x27;</span>:<span class="hljs-number">12</span>&#125;&#125;)<br>&gt;&#123; <span class="hljs-string">&quot;_id&quot;</span> : ObjectId(<span class="hljs-string">&quot;5a8e30c0d077dc147db71f83&quot;</span>), <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;xiaolong&quot;</span>, <span class="hljs-string">&quot;age&quot;</span> : <span class="hljs-number">14</span> &#125;<br><span class="hljs-string">&quot;xiaofeng&quot;</span>, <span class="hljs-string">&quot;age&quot;</span> : <span class="hljs-number">12</span> &#125;<br>&#123; <span class="hljs-string">&quot;_id&quot;</span> : ObjectId(<span class="hljs-string">&quot;5a8e38ba53d6700f027556c2&quot;</span>), <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;xiaoHong&quot;</span>, <span class="hljs-string">&quot;age&quot;</span> : <span class="hljs-number">15</span>, <span class="hljs-string">&quot;info&quot;</span> : <span class="hljs-selector-attr">[ &#123; <span class="hljs-string">&quot;country&quot;</span> : <span class="hljs-string">&quot;China&quot;</span> &#125;, &#123; <span class="hljs-string">&quot;phone&quot;</span> : <span class="hljs-string">&quot;110&quot;</span> &#125; ]</span> &#125;<br><br></code></pre></div></td></tr></table></figure>
+<p>要修改 age 大或等于 12 的 name 的<strong>所有</strong>记录，那么我么可以这样做<br />
+db.test.update({‘age’:{‘<span class='katex-error' title='ParseError: KaTeX parse error: Expected &#039;EOF&#039;, got &#039;}&#039; at position 8: gte’:12}̲},{‘'>gte’:12}},{‘</span>set’:{‘name’:’XXXXX’}},false,<strong>true</strong>)</p>
+<p>类似与MySQL：update tb_xxx set name=’xxxxx’ where age &gt;=12</p>
+<p>这时候回过头来看看</p>
+<figure class="highlight dart"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs dart"><span class="hljs-keyword">const</span> bson_t *selector =&gt; &#123;<span class="hljs-string">&#x27;age&#x27;</span>:&#123;<span class="hljs-string">&#x27;<span class="hljs-subst">$gte</span>&#x27;</span>:<span class="hljs-number">12</span>&#125; &#125;<br><span class="hljs-keyword">const</span> bson_t *update =&gt; &#123;<span class="hljs-string">&#x27;<span class="hljs-subst">$set</span>&#x27;</span>:&#123;<span class="hljs-string">&#x27;name&#x27;</span>:<span class="hljs-string">&#x27;XXXXX&#x27;</span>&#125;&#125;<br>mongoc_update_flags_t flags =&gt; MONGOC_UPDATE_MULTI_UPDATE<br></code></pre></div></td></tr></table></figure>
+<p>于是可以这样写</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-keyword">bson_t</span> *query=<span class="hljs-built_in">BCON_NEW</span>(<span class="hljs-string">&quot;age&quot;</span>,<span class="hljs-string">&quot;&#123;&quot;</span>,<br>                      <span class="hljs-string">&quot;$gte&quot;</span>,<span class="hljs-built_in">BCON_INT32</span>(<span class="hljs-number">12</span>),<br>                             <span class="hljs-string">&quot;&#125;&quot;</span>);<br><span class="hljs-keyword">bson_t</span> *update=<span class="hljs-built_in">BCON_NEW</span>(<span class="hljs-string">&quot;$set&quot;</span>,<span class="hljs-string">&quot;&#123;&quot;</span>,<br>                       <span class="hljs-string">&quot;age&quot;</span>,<span class="hljs-built_in">BCON_INT32</span>(<span class="hljs-number">888</span>),<br>                              <span class="hljs-string">&quot;&#125;&quot;</span>);<br><span class="hljs-keyword">bool</span> retr= <span class="hljs-built_in">mongoc_collection_update</span>(coll,MONGOC_UPDATE_MULTI_UPDATE,query,update,<span class="hljs-literal">NULL</span>,&amp;error);<br><span class="hljs-keyword">if</span>(!retr)&#123;<br>     	cout&lt;&lt;error.message&lt;&lt;endl;<br>&#125;<br><span class="hljs-built_in">bson_destroy</span>(query);<br><span class="hljs-built_in">bson_destroy</span>(update);<br><br></code></pre></div></td></tr></table></figure>
+<p>注意，<strong>“age”,”{“</strong> 要单独写，不能写成 <strong>“age{“</strong>，否则 <strong>src/bson/bcon.c:784 bcon_append_ctx_va(): precondition failed: type == BCON_TYPE_UTF8</strong> 这是最坑爹的地方</p>
+<h4 id="内存释放"><a class="markdownIt-Anchor" href="#内存释放"></a> 内存释放</h4>
+<p>别以为这样就结束了哦，还要记得要释放所有的内存</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-comment">// 释放char*指针</span><br><span class="hljs-built_in">bson_free</span>(<span class="hljs-keyword">void</span> *mem);<br><span class="hljs-comment">// 释放 bson_t *bson文档</span><br><span class="hljs-built_in">bson_destroy</span>(<span class="hljs-keyword">bson_t</span> *bson);<br><span class="hljs-built_in">mongoc_cursor_destroy</span>(cursor);<br><span class="hljs-built_in">mongoc_collection_destroy</span>(coll);<br><span class="hljs-built_in">mongoc_database_destroy</span>(database);<br><span class="hljs-built_in">mongoc_client_destroy</span>(client);<br><span class="hljs-built_in">mongoc_cleanup</span>();<br></code></pre></div></td></tr></table></figure>
+<h3 id="编译"><a class="markdownIt-Anchor" href="#编译"></a> 编译</h3>
+<p>编译方法也很简单</p>
+<blockquote>
+<p>g++ main.cpp -o main <code>pkg-config –libs –cflags libmongoc-1.0</code></p>
+</blockquote>
+<p>或者</p>
+<blockquote>
+<p>g++ main.cpp -o main -lbson-1.0 -lmongoc-1.0</p>
+</blockquote>
+<h3 id="结尾"><a class="markdownIt-Anchor" href="#结尾"></a> 结尾</h3>
+<p>不得不说，用mongoc来操控mongoDB数据库还挺复杂的。因此建议自己把这些函数封装成类对象。其实，关于mongoc封装成类，<strong>Mongoc</strong>目前已经发展到了<strong>MongoCXX</strong>，以Mongoc为基础，所有操作都被封装到类里面。引入了几个特殊的对象 <strong>view、value、view_or_value</strong>。同时，构建(<strong>Build</strong>)一个BSON文档有两种方法：<strong>basic、stream</strong>。可 <a target="_blank" rel="noopener" href="https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/installation/">参阅这里</a></p>
+<p>以后有空再介绍***mongocxx***吧～</p>
+<p>参考 <a target="_blank" rel="noopener" href="http://mongoc.org/libmongoc/current/tutorial.html">http://mongoc.org/libmongoc/current/tutorial.html</a></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/MongoDB/">MongoDB</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Linux/">Linux</a>
+                    
+                      <a class="hover-with-bg" href="/tags/C/">C++</a>
+                    
+                      <a class="hover-with-bg" href="/tags/C/">C</a>
+                    
+                      <a class="hover-with-bg" href="/tags/MongoDB/">MongoDB</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/linux-libxml2/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Libxml2解析XML文件</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/chrome-dark/">
+                        <span class="hidden-mobile">Chrome浏览器网页变成黑色(Dark Reader)</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"AzPbImmMjm5nQc1Xm9ulWCoH-gzGzoHsz","appKey":"xJqILn8nSbhYmdkB2VVQm8vI","placeholder":"说点什么","path":"window.location.pathname","avatar":"retro","meta":["nick","mail","link"],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false,"requiredFields":[]},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- KaTeX -->
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.10/dist/katex.min.css" />
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

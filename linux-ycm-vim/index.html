@@ -1,0 +1,526 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="由于之前不小心把vim的配置删了，致使之前的那篇文章无法访问，但为了回应有关网友的回复，特此重新编辑了vim的ycm配置。😃
+YCM全称 YouCompleteMe，是一个vim插件，但是却是一个能够使代码自动补全的工具。虽然如此，但也还是无法与专用IDE相媲美，不过对于vim党来说却是一个十分有趣的插件。">
+  <meta name="author" content="Joseph XRays">
+  <meta name="keywords" content="">
+  
+  <title>Linux Vim YCM配置 - JoXrays&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/monokai.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.joxrays.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>JoXrays's Blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Linux Vim YCM配置">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2019-09-09 00:00" pubdate>
+        2019年9月9日 凌晨
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.5k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      23
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Linux Vim YCM配置</h1>
+            
+            <div class="markdown-body">
+              <p>由于之前不小心把vim的配置删了，致使之前的那篇文章无法访问，但为了回应有关网友的回复，特此重新编辑了vim的ycm配置。😃</p>
+<p>YCM全称 YouCompleteMe，是一个vim插件，但是却是一个能够使代码自动补全的工具。虽然如此，但也还是无法与专用IDE相媲美，不过对于vim党来说却是一个十分有趣的插件。</p>
+<span id="more"></span>
+<h2 id="安装前"><a class="markdownIt-Anchor" href="#安装前"></a> 安装前</h2>
+<p>要使VIM配置YCM，则必须确保Vim支持Python2和Python3，可以用 <code>vim --version</code> 查看是否支持。否则请自行从源代码安装vim。</p>
+<p>我的系统是archlinux，vim版本为8.2</p>
+<h2 id="安装ycmvundle"><a class="markdownIt-Anchor" href="#安装ycmvundle"></a> 安装YCM(Vundle)</h2>
+<p>YCM github： <a target="_blank" rel="noopener" href="https://github.com/ycm-core/YouCompleteMe">https://github.com/ycm-core/YouCompleteMe</a></p>
+<p>推荐通过 <strong>Vundle</strong> 安装 YCM，在此之前，需要安装 Vundle： <a target="_blank" rel="noopener" href="https://github.com/VundleVim/Vundle.vim">https://github.com/VundleVim/Vundle.vim</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim<br></code></pre></div></td></tr></table></figure>
+<p>之后可以编辑 ~/.vimrc 文件</p>
+<figure class="highlight sh"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs sh"><span class="hljs-built_in">set</span> nocompatible<br>filetype off <br><br><span class="hljs-built_in">set</span> rtp+=~/.vim/bundle/Vundle.vim<br>call vundle<span class="hljs-comment">#begin()</span><br>...<br>Plugin <span class="hljs-string">&#x27;VundleVim/Vundle.vim&#x27;</span><br>...<br>call vundle<span class="hljs-comment">#end()</span><br>filetype plugin indent on<br></code></pre></div></td></tr></table></figure>
+<p>一般来说，vundle常用用法如下</p>
+<figure class="highlight elixir"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs elixir"><span class="hljs-symbol">:PluginList</span>       - 列举配置插件<br><span class="hljs-symbol">:PluginInstall</span>    - 安装 ‘Plugin’ 之后的插件<br><span class="hljs-symbol">:PluginUpdate</span>	  - 更新插件<br><span class="hljs-symbol">:PluginSearch</span> foo - 寻找插件 foo并添加的本地配置<br><span class="hljs-symbol">:PluginClean</span>      - 删除未被使用的插件<br></code></pre></div></td></tr></table></figure>
+<h2 id="支持cc"><a class="markdownIt-Anchor" href="#支持cc"></a> 支持C/C++</h2>
+<p>要使YCM支持C语言的自动补全，还需要配置YCM，首先在 .vimrc 添加一行</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">call vundle<span class="hljs-comment">#begin()</span><br>. . . <br>Plugin <span class="hljs-string">&#x27;Valloric/YouCompleteMe’</span><br><span class="hljs-string">. . .</span><br><span class="hljs-string">call vundle#end()</span><br></code></pre></div></td></tr></table></figure>
+<p>进入vim后 <code>:PluginInstall</code> ，然后在进行编译YCM，当然还有 ./install.sh --all ，不过我就不怎么配置了。 注意还要安装 <code>cmake</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> ~/.vim/bundle/YouCompleteMe<br>./install.sh --clang-completer<br></code></pre></div></td></tr></table></figure>
+<p>如果是Git YCM的，那么还需要在该目录下执行</p>
+<figure class="highlight sh"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs sh">git <span class="hljs-built_in">clone</span> https://github.com/ycm-core/YouCompleteMe.git<br>git submodule update --init --recursive<br></code></pre></div></td></tr></table></figure>
+<h2 id="下载安装libclang"><a class="markdownIt-Anchor" href="#下载安装libclang"></a> 下载安装libclang</h2>
+<p>由于我的系统是archlinux，所以可以直接</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">sudo pacman -S clang boost llvm-libs<br></code></pre></div></td></tr></table></figure>
+<p>其他linux系统比如Ubuntu，需要安装 llvm，clang，libclang，libboost。</p>
+<h2 id="编译构建-ycm_core-库"><a class="markdownIt-Anchor" href="#编译构建-ycm_core-库"></a> 编译构建 ycm_core 库</h2>
+<p>编译构建ycm_core库需要安装 cmake和python3-dev<br />
+创建一个用于存放编译过程的产生的文件</p>
+<figure class="highlight sh"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs sh"><span class="hljs-comment"># mkdir ~/ycm_build</span><br><span class="hljs-comment"># cd ~/ycm_build</span><br><span class="hljs-comment"># cmake -G &quot;Unix Makefiles&quot; -DUSE_SYSTEM_BOOST=ON -DUSE_SYSTEM_LIBCLANG=ON . ~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp</span><br><br>输出：<br>-- The C compiler identification is GNU 9.1.0<br>-- The CXX compiler identification is GNU 9.1.0<br>-- Check <span class="hljs-keyword">for</span> working C compiler: /usr/bin/cc<br>-- Check <span class="hljs-keyword">for</span> working C compiler: /usr/bin/cc -- works<br>-- Detecting C compiler ABI info<br>-- Detecting C compiler ABI info - <span class="hljs-keyword">done</span><br>-- Detecting C compile features<br>-- Detecting C compile features - <span class="hljs-keyword">done</span><br>-- Check <span class="hljs-keyword">for</span> working CXX compiler: /usr/bin/c++<br>-- Check <span class="hljs-keyword">for</span> working CXX compiler: /usr/bin/c++ -- works<br>-- Detecting CXX compiler ABI info<br>-- Detecting CXX compiler ABI info - <span class="hljs-keyword">done</span><br>-- Detecting CXX compile features<br>-- Detecting CXX compile features - <span class="hljs-keyword">done</span><br>-- Found PythonLibs: /usr/lib/libpython2.7.so (found suitable version <span class="hljs-string">&quot;2.7.16&quot;</span>, minimum required is <span class="hljs-string">&quot;2.7&quot;</span>) <br>-- Using libclang to provide semantic completion <span class="hljs-keyword">for</span> C/C++/ObjC<br>-- Found Boost: /usr/include (found version <span class="hljs-string">&quot;1.69.0&quot;</span>) found components:  filesystem regex <br>-- Using external libclang: /usr/lib/libclang.so.8<br>-- NOT using clang-tidy <span class="hljs-keyword">for</span> static analysis.<br>-- Configuring <span class="hljs-keyword">done</span><br>-- Generating <span class="hljs-keyword">done</span><br>-- Build files have been written to: /home/joxrays/ycm_build<br><br><span class="hljs-comment"># cmake --build . --target ycm_core --config Release</span><br>	--config Release 针对 Windows，对于Linux/Unix忽略<br>若无错误之后可看到 `Linking CXX shared library /home/joxrays/.vim/bundle/YouCompleteMe/third_party/ycmd/ycm_core.so`<br></code></pre></div></td></tr></table></figure>
+<p>至此YCM_CORE编译完成，接下来就可以</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">cp ~/.vim/bundle/YouCompleteMe/third_party/ycmd/examples/.ycm_extra_conf.py ~/.vim/<br></code></pre></div></td></tr></table></figure>
+<h2 id="vim配置文件插件"><a class="markdownIt-Anchor" href="#vim配置文件插件"></a> vim配置文件+插件</h2>
+<p>我先把我的vimrc配置文件贴出了</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><br><span class="hljs-built_in">set</span> nocp<br><span class="hljs-built_in">set</span> modelines=0<br><span class="hljs-built_in">set</span> backspace=2<br>syntax on <br>autocmd InsertLeave * se nocul<br>autocmd InsertEnter * se cul<br><span class="hljs-built_in">set</span> smartindent <br><span class="hljs-built_in">set</span> autoindent<br><span class="hljs-built_in">set</span> confirm <br><span class="hljs-built_in">set</span> tabstop=4 <br><span class="hljs-built_in">set</span> softtabstop=4<br><span class="hljs-built_in">set</span> shiftwidth=4 <br><span class="hljs-built_in">set</span> expandtab <br><span class="hljs-built_in">set</span> number<br><span class="hljs-built_in">set</span> <span class="hljs-built_in">history</span>=50  <br><span class="hljs-built_in">set</span> hlsearch<br><span class="hljs-built_in">set</span> incsearch<br><span class="hljs-built_in">set</span> gdefault<br><span class="hljs-built_in">set</span> encoding=utf-8<br><span class="hljs-built_in">set</span> fileencodings=utf-8,ucs-bom,shift-jis,gb18030,gbk,gb2312,cp936,utf-16,big5,euc-jp,latin1<br><span class="hljs-built_in">set</span> guifont=Menlo:h16:cANSI <br><span class="hljs-built_in">set</span> langmenu=zn_CN.UTF-8<br><span class="hljs-built_in">set</span> helplang=cn <br><span class="hljs-built_in">set</span> ruler <br><span class="hljs-built_in">set</span> laststatus=1 <br><span class="hljs-built_in">set</span> showcmd <br><span class="hljs-built_in">set</span> scrolloff=3<br><span class="hljs-built_in">set</span> showmatch <br><span class="hljs-built_in">set</span> matchtime=5<br><span class="hljs-built_in">set</span> autowrite <br><span class="hljs-built_in">set</span> wildmenu  <br><span class="hljs-built_in">set</span> linespace=2 <br><span class="hljs-built_in">set</span> whichwrap=b,s,&lt;,&gt;,[,] <br><span class="hljs-built_in">set</span> foldenable  <br><span class="hljs-built_in">set</span> cursorline <br><span class="hljs-built_in">set</span> magic  <br><span class="hljs-built_in">set</span> ignorecase<br><span class="hljs-built_in">set</span> background=dark<br><span class="hljs-built_in">set</span> t_Co=256   <br><span class="hljs-built_in">set</span> mouse=i <br><span class="hljs-built_in">set</span> backspace=indent,eol,start<br><span class="hljs-built_in">set</span> nocompatible<br><br><span class="hljs-built_in">set</span> rtp+=~/.vim/bundle/Vundle.vim<br>call vundle<span class="hljs-comment">#begin()</span><br>Plugin <span class="hljs-string">&#x27;VundleVim/Vundle.vim&#x27;</span><br>Plugin <span class="hljs-string">&#x27;Valloric/YouCompleteMe&#x27;</span><br>Plugin <span class="hljs-string">&#x27;altercation/vim-colors-solarized&#x27;</span><br>Plugin <span class="hljs-string">&#x27;scrooloose/nerdtree&#x27;</span><br>Plugin <span class="hljs-string">&#x27;scrooloose/nerdcommenter&#x27;</span><br>Plugin <span class="hljs-string">&#x27;majutsushi/tagbar&#x27;</span><br>Plugin <span class="hljs-string">&#x27;whatyouhide/vim-gotham&#x27;</span><br>Plugin <span class="hljs-string">&#x27;vim-airline/vim-airline&#x27;</span><br>Plugin <span class="hljs-string">&#x27;vim-airline/vim-airline-themes&#x27;</span><br><br>call vundle<span class="hljs-comment">#end()</span><br><br>filetype plugin indent on<br><br>autocmd CursorMovedI,InsertLeave * <span class="hljs-keyword">if</span> pumvisible() == 0|silent! pclose|endif<br>autocmd InsertLeave * <span class="hljs-keyword">if</span> pumvisible() == 0|pclose|endif<br><span class="hljs-built_in">set</span> completeopt=longest,menu<br>highlight Pmenu    guibg=darkgrey  guifg=black<br>highlight PmenuSel guibg=lightgrey guifg=black<br>inoremap &lt;expr&gt; &lt;Down&gt;     pumvisible() ? <span class="hljs-string">&quot;\&lt;C-n&gt;&quot;</span> : <span class="hljs-string">&quot;\&lt;Down&gt;&quot;</span><br>inoremap &lt;expr&gt; &lt;Up&gt;       pumvisible() ? <span class="hljs-string">&quot;\&lt;C-p&gt;&quot;</span> : <span class="hljs-string">&quot;\&lt;Up&gt;&quot;</span><br>inoremap &lt;expr&gt; &lt;PageDown&gt; pumvisible() ? <span class="hljs-string">&quot;\&lt;PageDown&gt;\&lt;C-p&gt;\&lt;C-n&gt;&quot;</span> : <span class="hljs-string">&quot;\&lt;PageDown&gt;&quot;</span><br>inoremap &lt;expr&gt; &lt;PageUp&gt;   pumvisible() ? <span class="hljs-string">&quot;\&lt;PageUp&gt;\&lt;C-p&gt;\&lt;C-n&gt;&quot;</span> : <span class="hljs-string">&quot;\&lt;PageUp&gt;&quot;</span><br>inoremap &lt;expr&gt; &lt;CR&gt;       pumvisible() ? <span class="hljs-string">&quot;\&lt;C-y&gt;&quot;</span> : <span class="hljs-string">&quot;\&lt;CR&gt;&quot;</span><br><br><span class="hljs-built_in">let</span> g:ycm_key_list_select_completion = [<span class="hljs-string">&#x27;&lt;Down&gt;&#x27;</span>]<br><span class="hljs-built_in">let</span> g:ycm_key_list_previous_completion = [<span class="hljs-string">&#x27;&lt;Up&gt;&#x27;</span>]<br><br><span class="hljs-built_in">let</span> g:ycm_goto_buffer_command = <span class="hljs-string">&#x27;horizontal-split&#x27;</span><br><span class="hljs-built_in">let</span> g:ycm_server_python_interpreter=<span class="hljs-string">&#x27;/usr/bin/python2&#x27;</span><br><span class="hljs-built_in">let</span> g:ycm_global_ycm_extra_conf = <span class="hljs-string">&#x27;~/.vim/.ycm_extra_conf.py&#x27;</span><br><span class="hljs-built_in">let</span> g:airline<span class="hljs-comment">#extensions#tabline#enabled = 1</span><br><span class="hljs-built_in">let</span> g:ycm_seed_identifiers_with_syntax = 1<br><span class="hljs-built_in">let</span> g:ycm_complete_in_strings = 1<br><span class="hljs-built_in">let</span> g:ycm_collect_identifiers_from_tags_files = 1<br><span class="hljs-built_in">let</span> g:ycm_complete_in_comments = 1<br><span class="hljs-built_in">let</span> g:ycm_min_num_of_chars_for_completion = 2<br><span class="hljs-built_in">let</span> g:ycm_cache_omnifunc=0<br><span class="hljs-built_in">let</span> g:ycm_confirm_extra_conf=0<br><br><br>syntax <span class="hljs-built_in">enable</span><br><span class="hljs-string">&quot;colorscheme solarized</span><br><span class="hljs-string">&quot;</span>colorscheme gotham<br>colorscheme jellybeans<br><span class="hljs-built_in">let</span> g:solarized_termcolors=256<br><br><br><span class="hljs-built_in">let</span> g:NERDTreeDirArrowExpandable = <span class="hljs-string">&#x27;▸&#x27;</span><br><span class="hljs-built_in">let</span> g:NERDTreeDirArrowCollapsible = <span class="hljs-string">&#x27;▾&#x27;</span><br>map &lt;C-b&gt; :NERDTreeToggle&lt;CR&gt;<br><br><br>map &lt;C-m&gt; :Tagbar&lt;CR&gt;<br><span class="hljs-built_in">let</span> g:tagbar_ctags_bin=<span class="hljs-string">&#x27;ctags&#x27;</span><br><span class="hljs-built_in">let</span> g:tagbar_width=30<br><br></code></pre></div></td></tr></table></figure>
+<p>之后只需在 vim 中  <strong>:PluginInstall</strong> 安装插件，可能需要点时间…</p>
+<p>taglist是一个用于显示定位程序中各种符号的插件。这里我使用的是tagbar，它是一个taglist的替代品，要是有tagbar还需要生成 tags 文件，生成方法可以参考 <a target="_blank" rel="noopener" href="https://www.vim.org/scripts/script.php?script_id=2358">https://www.vim.org/scripts/script.php?script_id=2358</a> 。</p>
+<p>首先要从该网站下载  <code>cpp_src.tar.bz2</code> ，解压后是一个 cpp_src目录，然后执行一下命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">ctags -R --c++-kinds=+p --fields=+iaS --extra=+q --language-force=C++ cpp_src<br>mv tags ~/.vim<br></code></pre></div></td></tr></table></figure>
+<p>而对于Vim颜色配置，比如本例中 jellybeans，则</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">mkdir -p ~/.vim/colors<br><span class="hljs-built_in">cd</span> ~/.vim/colors<br>curl -O https://raw.githubusercontent.com/nanotech/jellybeans.vim/master/colors/jellybeans.vim<br>然后在 .vimrc 中设置 colorscheme jellybeans<br></code></pre></div></td></tr></table></figure>
+<p>注意，如果 <code>let g:ycm_global_ycm_extra_conf = '~/.vim/.ycm_extra_conf.py'</code> 中 默认的 .ycm_extra_conf.py ，可能会出现一些莫名其妙的错误，那么可以下载该文件替换原有的 **.ycm_extra_conf.py **<br />
+<a target="_blank" rel="noopener" href="https://raw.githubusercontent.com/theodelrieu/dotfiles/master/.ycm_extra_conf.py">https://raw.githubusercontent.com/theodelrieu/dotfiles/master/.ycm_extra_conf.py</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> ~/.vim/<br>curl -O  https://raw.githubusercontent.com/theodelrieu/dotfiles/master/.ycm_extra_conf.py<br></code></pre></div></td></tr></table></figure>
+<h2 id="结尾"><a class="markdownIt-Anchor" href="#结尾"></a> 结尾</h2>
+<p>基本上YCM配置到此结束了，也没有想象中的那么难啦～<br />
+现在vim支持Python和C/C++代码补全了<br />
+最后贴一张测试图：</p>
+<p><img src="/uploads/images/ycm_vim/ycm_vim.png" srcset="/img/loading.gif" lazyload alt="YCM VIM" /></p>
+<p>有啥问题可联系我哈~</p>
+<p>bye</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Linux/">Linux</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Linux/">Linux</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Vim/">Vim</a>
+                    
+                      <a class="hover-with-bg" href="/tags/YCM/">YCM</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/add-subtract-multiply-divide/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">位运算实现加减乘除</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/centos-shadowsocks/">
+                        <span class="hidden-mobile">CentOS服务器Shadowsocks</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"AzPbImmMjm5nQc1Xm9ulWCoH-gzGzoHsz","appKey":"xJqILn8nSbhYmdkB2VVQm8vI","placeholder":"说点什么","path":"window.location.pathname","avatar":"retro","meta":["nick","mail","link"],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false,"requiredFields":[]},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- KaTeX -->
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.10/dist/katex.min.css" />
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

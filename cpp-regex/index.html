@@ -1,0 +1,485 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="最近接触了C++的正则表达式,感觉还可以,以此来记录下过程">
+  <meta name="author" content="Joseph XRays">
+  <meta name="keywords" content="">
+  
+  <title>C/C++正则表达式regex - JoXrays&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/monokai.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.joxrays.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>JoXrays's Blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="C/C++正则表达式regex">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2019-04-05 00:00" pubdate>
+        2019年4月5日 凌晨
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      927 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      16
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">C/C++正则表达式regex</h1>
+            
+            <div class="markdown-body">
+              <p>最近接触了C++的正则表达式,感觉还可以,以此来记录下过程</p>
+<span id="more"></span>
+<h3 id="正文"><a class="markdownIt-Anchor" href="#正文"></a> 正文</h3>
+<p>关于C++的正则表达式头文件,可以参考这个网站的教程http://www.cplusplus.com/reference/regex/</p>
+<p>C正则表达式头文件<strong>regex.h</strong><br />
+<a target="_blank" rel="noopener" href="http://pubs.opengroup.org/onlinepubs/7908799/xsh/regex.h.html">http://pubs.opengroup.org/onlinepubs/7908799/xsh/regex.h.html</a></p>
+<p>代码如下</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;regex.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;regex&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;sys/types.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;string.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;string&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><span class="hljs-comment">//c语言形式的正则表达式</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">cRegex</span><span class="hljs-params">()</span></span>&#123;<br>    <span class="hljs-keyword">regex_t</span> r;<br>    <span class="hljs-comment">//成功返回0(REG_NOERROR)</span><br>    <span class="hljs-keyword">int</span> ret=<span class="hljs-built_in">regcomp</span>(&amp;r,<span class="hljs-string">&quot;abc(.*?)-(.*?)xyz&quot;</span>,REG_EXTENDED|REG_ICASE);<br>    <span class="hljs-keyword">if</span>(ret==<span class="hljs-number">0</span>)&#123;<br>        <span class="hljs-keyword">regmatch_t</span> pm[<span class="hljs-number">10</span>];<br>        <span class="hljs-keyword">char</span> src[]=<span class="hljs-string">&quot;abcQQQQQQ-5555555xyz&quot;</span>;<br>        ret=<span class="hljs-built_in">regexec</span>(&amp;r,src,<span class="hljs-number">10</span>,pm,<span class="hljs-number">0</span>);<br>        <span class="hljs-keyword">if</span>(ret!=REG_NOMATCH&amp;&amp;ret==REG_NOERROR)&#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt;<span class="hljs-built_in"><span class="hljs-keyword">sizeof</span></span>(pm)/<span class="hljs-built_in"><span class="hljs-keyword">sizeof</span></span>(<span class="hljs-keyword">regmatch_t</span>); ++i) &#123;<br>                <span class="hljs-keyword">if</span>(pm[i].rm_so==<span class="hljs-number">-1</span>)&#123;<br>                    <span class="hljs-keyword">break</span>;<br>                &#125;<br>                <span class="hljs-comment">//rm_so:匹配子字符串的开始</span><br>                <span class="hljs-comment">//rm_eo:匹配子字符串的结束</span><br>                <span class="hljs-comment">//rm_eo-rm_so:表示匹配的字符串的长度</span><br>                <span class="hljs-comment">//可参考:http://pubs.opengroup.org/onlinepubs/7908799/xsh/regex.h.html</span><br>                <span class="hljs-comment">//cout&lt;&lt;pm[i].rm_so&lt;&lt;&quot;\t&quot;&lt;&lt;pm[i].rm_eo&lt;&lt;endl;</span><br>                <span class="hljs-keyword">int</span> matchcount=pm[i].rm_eo-pm[i].rm_so;<br>                <span class="hljs-keyword">char</span> matchvalue[<span class="hljs-number">20</span>+<span class="hljs-number">1</span>];<br>                <span class="hljs-built_in">bzero</span>(matchvalue,<span class="hljs-number">21</span>);<br>                <span class="hljs-comment">//从匹配到的子字符串索引拷贝内容</span><br>                <span class="hljs-built_in">memcpy</span>(matchvalue,src+pm[i].rm_so,matchcount);<br>                matchvalue[<span class="hljs-built_in">strlen</span>(matchvalue)]=<span class="hljs-string">&#x27;\0&#x27;</span>;<br>                <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;---&gt;%s\n&quot;</span>,matchvalue);<br>            &#125;<br>        &#125;<span class="hljs-keyword">else</span>&#123;<br>            <span class="hljs-keyword">char</span> errmsg[<span class="hljs-number">250</span>]=&#123;<span class="hljs-number">0</span>&#125;;<br>            <span class="hljs-built_in">regerror</span>(ret,&amp;r,errmsg,<span class="hljs-number">250</span>);<br>            cout&lt;&lt;<span class="hljs-string">&quot;Message:&quot;</span>&lt;&lt;errmsg&lt;&lt;endl;<br>        &#125;<br>        <span class="hljs-comment">//释放内存</span><br>        <span class="hljs-built_in">regfree</span>(&amp;r);<br>    &#125;<br>&#125;<br><span class="hljs-comment">//c++语言正则表达式替换</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">cppRegex_replace</span><span class="hljs-params">()</span></span>&#123;<br>    string tx=<span class="hljs-string">&quot;https://www.baidu.com&quot;</span>;<br>    cout&lt;&lt;<span class="hljs-string">&quot;old text:&quot;</span>&lt;&lt;tx.<span class="hljs-built_in">c_str</span>()&lt;&lt;endl;<br>    <span class="hljs-comment">//替换</span><br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-function">regex <span class="hljs-title">re</span><span class="hljs-params">(<span class="hljs-string">&quot;\\bbaidu\\b&quot;</span>)</span></span>;<br>        tx=<span class="hljs-built_in">regex_replace</span>(tx,re,<span class="hljs-string">&quot;google&quot;</span>);<br>        cout&lt;&lt;<span class="hljs-string">&quot;new text:&quot;</span>&lt;&lt;tx.<span class="hljs-built_in">c_str</span>()&lt;&lt;endl;<br>    &#125;<span class="hljs-built_in"><span class="hljs-keyword">catch</span></span> (regex_error &amp;e)&#123;<br>        <span class="hljs-keyword">if</span>(e.<span class="hljs-built_in">code</span>()==regex_constants::error_badrepeat)&#123;<br>            <span class="hljs-comment">//do something...</span><br>        &#125;<br>        cout&lt;&lt;<span class="hljs-string">&quot;code:&quot;</span>&lt;&lt;e.<span class="hljs-built_in">code</span>()&lt;&lt;endl<br>            &lt;&lt;<span class="hljs-string">&quot;msg:&quot;</span>&lt;&lt;e.<span class="hljs-built_in">what</span>()&lt;&lt;endl;<br>    &#125;<br>&#125;<br><span class="hljs-comment">//c++语言形式的正则表达式</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">cppRegex</span><span class="hljs-params">()</span></span>&#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     *检测是否为正确的邮箱格式*/</span><br>    string pattern=<span class="hljs-string">&quot;^\\w&#123;2,20&#125;@\\w&#123;2,&#125;.com$&quot;</span>;<br>    string text=<span class="hljs-string">&quot;josephxrays@qq.com&quot;</span>;<br>    <span class="hljs-function">regex <span class="hljs-title">re</span><span class="hljs-params">(pattern,</span></span><br><span class="hljs-params"><span class="hljs-function">             std::regex_constants::icase|</span></span><br><span class="hljs-params"><span class="hljs-function">             std::regex_constants::extended|</span></span><br><span class="hljs-params"><span class="hljs-function">             regex_constants::ECMAScript)</span></span>;<br>    match_results&lt;string::const_iterator&gt; res;<br>    <span class="hljs-comment">//smatch res;</span><br>    <span class="hljs-keyword">bool</span> is=<span class="hljs-built_in">regex_match</span>(text,res,re);<br>    <span class="hljs-comment">//is=regex_search(text,res,re);</span><br>    <span class="hljs-keyword">if</span>(is==<span class="hljs-literal">true</span>)&#123;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;ok ,this is a true email format :)\n&quot;</span>);<br>    &#125;<span class="hljs-keyword">else</span>&#123;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;error email format :(\n&quot;</span>);<br>    &#125;<br>&#125;<br><span class="hljs-comment">//c++语言形式的正则表达式2</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">cppRegex_matchGroup</span><span class="hljs-params">()</span></span>&#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     *检测是否为正确的邮箱格式*/</span><br>    string pattern=<span class="hljs-string">&quot;(.*?)@(.*?)\\.(.*?)&quot;</span>;<br>    string text=<span class="hljs-string">&quot;josephxrays@163.com&quot;</span>;<br>    <span class="hljs-function">regex <span class="hljs-title">re</span><span class="hljs-params">(pattern,</span></span><br><span class="hljs-params"><span class="hljs-function">             std::regex_constants::icase|<span class="hljs-comment">//忽略大小写</span></span></span><br><span class="hljs-params"><span class="hljs-function">             std::regex_constants::extended|</span></span><br><span class="hljs-params"><span class="hljs-function">             regex_constants::ECMAScript)</span></span>;<br>    match_results&lt;string::const_iterator&gt; res;<br>    <span class="hljs-comment">//smatch res;</span><br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-comment">//bool is=regex_search(text,res,re);</span><br>        <span class="hljs-keyword">bool</span> is=<span class="hljs-built_in">regex_match</span>(text,res,re);<br>        <span class="hljs-keyword">if</span>(is==<span class="hljs-literal">true</span>)&#123;<br>            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;ok :)\n&quot;</span>);<br>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; res.<span class="hljs-built_in">size</span>(); i++) &#123;<br>                <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;--&gt;%s \n&quot;</span>,res.<span class="hljs-built_in">str</span>(i).<span class="hljs-built_in">c_str</span>());<br>            &#125;<br>        &#125;<span class="hljs-keyword">else</span>&#123;<br>            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;no match :(\n&quot;</span>);<br>        &#125;<br>    &#125;<span class="hljs-built_in"><span class="hljs-keyword">catch</span></span> (regex_error &amp;e)&#123;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;exception:( \n \t %d \t %s\n&quot;</span>,e.<span class="hljs-built_in">code</span>(),e.<span class="hljs-built_in">what</span>());<br>    &#125;<br>&#125;<br><span class="hljs-comment">//c++语言形式的正则表达式3</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">cppRegex_matchGroup_iterator</span><span class="hljs-params">()</span></span>&#123;<br>    string pattern=<span class="hljs-string">&quot;&lt;a href=\&quot;(.*?)\&quot;&gt;(.*?)&lt;/a&gt;&quot;</span>;<br>    string text=<br>            <span class="hljs-string">&quot;&lt;a href=\&quot;https://www.baidu.com\&quot;&gt;百度&lt;/a&gt;&quot;</span>\<br>            <span class="hljs-string">&quot;&lt;a href=\&quot;https://www.google.com\&quot;&gt;谷歌&lt;/a&gt;&quot;</span>\<br>            <span class="hljs-string">&quot;&lt;a href=\&quot;http://www.csdn.net\&quot;&gt;CSDN&lt;/a&gt;&quot;</span>;<br>    <span class="hljs-function">regex <span class="hljs-title">re</span><span class="hljs-params">(pattern,</span></span><br><span class="hljs-params"><span class="hljs-function">             std::regex_constants::icase|</span></span><br><span class="hljs-params"><span class="hljs-function">             std::regex_constants::extended|</span></span><br><span class="hljs-params"><span class="hljs-function">             regex_constants::ECMAScript)</span></span>;<br>    <span class="hljs-comment">//regex_iterator 匹配所有子串</span><br>    <span class="hljs-function">sregex_iterator <span class="hljs-title">its</span><span class="hljs-params">(text.begin(),text.end(),re)</span></span>;<br>    sregex_iterator ends;<br>    <span class="hljs-keyword">while</span> (its!=ends)&#123;<br>        <span class="hljs-comment">//match_results&lt;T&gt;</span><br>        <span class="hljs-comment">//printf(&quot;%s \n&quot;,its-&gt;str(0).c_str());</span><br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;--&gt;%s \t&quot;</span>,its-&gt;<span class="hljs-built_in">str</span>(<span class="hljs-number">1</span>).<span class="hljs-built_in">c_str</span>());<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%s \n&quot;</span>,its-&gt;<span class="hljs-built_in">str</span>(<span class="hljs-number">2</span>).<span class="hljs-built_in">c_str</span>());<br>        its++;<br>    &#125;<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-built_in">cRegex</span>();<br>    <span class="hljs-built_in">cppRegex</span>();<br>    <span class="hljs-built_in">cppRegex_matchGroup</span>();<br>    <span class="hljs-built_in">cppRegex_replace</span>();<br>    <span class="hljs-built_in">cppRegex_matchGroup_iterator</span>();<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>编译运行: <code>g++ main.cpp -o regex_test &amp;&amp; ./regex_test</code></p>
+<p>输出结果:</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs livecodeserver"><span class="hljs-comment">---&gt;abcQQQQQQ-5555555xyz</span><br><span class="hljs-comment">---&gt;QQQQQQ</span><br><span class="hljs-comment">---&gt;5555555</span><br>ok ,this is <span class="hljs-keyword">a</span> truly email <span class="hljs-built_in">format</span> :)<br>ok :)<br><span class="hljs-comment">--&gt;josephxrays@163.com </span><br><span class="hljs-comment">--&gt;josephxrays </span><br><span class="hljs-comment">--&gt;163 </span><br><span class="hljs-comment">--&gt;com </span><br>old <span class="hljs-keyword">text</span>:<span class="hljs-keyword">https</span>://www.baidu.com<br><span class="hljs-built_in">new</span> <span class="hljs-keyword">text</span>:<span class="hljs-keyword">https</span>://www.google.com<br><span class="hljs-comment">--&gt;https://www.baidu.com 	百度 </span><br><span class="hljs-comment">--&gt;https://www.google.com 	谷歌 </span><br><span class="hljs-comment">--&gt;http://www.csdn.net 	CSDN</span><br></code></pre></div></td></tr></table></figure>
+<p>bye~</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Programming/">Programming</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/C/">C++</a>
+                    
+                      <a class="hover-with-bg" href="/tags/C/">C</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/installed-system-to-usb/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">安装Linux系统到U盘</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/linux-lshw-dmidecode/">
+                        <span class="hidden-mobile">Linux lshw和dmidecode查看硬件信息</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"AzPbImmMjm5nQc1Xm9ulWCoH-gzGzoHsz","appKey":"xJqILn8nSbhYmdkB2VVQm8vI","placeholder":"说点什么","path":"window.location.pathname","avatar":"retro","meta":["nick","mail","link"],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false,"requiredFields":[]},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- KaTeX -->
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.10/dist/katex.min.css" />
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

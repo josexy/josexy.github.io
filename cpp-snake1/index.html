@@ -1,0 +1,513 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content=" 前言
+最近刚学了链表这一方面的内容，感觉挺强大的，正巧想起以前用数组写过一个贪吃蛇游戏代码，于是打算用两种方法实现它。方法为以下两种：
+
+数组
+链表
+">
+  <meta name="author" content="Joseph XRays">
+  <meta name="keywords" content="">
+  
+  <title>Qt实现贪吃蛇1:数组实现 - JoXrays&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/monokai.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.joxrays.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>JoXrays's Blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Qt实现贪吃蛇1:数组实现">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2019-01-02 00:00" pubdate>
+        2019年1月2日 凌晨
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.7k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      26
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Qt实现贪吃蛇1:数组实现</h1>
+            
+            <div class="markdown-body">
+              <h3 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h3>
+<p>最近刚学了链表这一方面的内容，感觉挺强大的，正巧想起以前用数组写过一个贪吃蛇游戏代码，于是打算用两种方法实现它。方法为以下两种：</p>
+<ul>
+<li>数组</li>
+<li>链表</li>
+</ul>
+<span id="more"></span>
+<h3 id="正文"><a class="markdownIt-Anchor" href="#正文"></a> 正文</h3>
+<p>其实，用数组实现贪吃蛇还算是比较简单的了，为什么？因为不用花太大功夫去考虑蛇身的每个节点之间的关系。同样，在实现蛇的游动、吃食、撞墙、吃到自己等功能时，最核心的部分我觉得是要弄清。</p>
+<ul>
+<li>其中 <code>void paintEvent(QPaintEvent *event)</code> 用来在每次重绘时绘制游戏布局、食物的位置、蛇的位置。分别用两个数组表示 <strong>食物的位置、蛇的位置</strong></li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">int</span> food[<span class="hljs-number">2</span>];<span class="hljs-comment">// food[0]表示 x坐标，food[1]表示 y坐标 </span><br><span class="hljs-keyword">int</span> snake[<span class="hljs-number">100</span>][<span class="hljs-number">2</span>]; <span class="hljs-comment">//同理，不过这里100相当于最多有100个蛇节点</span><br></code></pre></div></td></tr></table></figure>
+<ul>
+<li>接着，<code>void keyPressEvent(QKeyEvent * event)</code> 事件用来改变蛇运动的方向。我添加了一个枚举值</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-class"><span class="hljs-keyword">enum</span>  <span class="hljs-title">Direction</span>:</span><span class="hljs-keyword">int</span><br>&#123;<br>    East,<br>    South,<br>    West,<br>    North<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+<ul>
+<li>由于蛇是自己移动的，所以还是创建一个时钟 <code>QTimer</code> 对象。</li>
+<li>那么怎么判断蛇是否吃到食物呢，这里其实很简单，可以<strong>判断蛇头的x,y坐标是否与食物的x,y坐标相等即可</strong>，即<code>if(snake[0][0]==food[0]&amp;&amp;snake[0][1]==food[1])&#123;...&#125;</code></li>
+<li>所以，检测是否撞到墙，也可以这样判断蛇头是否超过了边界 <code>if((snake[0][0]&lt;0||snake[0][1]&lt;0||snake[0][0]&gt;Columns-1||snake[0][1]&gt;Rows-1))&#123; ... &#125;</code></li>
+<li>检测蛇是否吃到自己，可以 <strong>遍历每个蛇节点，判断蛇头 snake[0] 是否等于 某一个蛇身节点 snake[n] 即：蛇头在蛇的身上，表示吃到自己</strong></li>
+</ul>
+<p>好了，有了这些思路，那么就可以开始写代码了，可以创建一个Qt widget项目。<br />
+代码如下：</p>
+<p>dialog.h</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">ifndef</span> DIALOG_H</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> DIALOG_H</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;QDialog&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span><span class="hljs-meta-string">&lt;QPalette&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span><span class="hljs-meta-string">&lt;QPushButton&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span><span class="hljs-meta-string">&lt;QLabel&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span><span class="hljs-meta-string">&lt;QPainter&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span><span class="hljs-meta-string">&lt;QDebug&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span><span class="hljs-meta-string">&lt;QKeyEvent&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span><span class="hljs-meta-string">&lt;QTimer&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span><span class="hljs-meta-string">&lt;QTime&gt;</span></span><br><span class="hljs-keyword">namespace</span> Ui &#123;<br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Dialog</span>;</span><br>&#125;<br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Dialog</span> :</span> <span class="hljs-keyword">public</span> QDialog<br>&#123;<br>    Q_OBJECT<br><span class="hljs-keyword">public</span> slots:<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">timeOut</span><span class="hljs-params">()</span></span>;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">btnStartslot</span><span class="hljs-params">()</span></span>;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">btnPauseslot</span><span class="hljs-params">()</span></span>;<br><span class="hljs-keyword">protected</span>:<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">keyPressEvent</span><span class="hljs-params">(QKeyEvent *)</span></span>;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">paintEvent</span><span class="hljs-params">(QPaintEvent *event)</span></span>;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-keyword">explicit</span> <span class="hljs-title">Dialog</span><span class="hljs-params">(QWidget *parent = <span class="hljs-number">0</span>)</span></span>;<br>    ~<span class="hljs-built_in">Dialog</span>();<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">initialized</span><span class="hljs-params">()</span></span>;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">snakeRun</span><span class="hljs-params">()</span></span>;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">checkHItWall</span><span class="hljs-params">()</span></span>;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">checkEatSelf</span><span class="hljs-params">()</span></span>;<br>    <span class="hljs-class"><span class="hljs-keyword">enum</span>  <span class="hljs-title">Direction</span>:</span><span class="hljs-keyword">int</span>&#123;<br>        East,<br>        South,<br>        West,<br>        North<br>    &#125;;<br><span class="hljs-keyword">private</span>:<br>    <span class="hljs-keyword">int</span> food[<span class="hljs-number">2</span>];<span class="hljs-comment">//食物坐标</span><br>    <span class="hljs-keyword">int</span> snake[<span class="hljs-number">100</span>][<span class="hljs-number">2</span>];<span class="hljs-comment">//蛇坐标</span><br>    <span class="hljs-keyword">int</span> eatfoodCount;<span class="hljs-comment">//吃到的食物总数</span><br>    <span class="hljs-keyword">int</span> directtion;<span class="hljs-comment">//蛇头方向</span><br>    <span class="hljs-keyword">int</span> scores;<span class="hljs-comment">//得分</span><br>    <span class="hljs-keyword">int</span> speed;<span class="hljs-comment">//蛇移动速度</span><br>    QLabel *lbScroe;<br>    QTimer *timer;<br>    Ui::Dialog *ui;<br>&#125;;<br><span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span> <span class="hljs-comment">// DIALOG_H</span></span><br></code></pre></div></td></tr></table></figure>
+<p>dialog.cpp</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;dialog.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;ui_dialog.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span><span class="hljs-meta-string">&lt;QMessageBox&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> Columns 20 <span class="hljs-comment">//20列</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> Rows 20  <span class="hljs-comment">//20行</span></span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Dialog::timeOut</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-built_in">snakeRun</span>();<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Dialog::btnStartslot</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    timer-&gt;<span class="hljs-built_in">start</span>();<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Dialog::btnPauseslot</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    timer-&gt;<span class="hljs-built_in">stop</span>();<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Dialog::keyPressEvent</span><span class="hljs-params">(QKeyEvent * event)</span></span><br><span class="hljs-function"></span>&#123;<br>        <span class="hljs-keyword">if</span>(event-&gt;<span class="hljs-built_in">key</span>()==<span class="hljs-string">&#x27;A&#x27;</span>)&#123;<br>            <span class="hljs-keyword">if</span>(directtion!=West)&#123;<br>                 directtion=East;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">if</span>(event-&gt;<span class="hljs-built_in">key</span>()==<span class="hljs-string">&#x27;D&#x27;</span>)&#123;<br>           <span class="hljs-keyword">if</span>(directtion!=East)&#123;<br>                directtion=West;<br>           &#125;<br>        &#125;<br>        <span class="hljs-keyword">if</span>(event-&gt;<span class="hljs-built_in">key</span>()==<span class="hljs-string">&#x27;W&#x27;</span>)&#123;<br>            <span class="hljs-keyword">if</span>(directtion!=South)&#123;<br>                directtion=North;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">if</span>(event-&gt;<span class="hljs-built_in">key</span>()==<span class="hljs-string">&#x27;S&#x27;</span>)&#123;<br>            <span class="hljs-keyword">if</span>(directtion!=North)&#123;<br>                directtion=South;<br>            &#125;<br>        &#125;<br>&#125;<br><span class="hljs-comment">///</span><br><span class="hljs-comment">/// \brief Dialog::paintEvent</span><br><span class="hljs-comment">/// \param event</span><br><span class="hljs-comment">/// 绘图事件主要负责 绘制 蛇</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Dialog::paintEvent</span><span class="hljs-params">(QPaintEvent *event)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-function">QPainter <span class="hljs-title">painter</span><span class="hljs-params">(<span class="hljs-keyword">this</span>)</span></span>;<br>    QPen pen;<br>    pen.<span class="hljs-built_in">setColor</span>(<span class="hljs-built_in">QColor</span>(Qt::darkGray));<br>    painter.<span class="hljs-built_in">setPen</span>(pen);<br>    <span class="hljs-comment">//绘制游戏布局</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> row = <span class="hljs-number">0</span>; row &lt; Rows; ++row) &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> column = <span class="hljs-number">0</span>; column &lt; Columns; ++column) &#123;<br>            painter.<span class="hljs-built_in">drawRect</span>(row*<span class="hljs-number">20</span>,column*<span class="hljs-number">20</span>,<span class="hljs-number">20</span>,<span class="hljs-number">20</span>);<br>        &#125;<br>    &#125;<br>    <span class="hljs-comment">//绘制食物</span><br>    painter.<span class="hljs-built_in">fillRect</span>(food[<span class="hljs-number">0</span>]*<span class="hljs-number">20</span>,food[<span class="hljs-number">1</span>]*<span class="hljs-number">20</span>,<span class="hljs-number">20</span>,<span class="hljs-number">20</span>,Qt::red);<br>    <span class="hljs-comment">//绘制蛇头</span><br>    painter.<span class="hljs-built_in">fillRect</span>(snake[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>]*<span class="hljs-number">20</span>,snake[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]*<span class="hljs-number">20</span>,<span class="hljs-number">20</span>,<span class="hljs-number">20</span>,Qt::green);<br>    <span class="hljs-comment">//根据食物的多少来绘制蛇身大长度</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> snakeBody = <span class="hljs-number">1</span>; snakeBody &lt;= eatfoodCount; snakeBody++) &#123;<br>        painter.<span class="hljs-built_in">fillRect</span>(snake[snakeBody][<span class="hljs-number">0</span>]*<span class="hljs-number">20</span>,snake[snakeBody][<span class="hljs-number">1</span>]*<span class="hljs-number">20</span>,<span class="hljs-number">20</span>,<span class="hljs-number">20</span>,<span class="hljs-built_in">QColor</span>(<span class="hljs-number">0</span>,<span class="hljs-number">100</span>,<span class="hljs-number">0</span>));<br>    &#125;<br>&#125;<br>Dialog::<span class="hljs-built_in">Dialog</span>(QWidget *parent) :<br>    <span class="hljs-built_in">QDialog</span>(parent),<br>    <span class="hljs-built_in">ui</span>(<span class="hljs-keyword">new</span> Ui::Dialog)<br>&#123;<br>    ui-&gt;<span class="hljs-built_in">setupUi</span>(<span class="hljs-keyword">this</span>);<br>    <span class="hljs-comment">//设置随机数</span><br>    QTime t=QTime::<span class="hljs-built_in">currentTime</span>();<br>    <span class="hljs-keyword">int</span> s=  t.<span class="hljs-built_in">secsTo</span>(<span class="hljs-built_in">QTime</span>(<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>));<br>     <span class="hljs-built_in">qsrand</span>(s);<br>    <span class="hljs-comment">//初始化</span><br>     <span class="hljs-built_in">initialized</span>();<br>    QPushButton *btnStart=<span class="hljs-keyword">new</span> <span class="hljs-built_in">QPushButton</span>(<span class="hljs-keyword">this</span>);<br>    btnStart-&gt;<span class="hljs-built_in">setFlat</span>(<span class="hljs-literal">true</span>);<br>    btnStart-&gt;<span class="hljs-built_in">setText</span>(<span class="hljs-string">&quot;start ...&quot;</span>);<br>    btnStart-&gt;<span class="hljs-built_in">setGeometry</span>(<span class="hljs-number">500</span>,<span class="hljs-number">100</span>,<span class="hljs-number">250</span>,<span class="hljs-number">50</span>);<br>    QPushButton *btnPause=<span class="hljs-keyword">new</span> <span class="hljs-built_in">QPushButton</span>(<span class="hljs-keyword">this</span>);<br>    btnPause-&gt;<span class="hljs-built_in">setFlat</span>(<span class="hljs-literal">true</span>);<br>    btnPause-&gt;<span class="hljs-built_in">setText</span>(<span class="hljs-string">&quot;pause ...&quot;</span>);<br>    btnPause-&gt;<span class="hljs-built_in">setGeometry</span>(<span class="hljs-number">500</span>,<span class="hljs-number">180</span>,<span class="hljs-number">250</span>,<span class="hljs-number">50</span>);<br>    <span class="hljs-built_in">connect</span>(btnStart,<span class="hljs-built_in">SIGNAL</span>(<span class="hljs-built_in">clicked</span>(<span class="hljs-keyword">bool</span>)),<span class="hljs-keyword">this</span>,<span class="hljs-built_in">SLOT</span>(<span class="hljs-built_in">btnStartslot</span>()));<br>    <span class="hljs-built_in">connect</span>(btnPause,<span class="hljs-built_in">SIGNAL</span>(<span class="hljs-built_in">clicked</span>(<span class="hljs-keyword">bool</span>)),<span class="hljs-keyword">this</span>,<span class="hljs-built_in">SLOT</span>(<span class="hljs-built_in">btnPauseslot</span>()));<br>    QLabel *lbshowScroe=<span class="hljs-keyword">new</span> <span class="hljs-built_in">QLabel</span>(<span class="hljs-keyword">this</span>);<br>    lbScroe=<span class="hljs-keyword">new</span> <span class="hljs-built_in">QLabel</span>(<span class="hljs-keyword">this</span>);<br>    lbshowScroe-&gt;<span class="hljs-built_in">setText</span>(<span class="hljs-string">&quot;得分：&quot;</span>);<br>    lbScroe-&gt;<span class="hljs-built_in">setText</span>(QString::<span class="hljs-built_in">number</span>(scores));<br>    lbshowScroe-&gt;<span class="hljs-built_in">setGeometry</span>(<span class="hljs-number">500</span>,<span class="hljs-number">50</span>,<span class="hljs-number">100</span>,<span class="hljs-number">50</span>);<br>    lbScroe-&gt;<span class="hljs-built_in">setGeometry</span>(<span class="hljs-number">600</span>,<span class="hljs-number">50</span>,<span class="hljs-number">100</span>,<span class="hljs-number">50</span>);<br>    <span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">setFixedSize</span>(<span class="hljs-number">800</span>,<span class="hljs-number">460</span>);<br>    <span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">setWindowTitle</span>(<span class="hljs-string">&quot;贪吃蛇&quot;</span>);<br>    <span class="hljs-comment">//设置时钟</span><br>    timer=<span class="hljs-keyword">new</span> <span class="hljs-built_in">QTimer</span>(<span class="hljs-keyword">this</span>);<br>    timer-&gt;<span class="hljs-built_in">setInterval</span>(speed);<br>    <span class="hljs-built_in">connect</span>(timer,<span class="hljs-built_in">SIGNAL</span>(<span class="hljs-built_in">timeout</span>()),<span class="hljs-keyword">this</span>,<span class="hljs-built_in">SLOT</span>(<span class="hljs-built_in">timeOut</span>()));<br>&#125;<br>Dialog::~<span class="hljs-built_in">Dialog</span>()<br>&#123;<br>    <span class="hljs-keyword">delete</span> ui;<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Dialog::initialized</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    eatfoodCount=<span class="hljs-number">0</span>;<br>    scores=<span class="hljs-number">0</span>;<br>    speed=<span class="hljs-number">200</span>;<br>    <span class="hljs-comment">//初始化食物坐标</span><br>    food[<span class="hljs-number">0</span>]=<span class="hljs-built_in">qrand</span>()%Columns;<br>    food [<span class="hljs-number">1</span>]= <span class="hljs-built_in">qrand</span>()%Rows;<br>    <span class="hljs-comment">//初始化蛇头坐标</span><br>    snake[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>]=<span class="hljs-built_in">qrand</span>()%Columns;<br>    snake[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]=<span class="hljs-built_in">qrand</span>()%Rows;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; eatfoodCount; ++i) &#123;<br>        <span class="hljs-comment">//判断食物是否出现在蛇的身上</span><br>        <span class="hljs-keyword">if</span>(food[<span class="hljs-number">0</span>]==snake[i][<span class="hljs-number">0</span>]&amp;&amp;food[<span class="hljs-number">1</span>]==snake[i][<span class="hljs-number">1</span>])&#123;<br>            <span class="hljs-built_in">qDebug</span>()&lt;&lt;<span class="hljs-string">&quot;the food position is at snake ...&quot;</span>;<br>            snake[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>]=<span class="hljs-built_in">qrand</span>()%Columns;<br>            snake[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]=<span class="hljs-built_in">qrand</span>()%Rows;<br>        &#125;<br>    &#125;<br>    <span class="hljs-comment">//初始化蛇头方向</span><br>    directtion=<span class="hljs-built_in">qrand</span>()%<span class="hljs-number">4</span>;<br>&#125;<br><span class="hljs-comment">///</span><br><span class="hljs-comment">/// \brief Dialog::snakeRun</span><br><span class="hljs-comment">/// 蛇移动</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Dialog::snakeRun</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-comment">//打印出蛇的每个节点坐标，用于测试</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; eatfoodCount; ++i) &#123;<br>        <span class="hljs-built_in">qDebug</span>()&lt;&lt;<span class="hljs-built_in">QString</span>(<span class="hljs-string">&quot;%1 : (%2-%3)&quot;</span>).<span class="hljs-built_in">arg</span>(i).<span class="hljs-built_in">arg</span>(snake[i][<span class="hljs-number">0</span>]).<span class="hljs-built_in">arg</span>(snake[i][<span class="hljs-number">1</span>]);<br>    &#125;<br>    <span class="hljs-built_in">qDebug</span>()&lt;&lt;endl;<br>    <span class="hljs-comment">//吃到食物，即 食物 food x,y坐标 等于 蛇头snake[0] x，y坐标</span><br>    <span class="hljs-keyword">if</span>(snake[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>]==food[<span class="hljs-number">0</span>]&amp;&amp;snake[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]==food[<span class="hljs-number">1</span>])&#123;<br>        scores+=<span class="hljs-number">20</span>; <span class="hljs-comment">//得分</span><br>        <span class="hljs-built_in">qDebug</span>()&lt;&lt;<span class="hljs-string">&quot;eat the food&quot;</span>;<br>        eatfoodCount++;<span class="hljs-comment">//食物个数++</span><br>        lbScroe-&gt;<span class="hljs-built_in">setText</span>(QString::<span class="hljs-built_in">number</span>(scores));<br>        <span class="hljs-comment">//产生新的食物位置</span><br>        food[<span class="hljs-number">0</span>]=<span class="hljs-built_in">qrand</span>()%Columns;<br>        food [<span class="hljs-number">1</span>]= <span class="hljs-built_in">qrand</span>()%Rows;<br>    &#125;<br>    <span class="hljs-comment">//变换速度</span><br>    <span class="hljs-keyword">if</span>(scores&gt;= <span class="hljs-number">50</span>)&#123;<br>        speed=<span class="hljs-number">100</span>;<br>        timer-&gt;<span class="hljs-built_in">setInterval</span>(speed);<br>    &#125;<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(scores&gt;=<span class="hljs-number">100</span>)&#123;<br>        speed=<span class="hljs-number">50</span>;<br>        timer-&gt;<span class="hljs-built_in">setInterval</span>(speed);<br>    &#125;<br>    <span class="hljs-built_in">checkHItWall</span>();<br>    <span class="hljs-built_in">checkEatSelf</span>();<br>    <span class="hljs-comment">//蛇头向前移动一格后，蛇头坐标变了，</span><br>    <span class="hljs-comment">//原蛇头的坐标为第一节身体的坐标，</span><br>    <span class="hljs-comment">//原第一节身体坐标为现在第二节的坐标，即所有坐标向前移动一格</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i =  eatfoodCount; i &gt;<span class="hljs-number">0</span>; i--) &#123;<br>        snake[i][<span class="hljs-number">0</span>]=snake[i<span class="hljs-number">-1</span>][<span class="hljs-number">0</span>];<br>        snake[i][<span class="hljs-number">1</span>]=snake[i<span class="hljs-number">-1</span>][<span class="hljs-number">1</span>];<br>    &#125;<br>    <span class="hljs-comment">//根据方向来移动蛇</span><br>    <span class="hljs-built_in"><span class="hljs-keyword">switch</span></span> (directtion) &#123;<br>    <span class="hljs-keyword">case</span> East:<br>        snake[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>]--;<br>        <span class="hljs-keyword">break</span>;<br>    <span class="hljs-keyword">case</span> South:<br>        snake[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]++;<br>        <span class="hljs-keyword">break</span>;<br>    <span class="hljs-keyword">case</span> West:<br>        snake[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>]++;<br>        <span class="hljs-keyword">break</span>;<br>    <span class="hljs-keyword">case</span> North:<br>        snake[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]--;<br>        <span class="hljs-keyword">break</span>;<br>    <span class="hljs-keyword">default</span>:<br>        <span class="hljs-keyword">break</span>;<br>    &#125;<br>    <span class="hljs-comment">/// 更新绘图</span><br>    <span class="hljs-built_in">update</span>();<br>&#125;<br><span class="hljs-comment">///</span><br><span class="hljs-comment">/// \brief Dialog::checkHItWall</span><br><span class="hljs-comment">/// 是否撞墙</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Dialog::checkHItWall</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-comment">//即 判断是否超过了边界</span><br>    <span class="hljs-keyword">if</span>((snake[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>]&lt;<span class="hljs-number">0</span>||snake[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]&lt;<span class="hljs-number">0</span>||snake[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>]&gt;Columns<span class="hljs-number">-1</span>||snake[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]&gt;Rows<span class="hljs-number">-1</span>))&#123;<br>       <span class="hljs-built_in">qDebug</span>()&lt;&lt;<span class="hljs-string">&quot;Game Over&quot;</span>;<br>       timer-&gt;<span class="hljs-built_in">stop</span>();<br>       QMessageBox::<span class="hljs-built_in">information</span>(<span class="hljs-keyword">this</span>,<span class="hljs-string">&quot;game over&quot;</span>,<span class="hljs-string">&quot;hit the wall&quot;</span>);<br>       <span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">close</span>();<br>    &#125;<br>&#125;<br><span class="hljs-comment">///</span><br><span class="hljs-comment">/// \brief Dialog::checkEatSelf</span><br><span class="hljs-comment">/// 是否吃到自己</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Dialog::checkEatSelf</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-comment">//遍历每个蛇节点，判断蛇头 snake[0]  是否等于 某一个蛇身节点 snake[n]</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> n = <span class="hljs-number">1</span>; n &lt;= eatfoodCount; n++) &#123;<br>            <span class="hljs-keyword">if</span>(snake[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>]==snake[n][<span class="hljs-number">0</span>]&amp;&amp;snake[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]==snake[n][<span class="hljs-number">1</span>])&#123;<br>                <span class="hljs-built_in">qDebug</span>()&lt;&lt;<span class="hljs-string">&quot;Game Over;;;&quot;</span>;<br>                timer-&gt;<span class="hljs-built_in">stop</span>();<br>                QMessageBox::<span class="hljs-built_in">information</span>(<span class="hljs-keyword">this</span>,<span class="hljs-string">&quot;game over&quot;</span>,<span class="hljs-string">&quot;eat self&quot;</span>);<br>                <span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">close</span>();<br>            &#125;<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>代码中的注释还算是比较详细的吧。。。不过关键还是自己亲手写出来！<br />
+现在，来看一下运行结果<br />
+<img src="/uploads/images/snake/snake1.gif" srcset="/img/loading.gif" lazyload alt="img" /></p>
+<p>那么，下次在介绍用链表实现贪吃蛇！</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Programming/">Programming</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Linux/">Linux</a>
+                    
+                      <a class="hover-with-bg" href="/tags/C/">C++</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Qt/">Qt</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/cpp-snake2/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Qt实现贪吃蛇2:链表实现</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/linux-qt-com-mysql/">
+                        <span class="hidden-mobile">Qt5.10.0编译MYSQL(Mariadb)驱动</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"AzPbImmMjm5nQc1Xm9ulWCoH-gzGzoHsz","appKey":"xJqILn8nSbhYmdkB2VVQm8vI","placeholder":"说点什么","path":"window.location.pathname","avatar":"retro","meta":["nick","mail","link"],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false,"requiredFields":[]},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- KaTeX -->
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.10/dist/katex.min.css" />
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

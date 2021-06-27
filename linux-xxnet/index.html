@@ -1,0 +1,598 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="我是在Linux下搭建的,不过其他系统也是一样的.
+由于搭建FQ过程比较复杂的,所以这里列举几个工具:
+下载Google chrome
+使用lantern蓝灯
+创建GAE并申请appid
+XX-NET配置">
+  <meta name="author" content="Joseph XRays">
+  <meta name="keywords" content="">
+  
+  <title>XX-NET搭建FQ环境 - JoXrays&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/monokai.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.joxrays.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>JoXrays's Blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="XX-NET搭建FQ环境">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2018-05-25 00:00" pubdate>
+        2018年5月25日 凌晨
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.1k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      14
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">XX-NET搭建FQ环境</h1>
+            
+            <div class="markdown-body">
+              <p>我是在Linux下搭建的,不过其他系统也是一样的.<br />
+由于搭建FQ过程比较复杂的,所以这里列举几个工具:<br />
+<a href="#googlechrome">下载Google chrome</a><br />
+<a href="#lantern">使用lantern蓝灯</a><br />
+<a href="#gae">创建GAE并申请appid</a><br />
+<a href="#xx_net">XX-NET配置</a></p>
+<span id="more"></span>
+<p><font color=green>PS： 以下方法可能比较旧，目前我使用的是X-Tunnel</font></p>
+<h3 id="正文"><a class="markdownIt-Anchor" href="#正文"></a> 正文</h3>
+<table>
+<thead>
+<tr>
+<th>需要</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Chrome浏览器</td>
+<td>–</td>
+</tr>
+<tr>
+<td>lantern</td>
+<td>访问Google</td>
+</tr>
+<tr>
+<td>XX-NET</td>
+<td>主要工具</td>
+</tr>
+<tr>
+<td>GAE</td>
+<td>代理服务器</td>
+</tr>
+<tr>
+<td>SwitchOmega</td>
+<td>管理和切换多个代理设置</td>
+</tr>
+</tbody>
+</table>
+<h4 id="下载google-chrome"><a class="markdownIt-Anchor" href="#下载google-chrome"></a> 下载Google chrome</h4>
+<p>建议去官网下载,所以这里就要用到lantern了<br />
+<img src="/uploads/images/vpn/file_003.png" srcset="/img/loading.gif" lazyload alt="img" /><br />
+安装略 😃</p>
+<h4 id="使用lantern蓝灯"><a class="markdownIt-Anchor" href="#使用lantern蓝灯"></a> 使用lantern蓝灯</h4>
+<p>使用lantern蓝灯</p>
+<p>到github获取 <a target="_blank" rel="noopener" href="https://github.com/getlantern/forum">https://github.com/getlantern/forum</a></p>
+<p><img src="/uploads/images/vpn/file_001.png" srcset="/img/loading.gif" lazyload alt="img" /><br />
+我的是Linux系统<br />
+<img src="/uploads/images/vpn/file_002.png" srcset="/img/loading.gif" lazyload alt="img" /><br />
+下载之后就可以 <code>dpkg -i</code>来安装了,然后可以直接 lantern 运行,并显示一个托盘图标.<br />
+可以 <code>netstat -ntlp |grep lantern</code> 来查看lantern进场监听的端口.</p>
+<blockquote>
+<p>别说这访问速度还挺快的.不过,体验版lantern用户每个月只能用几百MB的流量,超过后就不能用了(省点用啊),所以,特么的看个视频就没了…基于此,我决定折腾一番…</p>
+</blockquote>
+<h4 id="创建gae并申请appid"><a class="markdownIt-Anchor" href="#创建gae并申请appid"></a> 创建GAE并申请appid</h4>
+<p>其实,到了这里就是注意了,这才是最主要的.<br />
+GAE(Google APP Engine)是什么?<br />
+以下摘自百度</p>
+<blockquote>
+<p>Google App Engine 是一种让您可以在 Google 的基础架构上运行您的网络应用程序。Google App Engine 应用程序易于构建和维护，并可根据您的访问量和数据存储需要的增长轻松扩展。使用 Google App Engine，将不再需要维护服务器：您只需上传您的应用程序，它便可立即为您的用户提供服务。</p>
+</blockquote>
+<p><strong>PS:必须去创建一个Google账号,此处不在赘述</strong><br />
+gae官网: <a target="_blank" rel="noopener" href="https://appengine.google.com">https://appengine.google.com</a><br />
+输入Google账号密码之后就可以进去gae管理界面了<br />
+<img src="/uploads/images/vpn/file_004.png" srcset="/img/loading.gif" lazyload alt="img" /></p>
+<p>之后可以直接创建项目了,注意那个<code>appid</code>就是<strong>项目名</strong><br />
+<img src="/uploads/images/vpn/file_005.png" srcset="/img/loading.gif" lazyload alt="img" /></p>
+<p>等待创建完成<br />
+<img src="/uploads/images/vpn/file_006.png" srcset="/img/loading.gif" lazyload alt="img" /></p>
+<p>完成之后只需吧那个<code>appid</code>记住.<br />
+<img src="/uploads/images/vpn/file_007.png" srcset="/img/loading.gif" lazyload alt="img" /></p>
+<p><strong>PS:可以创建多个项目.在配置xx-net时也可以指定多个appid,一个appid对应1G的使用流量</strong></p>
+<h4 id="xx-net配置"><a class="markdownIt-Anchor" href="#xx-net配置"></a> XX-NET配置</h4>
+<p>可以在 <a target="_blank" rel="noopener" href="https://github.com/XX-net/XX-Net">https://github.com/XX-net/XX-Net</a> 下载 <strong>XX-NET</strong><br />
+直接 <code>git clone https://github.com/XX-net/XX-Net.git</code><br />
+<img src="/uploads/images/vpn/file_008.png" srcset="/img/loading.gif" lazyload alt="img" /></p>
+<p>或者在这里下载: <a target="_blank" rel="noopener" href="https://github.com/XX-net/XX-Net/blob/master/code/default/download.md">https://github.com/XX-net/XX-Net/blob/master/code/default/download.md</a><br />
+<img src="/uploads/images/vpn/file_009.png" srcset="/img/loading.gif" lazyload alt="img" /><br />
+中文帮助文档: <a target="_blank" rel="noopener" href="https://github.com/XX-net/XX-Net/wiki/%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3">https://github.com/XX-net/XX-Net/wiki/%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3</a></p>
+<p>下载之后</p>
+<figure class="highlight dos"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs dos">unzip XX-<span class="hljs-built_in">Net</span>-<span class="hljs-number">3</span>.<span class="hljs-number">8</span>.<span class="hljs-number">0</span>.zip<br><span class="hljs-built_in">cd</span> XX-<span class="hljs-built_in">Net</span>-<span class="hljs-number">3</span>.<span class="hljs-number">8</span>.<span class="hljs-number">0</span><br>./<span class="hljs-built_in">start</span> #后台运行<br></code></pre></div></td></tr></table></figure>
+<p><strong>PS:建议在配置XX-NET之前,后台运行lantern,因为等下部署时要登录Google账号</strong></p>
+<p>我在Linux下配置时还要开启<strong>ipv6</strong>通道 .方法如下</p>
+<figure class="highlight apache"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs apache"><span class="hljs-attribute">apt</span>-get install miredo<br><span class="hljs-attribute">miredo</span> #运行<br><span class="hljs-attribute">ifconfig</span>可以看到多出一个`teredo`接口<br><br><span class="hljs-attribute">teredo</span>: flags=<span class="hljs-number">4305</span> mtu <span class="hljs-number">1280</span><br><span class="hljs-attribute">inet6</span> <span class="hljs-number">2001</span>:<span class="hljs-number">0</span>:<span class="hljs-number">53</span>aa:<span class="hljs-number">64</span>c:<span class="hljs-number">2</span>c<span class="hljs-number">46</span>:bf<span class="hljs-number">0</span>:e<span class="hljs-number">4</span>db:<span class="hljs-number">1</span>ac<span class="hljs-number">5</span> prefixlen <span class="hljs-number">32</span> scopeid <span class="hljs-number">0</span>x<span class="hljs-number">0</span><br><span class="hljs-attribute">inet6</span> fe<span class="hljs-number">80</span>::<span class="hljs-number">707</span>:<span class="hljs-number">2</span>c<span class="hljs-number">4</span>a:<span class="hljs-number">7</span>df<span class="hljs-number">6</span>:<span class="hljs-number">4104</span> prefixlen <span class="hljs-number">64</span> scopeid <span class="hljs-number">0</span>x<span class="hljs-number">20</span><br><span class="hljs-attribute">inet6</span> fe<span class="hljs-number">80</span>::ffff:ffff:ffff prefixlen <span class="hljs-number">64</span> scopeid <span class="hljs-number">0</span>x<span class="hljs-number">20</span><br><span class="hljs-attribute">unspec</span> <span class="hljs-number">00</span>-<span class="hljs-number">00</span>-<span class="hljs-number">00</span>-<span class="hljs-number">00</span>-<span class="hljs-number">00</span>-<span class="hljs-number">00</span>-<span class="hljs-number">00</span>-<span class="hljs-number">00</span>-<span class="hljs-number">00</span>-<span class="hljs-number">00</span>-<span class="hljs-number">00</span>-<span class="hljs-number">00</span>-<span class="hljs-number">00</span>-<span class="hljs-number">00</span>-<span class="hljs-number">00</span>-<span class="hljs-number">00</span> txqueuelen <span class="hljs-number">500</span> (UNSPEC)<br><span class="hljs-attribute">RX</span> packets <span class="hljs-number">2828</span> bytes <span class="hljs-number">1820077</span> (<span class="hljs-number">1</span>.<span class="hljs-number">7</span> MiB)<br><span class="hljs-attribute">RX</span> errors <span class="hljs-number">0</span> dropped <span class="hljs-number">0</span> overruns <span class="hljs-number">0</span> frame <span class="hljs-number">0</span><br><span class="hljs-attribute">TX</span> packets <span class="hljs-number">3687</span> bytes <span class="hljs-number">397036</span> (<span class="hljs-number">387</span>.<span class="hljs-number">7</span> KiB)<br><span class="hljs-attribute">TX</span> errors <span class="hljs-number">0</span> dropped <span class="hljs-number">0</span> overruns <span class="hljs-number">0</span> carrier <span class="hljs-number">0</span> collisions <span class="hljs-number">0</span><br></code></pre></div></td></tr></table></figure>
+<p>XX-NET主界面<br />
+<img src="/uploads/images/vpn/file_010.png" srcset="/img/loading.gif" lazyload alt="img" /></p>
+<p>部署服务端–&gt;配置–&gt;查看状态</p>
+<ul>
+<li>部署服务端<br />
+多个appid用 “|” 分割,之后可以[开始部署],再次强调一下,那个<code>appid</code>就是<strong>项目名</strong><br />
+<img src="/uploads/images/vpn/file_011.png" srcset="/img/loading.gif" lazyload alt="img" /></li>
+</ul>
+<p>之后会跳转到登录Google账号的窗口.登录ok后<strong>等待部署完成</strong></p>
+<ul>
+<li>配置<br />
+之后在<code>GAE AppID</code>输入自己的appid<br />
+<img src="/uploads/images/vpn/file_012.png" srcset="/img/loading.gif" lazyload alt="img" /></li>
+<li>状态<br />
+确保每次配置时查看是否配置成功!<br />
+<img src="/uploads/images/vpn/file_013.png" srcset="/img/loading.gif" lazyload alt="img" /><br />
+如果出现 <code>请检查浏览器代理设置。</code>表示配置成功了,只是还需要 <strong>“设置代理，是为了让你的浏览器或者其他应用程序知道XX-Net的存在，这样他们才会通过XX-Net科学上网。”</strong></li>
+<li>解决方法<br />
+具体方法可以查看 <a target="_blank" rel="noopener" href="https://github.com/XX-net/XX-Net/wiki/%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86">https://github.com/XX-net/XX-Net/wiki/%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86</a></li>
+</ul>
+<p>由于我目前是Linux系统,所以 我用 <strong>Chrome+SwitchOmega(管理和切换多个代理设置)</strong></p>
+<p>可以在chrome浏览器应用商店安装SwitchOmega拓展程序<br />
+<img src="/uploads/images/vpn/file_014.png" srcset="/img/loading.gif" lazyload alt="img" /></p>
+<p>然后打开<strong>SwitchOmega选项</strong>–&gt;导入/导出–&gt;从备份文件恢复<br />
+导入<strong>OmegaOptions.bak</strong>文件,此文件位置在 …/XX-Net-3.8.0/SwitchyOmega/ 目录下<br />
+<img src="/uploads/images/vpn/file_015.png" srcset="/img/loading.gif" lazyload alt="img" /></p>
+<p>之后可以看到一下几个选项<br />
+<img src="/uploads/images/vpn/file_016.png" srcset="/img/loading.gif" lazyload alt="img" /></p>
+<p>然后选择gae服务器代理.恢复正常可以切换回 <strong>[系统代理]</strong><br />
+<img src="/uploads/images/vpn/file_017.png" srcset="/img/loading.gif" lazyload alt="img" /></p>
+<p>然后再看看XX-NET配置状态,成功!<br />
+<img src="/uploads/images/vpn/file_018.png" srcset="/img/loading.gif" lazyload alt="img" /><br />
+现在可以关闭lantern了,然后再去试试看能不能打开 <a target="_blank" rel="noopener" href="https://www.google.com">https://www.google.com</a> 吧!<br />
+<img src="/uploads/images/vpn/file_019.png" srcset="/img/loading.gif" lazyload alt="img" /><br />
+<img src="/uploads/images/vpn/file_020.png" srcset="/img/loading.gif" lazyload alt="img" /></p>
+<p>去浪吧~ :&gt;</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Others/">Others</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Linux/">Linux</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Google/">Google</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/sdl2-png-mp3/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">SDL2显示PNG图片+播放MP3</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/windows-xxnet/">
+                        <span class="hidden-mobile">Windows XX-NET使用</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"AzPbImmMjm5nQc1Xm9ulWCoH-gzGzoHsz","appKey":"xJqILn8nSbhYmdkB2VVQm8vI","placeholder":"说点什么","path":"window.location.pathname","avatar":"retro","meta":["nick","mail","link"],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false,"requiredFields":[]},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- KaTeX -->
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.10/dist/katex.min.css" />
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

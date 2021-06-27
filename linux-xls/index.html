@@ -1,0 +1,526 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="这里要讨论的是两款开源库 libxls 和 xlslib,前者用与 读 Excel,后者用于 写 .所以可以在Linux或Windows上使用">
+  <meta name="author" content="Joseph XRays">
+  <meta name="keywords" content="">
+  
+  <title>Linux libxls和xlslib读写Excel文档 - JoXrays&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/monokai.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.joxrays.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>JoXrays's Blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Linux libxls和xlslib读写Excel文档">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2019-05-28 00:00" pubdate>
+        2019年5月28日 凌晨
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.1k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      17
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Linux libxls和xlslib读写Excel文档</h1>
+            
+            <div class="markdown-body">
+              <p>这里要讨论的是两款开源库 <strong>libxls</strong> 和 <strong>xlslib</strong>,前者用与 <strong>读</strong> Excel,后者用于 <strong>写</strong> .所以可以在Linux或Windows上使用</p>
+<span id="more"></span>
+<h3 id="libxls读excel"><a class="markdownIt-Anchor" href="#libxls读excel"></a> libxls(读Excel</h3>
+<h4 id="获取libxls"><a class="markdownIt-Anchor" href="#获取libxls"></a> 获取libxls</h4>
+<p>可以在 <a target="_blank" rel="noopener" href="http://libxls.sourceforge.net/">官网</a> 获取源代码, 目前最新版为 1.4.0</p>
+<blockquote>
+<p>unzip libxls-1.4.0.zip<br />
+cd libxls<br />
+./configure<br />
+make<br />
+make install</p>
+</blockquote>
+<p>注意默认安装到 <strong>/usr/local</strong> 目录下,所以需要自己手动复制相关文件到系统目录下</p>
+<blockquote>
+<p>cp -r /usr/local/libxls/include/* /usr/include<br />
+cp -r /usr/local/libxls/lib/* /usr</p>
+</blockquote>
+<p>至此基本上可以了</p>
+<h4 id="例子"><a class="markdownIt-Anchor" href="#例子"></a> 例子</h4>
+<p>test.cpp</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;xls.h&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> xls;<br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc,<span class="hljs-keyword">char</span> *argv[])</span> </span>&#123;<br>    <span class="hljs-comment">//版本信息</span><br>    cout&lt;&lt;<span class="hljs-string">&quot;version:&quot;</span>&lt;&lt;xls::<span class="hljs-built_in">xls_getVersion</span>()&lt;&lt;endl;<br>    xlsWorkBook *pwb;<br>    xlsWorkSheet *pws;<br>    <span class="hljs-comment">//打开一个excel表格</span><br>    pwb=<span class="hljs-built_in">xls_open</span>(<span class="hljs-string">&quot;test.xls&quot;</span>,<span class="hljs-string">&quot;UTF-8&quot;</span>);<br>    <span class="hljs-keyword">if</span>(!pwb)&#123;<br>        cout&lt;&lt;<span class="hljs-string">&quot;open failed!&quot;</span>&lt;&lt;endl;<br>        <span class="hljs-built_in">exit</span>(EXIT_SUCCESS);<br>    &#125;<br>    xlsSummaryInfo *summaryInfo=<span class="hljs-built_in">xls_summaryInfo</span>(pwb);<br>    <span class="hljs-keyword">if</span>(summaryInfo)&#123;<br>        <span class="hljs-keyword">if</span>(summaryInfo-&gt;title)cout&lt;&lt;<span class="hljs-string">&quot;title:&quot;</span>&lt;&lt;summaryInfo-&gt;title&lt;&lt;endl;<br>        <span class="hljs-keyword">if</span>(summaryInfo-&gt;manager)cout&lt;&lt;<span class="hljs-string">&quot;manager:&quot;</span>&lt;&lt;summaryInfo-&gt;manager&lt;&lt;endl;<br>        <span class="hljs-keyword">if</span>(summaryInfo-&gt;lastAuthor)cout&lt;&lt;<span class="hljs-string">&quot;lastAuthor:&quot;</span>&lt;&lt;summaryInfo-&gt;lastAuthor&lt;&lt;endl;<br>        <span class="hljs-keyword">if</span>(summaryInfo-&gt;keywords)cout&lt;&lt;<span class="hljs-string">&quot;keywords:&quot;</span>&lt;&lt;summaryInfo-&gt;keywords&lt;&lt;endl;<br>        <span class="hljs-keyword">if</span>(summaryInfo-&gt;company)cout&lt;&lt;<span class="hljs-string">&quot;company:&quot;</span>&lt;&lt;summaryInfo-&gt;company&lt;&lt;endl;<br>        <span class="hljs-keyword">if</span>(summaryInfo-&gt;comment)cout&lt;&lt;<span class="hljs-string">&quot;comment:&quot;</span>&lt;&lt;summaryInfo-&gt;comment&lt;&lt;endl;<br>        <span class="hljs-keyword">if</span>(summaryInfo-&gt;appName)cout&lt;&lt;<span class="hljs-string">&quot;appName:&quot;</span>&lt;&lt;summaryInfo-&gt;appName&lt;&lt;endl;<br>        <span class="hljs-keyword">if</span>(summaryInfo-&gt;subject)cout&lt;&lt;<span class="hljs-string">&quot;subject:&quot;</span>&lt;&lt;summaryInfo-&gt;subject&lt;&lt;endl;<br>    &#125;<br>    cout&lt;&lt;<span class="hljs-string">&quot;charset:&quot;</span>&lt;&lt;pwb-&gt;charset&lt;&lt;endl;<br>    cout&lt;&lt;<span class="hljs-string">&quot;font name:&quot;</span>&lt;&lt;pwb-&gt;fonts.font-&gt;name&lt;&lt;endl;<br>    cout&lt;&lt;<span class="hljs-string">&quot;font bold:&quot;</span>&lt;&lt;pwb-&gt;fonts.font-&gt;bold&lt;&lt;endl;<br>    cout&lt;&lt;<span class="hljs-string">&quot;当前表名:&quot;</span>&lt;&lt;pwb-&gt;sheets.sheet-&gt;name&lt;&lt;endl;<br>    cout&lt;&lt;<span class="hljs-string">&quot;总表数:&quot;</span>&lt;&lt;pwb-&gt;sheets.count&lt;&lt;endl&lt;&lt;endl;<br>    <span class="hljs-comment">//获取第一张表单 索引从0开始</span><br>    pws= <span class="hljs-built_in">xls_getWorkSheet</span>(pwb,<span class="hljs-number">0</span>);<br>    <span class="hljs-comment">//开始解析表单</span><br>    <span class="hljs-built_in">xls_parseWorkSheet</span>(pws);<br>    cout&lt;&lt;<span class="hljs-string">&quot;行数:&quot;</span>&lt;&lt;pws-&gt;rows.lastrow+<span class="hljs-number">1</span>&lt;&lt;endl;<br>    cout&lt;&lt;<span class="hljs-string">&quot;列数:&quot;</span>&lt;&lt;pws-&gt;rows.lastcol&lt;&lt;endl;<br>    <span class="hljs-comment">//遍历</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; pws-&gt;rows.lastrow+<span class="hljs-number">1</span>; ++i) &#123;<br>        <span class="hljs-comment">//xlsRow = st_row::st_row_data</span><br>        <span class="hljs-comment">//获取每一行的数据</span><br>        st_row::st_row_data row= pws-&gt;rows.row[i];<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; pws-&gt;rows.lastcol; ++j) &#123;<br>            <span class="hljs-keyword">if</span>(row.cells.cell[j].str) &#123;<br>                cout &lt;&lt; (<span class="hljs-keyword">char</span>*)row.cells.cell[j].str &lt;&lt; <span class="hljs-string">&quot;\t&quot;</span>;<br>            &#125;<br>        &#125;<br>        cout&lt;&lt;endl;<br>    &#125;<br>    <span class="hljs-comment">//关闭</span><br>    <span class="hljs-built_in">xls_close_WS</span>(pws);<br>    <span class="hljs-built_in">xls_close_WB</span>(pwb);<br>    <br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>注意,由于我使用 clion 编写代码,所以在链接库时在 CMakeLists.txt 最后一行添加 <strong>target_link_libraries(libxls_read <a target="_blank" rel="noopener" href="http://libxlsreader.so">libxlsreader.so</a>)</strong> 其中 <strong>libxls_read</strong> 为项目名.<br />
+或者直接 <code>g++ test.cpp -o libxls_read -lxlsreader</code></p>
+<p>测试:<br />
+假设有一个Excel文件<br />
+<img src="/uploads/images/libxls/file_001.png" srcset="/img/loading.gif" lazyload alt="img" /></p>
+<p>执行程序输出</p>
+<blockquote>
+<p>version:1.4.0<br />
+标题:我是标题<br />
+keywords:我是关键字<br />
+comment:这是一个测试<br />
+subject:我是主题<br />
+charset:UTF-8<br />
+font name:文泉驿正黑<br />
+font bold:400<br />
+当前表名:第一张表单<br />
+总表数:1</p>
+<p>行数:4<br />
+列数:5<br />
+刘备 关羽 张飞 曹操 刘禅<br />
+曹丕 赵云 孙权 黄盖 曹植<br />
+貂蝉 张角 孔明 周瑜 小乔<br />
+马超</p>
+</blockquote>
+<h3 id="xlslib写excel"><a class="markdownIt-Anchor" href="#xlslib写excel"></a> xlslib(写Excel</h3>
+<h4 id="获取xlslib"><a class="markdownIt-Anchor" href="#获取xlslib"></a> 获取xlslib</h4>
+<p>可以从 <a target="_blank" rel="noopener" href="http://sourceforge.net/projects/xlslib/">http://sourceforge.net/projects/xlslib/</a> 获取 xlslib并编译安装,同样的默认也是安装到 <strong>/usr/local/include</strong> ,需手动复制到系统目录下</p>
+<blockquote>
+<p>cp -r /usr/local/include/xlslib /usr/include/</p>
+</blockquote>
+<h4 id="例子-2"><a class="markdownIt-Anchor" href="#例子-2"></a> 例子</h4>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;xlslib/xlslib.h&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> xlslib_core;<br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    workbook wb;<br>    string label;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Version: %s\n&quot;</span>,wb.<span class="hljs-built_in">version</span>());<br>    <span class="hljs-comment">//设置字体</span><br>    <span class="hljs-keyword">font_t</span> *t=wb.<span class="hljs-built_in">font</span>(<span class="hljs-string">&quot;Ubuntu&quot;</span>);<br>    t-&gt;<span class="hljs-built_in">SetColor</span>(CLR_RED);<br>    t-&gt;<span class="hljs-built_in">SetItalic</span>(<span class="hljs-literal">true</span>);<br>    t-&gt;<span class="hljs-built_in">SetHeight</span>(<span class="hljs-number">20</span>*<span class="hljs-number">15</span>);<br>   <span class="hljs-comment">// t-&gt;SetBoldStyle(BOLDNESS_BOLD);</span><br>    <span class="hljs-keyword">xf_t</span> *xf= wb.<span class="hljs-built_in">xformat</span>();<br>    xf-&gt;<span class="hljs-built_in">SetFillBGColor</span>(CLR_GREEN);<br>    xf-&gt;<span class="hljs-built_in">SetFillFGColor</span>(CLR_RED);<br>    xf-&gt;<span class="hljs-built_in">SetFont</span>(t);<br>    <span class="hljs-comment">//第一张表单</span><br>    worksheet *ws=wb.<span class="hljs-built_in">sheet</span>(<span class="hljs-string">&quot;one&quot;</span>);<br>    <span class="hljs-comment">//第二张表单</span><br>    worksheet* ws2=wb.<span class="hljs-built_in">sheet</span>(<span class="hljs-string">&quot;two&quot;</span>);<br>    ws-&gt;<span class="hljs-built_in">MakeActive</span>();<br>    <span class="hljs-comment">//设置列宽度,行高度</span><br>    ws-&gt;<span class="hljs-built_in">defaultColwidth</span>(<span class="hljs-number">15</span>);<br>    ws-&gt;<span class="hljs-built_in">defaultRowHeight</span>(<span class="hljs-number">25</span>);<br>    <span class="hljs-comment">//6行</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">6</span>; ++i) &#123;<br>        <span class="hljs-comment">//6列</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt;<span class="hljs-number">6</span> ; ++j) &#123;<br>            <span class="hljs-keyword">char</span> buf[<span class="hljs-number">20</span>]=&#123;<span class="hljs-number">0</span>&#125;;<br>            <span class="hljs-built_in">sprintf</span>(buf,<span class="hljs-string">&quot;%d&quot;</span>,i*j);<br>            label=buf;<br>            <span class="hljs-comment">// 写入</span><br>            <span class="hljs-keyword">cell_t</span> * cell= ws-&gt;<span class="hljs-built_in">label</span>(i,j,label,xf);<br>            <span class="hljs-comment">//或者 ws-&gt;number(i,j,i*j,xf);</span><br>            <span class="hljs-comment">//设置字体阴影</span><br>            cell-&gt;<span class="hljs-built_in">fontshadow</span>(<span class="hljs-literal">true</span>);<br>            <span class="hljs-comment">//设置单元格文本对齐</span><br>            cell-&gt;<span class="hljs-built_in">halign</span>(HALIGN_CENTER);<br>            cell-&gt;<span class="hljs-built_in">valign</span>(VALIGN_CENTER);<br>            <span class="hljs-comment">//设置行高度</span><br>            ws-&gt;<span class="hljs-built_in">rowheight</span>(i,<span class="hljs-number">20</span>*<span class="hljs-number">15</span>);<br>        &#125;<br>    &#125;<br>    range *ran=ws-&gt;<span class="hljs-built_in">rangegroup</span>(<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>);<br>    ran-&gt;<span class="hljs-built_in">cellcolor</span>(CLR_GREEN);<br>    <span class="hljs-comment">//保存到excel文件</span><br>    wb.<span class="hljs-built_in">Dump</span>(<span class="hljs-string">&quot;mynew.xls&quot;</span>);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Programming/">Programming</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Linux/">Linux</a>
+                    
+                      <a class="hover-with-bg" href="/tags/C/">C++</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/linux-crunch/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">强大的Crunch字典生成工具</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/linux-shell-window/">
+                        <span class="hidden-mobile">Linux Shell窗口化</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"AzPbImmMjm5nQc1Xm9ulWCoH-gzGzoHsz","appKey":"xJqILn8nSbhYmdkB2VVQm8vI","placeholder":"说点什么","path":"window.location.pathname","avatar":"retro","meta":["nick","mail","link"],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false,"requiredFields":[]},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- KaTeX -->
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.10/dist/katex.min.css" />
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

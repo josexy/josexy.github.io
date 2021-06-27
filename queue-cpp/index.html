@@ -1,0 +1,535 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="队列是一种先进先出(FIFO)的数据结构，与栈(后进先出LIFO)不同，但两者都是线性结构，因此可以用线性表去描述队列，本文主要是用数组去实现一个简单的队列">
+  <meta name="author" content="Joseph XRays">
+  <meta name="keywords" content="">
+  
+  <title>数据结构-队列 - JoXrays&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/monokai.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.joxrays.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>JoXrays's Blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="数据结构-队列">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-01-13 00:00" pubdate>
+        2020年1月13日 凌晨
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.5k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      22
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">数据结构-队列</h1>
+            
+            <div class="markdown-body">
+              <p>队列是一种先进先出(FIFO)的数据结构，与栈(后进先出LIFO)不同，但两者都是线性结构，因此可以用线性表去描述队列，本文主要是用数组去实现一个简单的队列</p>
+<span id="more"></span>
+<h3 id="队列"><a class="markdownIt-Anchor" href="#队列"></a> 队列</h3>
+<p>对一个队列操作，只能从队首删除元素，队尾插入元素，因此我们可以定义两个队列元素指针front,back，用于跟踪队列首尾元素。<br />
+C++ STL实现了队列数据结构，我们用时不可能立即手写一个队列，因而只需include头文件即可，不过对于队列这一数据结构原理还是要理解的</p>
+<p>我们知道，队列可以用数组或链表实现，不过本文是以数组来讲述的因此较为简单</p>
+<h4 id="插入"><a class="markdownIt-Anchor" href="#插入"></a> 插入</h4>
+<p>队列插入一个元素时，先将队尾指针back+1，使其指向下一个空闲区<br />
+域，然后在插入元素。复杂度为O(1)</p>
+<h4 id="删除"><a class="markdownIt-Anchor" href="#删除"></a> 删除</h4>
+<p>删除队首元素有两种策略</p>
+<ol>
+<li>直接整个数组左移一位，front不变，back向前移动一位。复杂度O(n)</li>
+<li>数组不移动，front移动到下一位，back不变。复杂度O(1)</li>
+</ol>
+<p>显然删除操作情况1不能接受，然而对于删除操作情况2，会导致数组空间浪费，这是因为front指针之前的区域未能被利用，而back指针之后的区域显然不够(这里在没有考虑数组变增的情况下)。</p>
+<p>如果将数组“串”起来怎样？事实上确实可以，这种数组叫环形数组，用此类型数组实现的队列称为<strong>循环队列</strong> 且其插入删除复杂度均为O(1)</p>
+<p>环形数组表示队列通过下面公式实现:</p>
+<blockquote>
+<p>location(i)=(location(front)+i)%arrayLength</p>
+</blockquote>
+<p>如下图一个空队列，此时 front=back<br />
+<img src="/uploads/images/data_structure/queue_cpp/01.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>当插入一个元素时，也有两种策略</p>
+<blockquote>
+<p>1.先移动back，后插入元素。那么front指向元素为&quot;空&quot;<br />
+2.先插入元素，后移动back。那么back指向元素为&quot;空&quot;</p>
+</blockquote>
+<img src="/uploads/images/data_structure/queue_cpp/02.png" srcset="/img/loading.gif" lazyload width="70%" height="70%">
+<p>每次插入都需要判断 (back+1)%size == front ，为什么？我们知道，初始时front=back表示空队列，那么当插入元素数量达到数组长度此时front=back！这表示这个队列满的还是空的？因此我们预留一个位置，也就是队列不能插满。即</p>
+<blockquote>
+<p>front=back  空队列<br />
+(back+1)%size = front 满队列</p>
+</blockquote>
+<img src="/uploads/images/data_structure/queue_cpp/03.png" srcset="/img/loading.gif" lazyload width="70%" height="70%">
+<p>如何获取队列中第n个元素在数组中的下标？<br />
+假设front=10，back=4。<br />
+<img src="/uploads/images/data_structure/queue_cpp/04.png" srcset="/img/loading.gif" lazyload width="70%" height="70%"></p>
+<p>因此我们用C++实现该循环队列</p>
+<h3 id="队列实现"><a class="markdownIt-Anchor" href="#队列实现"></a> 队列实现</h3>
+<p>队列抽象数据类型</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-keyword">template</span>&lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">T</span>&gt;</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">QueueBase</span>&#123;</span><br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-keyword">virtual</span> ~<span class="hljs-built_in">QueueBase</span>()&#123;&#125;<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> <span class="hljs-title">push_back</span><span class="hljs-params">(<span class="hljs-keyword">const</span> T &amp;)</span></span>=<span class="hljs-number">0</span>;<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> <span class="hljs-title">pop_front</span><span class="hljs-params">()</span></span>=<span class="hljs-number">0</span>;<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> T &amp; <span class="hljs-title">front</span><span class="hljs-params">()</span></span>=<span class="hljs-number">0</span>;<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> T &amp; <span class="hljs-title">back</span><span class="hljs-params">()</span></span>=<span class="hljs-number">0</span>;<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-keyword">bool</span> <span class="hljs-title">empty</span><span class="hljs-params">()</span></span>=<span class="hljs-number">0</span>;<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-keyword">int</span> <span class="hljs-title">size</span><span class="hljs-params">()</span></span>=<span class="hljs-number">0</span>;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+<p>之后在另外定义一个派生类继承QueueBase接口。<br />
+我是按照策略2来插入元素的，代码如下</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-keyword">template</span>&lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">T</span>&gt;</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">arrayQueue</span>&#123;</span><br><span class="hljs-keyword">private</span>:<br>    T *m_array;<br>    <span class="hljs-keyword">int</span> m_capacity;<br>    <span class="hljs-keyword">int</span> front;<br>    <span class="hljs-keyword">int</span> back;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-built_in">arrayQueue</span>(<span class="hljs-keyword">int</span> initCapacity=<span class="hljs-number">10</span>)&#123;<br>        m_capacity=initCapacity;<br>        m_array=<span class="hljs-keyword">new</span> T[m_capacity];<br>        front=<span class="hljs-number">0</span>;<br>        back=<span class="hljs-number">0</span>;<br>    &#125;<br>    ~<span class="hljs-built_in">arrayQueue</span>()&#123;<span class="hljs-keyword">delete</span> []m_array;&#125;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">push_back</span><span class="hljs-params">(<span class="hljs-keyword">const</span> T &amp;)</span></span>;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">pop_front</span><span class="hljs-params">()</span></span>;<br>    <span class="hljs-function">T &amp; <span class="hljs-title">Front</span><span class="hljs-params">()</span></span>&#123;<br>        <span class="hljs-keyword">return</span> m_array[front];<br>    &#125;<br>    <span class="hljs-function">T &amp; <span class="hljs-title">Back</span><span class="hljs-params">()</span></span>&#123;<br>        <span class="hljs-keyword">return</span> m_array[back<span class="hljs-number">-1</span>];<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">empty</span><span class="hljs-params">()</span></span>&#123;<span class="hljs-keyword">return</span> front==back;&#125;<br>    <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">size</span><span class="hljs-params">()</span></span>&#123;<br>        <span class="hljs-keyword">if</span>(front&lt;back)<br>            <span class="hljs-keyword">return</span> back-front;<br>        <span class="hljs-keyword">else</span> <br>            <span class="hljs-keyword">return</span> back+m_capacity-front;<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">changeLength</span><span class="hljs-params">(T* &amp;,<span class="hljs-keyword">int</span>,<span class="hljs-keyword">int</span>)</span></span>;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">output</span><span class="hljs-params">()</span></span>&#123;<br>        <span class="hljs-keyword">if</span>(<span class="hljs-built_in">empty</span>())<span class="hljs-keyword">return</span>;<br>        <span class="hljs-comment">// 情况1</span><br>        <span class="hljs-keyword">if</span>(front&lt;back)&#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = front; i &lt; back; i++)&#123;<br>                cout&lt;&lt;<span class="hljs-string">&quot;[&quot;</span>&lt;&lt;i&lt;&lt;<span class="hljs-string">&quot;] &quot;</span>&lt;&lt;m_array[i]&lt;&lt;<span class="hljs-string">&quot;\n&quot;</span>;<br>            &#125;<br>        <span class="hljs-comment">// 情况2</span><br>        &#125;<span class="hljs-keyword">else</span>&#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = front; i &lt; m_capacity; i++)&#123;<br>                cout&lt;&lt;<span class="hljs-string">&quot;[&quot;</span>&lt;&lt;i&lt;&lt;<span class="hljs-string">&quot;] &quot;</span>&lt;&lt;m_array[i]&lt;&lt;<span class="hljs-string">&quot;\n&quot;</span>;<br>            &#125;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; back; i++)&#123;<br>                cout&lt;&lt;<span class="hljs-string">&quot;[&quot;</span>&lt;&lt;i&lt;&lt;<span class="hljs-string">&quot;] &quot;</span>&lt;&lt;m_array[i]&lt;&lt;<span class="hljs-string">&quot;\n&quot;</span>;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;;<br><br><span class="hljs-keyword">template</span>&lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">T</span>&gt;</span><br><span class="hljs-keyword">void</span> arrayQueue&lt;T&gt;::<span class="hljs-built_in">push_back</span>(<span class="hljs-keyword">const</span> T &amp;element)&#123;<br>    <span class="hljs-comment">// 满队列</span><br>    <span class="hljs-keyword">if</span>((back+<span class="hljs-number">1</span>)%m_capacity==front)&#123;<br>        <span class="hljs-comment">// 数组倍增</span><br>        <span class="hljs-built_in">changeLength</span>(m_array,m_capacity,m_capacity*<span class="hljs-number">2</span>);<br>        m_capacity*=<span class="hljs-number">2</span>;<br>    &#125;<br>    <span class="hljs-comment">// 按照策略2插入: 先插入元素，后移动back</span><br>    m_array[back]=element;<br>    <span class="hljs-comment">// 注意，此处不能直接 back++，这样做会使back超出数组长度从而导致数组访问越界</span><br>    <span class="hljs-comment">// 相反，(back+1)%m_capacity 会使back指针回到数组起始处继续插入</span><br>    back=(back+<span class="hljs-number">1</span>)%m_capacity;<br>&#125;<br><span class="hljs-keyword">template</span>&lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">T</span>&gt;</span><br><span class="hljs-keyword">void</span> arrayQueue&lt;T&gt;::<span class="hljs-built_in">pop_front</span>()&#123;<br>    <span class="hljs-comment">// 判空</span><br>    <span class="hljs-keyword">if</span>(back==front)<span class="hljs-keyword">return</span>;<br>    m_array[front].~<span class="hljs-built_in">T</span>();<br>    <span class="hljs-comment">// 同样这里也是控制front只能处于数组之间</span><br>    front=(front+<span class="hljs-number">1</span>)%<span class="hljs-keyword">this</span>-&gt;m_capacity;<br>&#125;<br><span class="hljs-keyword">template</span>&lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">T</span>&gt;</span><br><span class="hljs-keyword">void</span> arrayQueue&lt;T&gt;::<span class="hljs-built_in">changeLength</span>(T* &amp;array,<span class="hljs-keyword">int</span> oldLength,<span class="hljs-keyword">int</span> newLength)&#123;<br>    <span class="hljs-keyword">if</span>(newLength&lt;<span class="hljs-number">0</span>)<span class="hljs-keyword">return</span>;<br>    T* temp=<span class="hljs-keyword">new</span> T[newLength];<br>    <span class="hljs-comment">// 从有效元素开始复制</span><br>    <span class="hljs-keyword">if</span>(front&lt;back)<br>        <span class="hljs-comment">// 没有形成环</span><br>        std::<span class="hljs-built_in">copy</span>(array+front,array+back,temp);<br>    <span class="hljs-keyword">else</span>&#123;<br>        <span class="hljs-comment">// 形成环</span><br>        std::<span class="hljs-built_in">copy</span>(array+front,array+oldLength,temp);<br>        std::<span class="hljs-built_in">copy</span>(array,array+back,temp+oldLength-front);<br>        <span class="hljs-comment">// 重新设置front,back</span><br>        front=<span class="hljs-number">0</span>;<br>        back=oldLength<span class="hljs-number">-1</span>;<br>    &#125;<br>    <span class="hljs-keyword">delete</span> []array;<br>    array=temp;<br>&#125;   <br><br></code></pre></div></td></tr></table></figure>
+<p>我认为比较难理解的是changeLength改变数组长度函数，其实用一张图表示就很简单了</p>
+<img src="/uploads/images/data_structure/queue_cpp/05.png" srcset="/img/loading.gif" lazyload width="70%" height="70%">
+<h3 id="测试"><a class="markdownIt-Anchor" href="#测试"></a> 测试</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span><span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br>    arrayQueue&lt;<span class="hljs-keyword">int</span>&gt;<span class="hljs-built_in">q</span>(<span class="hljs-number">5</span>);<br>    q.<span class="hljs-built_in">push_back</span>(<span class="hljs-number">1</span>);<br>    q.<span class="hljs-built_in">push_back</span>(<span class="hljs-number">2</span>);<br>    q.<span class="hljs-built_in">push_back</span>(<span class="hljs-number">3</span>);<br>    q.<span class="hljs-built_in">push_back</span>(<span class="hljs-number">4</span>);<br>    q.<span class="hljs-built_in">push_back</span>(<span class="hljs-number">40</span>);<br>    q.<span class="hljs-built_in">push_back</span>(<span class="hljs-number">400</span>);<br>    q.<span class="hljs-built_in">push_back</span>(<span class="hljs-number">4000</span>);<br>    q.<span class="hljs-built_in">push_back</span>(<span class="hljs-number">40000</span>);<br><br>    q.<span class="hljs-built_in">pop_front</span>();<br>    q.<span class="hljs-built_in">pop_front</span>();<br>    q.<span class="hljs-built_in">pop_front</span>();<br>    q.<span class="hljs-built_in">pop_front</span>();<br>    q.<span class="hljs-built_in">pop_front</span>();<br>    q.<span class="hljs-built_in">pop_front</span>();<br><br>    q.<span class="hljs-built_in">push_back</span>(<span class="hljs-number">5</span>);<br>    q.<span class="hljs-built_in">push_back</span>(<span class="hljs-number">6</span>);<br>    q.<span class="hljs-built_in">push_back</span>(<span class="hljs-number">7</span>);<br>    q.<span class="hljs-built_in">push_back</span>(<span class="hljs-number">8</span>);<br>    q.<span class="hljs-built_in">push_back</span>(<span class="hljs-number">9</span>);<br><br>    q.<span class="hljs-built_in">output</span>();<br>    cout&lt;&lt;<span class="hljs-string">&quot;size: &quot;</span>&lt;&lt;q.<span class="hljs-built_in">size</span>()&lt;&lt;endl;<br>    cout&lt;&lt;<span class="hljs-string">&quot;front: &quot;</span>&lt;&lt;q.<span class="hljs-built_in">Front</span>()&lt;&lt;endl;<br>    cout&lt;&lt;<span class="hljs-string">&quot;back: &quot;</span>&lt;&lt;q.<span class="hljs-built_in">Back</span>()&lt;&lt;endl;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs angelscript"><span class="hljs-string">[6]</span> <span class="hljs-number">4000</span><br><span class="hljs-string">[7]</span> <span class="hljs-number">40000</span><br><span class="hljs-string">[8]</span> <span class="hljs-number">5</span><br><span class="hljs-string">[9]</span> <span class="hljs-number">6</span><br><span class="hljs-string">[0]</span> <span class="hljs-number">7</span><br><span class="hljs-string">[1]</span> <span class="hljs-number">8</span><br><span class="hljs-string">[2]</span> <span class="hljs-number">9</span><br>size: <span class="hljs-number">7</span><br>front: <span class="hljs-number">4000</span><br>back: <span class="hljs-number">9</span><br></code></pre></div></td></tr></table></figure>
+<h3 id="stl-queue"><a class="markdownIt-Anchor" href="#stl-queue"></a> STL queue</h3>
+<p>将自己写的arrayQueue和STL queue分别测试，看看谁快些，这里我仅仅测试了先插入完成后再删除。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br>    arrayQueue&lt;<span class="hljs-keyword">int</span>&gt;q2;<br>    <span class="hljs-keyword">int</span> n=<span class="hljs-number">100000000</span>;<br>    CClock::<span class="hljs-built_in">start_timeclock</span>();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++)&#123;<br>        q2.<span class="hljs-built_in">push_back</span>(i);<br>    &#125;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++)&#123;<br>        q2.<span class="hljs-built_in">pop_front</span>();<br>    &#125;<br>    q2.<span class="hljs-built_in">output</span>();<br>    CClock::<span class="hljs-built_in">stop_timeclock</span>();<br>    <span class="hljs-keyword">auto</span> t1=CClock::<span class="hljs-built_in">time_duration</span>();<br><br>    CClock::<span class="hljs-built_in">start_timeclock</span>();<br>    queue&lt;<span class="hljs-keyword">int</span>&gt;q3;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++)&#123;<br>        q3.<span class="hljs-built_in">push</span>(i);<br>    &#125;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++)&#123;<br>        q3.<span class="hljs-built_in">pop</span>();<br>    &#125;<br>    CClock::<span class="hljs-built_in">stop_timeclock</span>();<br>    <span class="hljs-keyword">auto</span> t2=CClock::<span class="hljs-built_in">time_duration</span>();<br><br>    cout&lt;&lt;<span class="hljs-string">&quot;arrayQueue: &quot;</span>&lt;&lt;t1&lt;&lt;endl;<br>    cout&lt;&lt;<span class="hljs-string">&quot;queue: &quot;</span>&lt;&lt;t2&lt;&lt;endl;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>输出结果，单位秒</p>
+<figure class="highlight apache"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs apache"><span class="hljs-attribute">arrayQueue</span>: <span class="hljs-number">2</span>.<span class="hljs-number">32446</span><br><span class="hljs-attribute">queue</span>: <span class="hljs-number">2</span>.<span class="hljs-number">63278</span><br></code></pre></div></td></tr></table></figure>
+<p>不知道该如何表达…<br />
+(⊙o⊙)…</p>
+<h3 id="结尾"><a class="markdownIt-Anchor" href="#结尾"></a> 结尾</h3>
+<p>bye~</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/C/">C++</a>
+                    
+                      <a class="hover-with-bg" href="/tags/DataStructures/">DataStructures</a>
+                    
+                      <a class="hover-with-bg" href="/tags/C/">C</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/skiplist-cpp/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">数据结构-跳跃表C++实现</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/linkedlist-cpp/">
+                        <span class="hidden-mobile">数据结构-C++链表实现</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"AzPbImmMjm5nQc1Xm9ulWCoH-gzGzoHsz","appKey":"xJqILn8nSbhYmdkB2VVQm8vI","placeholder":"说点什么","path":"window.location.pathname","avatar":"retro","meta":["nick","mail","link"],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false,"requiredFields":[]},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- KaTeX -->
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.10/dist/katex.min.css" />
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

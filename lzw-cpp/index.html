@@ -1,0 +1,541 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="最近翻看《数据结构、算法与应用》里面关于哈希表章节时看到一个LZW文本压缩算法的实例，啃了很久才基本了解LZW算法，于是赶紧把它记录下来方便日后翻看。">
+  <meta name="author" content="Joseph XRays">
+  <meta name="keywords" content="">
+  
+  <title>LZW文本压缩 - JoXrays&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/monokai.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.joxrays.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>JoXrays's Blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="LZW文本压缩">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-02-22 00:00" pubdate>
+        2020年2月22日 凌晨
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.5k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      32
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">LZW文本压缩</h1>
+            
+            <div class="markdown-body">
+              <p>最近翻看《数据结构、算法与应用》里面关于哈希表章节时看到一个LZW文本压缩算法的实例，啃了很久才基本了解LZW算法，于是赶紧把它记录下来方便日后翻看。</p>
+<span id="more"></span>
+<h3 id="lzw"><a class="markdownIt-Anchor" href="#lzw"></a> LZW</h3>
+<p>Lempel-Ziv-Welch（LZW）是由Abraham Lempel，Jacob Ziv和Terry Welch创建的<strong>无损</strong>数据压缩算法。<br />
+为了减少一个文本文件占用的磁盘空间，通常需要将文本文件压缩编码后存储，这个过程需要对文件编码的<strong>压缩器compressor</strong>，以及解码的<strong>解压器decompressor</strong>。</p>
+<h3 id="压缩compress"><a class="markdownIt-Anchor" href="#压缩compress"></a> 压缩compress</h3>
+<p>LZW压缩方法是将文本字符串Text映射为数字编码Code（比如ASCII 0-255），而将文本字符串Text和数字编码Code这一对映射关系存储在字典/哈希表中。</p>
+<p>首先我们规定：<code>p</code>表示存在于字典中<code>最长</code>的字符串，称为<strong>前缀字符串</strong>；<code>c</code>表示在待编码字符串<code>S</code>中匹配到的<code>p</code>前缀字符串的<code>下一个字符</code>，称为<strong>后缀字符</strong>；<code>p</code>在字典表<code>table</code>中的<code>代码</code>为<code>table[p]</code>。</p>
+<p>为了简化事例，假设一串文本<code>S=aaabbbbbbaabaaba</code>只由a、b组成，初始情况下字典中只有<code>a</code>和<code>b</code>这两个字符，且存储在字典<code>table</code>中，已压缩串为空。</p>
+<p>这张图参考了书上的例子，加上自己修改觉得挺不错的。图中表格阴影部分表示输出的压缩串代码在字典中的位置。<br />
+<img src="/uploads/images/data_structure/lzw_cpp/01.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>用LZW压缩算法来模拟上图的过程：<br />
+1.首先初始化字典<code>table&lt;String,Integer&gt;</code>；<br />
+2.然后找到待编码字符串<code>S</code>的第一个字符作为<code>前缀字符串p</code>，且这个字符一定能在字典中找到对应代码<code>table[p]</code>；<br />
+3.接着读取<code>S</code>的下一个<strong>字符</strong>作为<code>后缀字符c=a</code>；<br />
+4.如果<code>p+c</code>在字典中，则p指向下一个字符串：<code>p=p+c</code>；<br />
+5.如果<code>p+c</code>不在字典中，那么输出<code>p</code>在字典中的代码<code>table[p]</code>，同时为<code>p+c</code>在字典中分配一个新的代码<code>table[p+c]</code>，<code>p</code>指向下一个字符：<code>p=c</code>；<br />
+6.重复步骤3、4、5直到<code>EOF</code>；<br />
+7.最后输出代码<code>table[p]</code>；<br />
+8.结束。</p>
+<p>伪代码如下</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs pgsql">Initialize <span class="hljs-keyword">table</span><br>P = first <span class="hljs-keyword">input</span> <span class="hljs-type">character</span><br><span class="hljs-keyword">WHILE</span> <span class="hljs-keyword">not</span> EOF<br>    C = next <span class="hljs-keyword">input</span> <span class="hljs-type">character</span><br>    <span class="hljs-keyword">IF</span> P + C <span class="hljs-keyword">in</span> <span class="hljs-keyword">table</span><br>        P = P + C<br>    <span class="hljs-keyword">ELSE</span><br>        output the code <span class="hljs-keyword">for</span> P<br>        <span class="hljs-keyword">insert</span> P + C <span class="hljs-keyword">into</span> <span class="hljs-keyword">table</span><br>        P = C<br>output code <span class="hljs-keyword">for</span> P<br></code></pre></div></td></tr></table></figure>
+<p>初始字典仅仅包含一些基本字符串和代码，但是随着编码的进行，字典不断扩增，如果遇到一个新的字符串<code>p+c</code>不在字典中，那么就将其添加到字典，以便下一次编码时<code>p+c</code>能够从字典中找到；如果能够在字典中找到<code>p+c</code>，意味着需要一个更长的字符串<code>p</code>来映射一些新的代码以达到文本压缩目的。就像上图例2,3，此时<code>p=a,c=a</code>,<code>&lt;aa,2&gt;</code>已经存在字典，下一次判断<code>p+c=aa</code>就能够在字典中找到<code>aa</code>，于是<code>p=p+c=aa</code>，尽可能选择一个最长的前缀字符串，接着下一次判断时<code>aa+b=aab</code>在字典中找不到，于是将<code>&lt;aab,3&gt;</code>插入到字典中。</p>
+<p>还有当读取文件尾/字符串到达结尾时，此时<code>p</code>还保留之前的字符串<code>p=c</code>或<code>p=p+c</code>，而且一定能在字典中找到。这是因为单个字符<code>p=c</code>在初始字典table时就已经有对应的代码了，而<code>p=p+c</code>要成立，那么它必须是插入<code>p+c</code>之后才能得到，也就是说，“输出”慢于“插入”。于是编码结束时，还要将对<code>table[p]</code>处理(输出)才算是完整的LZW编码。</p>
+<p>于是，压缩文本中并没有包含在编码过程中的生成的字典，而是通过编码的进行不断生成新的<code>&lt;新字符串前缀,新的代码&gt;</code>，而且注意到，将文本编码后的代码输出也只是<code>前缀字符串p</code>。</p>
+<h3 id="解压缩decompress"><a class="markdownIt-Anchor" href="#解压缩decompress"></a> 解压缩decompress</h3>
+<p>与压缩对应的便是解压缩，其实lzw解压缩与lzw压缩是互逆的，但要理解它是怎么处理的需要些功夫。<br />
+在前面的压缩compress时，定义一个初始字典，且映射关系为&lt;文本串,代码&gt; =&gt; <code>table&lt;String,Integer&gt;</code>。同样，解压缩也需要一个字典：<code>table&lt;Integer,String&gt;</code>。<br />
+由于解码的过程中，解码器得到的是一个代码数字int，那得考虑代码在不在字典内，以及对应的解码文本是什么。</p>
+<p>首先需要规定：<code>p</code>表示当前读取到的待解码串<code>S</code>中某一个代码，其对应的文本为<code>text(p)</code>（或者<code>table[p]</code>如果存在的话）；<code>q</code>表示出现于<code>p</code>之前的代码，可称为<code>前缀代码</code>，而且该代码<code>q</code>一定存在字典里，其对应的文本为<code>text(q)</code>；<code>fc(p)</code>表示<code>text(p)</code>的第一个字符(first character)，可称为<code>后缀字符</code>。</p>
+<p>还是以上面的例子来说明，存在已经编码的代码串<code>0214537</code>。图中表格阴影部分表示将新的&lt;代码,文本&gt;添加到字典中。<br />
+<img src="/uploads/images/data_structure/lzw_cpp/02.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>LZW解码过程如下：<br />
+1.首先初始化字典；<br />
+2.然后找到<code>S</code>的第一个代码<code>q</code>，而且该代码一定存在字典内（这是由编码时决定的），输出文本<code>text(q)</code>；<br />
+3.接着读取<code>S</code>的下一个代码<code>p</code>；<br />
+4.如果<code>p</code>在字典里，则输出对应的文本<code>text(p)</code>，同时向字典添加新的代码<code>text(q)fc(p)</code>；<br />
+5.如果<code>p</code>不在字典里，则向字典添加新的代码<code>text(p)=text(q)fc(q)</code>，输出对应的文本<code>text(p)</code>；<br />
+6.重复步骤3、4、5，直到<code>EOF</code>；<br />
+7.结束。</p>
+<p>伪代码如下：</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs pgsql">Initialize <span class="hljs-keyword">table</span><br>Q = first <span class="hljs-keyword">input</span> code<br>output <span class="hljs-keyword">table</span>[Q]<br><span class="hljs-keyword">WHILE</span> <span class="hljs-keyword">not</span> EOF<br>    P = next <span class="hljs-keyword">input</span> code<br>    <span class="hljs-keyword">IF</span> P <span class="hljs-type">int</span> <span class="hljs-keyword">table</span><br>        <span class="hljs-keyword">insert</span> TEXT(Q)+FirstCharacter(P) <span class="hljs-keyword">into</span> <span class="hljs-keyword">table</span><br>    <span class="hljs-keyword">ELSE</span><br>        <span class="hljs-keyword">insert</span> TEXT(Q)+FirstCharacter(Q) <span class="hljs-keyword">into</span> <span class="hljs-keyword">table</span><br>    output <span class="hljs-keyword">table</span>[P]<br>    Q=P<br></code></pre></div></td></tr></table></figure>
+<p>1.<code>p</code>在字典里<br />
+以代码<code>p=1</code>和代码<code>q=2</code>为例。<br />
+现在根据<code>解压缩</code>的情况来分析：已知代码<code>p</code>在字典里，说明在<code>编码</code>过程（此时p表示代码对应的文本）中输出代码<code>table[p]=1</code>之前的某一步骤输出了代码<code>table[q]=2</code>，同时添加新的文本<code>q+c=aa+b=aab</code>到字典里且<code>table[q+c]=3</code>（<font color="red">这也就是解码时的text(q)+fc§，c=fc§</font>），然后<code>q=c=b</code>；之后继续判断<code>q+c=b+b=bb</code>不在字典内，则输出<code>table[q=b]=1</code>。于是就形成了代码<code>2 1</code>的情况。<br />
+<img src="/uploads/images/data_structure/lzw_cpp/04.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>还有<code>5 3</code>这种情况<br />
+<img src="/uploads/images/data_structure/lzw_cpp/03.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>2.<code>p</code>不在字典里<br />
+这种情况只有在文本段中形式为<code>text(q)text(q)fc(q)</code>和<code>text(q)fc(q)</code>，且相应的压缩代码串为<code>qp</code>的时候（qp相邻，观察上图可知），只有在<code>q</code>被<code>text(q)</code>代替的情况下，代码<code>q</code>在字典中才不会有对应的文本，而这个文本应该是<code>text(q)fc(q)</code>。比如上面的<code>q=3 p=7</code>且原始文本段<code>aab aaba</code>，即<code>text(7)=text(3)fc(3)</code>；又如<code>q=4 p=5</code>且原始文本段<code>bb bbb</code>，即<code>text(5)=text(4)fc(4)</code>；而<code>q=5 p=3</code>的原始文本段为<code>bbb aab</code>，但是没有<code>text(3)=text(5)fc(5)=bbbb</code>这种情况。这是在编码过程中决定的。</p>
+<p>解码是根据读取的代码来构建一个与编码之前完全相同的字典并输出对应的文本，而且也一定会将所有的代码读取完。</p>
+<p>以上例子只展示了一个字符串只有a、b两个字符，以及初始字典为&lt;a,0&gt;、&lt;b,1&gt;，一般来说，常见文本文件是ASCII文件，所以这时的初始字典大小可以是256，包含了扩展ASCII码。</p>
+<h3 id="code"><a class="markdownIt-Anchor" href="#code"></a> Code</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span><span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span><span class="hljs-meta-string">&lt;unordered_map&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span><span class="hljs-meta-string">&lt;vector&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-keyword">constexpr</span> <span class="hljs-keyword">int</span> ALPHA_MAX=<span class="hljs-number">256</span>;<br>unordered_map&lt;string,<span class="hljs-keyword">int</span>&gt;table;<br>unordered_map&lt;<span class="hljs-keyword">int</span>,string&gt;table2;<br><br><span class="hljs-comment">// 保存编码之后的代码</span><br>vector&lt;<span class="hljs-keyword">int</span>&gt;codes;<br><span class="hljs-comment">// 保存解码之后的文本</span><br>string text;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">output</span><span class="hljs-params">(string str)</span></span>&#123;<br>    codes.<span class="hljs-built_in">push_back</span>(table[str]);<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">output</span><span class="hljs-params">(<span class="hljs-keyword">int</span> code)</span></span>&#123;<br>    text+=table2[code];<br>&#125;<br><span class="hljs-comment">// 编码</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">compress</span><span class="hljs-params">(string source)</span></span>&#123;<br>    <span class="hljs-comment">// 初始化字典</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; ALPHA_MAX; i++)&#123;<br>        <span class="hljs-function">string <span class="hljs-title">key</span><span class="hljs-params">(<span class="hljs-number">1</span>,<span class="hljs-keyword">char</span>(i))</span></span>;<br>        table.<span class="hljs-built_in">insert</span>(<span class="hljs-built_in">make_pair</span>(key,i));<br>    &#125;<br>    <span class="hljs-comment">// 已使用代码数量</span><br>    <span class="hljs-keyword">int</span> usedCode=ALPHA_MAX;<br>    string p=<span class="hljs-string">&quot;&quot;</span>;<br>    string c;<br>    p+=source[<span class="hljs-number">0</span>];<br>    <span class="hljs-keyword">int</span> len=source.<span class="hljs-built_in">size</span>();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt; len; i++) &#123;<br>        c.<span class="hljs-built_in">clear</span>();<br>        c+=source[i];<br>        <span class="hljs-comment">// p+c在字典</span><br>        <span class="hljs-keyword">if</span>(table.<span class="hljs-built_in">find</span>(p+c)!=table.<span class="hljs-built_in">end</span>())&#123;<br>            p=p+c;<br>        <span class="hljs-comment">// p+c不在字典</span><br>        &#125;<span class="hljs-keyword">else</span>&#123;<br>            <span class="hljs-built_in">output</span>(p);<br>            table.<span class="hljs-built_in">insert</span>(<span class="hljs-built_in">make_pair</span>(p+c,usedCode++));<br>            p=c;<br>        &#125;<br>    &#125;<br>    <span class="hljs-built_in">output</span>(p);<br>&#125;<br><span class="hljs-comment">// 解码</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">uncompress</span><span class="hljs-params">(vector&lt;<span class="hljs-keyword">int</span>&gt;codes)</span></span>&#123;<br>    <span class="hljs-comment">// 初始化字典</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; ALPHA_MAX; i++)&#123;<br>        <span class="hljs-function">string <span class="hljs-title">text</span><span class="hljs-params">(<span class="hljs-number">1</span>,<span class="hljs-keyword">char</span>(i))</span></span>;<br>        table2.<span class="hljs-built_in">insert</span>(<span class="hljs-built_in">make_pair</span>(i,text));<br>    &#125;<br>    <span class="hljs-comment">// 已使用代码数量</span><br>    <span class="hljs-keyword">int</span> usedCode=ALPHA_MAX;<br><br>    <span class="hljs-keyword">int</span> q=codes[<span class="hljs-number">0</span>];<br>    <span class="hljs-built_in">output</span>(q);<br>    <span class="hljs-keyword">int</span> len=codes.<span class="hljs-built_in">size</span>();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt; len; i++)&#123;<br>        <span class="hljs-comment">// 读取下一个代码code</span><br>        <span class="hljs-keyword">int</span> p=codes[i];<br>        <span class="hljs-comment">// 当前读取的代码p在字典</span><br>        <span class="hljs-keyword">if</span>(table2.<span class="hljs-built_in">find</span>(p)!=table2.<span class="hljs-built_in">end</span>())&#123;<br>            <span class="hljs-comment">// text(code)=text(q)fc(p)</span><br>            string code=table2[q]+table2[p][<span class="hljs-number">0</span>];<br>            table2.<span class="hljs-built_in">insert</span>(<span class="hljs-built_in">make_pair</span>(usedCode++,code));<br>        <span class="hljs-comment">// 当前读取的代码p不在字典</span><br>        &#125;<span class="hljs-keyword">else</span>&#123;<br>            <span class="hljs-comment">// text(p)=text(q)fc(q)</span><br>            string pT=table2[q]+table2[q][<span class="hljs-number">0</span>];<br>            table2.<span class="hljs-built_in">insert</span>(<span class="hljs-built_in">make_pair</span>(usedCode++,pT));<br>        &#125;<br>        q=p;<br>        <span class="hljs-built_in">output</span>(p);<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    ifstream in;<br>    in.<span class="hljs-built_in">open</span>(<span class="hljs-string">&quot;test.txt&quot;</span>,ios_base::binary);<br>    string text=<span class="hljs-string">&quot;&quot;</span>;<br>    <span class="hljs-keyword">char</span> c;<br>    <span class="hljs-keyword">while</span>((c=in.<span class="hljs-built_in">get</span>())!=EOF)&#123;<br>        text+=c;<br>    &#125;<br>    <span class="hljs-built_in">compress</span>(text);<br>    in.<span class="hljs-built_in">close</span>();<br><br>    ofstream out;<br>    out.<span class="hljs-built_in">open</span>(<span class="hljs-string">&quot;test.txt.lzw&quot;</span>,ios_base::binary);<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> x:codes)&#123;<br>        out.<span class="hljs-built_in">put</span>(x);<br>    &#125;<br>    out.<span class="hljs-built_in">close</span>();<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>测试一个ASCII文件<br />
+<img src="/uploads/images/data_structure/lzw_cpp/05.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>又测试一个文件其最后压缩时生成的字典<br />
+<img src="/uploads/images/data_structure/lzw_cpp/06.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>C++中char数组存储中文时，如果取其中一个char的话，由于char占用1个字节，使得中文发生截断（被分解），比如<code>string s=&quot;你好&quot;;</code> 不过上面的测试依然可以通过，只要在编码过程中将被截断的所有char依次写入编码文件中，在解码时按照同样的规则去读取char，最后还是可以解码成功的。<br />
+<img src="/uploads/images/data_structure/lzw_cpp/07.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>就这样吧，等有空再来更新更新…</p>
+<h3 id="参考"><a class="markdownIt-Anchor" href="#参考"></a> 参考</h3>
+<p>《数据结构、算法与应用》<br />
+<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Lempel%E2%80%93Ziv%E2%80%93Welch">Lempel–Ziv–Welch</a><br />
+<a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000011425787?utm_medium=referral&amp;utm_source=tuicool">LZW压缩算法原理解析</a></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/C/">C++</a>
+                    
+                      <a class="hover-with-bg" href="/tags/DataStructures/">DataStructures</a>
+                    
+                      <a class="hover-with-bg" href="/tags/C/">C</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/huffman-encode-decode/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">哈夫曼编码实现解压缩文本文件</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/linux-tinyproxy/">
+                        <span class="hidden-mobile">CentOS+TinyProxy+Stunnel配置HTTP代理服务器</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"AzPbImmMjm5nQc1Xm9ulWCoH-gzGzoHsz","appKey":"xJqILn8nSbhYmdkB2VVQm8vI","placeholder":"说点什么","path":"window.location.pathname","avatar":"retro","meta":["nick","mail","link"],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false,"requiredFields":[]},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- KaTeX -->
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.10/dist/katex.min.css" />
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

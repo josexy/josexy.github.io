@@ -1,0 +1,607 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="计算机里的字典这东西,说白了就是保存着大量的可知数据,一般是用来暴力破解的……而要想要爆破成功,就得有一个强大而又有用的字典.
+而Linux下的一个开源程序 crunch 就是为了对字典的生成而被创造出来的.">
+  <meta name="author" content="Joseph XRays">
+  <meta name="keywords" content="">
+  
+  <title>强大的Crunch字典生成工具 - JoXrays&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/monokai.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.joxrays.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>JoXrays's Blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="强大的Crunch字典生成工具">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2019-06-02 00:00" pubdate>
+        2019年6月2日 凌晨
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.9k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      30
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">强大的Crunch字典生成工具</h1>
+            
+            <div class="markdown-body">
+              <p>计算机里的字典这东西,说白了就是保存着大量的可知数据,一般是用来<strong>暴力破解</strong>的……而要想要爆破成功,就得有一个强大而又有用的字典.<br />
+而Linux下的一个开源程序 <strong>crunch</strong> 就是为了对字典的生成而被创造出来的.</p>
+<span id="more"></span>
+<h3 id="crunch"><a class="markdownIt-Anchor" href="#crunch"></a> crunch</h3>
+<p>安装很简单:<code>apt-get install crunch</code><br />
+crunch的使用方法建议 <code>man crunch</code> 查看帮助文档,并且其中也有一些例子.</p>
+<figure class="highlight applescript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs applescript">CRUNCH(<span class="hljs-number">1</span>)                        General Commands Manual                        CRUNCH(<span class="hljs-number">1</span>)<br>NAME<br>       crunch - generate wordlists <span class="hljs-keyword">from</span> a <span class="hljs-built_in">character</span> <span class="hljs-keyword">set</span><br>SYNOPSIS<br>       crunch &lt;min-len&gt; &lt;max-len&gt; [&lt;charset <span class="hljs-built_in">string</span>&gt;] [options]<br>DESCRIPTION<br>       Crunch  can  create  a  wordlist  based  <span class="hljs-keyword">on</span> criteria you specify.  The output <span class="hljs-keyword">from</span><br>       crunch can be sent <span class="hljs-keyword">to</span> <span class="hljs-keyword">the</span> screen, <span class="hljs-built_in">file</span>,  <span class="hljs-keyword">or</span>  <span class="hljs-keyword">to</span>  another  program.   The  required<br>       parameters are:<br>       min-len<br>              The  minimum  <span class="hljs-built_in">length</span>  <span class="hljs-built_in">string</span>  you  want crunch <span class="hljs-keyword">to</span> start <span class="hljs-keyword">at</span>.  This option <span class="hljs-keyword">is</span><br>              required even <span class="hljs-keyword">for</span> parameters <span class="hljs-keyword">that</span> won&#x27;t use <span class="hljs-keyword">the</span> value.<br>       max-len<br>              The maximum <span class="hljs-built_in">length</span> <span class="hljs-built_in">string</span> you want  crunch  <span class="hljs-keyword">to</span>  <span class="hljs-keyword">end</span>  <span class="hljs-keyword">at</span>.   This  option  <span class="hljs-keyword">is</span><br>              required even <span class="hljs-keyword">for</span> parameters <span class="hljs-keyword">that</span> won&#x27;t use <span class="hljs-keyword">the</span> value.<br>       charset <span class="hljs-built_in">string</span><br>              You  may specify <span class="hljs-built_in">character</span> sets <span class="hljs-keyword">for</span> crunch <span class="hljs-keyword">to</span> use <span class="hljs-keyword">on</span> <span class="hljs-keyword">the</span> command line <span class="hljs-keyword">or</span> <span class="hljs-keyword">if</span><br>              you leave <span class="hljs-keyword">it</span> blank crunch will use <span class="hljs-keyword">the</span> default <span class="hljs-built_in">character</span> sets.   The  order<br>              MUST  BE  lower  case  <span class="hljs-built_in">characters</span>, upper case <span class="hljs-built_in">characters</span>, numbers, <span class="hljs-keyword">and</span> <span class="hljs-keyword">then</span><br>              symbols.  If you don&#x27;t follow this order you will <span class="hljs-keyword">not</span> <span class="hljs-keyword">get</span> <span class="hljs-keyword">the</span>  results  you<br>              want.   You  MUST  specify  either  values <span class="hljs-keyword">for</span> <span class="hljs-keyword">the</span> <span class="hljs-built_in">character</span> type <span class="hljs-keyword">or</span> a plus<br>              sign.  NOTE: If you want <span class="hljs-keyword">to</span> include <span class="hljs-keyword">the</span> <span class="hljs-literal">space</span> <span class="hljs-built_in">character</span> <span class="hljs-keyword">in</span>  your  <span class="hljs-built_in">character</span><br>              <span class="hljs-keyword">set</span>  you must escape <span class="hljs-keyword">it</span> using <span class="hljs-keyword">the</span> \ <span class="hljs-built_in">character</span> <span class="hljs-keyword">or</span> enclose your <span class="hljs-built_in">character</span> <span class="hljs-keyword">set</span><br>              <span class="hljs-keyword">in</span> quotes i.e. <span class="hljs-string">&quot;abc &quot;</span>.  See <span class="hljs-keyword">the</span> examples <span class="hljs-number">3</span>, <span class="hljs-number">11</span>, <span class="hljs-number">12</span>, <span class="hljs-keyword">and</span> <span class="hljs-number">13</span> <span class="hljs-keyword">for</span> examples.<br>OPTIONS<br>       -b <span class="hljs-built_in">number</span>[type]<br>              Specifies <span class="hljs-keyword">the</span> size <span class="hljs-keyword">of</span> <span class="hljs-keyword">the</span> output <span class="hljs-built_in">file</span>, only works  <span class="hljs-keyword">if</span>  -o  START  <span class="hljs-keyword">is</span>  used,<br>              i.e.:  <span class="hljs-number">60</span>MB  The output files will be <span class="hljs-keyword">in</span> <span class="hljs-keyword">the</span> format <span class="hljs-keyword">of</span> starting letter-<span class="hljs-keyword">end</span>‐<br>              ing letter <span class="hljs-keyword">for</span> example: ./crunch <span class="hljs-number">4</span> <span class="hljs-number">5</span> -b <span class="hljs-number">20</span>mib  -o  START  will  generate  <span class="hljs-number">4</span><br>              files:  aaaa-gvfed.txt,  gvfee-ombqy.txt,  ombqz-wcydt.txt, wcydu-zzzzz.txt<br>              valid values <span class="hljs-keyword">for</span> type are kb, mb, gb, kib, mib, <span class="hljs-keyword">and</span> gib.  The  <span class="hljs-keyword">first</span>  three<br>              types are based <span class="hljs-keyword">on</span> <span class="hljs-number">1000</span> <span class="hljs-keyword">while</span> <span class="hljs-keyword">the</span> <span class="hljs-keyword">last</span> three types are based <span class="hljs-keyword">on</span> <span class="hljs-number">1024.</span>  NOTE<br>              There <span class="hljs-keyword">is</span> no <span class="hljs-literal">space</span> <span class="hljs-keyword">between</span> <span class="hljs-keyword">the</span> <span class="hljs-built_in">number</span> <span class="hljs-keyword">and</span> type.  For example <span class="hljs-number">500</span>mb  <span class="hljs-keyword">is</span>  cor‐<br>              rect <span class="hljs-number">500</span> mb <span class="hljs-keyword">is</span> NOT correct.<br>       -c <span class="hljs-built_in">number</span><br>              Specifies  <span class="hljs-keyword">the</span>  <span class="hljs-built_in">number</span>  <span class="hljs-keyword">of</span>  lines <span class="hljs-keyword">to</span> <span class="hljs-built_in">write</span> <span class="hljs-keyword">to</span> output <span class="hljs-built_in">file</span>, only works <span class="hljs-keyword">if</span> -o<br>              START <span class="hljs-keyword">is</span> used, i.e.: <span class="hljs-number">60</span>  The output files will be <span class="hljs-keyword">in</span> <span class="hljs-keyword">the</span> format <span class="hljs-keyword">of</span> starting<br>              letter-ending   letter   <span class="hljs-keyword">for</span>   example:  ./crunch  <span class="hljs-number">1</span>  <span class="hljs-number">1</span>  -f  /pentest/pass‐<br>              <span class="hljs-built_in">word</span>/crunch/charset.lst mixalpha-numeric-all-<span class="hljs-literal">space</span>  -o  START  -c  <span class="hljs-number">60</span>  will<br>              <span class="hljs-literal">result</span>  <span class="hljs-keyword">in</span>  <span class="hljs-number">2</span> files: a<span class="hljs-number">-7.</span>txt <span class="hljs-keyword">and</span> <span class="hljs-number">8</span>-\ .txt  The reason <span class="hljs-keyword">for</span> <span class="hljs-keyword">the</span> slash <span class="hljs-keyword">in</span>  <span class="hljs-keyword">the</span><br>              <span class="hljs-keyword">second</span> filename <span class="hljs-keyword">is</span> <span class="hljs-keyword">the</span> ending <span class="hljs-built_in">character</span> <span class="hljs-keyword">is</span> <span class="hljs-literal">space</span> <span class="hljs-keyword">and</span> ls has <span class="hljs-keyword">to</span> escape <span class="hljs-keyword">it</span> <span class="hljs-keyword">to</span><br>              print  <span class="hljs-keyword">it</span>.   Yes you will need <span class="hljs-keyword">to</span> <span class="hljs-keyword">put</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">the</span> \ when specifying <span class="hljs-keyword">the</span> filename<br>              because <span class="hljs-keyword">the</span> <span class="hljs-keyword">last</span> <span class="hljs-built_in">character</span> <span class="hljs-keyword">is</span> a <span class="hljs-literal">space</span>.<br>       -d numbersymbol<br>              Limits <span class="hljs-keyword">the</span> <span class="hljs-built_in">number</span> <span class="hljs-keyword">of</span> duplicate <span class="hljs-built_in">characters</span>.  -d <span class="hljs-number">2</span>@  limits  <span class="hljs-keyword">the</span>  lower  case<br>              alphabet <span class="hljs-keyword">to</span> output like aab <span class="hljs-keyword">and</span> aac.  aaa would <span class="hljs-keyword">not</span> be generated <span class="hljs-keyword">as</span> <span class="hljs-keyword">that</span> <span class="hljs-keyword">is</span><br>              <span class="hljs-number">3</span> consecutive letters <span class="hljs-keyword">of</span> a.  The format <span class="hljs-keyword">is</span> <span class="hljs-built_in">number</span> <span class="hljs-keyword">then</span> symbol <span class="hljs-keyword">where</span>  <span class="hljs-built_in">number</span><br>              <span class="hljs-keyword">is</span> <span class="hljs-keyword">the</span> maximum <span class="hljs-built_in">number</span> <span class="hljs-keyword">of</span> consecutive <span class="hljs-built_in">characters</span> <span class="hljs-keyword">and</span> symbol <span class="hljs-keyword">is</span> <span class="hljs-keyword">the</span> symbol <span class="hljs-keyword">of</span><br>              <span class="hljs-keyword">the</span> <span class="hljs-keyword">the</span> <span class="hljs-built_in">character</span> <span class="hljs-keyword">set</span> you want <span class="hljs-keyword">to</span> limit i.e. @,%^   See examples <span class="hljs-number">17</span><span class="hljs-number">-19.</span><br>       -e <span class="hljs-built_in">string</span><br>              Specifies when crunch should stop early<br>       -f /path/<span class="hljs-keyword">to</span>/charset.lst charset-<span class="hljs-built_in">name</span><br>              Specifies a <span class="hljs-built_in">character</span> <span class="hljs-keyword">set</span> <span class="hljs-keyword">from</span> <span class="hljs-keyword">the</span> charset.lst<br>       -i  Inverts  <span class="hljs-keyword">the</span>   output   so   instead   <span class="hljs-keyword">of</span>   aaa,aab,aac,aad,   etc   you   <span class="hljs-keyword">get</span><br>              aaa,baa,caa,daa,aba,bba, etc<br>       -l  When  you  use  <span class="hljs-keyword">the</span> -t option this option tells crunch which symbols should be<br>              treated <span class="hljs-keyword">as</span> literals.  This will allow you <span class="hljs-keyword">to</span> use <span class="hljs-keyword">the</span> placeholders  <span class="hljs-keyword">as</span>  let‐<br>              ters  <span class="hljs-keyword">in</span>  <span class="hljs-keyword">the</span>  pattern.   The -l option should be <span class="hljs-keyword">the</span> same <span class="hljs-built_in">length</span> <span class="hljs-keyword">as</span> <span class="hljs-keyword">the</span> -t<br>              option.  See example <span class="hljs-number">15.</span><br>       -m Merged <span class="hljs-keyword">with</span> -p.  Please use -p instead.<br>       -o wordlist.txt<br>              Specifies <span class="hljs-keyword">the</span> <span class="hljs-built_in">file</span> <span class="hljs-keyword">to</span> <span class="hljs-built_in">write</span> <span class="hljs-keyword">the</span> output <span class="hljs-keyword">to</span>, eg: wordlist.txt<br>       -p charset OR -p word1 word2 ...<br>              Tells crunch <span class="hljs-keyword">to</span> generate <span class="hljs-built_in">words</span> <span class="hljs-keyword">that</span> don&#x27;t have  repeating  <span class="hljs-built_in">characters</span>.   By<br>              default  crunch  will  generate  a  wordlist size <span class="hljs-keyword">of</span> <span class="hljs-comment">#of_chars_in_charset ^</span><br>              max_length.  This option will instead generate <span class="hljs-comment">#of_chars_in_charset!.   The</span><br>              !  stands <span class="hljs-keyword">for</span> factorial.  For example <span class="hljs-built_in">say</span> <span class="hljs-keyword">the</span> charset <span class="hljs-keyword">is</span> abc <span class="hljs-keyword">and</span> max <span class="hljs-built_in">length</span><br>              <span class="hljs-keyword">is</span> <span class="hljs-number">4.</span>.  Crunch will <span class="hljs-keyword">by</span> default generate <span class="hljs-number">3</span>^<span class="hljs-number">4</span> = <span class="hljs-number">81</span> <span class="hljs-built_in">words</span>.  This  option  will<br>              instead generate <span class="hljs-number">3</span>! = <span class="hljs-number">3</span>x2x1 = <span class="hljs-number">6</span> <span class="hljs-built_in">words</span> (abc, acb, bac, bca, cab, cba).  THIS<br>              MUST BE THE LAST OPTION!  This option CANNOT be used <span class="hljs-keyword">with</span> -s <span class="hljs-keyword">and</span> <span class="hljs-keyword">it</span> ignores<br>              min <span class="hljs-keyword">and</span> max <span class="hljs-built_in">length</span> however you must still specify two numbers.<br>       -q filename.txt<br>              Tells  crunch  <span class="hljs-keyword">to</span> <span class="hljs-built_in">read</span> filename.txt <span class="hljs-keyword">and</span> permute what <span class="hljs-keyword">is</span> <span class="hljs-built_in">read</span>.  This <span class="hljs-keyword">is</span> like<br>              <span class="hljs-keyword">the</span> -p option except <span class="hljs-keyword">it</span> gets <span class="hljs-keyword">the</span> input <span class="hljs-keyword">from</span> filename.txt.<br>       -r Tells crunch <span class="hljs-keyword">to</span> resume generate <span class="hljs-built_in">words</span> <span class="hljs-keyword">from</span> <span class="hljs-keyword">where</span> <span class="hljs-keyword">it</span> left off.  -r only works <span class="hljs-keyword">if</span><br>              you  use -o.  You must use <span class="hljs-keyword">the</span> same command <span class="hljs-keyword">as</span> <span class="hljs-keyword">the</span> original command used <span class="hljs-keyword">to</span><br>              generate <span class="hljs-keyword">the</span> <span class="hljs-built_in">words</span>.  The only exception <span class="hljs-keyword">to</span> this <span class="hljs-keyword">is</span> <span class="hljs-keyword">the</span> -s option.  If  your<br>              original  command  used  <span class="hljs-keyword">the</span> -s option you MUST remove <span class="hljs-keyword">it</span> <span class="hljs-keyword">before</span> you resume<br>              <span class="hljs-keyword">the</span> session.  Just add -r <span class="hljs-keyword">to</span> <span class="hljs-keyword">the</span> <span class="hljs-keyword">end</span> <span class="hljs-keyword">of</span> <span class="hljs-keyword">the</span> original command.<br>       -s startblock<br>              Specifies a starting <span class="hljs-built_in">string</span>, eg: <span class="hljs-number">03</span>god22fs<br>       -t @,%^<br>              Specifies a pattern, eg: @@god@@@@ <span class="hljs-keyword">where</span> <span class="hljs-keyword">the</span> only <span class="hljs-keyword">the</span> @&#x27;s,  ,&#x27;s,  %&#x27;s,  <span class="hljs-keyword">and</span><br>              ^&#x27;s will change.<br>              @ will insert lower case <span class="hljs-built_in">characters</span><br>              , will insert upper case <span class="hljs-built_in">characters</span><br>              % will insert numbers<br>              ^ will insert symbols<br>       -u<br>              The -u option disables <span class="hljs-keyword">the</span> printpercentage thread.  This should be <span class="hljs-keyword">the</span> <span class="hljs-keyword">last</span><br>              option.<br>       -z gzip, bzip2, lzma, <span class="hljs-keyword">and</span> <span class="hljs-number">7</span>z<br>              Compresses <span class="hljs-keyword">the</span> output <span class="hljs-keyword">from</span> <span class="hljs-keyword">the</span>  -o  option.   Valid  parameters  are  gzip,<br>              bzip2, lzma, <span class="hljs-keyword">and</span> <span class="hljs-number">7</span>z.<br>              gzip  <span class="hljs-keyword">is</span>  <span class="hljs-keyword">the</span>  fastest  <span class="hljs-keyword">but</span>  <span class="hljs-keyword">the</span> compression <span class="hljs-keyword">is</span> minimal.  bzip2 <span class="hljs-keyword">is</span> a little<br>              slower than gzip <span class="hljs-keyword">but</span> has better compression.  <span class="hljs-number">7</span>z <span class="hljs-keyword">is</span>  slowest  <span class="hljs-keyword">but</span>  has  <span class="hljs-keyword">the</span><br>              best compression.<br></code></pre></div></td></tr></table></figure>
+<p>命令格式为: <code>crunch &lt;min-len&gt; &lt;max-len&gt; [&lt;charset string&gt;] [options]</code></p>
+<ul>
+<li>min-len: 生成字典的最小长度</li>
+<li>max-len: 生成字典的最大长度</li>
+</ul>
+<p>其中,几个比较重要的参数:</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-b</td>
+<td>指定写入文件最大字节数,类型可为kb, mb, gb, kib, mib, and gib.注意此参数必须跟 -o START 一起使用</td>
+</tr>
+<tr>
+<td>-c</td>
+<td>指定写出文件的行数</td>
+</tr>
+<tr>
+<td>-s</td>
+<td>指定crunch从该字符串开始生成字典</td>
+</tr>
+<tr>
+<td>-e</td>
+<td>指定crunch从该字符串结束生成字典</td>
+</tr>
+<tr>
+<td>-f</td>
+<td>指定一个字符集合,默认路径 <strong>/usr/share/crunch/charset.lst</strong>,作用见下文</td>
+</tr>
+<tr>
+<td>-l</td>
+<td>类似于转义的操作</td>
+</tr>
+<tr>
+<td>-o</td>
+<td>指定写出文件名,要分清楚 <strong>-o START</strong></td>
+</tr>
+<tr>
+<td>-t</td>
+<td>指定生成字典的特殊格式,此参数乃crunch的核心!</td>
+</tr>
+<tr>
+<td>-z</td>
+<td>指定压缩生成的字典文件,格式为:gzip, bzip2, lzma, and 7z,且与 <strong>-o START</strong> 使用</td>
+</tr>
+<tr>
+<td>-p</td>
+<td>这个参数可以理解为把指定的字符串看做<strong>一个整体</strong>并自由组合</td>
+</tr>
+</tbody>
+</table>
+<p><strong>注意:在使用crunch生成字典时,一定要看生成的字典文件的预计大小.比如:[ crunch 1 8 ] 就是输出 1812GB 的数据!! 这样的话硬盘早就撑爆了!!</strong></p>
+<h4 id="example1"><a class="markdownIt-Anchor" href="#example1"></a> example1</h4>
+<blockquote>
+<p>$ crunch 1 8<br />
+这将会显示出从 a 到 zzzzzzzz 的数据,也就是1812GB!</p>
+</blockquote>
+<h4 id="example2"><a class="markdownIt-Anchor" href="#example2"></a> example2</h4>
+<blockquote>
+<p>$ crunch 1 6 abcdefg -o mydict.lst<br />
+这将会生成一个从 a 到 gggggg 的字典文件</p>
+</blockquote>
+<h4 id="example3"><a class="markdownIt-Anchor" href="#example3"></a> example3</h4>
+<blockquote>
+<p>$ crunch 8 8 -f /usr/share/crunch/charset.lst <strong>mixalpha-numeric-all-space</strong><br />
+这将生成 8位 大小写以及特殊符号的字典</p>
+</blockquote>
+<p>charset.lst文件如下:<br />
+<img src="/uploads/images/linux/file_002.png" srcset="/img/loading.gif" lazyload alt="img" /></p>
+<p>可以看到 mixalpha-numeric-all-space 表示 a-z,A-Z大小写+0-9数字+特殊字符:<br />
+<strong>abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345 6789!@#$%^&amp;*()-_+=~`[]{}|:;”‘&lt;&gt;,.?/</strong></p>
+<p>当指定 <strong>-f</strong> 参数时,必须要指明一个变量,如 <strong>mixalpha-numeric-all-space</strong></p>
+<h4 id="example4"><a class="markdownIt-Anchor" href="#example4"></a> example4</h4>
+<blockquote>
+<p>$ crunch 6 6 -s <strong>xxdog5</strong> -t <strong>@@dog%</strong><br />
+注意这里的<strong>格式</strong>,这里以 xxdog5 开始且字符个数必须为6,因为这里最小字符数为6,同时 <strong>-t</strong> 指定的该格式也必须时 <strong>-s</strong> 指定的格式.</p>
+</blockquote>
+<p>一般地,crunch的4个<strong>通配符</strong>代表了不同的意思</p>
+<ul>
+<li><strong>@</strong> :表示一个 a-z 小写字符</li>
+<li><strong>,</strong> :表示一个 A-Z 大写字符</li>
+<li><strong>%</strong> :表示一个 0-9 的数字</li>
+<li><strong>^</strong> :表示一个象征符号</li>
+</ul>
+<p>弄清楚这几个后,上面的也就可以明白了,如果把 xxdog5 换成 xxdoga 就错了</p>
+<h4 id="example5"><a class="markdownIt-Anchor" href="#example5"></a> example5</h4>
+<blockquote>
+<p>$ crunch 3 3 -p abc<br />
+这里指定了 -p 参数,意味着吧 a,b,c 这三个字符进行组合 .输出结果为:<br />
+abc<br />
+acb<br />
+bac<br />
+bca<br />
+cab<br />
+cba</p>
+</blockquote>
+<p>当然这里也可以写成 <strong>crunch 3 3 -p a b c</strong><br />
+举一反三,再来一个例子:</p>
+<blockquote>
+<p>$ crunch 3 3 <strong>-p</strong> i love you<br />
+输出:<br />
+iloveyou<br />
+iyoulove<br />
+loveiyou<br />
+loveyoui<br />
+youilove<br />
+youlovei<br />
+可看到,该参数吧一个词看做整体来进行匹配</p>
+</blockquote>
+<h4 id="example6"><a class="markdownIt-Anchor" href="#example6"></a> example6</h4>
+<blockquote>
+<p>$ crunch 3 3 abc <strong>-o START</strong> -c 10 -z bzip2<br />
+最后会生成3个.bz2压缩文件<br />
+aaa-baa.txt.bz2<br />
+bab-cab.txt.bz2<br />
+cac-ccc.txt.bz2</p>
+</blockquote>
+<p>这里使用参数 <strong>-o START</strong>, <strong>-c</strong> 表示生成的字典文件每个10行数据,直到生成结束,加入 <strong>-z bzip2</strong> 表示然后再把这些 .txt文件压缩成后缀为 .bz2的压缩包</p>
+<p><strong>注意,这里没有必要再指定生成字典的文件名!</strong></p>
+<h3 id="结尾"><a class="markdownIt-Anchor" href="#结尾"></a> 结尾</h3>
+<p>关于crunch的例子,可以查看文档,文档是个好东西~<br />
+熟悉crunch的使用,还是很重要的……</p>
+<p>bye~</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Others/">Others</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Linux/">Linux</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/mongodb-driver-install/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">MongoDB C Driver安装</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/linux-xls/">
+                        <span class="hidden-mobile">Linux libxls和xlslib读写Excel文档</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"AzPbImmMjm5nQc1Xm9ulWCoH-gzGzoHsz","appKey":"xJqILn8nSbhYmdkB2VVQm8vI","placeholder":"说点什么","path":"window.location.pathname","avatar":"retro","meta":["nick","mail","link"],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false,"requiredFields":[]},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- KaTeX -->
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.10/dist/katex.min.css" />
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

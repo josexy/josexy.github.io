@@ -1,0 +1,647 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="大家都应该熟悉ping这个网络诊断工具，它用来检测网络是否连通以及目的主机是否在线。然而唯一缺点是它只支持ICMP协议。因此，大多数主机都会防火墙过滤ICMP数据包，不过，Linux下也有跟他类似的ping工具，本文将会介绍一些常见的工具。
+">
+  <meta name="author" content="Joseph XRays">
+  <meta name="keywords" content="">
+  
+  <title>Linux Ping工具汇总 - JoXrays&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/monokai.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.joxrays.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>JoXrays's Blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Linux Ping工具汇总">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2019-07-01 00:00" pubdate>
+        2019年7月1日 凌晨
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      4.4k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      80
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Linux Ping工具汇总</h1>
+            
+            <div class="markdown-body">
+              <p>大家都应该熟悉ping这个网络诊断工具，它用来检测网络是否连通以及目的主机是否在线。然而唯一缺点是它只支持ICMP协议。因此，大多数主机都会防火墙过滤ICMP数据包，不过，Linux下也有跟他类似的ping工具，本文将会介绍一些常见的工具。</p>
+<p><img src="/uploads/images/imgs/command-87198_640.jpg" srcset="/img/loading.gif" lazyload alt="" /></p>
+<span id="more"></span>
+<h3 id="ping"><a class="markdownIt-Anchor" href="#ping"></a> ping</h3>
+<p>一般作为所有系统默认自带的 <code>ping</code> ，它同样也很重要。通过 <code>man ping</code> 来查看ping的帮助手册</p>
+<figure class="highlight inform7"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs inform7">ping  <span class="hljs-comment">[-aAbBdDfhLnOqrRUvV46]</span> <span class="hljs-comment">[-c count]</span> <span class="hljs-comment">[-F flowlabel]</span> <span class="hljs-comment">[-i interval]</span> <span class="hljs-comment">[-I interface]</span><br>       <span class="hljs-comment">[-l preload]</span> <span class="hljs-comment">[-m mark]</span> <span class="hljs-comment">[-M pmtudisc_option]</span> <span class="hljs-comment">[-N nodeinfo_option]</span> <span class="hljs-comment">[-w deadline]</span>  <span class="hljs-comment">[-W</span><br><span class="hljs-comment">       timeout]</span>  <span class="hljs-comment">[-p  pattern]</span> <span class="hljs-comment">[-Q tos]</span> <span class="hljs-comment">[-s packetsize]</span> <span class="hljs-comment">[-S sndbuf]</span> <span class="hljs-comment">[-t ttl]</span> <span class="hljs-comment">[-T timestamp</span><br><span class="hljs-comment">       option]</span> <span class="hljs-comment">[hop ...]</span> destination<br></code></pre></div></td></tr></table></figure>
+<p>常用的也就是 -c(发送数据包的数量)，-s(发送数据的字节大小)，-I(网络接口)</p>
+<figure class="highlight routeros"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs routeros">&gt;<span class="hljs-built_in"> ping </span>baidu.com -c 2 -s 64<span class="hljs-built_in"></span><br><span class="hljs-built_in">PING </span>baidu.com (111.13.101.208) 64(92) bytes of data.<br>72 bytes <span class="hljs-keyword">from</span> 111.13.101.208 (111.13.101.208): <span class="hljs-attribute">icmp_seq</span>=1 <span class="hljs-attribute">ttl</span>=55 <span class="hljs-attribute">time</span>=44.2 ms<br>72 bytes <span class="hljs-keyword">from</span> 111.13.101.208 (111.13.101.208): <span class="hljs-attribute">icmp_seq</span>=2 <span class="hljs-attribute">ttl</span>=55 <span class="hljs-attribute">time</span>=43.4 ms<br>--- baidu.com<span class="hljs-built_in"> ping </span>statistics ---<br>2 packets transmitted, 2 received, 0% packet loss, time 1017ms<br>rtt min/avg/max/mdev = 43.490/43.873/44.257/0.436 ms<br></code></pre></div></td></tr></table></figure>
+<p>假如我要ping一个主机的IPv6地址，那么可以这样做(必须指定 -I eth0)</p>
+<figure class="highlight elixir"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs elixir">&gt; ping -I eth0 fe80::<span class="hljs-number">2605</span><span class="hljs-symbol">:fff</span><span class="hljs-symbol">:fe41</span><span class="hljs-symbol">:e387</span> -c <span class="hljs-number">2</span><br>PING fe80::<span class="hljs-number">2605</span><span class="hljs-symbol">:fff</span><span class="hljs-symbol">:fe41</span><span class="hljs-symbol">:e387</span>(fe80::<span class="hljs-number">2605</span><span class="hljs-symbol">:fff</span><span class="hljs-symbol">:fe41</span><span class="hljs-symbol">:e387</span>) from fe80::<span class="hljs-number">2</span><span class="hljs-symbol">cca:</span><span class="hljs-symbol">ff77:</span><span class="hljs-number">78</span><span class="hljs-symbol">dc:</span><span class="hljs-number">1025</span>%eth0 <span class="hljs-symbol">eth0:</span> <span class="hljs-number">56</span> data bytes<br><span class="hljs-number">64</span> bytes from fe80::<span class="hljs-number">2605</span><span class="hljs-symbol">:fff</span><span class="hljs-symbol">:fe41</span><span class="hljs-symbol">:e387%eth0</span>: icmp_seq=<span class="hljs-number">1</span> ttl=<span class="hljs-number">255</span> time=<span class="hljs-number">1.67</span> ms<br><span class="hljs-number">64</span> bytes from fe80::<span class="hljs-number">2605</span><span class="hljs-symbol">:fff</span><span class="hljs-symbol">:fe41</span><span class="hljs-symbol">:e387%eth0</span>: icmp_seq=<span class="hljs-number">2</span> ttl=<span class="hljs-number">255</span> time=<span class="hljs-number">4.43</span> ms<br>--- fe80::<span class="hljs-number">2605</span><span class="hljs-symbol">:fff</span><span class="hljs-symbol">:fe41</span><span class="hljs-symbol">:e387</span> ping statistics ---<br><span class="hljs-number">2</span> packets transmitted, <span class="hljs-number">2</span> received, 0% packet loss, time <span class="hljs-number">1001</span>ms<br>rtt min/avg/max/mdev = <span class="hljs-number">1.671</span>/<span class="hljs-number">3.054</span>/<span class="hljs-number">4.438</span>/<span class="hljs-number">1.384</span> ms<br></code></pre></div></td></tr></table></figure>
+<p>或者 <strong>ping6 -I eth0 fe80::2605:fff:fe41:e387 -c 2</strong></p>
+<h3 id="fping"><a class="markdownIt-Anchor" href="#fping"></a> fping</h3>
+<p>相对来说fping比ping要高级点(<strong>也是通过ICMP协议来发送数据包的</strong>)，他可以向多个目标主机发送ping，也可以指定一个主机列表文件。其中，fping的 <strong>-g</strong> 选项比较重要</p>
+<blockquote>
+<p><strong>-g, –generate</strong> generate target list (only if no -f specified)<br />
+(give start and end IP in the target list, or a <strong>CIDR address</strong>)<br />
+(ex. fping -g 192.168.1.0 192.168.1.255 or fping -g 192.168.1.0/24)</p>
+</blockquote>
+<figure class="highlight vhdl"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs vhdl">fping <span class="hljs-comment">--help</span><br>Usage: fping [options] [targets...]<br>Probing options:<br>   -<span class="hljs-number">4</span>, <span class="hljs-comment">--ipv4         only ping IPv4 addresses</span><br>   -<span class="hljs-number">6</span>, <span class="hljs-comment">--ipv6         only ping IPv6 addresses</span><br>   -b, <span class="hljs-comment">--size=BYTES   amount of ping data to send, in bytes (default: 56)</span><br>   -B, <span class="hljs-comment">--backoff=N    set exponential backoff factor to N (default: 1.5)</span><br>   -c, <span class="hljs-comment">--count=N      count mode: send N pings to each target</span><br>   -f, <span class="hljs-comment">--file=FILE    read list of targets from a file ( - means stdin)</span><br>   -g, <span class="hljs-comment">--generate     generate target list (only if no -f specified)</span><br>                      (give start <span class="hljs-keyword">and</span> <span class="hljs-keyword">end</span> IP <span class="hljs-keyword">in</span> the target list, <span class="hljs-keyword">or</span> a CIDR address)<br>                      (ex. fping -g <span class="hljs-number">192.168</span>.<span class="hljs-number">1.0</span> <span class="hljs-number">192.168</span>.<span class="hljs-number">1.255</span> <span class="hljs-keyword">or</span> fping -g <span class="hljs-number">192.168</span>.<span class="hljs-number">1.0</span>/<span class="hljs-number">24</span>)<br>   -H, <span class="hljs-comment">--ttl=N        set the IP TTL value (Time To Live hops)</span><br>   -I, <span class="hljs-comment">--iface=IFACE  bind to a particular interface</span><br>   -l, <span class="hljs-comment">--loop         loop mode: send pings forever</span><br>   -m, <span class="hljs-comment">--all          use all IPs of provided hostnames (e.g. IPv4 and IPv6), use with -A</span><br>   -M, <span class="hljs-comment">--dontfrag     set the Don&#x27;t Fragment flag</span><br>   -O, <span class="hljs-comment">--tos=N        set the type of service (tos) flag on the ICMP packets</span><br>   -p, <span class="hljs-comment">--period=MSEC  interval between ping packets to one target (in ms)</span><br>                      (<span class="hljs-keyword">in</span> <span class="hljs-keyword">loop</span> <span class="hljs-keyword">and</span> count modes, <span class="hljs-keyword">default</span>: <span class="hljs-number">1000</span> ms)<br>   -r, <span class="hljs-comment">--retry=N      number of retries (default: 3)</span><br>   -R, <span class="hljs-comment">--random       random packet data (to foil link data compression)</span><br>   -S, <span class="hljs-comment">--src=IP       set source address</span><br>   -t, <span class="hljs-comment">--timeout=MSEC individual target initial timeout (default: 500 ms,</span><br>                      except <span class="hljs-keyword">with</span> -l/-c/-C, where it<span class="hljs-symbol">&#x27;s</span> the -p period up <span class="hljs-keyword">to</span> <span class="hljs-number">2000</span> ms)<br>Output options:<br>   -a, <span class="hljs-comment">--alive        show targets that are alive</span><br>   -A, <span class="hljs-comment">--addr         show targets by address</span><br>   -C, <span class="hljs-comment">--vcount=N     same as -c, report results in verbose format</span><br>   -D, <span class="hljs-comment">--timestamp    print timestamp before each output line</span><br>   -e, <span class="hljs-comment">--elapsed      show elapsed time on return packets</span><br>   -i, <span class="hljs-comment">--interval=MSEC  interval between sending ping packets (default: 10 ms)</span><br>   -n, <span class="hljs-comment">--name         show targets by name (-d is equivalent)</span><br>   -N, <span class="hljs-comment">--netdata      output compatible for netdata (-l -Q are required)</span><br>   -o, <span class="hljs-comment">--outage       show the accumulated outage time (lost packets * packet interval)</span><br>   -q, <span class="hljs-comment">--quiet        quiet (don&#x27;t show per-target/per-ping results)</span><br>   -Q, <span class="hljs-comment">--squiet=SECS  same as -q, but show summary every n seconds</span><br>   -s, <span class="hljs-comment">--stats        print final stats</span><br>   -u, <span class="hljs-comment">--unreach      show targets that are unreachable</span><br>   -v, <span class="hljs-comment">--version      show version</span><br></code></pre></div></td></tr></table></figure>
+<p>用法如下</p>
+<figure class="highlight gradle"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs gradle">&gt; fping -I eth0 -b <span class="hljs-number">64</span> -f list_targets -a -q -s<br><span class="hljs-number">192.168</span>.<span class="hljs-number">1.16</span>  : xmt<span class="hljs-regexp">/rcv/</span>%loss = <span class="hljs-number">2</span><span class="hljs-regexp">/2/</span><span class="hljs-number">0</span>%, min<span class="hljs-regexp">/avg/m</span>ax = <span class="hljs-number">58.0</span><span class="hljs-regexp">/74.1/</span><span class="hljs-number">90.1</span><br><span class="hljs-number">192.168</span>.<span class="hljs-number">1.15</span>  : xmt<span class="hljs-regexp">/rcv/</span>%loss = <span class="hljs-number">2</span><span class="hljs-regexp">/0/</span><span class="hljs-number">100</span>%<br><span class="hljs-number">192.168</span>.<span class="hljs-number">1.110</span> : xmt<span class="hljs-regexp">/rcv/</span>%loss = <span class="hljs-number">2</span><span class="hljs-regexp">/2/</span><span class="hljs-number">0</span>%, min<span class="hljs-regexp">/avg/m</span>ax = <span class="hljs-number">1.48</span><span class="hljs-regexp">/3.39/</span><span class="hljs-number">5.31</span><br>       <span class="hljs-number">3</span> targets<br>       <span class="hljs-number">2</span> alive<br>       <span class="hljs-number">1</span> unreachable<br>       <span class="hljs-number">0</span> unknown addresses<br>       <span class="hljs-number">1</span> timeouts (waiting <span class="hljs-keyword">for</span> response)<br>       <span class="hljs-number">6</span> ICMP Echos sent<br>       <span class="hljs-number">4</span> ICMP Echo Replies received<br>       <span class="hljs-number">0</span> other ICMP received<br> <span class="hljs-number">1.48</span> ms (min <span class="hljs-keyword">round</span> trip time)<br> <span class="hljs-number">38.7</span> ms (avg <span class="hljs-keyword">round</span> trip time)<br> <span class="hljs-number">90.1</span> ms (max <span class="hljs-keyword">round</span> trip time)<br>        <span class="hljs-number">2.022</span> sec (elapsed real time)<br><br></code></pre></div></td></tr></table></figure>
+<p>-b 指定发送数据字节大小<br />
+-f 指定一个目标主机列表文件，每行一个地址<br />
+-a 只显示可以ping通的目标主机<br />
+-q 安静模式，不显示在ping时的每个主机的结果<br />
+-s 最后显示总计结果<br />
+-r 重试次数，默认:3<br />
+还可以指定 -g 来扫描局域网下所有主机</p>
+<figure class="highlight accesslog"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs accesslog">&gt; fping -asgq <span class="hljs-number">192</span>.<span class="hljs-number">168</span>.<span class="hljs-number">1</span>.<span class="hljs-number">0</span>/<span class="hljs-number">24</span><br><span class="hljs-number">192.168.1.1</span><br><span class="hljs-number">192.168.1.11</span><br><span class="hljs-number">192.168.1.6</span><br><span class="hljs-number">192.168.1.16</span><br><span class="hljs-number">192.168.1.3</span><br><span class="hljs-number">192.168.1.5</span><br><span class="hljs-number">192.168.1.12</span><br><span class="hljs-number">192.168.1.9</span><br><span class="hljs-number">192.168.1.105</span><br><span class="hljs-number">192.168.1.108</span><br><span class="hljs-number">192.168.1.110</span><br>     <span class="hljs-number">254</span> targets<br>      <span class="hljs-number">11</span> alive<br>     <span class="hljs-number">243</span> unreachable<br>       <span class="hljs-number">0</span> unknown addresses<br>     <span class="hljs-number">243</span> timeouts (waiting for response)<br>     <span class="hljs-number">983</span> ICMP Echos sent<br>      <span class="hljs-number">11</span> ICMP Echo Replies received<br>     <span class="hljs-number">964</span> other ICMP received<br> <span class="hljs-number">0</span>.<span class="hljs-number">04</span> ms (min round trip time)<br> <span class="hljs-number">88</span>.<span class="hljs-number">2</span> ms (avg round trip time)<br> <span class="hljs-number">268</span> ms (max round trip time)<br>       <span class="hljs-number">11</span>.<span class="hljs-number">633</span> sec (elapsed real time)<br></code></pre></div></td></tr></table></figure>
+<p>通过 -u 可以显示主机不可达的地址，如: <code>fping -usgq 192.168.1.0/24</code></p>
+<h3 id="hping3"><a class="markdownIt-Anchor" href="#hping3"></a> hping3</h3>
+<p>这个hping3就比较强大的，它支持的协议有TCP，UDP，ICMP，支持使用tcl脚本。<br />
+主要用途：</p>
+<ul>
+<li><strong>测试防火墙规则</strong></li>
+<li>测试入侵检测系统(IDS)</li>
+<li>测试TCP/IP模式的安全漏洞</li>
+</ul>
+<p>对于一些主机的防火墙过滤了ICMP数据包，那么我们可以使用hping3发送TCP数据包来判断主机是否存活</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs jboss-cli">&gt; hping3 -h<br>usage: hping3 host [options]<br>  -h  <span class="hljs-params">--help</span>      show this <span class="hljs-keyword">help</span><br>  -v  <span class="hljs-params">--version</span>   show <span class="hljs-keyword">version</span><br>  -c  <span class="hljs-params">--count</span>     packet count<br>  -i  <span class="hljs-params">--interval</span>  wait <span class="hljs-params">(uX for X microseconds, for example -i u1000)</span><br>      <span class="hljs-params">--fast</span>      <span class="hljs-keyword">alias</span> for -i u10000 <span class="hljs-params">(10 packets for second)</span><br>      <span class="hljs-params">--faster</span>    <span class="hljs-keyword">alias</span> for -i u1000 <span class="hljs-params">(100 packets for second)</span><br>      <span class="hljs-params">--flood</span>	   sent packets as fast as possible. Don&#x27;t show replies.<br>  -n  <span class="hljs-params">--numeric</span>   numeric output<br>  -q  <span class="hljs-params">--quiet</span>     quiet<br>  -I  <span class="hljs-params">--interface</span> interface name <span class="hljs-params">(otherwise default routing interface)</span><br>  -V  <span class="hljs-params">--verbose</span>   verbose mode<br>  -D  <span class="hljs-params">--debug</span>     debugging info<br>  -z  <span class="hljs-params">--bind</span>      bind ctrl+z to ttl           <span class="hljs-params">(default to dst port)</span><br>  -Z  <span class="hljs-params">--unbind</span>    unbind ctrl+z<br>      <span class="hljs-params">--beep</span>      beep for every matching packet received<br>Mode<br>  default mode     TCP<br>  -0  <span class="hljs-params">--rawip</span>      RAW IP mode<br>  -1  <span class="hljs-params">--icmp</span>       ICMP mode<br>  -2  <span class="hljs-params">--udp</span>        UDP mode<br>  -8  <span class="hljs-params">--scan</span>       SCAN mode.<br>                   Example: hping <span class="hljs-params">--scan</span> 1-30,70-90 -S www.target.host<br>  -9  <span class="hljs-params">--listen</span>     listen mode<br>IP<br>  -a  <span class="hljs-params">--spoof</span>      spoof source address<br>  <span class="hljs-params">--rand-dest</span>      random destionation address mode. see the man.<br>  <span class="hljs-params">--rand-source</span>    random source address mode. see the man.<br>  -t  <span class="hljs-params">--ttl</span>        ttl <span class="hljs-params">(default 64)</span><br>  -N  <span class="hljs-params">--id</span>         id <span class="hljs-params">(default random)</span><br>  -W  <span class="hljs-params">--winid</span>      use win* id byte ordering<br>  -r  <span class="hljs-params">--rel</span>        relativize id field          <span class="hljs-params">(to estimate host traffic)</span><br>  -f  <span class="hljs-params">--frag</span>       split packets in more frag.  <span class="hljs-params">(may pass weak acl)</span><br>  -x  <span class="hljs-params">--morefrag</span>   <span class="hljs-keyword">set</span> more fragments flag<br>  -y  <span class="hljs-params">--dontfrag</span>   <span class="hljs-keyword">set</span> don&#x27;t fragment flag<br>  -g  <span class="hljs-params">--fragoff</span>    <span class="hljs-keyword">set</span> the fragment offset<br>  -m  <span class="hljs-params">--mtu</span>        <span class="hljs-keyword">set</span> virtual mtu, implies <span class="hljs-params">--frag</span> <span class="hljs-keyword">if</span> packet size &gt; mtu<br>  -o  <span class="hljs-params">--tos</span>        type of service <span class="hljs-params">(default 0x00)</span>, <span class="hljs-keyword">try</span> <span class="hljs-params">--tos</span> <span class="hljs-keyword">help</span><br>  -G  <span class="hljs-params">--rroute</span>     includes RECORD_ROUTE option and display the route buffer<br>  <span class="hljs-params">--lsrr</span>           loose source routing and record route<br>  <span class="hljs-params">--ssrr</span>           strict source routing and record route<br>  -H  <span class="hljs-params">--ipproto</span>    <span class="hljs-keyword">set</span> the IP protocol field, only in RAW IP mode<br>ICMP<br>  -C  <span class="hljs-params">--icmptype</span>   icmp type <span class="hljs-params">(default echo request)</span><br>  -K  <span class="hljs-params">--icmpcode</span>   icmp code <span class="hljs-params">(default 0)</span><br>      <span class="hljs-params">--force-icmp</span> send all icmp types <span class="hljs-params">(default send only supported types)</span><br>      <span class="hljs-params">--icmp-gw</span>    <span class="hljs-keyword">set</span> gateway address for ICMP redirect <span class="hljs-params">(default 0.0.0.0)</span><br>      <span class="hljs-params">--icmp-ts</span>    Alias for <span class="hljs-params">--icmp</span> <span class="hljs-params">--icmptype</span> 13 <span class="hljs-params">(ICMP timestamp)</span><br>      <span class="hljs-params">--icmp-addr</span>  Alias for <span class="hljs-params">--icmp</span> <span class="hljs-params">--icmptype</span> 17 <span class="hljs-params">(ICMP address subnet mask)</span><br>      <span class="hljs-params">--icmp-help</span>  display <span class="hljs-keyword">help</span> for others icmp options<br>UDP/TCP<br>  -s  <span class="hljs-params">--baseport</span>   base source port             <span class="hljs-params">(default random)</span><br>  -p  <span class="hljs-params">--destport</span>   [+][+]&lt;port&gt; destination port<span class="hljs-params">(default 0)</span> ctrl+z inc/dec<br>  -k  <span class="hljs-params">--keep</span>       keep still source port<br>  -w  <span class="hljs-params">--win</span>        winsize <span class="hljs-params">(default 64)</span><br>  -O  <span class="hljs-params">--tcpoff</span>     <span class="hljs-keyword">set</span> fake tcp data offset     <span class="hljs-params">(instead of tcphdrlen / 4)</span><br>  -Q  <span class="hljs-params">--seqnum</span>     shows only tcp sequence number<br>  -b  <span class="hljs-params">--badcksum</span>   <span class="hljs-params">(try to)</span> send packets with a bad IP checksum<br>                   many systems will fix the IP checksum sending the packet<br>                   so you&#x27;ll get bad UDP/TCP checksum instead.<br>  -M  <span class="hljs-params">--setseq</span>     <span class="hljs-keyword">set</span> TCP sequence number<br>  -L  <span class="hljs-params">--setack</span>     <span class="hljs-keyword">set</span> TCP ack<br>  -F  <span class="hljs-params">--fin</span>        <span class="hljs-keyword">set</span> FIN flag<br>  -S  <span class="hljs-params">--syn</span>        <span class="hljs-keyword">set</span> SYN flag<br>  -R  <span class="hljs-params">--rst</span>        <span class="hljs-keyword">set</span> RST flag<br>  -P  <span class="hljs-params">--push</span>       <span class="hljs-keyword">set</span> PUSH flag<br>  -A  <span class="hljs-params">--ack</span>        <span class="hljs-keyword">set</span> ACK flag<br>  -U  <span class="hljs-params">--urg</span>        <span class="hljs-keyword">set</span> URG flag<br>  -X  <span class="hljs-params">--xmas</span>       <span class="hljs-keyword">set</span> X unused flag <span class="hljs-params">(0x40)</span><br>  -Y  <span class="hljs-params">--ymas</span>       <span class="hljs-keyword">set</span> Y unused flag <span class="hljs-params">(0x80)</span><br>  <span class="hljs-params">--tcpexitcode</span>    use last tcp-&gt;th_flags as exit code<br>  <span class="hljs-params">--tcp-mss</span>        enable the TCP MSS option with the given value<br>  <span class="hljs-params">--tcp-timestamp</span>  enable the TCP timestamp option to guess the HZ/uptime<br>Common<br>  -d  <span class="hljs-params">--data</span>       data size                    <span class="hljs-params">(default is 0)</span><br>  -E  <span class="hljs-params">--file</span>       data from file<br>  -e  <span class="hljs-params">--sign</span>       add &#x27;signature&#x27;<br>  -j  <span class="hljs-params">--dump</span>       dump packets in hex<br>  -J  <span class="hljs-params">--print</span>      dump printable characters<br>  -B  <span class="hljs-params">--safe</span>       enable &#x27;safe&#x27; protocol<br>  -u  <span class="hljs-params">--end</span>        tell you when <span class="hljs-params">--file</span> reached EOF and prevent rewind<br>  -T  <span class="hljs-params">--traceroute</span> traceroute mode              <span class="hljs-params">(implies --bind and --ttl 1)</span><br>  <span class="hljs-params">--tr-stop</span>        Exit when receive the first not ICMP in traceroute mode<br>  <span class="hljs-params">--tr-keep-ttl</span>    Keep the source TTL fixed, useful to monitor just one hop<br>  <span class="hljs-params">--tr-no-rtt</span>	    Don&#x27;t calculate/show RTT information in traceroute mode<br>ARS packet description <span class="hljs-params">(new, unstable)</span><br>  <span class="hljs-params">--apd-send</span>       Send the packet described with APD <span class="hljs-params">(see docs/APD.txt)</span><br></code></pre></div></td></tr></table></figure>
+<p>可以通过一下选项指定发送数据包的协议</p>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>选项全称</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-0</td>
+<td>–rawip</td>
+<td>发送原始IP数据包</td>
+</tr>
+<tr>
+<td>-1</td>
+<td>–icmp</td>
+<td>发送ICMP数据包</td>
+</tr>
+<tr>
+<td>-2</td>
+<td>–udp</td>
+<td>发送UDP数据包</td>
+</tr>
+<tr>
+<td>-8</td>
+<td>–scan</td>
+<td>扫描模式</td>
+</tr>
+<tr>
+<td>-9</td>
+<td>–listen</td>
+<td>监听模式</td>
+</tr>
+</tbody>
+</table>
+<p>注意，默认是发送TCP数据包</p>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-S</td>
+<td>SYN</td>
+</tr>
+<tr>
+<td>-F</td>
+<td>FIN</td>
+</tr>
+<tr>
+<td>-R</td>
+<td>RST</td>
+</tr>
+<tr>
+<td>-P</td>
+<td>PUSH</td>
+</tr>
+<tr>
+<td>-A</td>
+<td>ACK</td>
+</tr>
+<tr>
+<td>-U</td>
+<td>URG</td>
+</tr>
+<tr>
+<td>-X</td>
+<td>XMAS</td>
+</tr>
+<tr>
+<td>-Y</td>
+<td>YMAS</td>
+</tr>
+</tbody>
+</table>
+<h4 id="发送tcp数据包"><a class="markdownIt-Anchor" href="#发送tcp数据包"></a> 发送TCP数据包</h4>
+<figure class="highlight routeros"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs routeros">&gt; hping3 -I eth0 -V --syn 192.168.1.110 -c 2<br>using eth0, addr: 192.168.1.108, MTU: 1500<br>HPING 192.168.1.110 (eth0 192.168.1.110): S set, 40 headers + 0 data bytes<br><span class="hljs-attribute">len</span>=46 <span class="hljs-attribute">ip</span>=192.168.1.110 <span class="hljs-attribute">ttl</span>=64 DF <span class="hljs-attribute">id</span>=10106 <span class="hljs-attribute">tos</span>=0 <span class="hljs-attribute">iplen</span>=40<br><span class="hljs-attribute">sport</span>=0 <span class="hljs-attribute">flags</span>=RA <span class="hljs-attribute">seq</span>=0 <span class="hljs-attribute">win</span>=0 <span class="hljs-attribute">rtt</span>=7.7 ms<br><span class="hljs-attribute">seq</span>=0 <span class="hljs-attribute">ack</span>=1839333390 <span class="hljs-attribute">sum</span>=88b4 <span class="hljs-attribute">urp</span>=0<br><span class="hljs-attribute">len</span>=46 <span class="hljs-attribute">ip</span>=192.168.1.110 <span class="hljs-attribute">ttl</span>=64 DF <span class="hljs-attribute">id</span>=10157 <span class="hljs-attribute">tos</span>=0 <span class="hljs-attribute">iplen</span>=40<br><span class="hljs-attribute">sport</span>=0 <span class="hljs-attribute">flags</span>=RA <span class="hljs-attribute">seq</span>=1 <span class="hljs-attribute">win</span>=0 <span class="hljs-attribute">rtt</span>=7.6 ms<br><span class="hljs-attribute">seq</span>=0 <span class="hljs-attribute">ack</span>=439379179 <span class="hljs-attribute">sum</span>=1ca3 <span class="hljs-attribute">urp</span>=0<br>--- 192.168.1.110 hping statistic ---<br>2 packets transmitted, 2 packets received, 0% packet loss<br>round-trip min/avg/max = 7.6/7.7/7.7 ms<br></code></pre></div></td></tr></table></figure>
+<h4 id="端口检测"><a class="markdownIt-Anchor" href="#端口检测"></a> 端口检测</h4>
+<p>-p 指定目的端口</p>
+<figure class="highlight routeros"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs routeros">&gt; hping3  -I eth0 -S -p 3306 192.168.1.110 -c 2<br>HPING 192.168.1.110 (eth0 192.168.1.110): S set, 40 headers + 0 data bytes<br><span class="hljs-attribute">len</span>=46 <span class="hljs-attribute">ip</span>=192.168.1.110 <span class="hljs-attribute">ttl</span>=64 DF <span class="hljs-attribute">id</span>=0 <span class="hljs-attribute">sport</span>=3306 <span class="hljs-attribute">flags</span>=SA <span class="hljs-attribute">seq</span>=0 <span class="hljs-attribute">win</span>=29200 <span class="hljs-attribute">rtt</span>=31.8 ms<br><span class="hljs-attribute">len</span>=46 <span class="hljs-attribute">ip</span>=192.168.1.110 <span class="hljs-attribute">ttl</span>=64 DF <span class="hljs-attribute">id</span>=0 <span class="hljs-attribute">sport</span>=3306 <span class="hljs-attribute">flags</span>=SA <span class="hljs-attribute">seq</span>=1 <span class="hljs-attribute">win</span>=29200 <span class="hljs-attribute">rtt</span>=7.7 ms<br>--- 192.168.1.110 hping statistic ---<br>2 packets transmitted, 2 packets received, 0% packet loss<br>round-trip min/avg/max = 7.7/19.7/31.8 ms<br><br></code></pre></div></td></tr></table></figure>
+<p>注意其中的 <strong>win=29200</strong> 表示开放该端口</p>
+<h4 id="scan模式"><a class="markdownIt-Anchor" href="#scan模式"></a> Scan模式</h4>
+<p>通过 -8/–scan 来开启扫描模式。<br />
+所谓扫描模式，通过一个端口组，对主机进行端口扫描。<br />
+hping3 给出了两个关键字代表多个端口。</p>
+<table>
+<thead>
+<tr>
+<th>关键字</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>all</td>
+<td>表示 0-65535 的端口</td>
+</tr>
+<tr>
+<td>known</td>
+<td>表示已知本地端口，这些端口位于/etc/services文件</td>
+</tr>
+</tbody>
+</table>
+<p>例1，扫描 0-65535 的端口</p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs asciidoc">&gt; hping3 --scan <span class="hljs-emphasis">&#x27;all&#x27;</span> -S 192.168.1.110<br>Scanning 192.168.1.110 (192.168.1.110), port all<br><span class="hljs-section">65536 ports to scan, use -V to see all the replies</span><br><span class="hljs-section">+----+-----------+---------+---+-----+-----+-----+</span><br><span class="hljs-section">|port| serv name |  flags  |ttl| id  | win | len |</span><br><span class="hljs-section">+----+-----------+---------+---+-----+-----+-----+</span><br><span class="hljs-code"> 3306 mysql      : .S..A...  64     0 29200    46</span><br><span class="hljs-code">   80 http       : .S..A...  64     0 29200    46</span><br>All replies received. Done.<br>Not responding ports: (1 tcpmux) (2 nbp) (3 ) (4 echo) (6 zip) (8 ) (9 discard) (10 ) (11 systat) (13 daytime) (14 ) <br><span class="hljs-code">......</span><br><span class="hljs-code">......</span><br></code></pre></div></td></tr></table></figure>
+<p>例2，扫描 1-5555的端口和已知端口</p>
+<figure class="highlight tap"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs tap">&gt; hping3 -8 &#x27;1-5555,known&#x27; -S 192.168.1.17<br>Scanning 192.168.1.17 (192.168.1.17), port 1-5555,known<br>5641 ports to scan, use -V to see all the replies<br>+----+-----------+---------+---+-----+-----+-----+<br>|port| serv name |  flags  |ttl| id  | win | len |<br>+----+-----------+---------+---+-----+-----+-----+<br>  <span class="hljs-number"> 21 </span>ftp        : .S..A... <span class="hljs-number"> 64 </span>   <span class="hljs-number"> 0 </span><span class="hljs-number"> 5840 </span>   44<br>  <span class="hljs-number"> 22 </span>ssh        : .S..A... <span class="hljs-number"> 64 </span>   <span class="hljs-number"> 0 </span><span class="hljs-number"> 5840 </span>   44<br>  <span class="hljs-number"> 23 </span>telnet     : .S..A... <span class="hljs-number"> 64 </span>   <span class="hljs-number"> 0 </span><span class="hljs-number"> 5840 </span>   44<br>  <span class="hljs-number"> 25 </span>smtp       : .S..A... <span class="hljs-number"> 64 </span>   <span class="hljs-number"> 0 </span><span class="hljs-number"> 5840 </span>   44<br>  <span class="hljs-number"> 53 </span>domain     : .S..A... <span class="hljs-number"> 64 </span>   <span class="hljs-number"> 0 </span><span class="hljs-number"> 5840 </span>   44<br>  <span class="hljs-number"> 80 </span>http       : .S..A... <span class="hljs-number"> 64 </span>   <span class="hljs-number"> 0 </span><span class="hljs-number"> 5840 </span>   44<br> <span class="hljs-number"> 111 </span>sunrpc     : .S..A... <span class="hljs-number"> 64 </span>   <span class="hljs-number"> 0 </span><span class="hljs-number"> 5840 </span>   44<br> <span class="hljs-number"> 139 </span>netbios-ssn: .S..A... <span class="hljs-number"> 64 </span>   <span class="hljs-number"> 0 </span><span class="hljs-number"> 5840 </span>   44<br> <span class="hljs-number"> 445 </span>microsoft-d: .S..A... <span class="hljs-number"> 64 </span>   <span class="hljs-number"> 0 </span><span class="hljs-number"> 5840 </span>   44<br> <span class="hljs-number"> 512 </span>exec       : .S..A... <span class="hljs-number"> 64 </span>   <span class="hljs-number"> 0 </span><span class="hljs-number"> 5840 </span>   44<br> <span class="hljs-number"> 513 </span>login      : .S..A... <span class="hljs-number"> 64 </span>   <span class="hljs-number"> 0 </span><span class="hljs-number"> 5840 </span>   44<br> <span class="hljs-number"> 514 </span>shell      : .S..A... <span class="hljs-number"> 64 </span>   <span class="hljs-number"> 0 </span><span class="hljs-number"> 5840 </span>   44<br><span class="hljs-number"> 1099 </span>rmiregistry: .S..A... <span class="hljs-number"> 64 </span>   <span class="hljs-number"> 0 </span><span class="hljs-number"> 5840 </span>   44<br><span class="hljs-number"> 1524 </span>ingreslock : .S..A... <span class="hljs-number"> 64 </span>   <span class="hljs-number"> 0 </span><span class="hljs-number"> 5840 </span>   44<br><span class="hljs-number"> 2049 </span>nfs        : .S..A... <span class="hljs-number"> 64 </span>   <span class="hljs-number"> 0 </span><span class="hljs-number"> 5840 </span>   44<br><span class="hljs-number"> 2121 </span>iprop      : .S..A... <span class="hljs-number"> 64 </span>   <span class="hljs-number"> 0 </span><span class="hljs-number"> 5840 </span>   44<br><span class="hljs-number"> 3306 </span>mysql      : .S..A... <span class="hljs-number"> 64 </span>   <span class="hljs-number"> 0 </span><span class="hljs-number"> 5840 </span>   44<br><span class="hljs-number"> 3632 </span>distcc     : .S..A... <span class="hljs-number"> 64 </span>   <span class="hljs-number"> 0 </span><span class="hljs-number"> 5840 </span>   44<br><span class="hljs-number"> 5432 </span>postgresql : .S..A... <span class="hljs-number"> 64 </span>   <span class="hljs-number"> 0 </span><span class="hljs-number"> 5840 </span>   44<br><span class="hljs-number"> 6000 </span>x11        : .S..A... <span class="hljs-number"> 64 </span>   <span class="hljs-number"> 0 </span><span class="hljs-number"> 5840 </span>   44<br><span class="hljs-number"> 6667 </span>ircd       : .S..A... <span class="hljs-number"> 64 </span>   <span class="hljs-number"> 0 </span><span class="hljs-number"> 5840 </span>   44<br><span class="hljs-number"> 6697 </span>ircs-u     : .S..A... <span class="hljs-number"> 64 </span>   <span class="hljs-number"> 0 </span><span class="hljs-number"> 5840 </span>   44<br>All replies received. Done.<br>Not responding ports:<br></code></pre></div></td></tr></table></figure>
+<h4 id="发送随机原ip地址的数据包"><a class="markdownIt-Anchor" href="#发送随机原ip地址的数据包"></a> 发送随机原IP地址的数据包</h4>
+<p>–rand-source/–rand-dest 用于伪造原/目的IP地址，这可以在很大程度上不让我们自己的IP地址被对方检测到</p>
+<figure class="highlight routeros"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs routeros">&gt; hping3 --udp -S 192.168.1.17 -c 5 --rand-source<br>HPING 192.168.1.17 (eth0 192.168.1.17): udp mode set, 28 headers + 0 data bytes<br>ICMP<span class="hljs-built_in"> Port </span>Unreachable <span class="hljs-keyword">from</span> <span class="hljs-attribute">ip</span>=192.168.1.17 <span class="hljs-attribute">name</span>=192.168.1.17<br><span class="hljs-attribute">status</span>=0 <span class="hljs-attribute">port</span>=2475 <span class="hljs-attribute">seq</span>=0<br>ICMP<span class="hljs-built_in"> Port </span>Unreachable <span class="hljs-keyword">from</span> <span class="hljs-attribute">ip</span>=192.168.1.17 <span class="hljs-attribute">name</span>=192.168.1.17<br><span class="hljs-attribute">status</span>=0 <span class="hljs-attribute">port</span>=2476 <span class="hljs-attribute">seq</span>=1<br>ICMP<span class="hljs-built_in"> Port </span>Unreachable <span class="hljs-keyword">from</span> <span class="hljs-attribute">ip</span>=192.168.1.17 <span class="hljs-attribute">name</span>=192.168.1.17<br><span class="hljs-attribute">status</span>=0 <span class="hljs-attribute">port</span>=2477 <span class="hljs-attribute">seq</span>=2<br>ICMP<span class="hljs-built_in"> Port </span>Unreachable <span class="hljs-keyword">from</span> <span class="hljs-attribute">ip</span>=192.168.1.17 <span class="hljs-attribute">name</span>=192.168.1.17<br><span class="hljs-attribute">status</span>=0 <span class="hljs-attribute">port</span>=2478 <span class="hljs-attribute">seq</span>=3<br>--- 192.168.1.17 hping statistic ---<br>5 packets transmitted, 4 packets received, 20% packet loss<br>round-trip min/avg/max = 3.5/4.1/5.8 ms<br></code></pre></div></td></tr></table></figure>
+<p>然而这个的问题是丢包率增大。</p>
+<p>可以在目主机上执行 <code>tcpdump -nn -v -t udp</code> 来查看收发包情况。</p>
+<h3 id="nping"><a class="markdownIt-Anchor" href="#nping"></a> nping</h3>
+<p>nping是 <a target="_blank" rel="noopener" href="https://nmap.org">Nmap</a> 的一个 网络数据包生成工具。支持 <strong>TCP、UDP、ICMP、ARP</strong> 协议，多个主机的多个端口。功能类似与hping3</p>
+<figure class="highlight stata"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs stata">Nping 0.7.60 ( https:<span class="hljs-comment">//nmap.org/nping )</span><br>Usage: nping [Probe mode] [Options] &#123;target specification&#125;<br>TARGET SPECIFICATION:<br>  Targets may be specified <span class="hljs-keyword">as</span> hostnames, IP addresses, networks, etc.<br>  <span class="hljs-keyword">Ex</span>: scanme.nmap.org, microsoft.com/24, 192.168.0.1; 10.0.*.1-24<br>PROBE MODES:<br>  --tcp-connect                    : Unprivileged TCP connect probe mode.<br>  --tcp                            : TCP probe mode.<br>  --udp                            : UDP probe mode.<br>  --icmp                           : ICMP probe mode.<br>  --arp                            : ARP/RARP probe mode.<br>  --tr, --traceroute               : Traceroute mode (can only be used with <br>                                     TCP/UDP/ICMP modes).<br>TCP CONNECT MODE:<br>   -p, --dest-port &lt;port spec&gt;     : <span class="hljs-keyword">Set</span> destination port(s).<br>   -<span class="hljs-keyword">g</span>, --source-port &lt;portnumber&gt;  : Try to <span class="hljs-keyword">use</span> a custom source port.<br>TCP PROBE MODE:<br>   -<span class="hljs-keyword">g</span>, --source-port &lt;portnumber&gt;  : <span class="hljs-keyword">Set</span> source port.<br>   -p, --dest-port &lt;port spec&gt;     : <span class="hljs-keyword">Set</span> destination port(s).<br>   --seq &lt;seqnumber&gt;               : <span class="hljs-keyword">Set</span> sequence number.<br>   --flags &lt;flag <span class="hljs-keyword">list</span>&gt;             : <span class="hljs-keyword">Set</span> TCP flags (ACK,PSH,RST,SYN,FIN...)<br>   --ack &lt;acknumber&gt;               : <span class="hljs-keyword">Set</span> ACK number.<br>   --<span class="hljs-keyword">win</span> &lt;size&gt;                    : <span class="hljs-keyword">Set</span> <span class="hljs-keyword">window</span> size.<br>   --badsum                        : <span class="hljs-keyword">Use</span> a random invalid <span class="hljs-keyword">checksum</span>. <br>UDP PROBE MODE:<br>   -<span class="hljs-keyword">g</span>, --source-port &lt;portnumber&gt;  : <span class="hljs-keyword">Set</span> source port.<br>   -p, --dest-port &lt;port spec&gt;     : <span class="hljs-keyword">Set</span> destination port(s).<br>   --badsum                        : <span class="hljs-keyword">Use</span> a random invalid <span class="hljs-keyword">checksum</span>. <br>ICMP PROBE MODE:<br>  --icmp-<span class="hljs-keyword">type</span> &lt;<span class="hljs-keyword">type</span>&gt;               : ICMP <span class="hljs-keyword">type</span>.<br>  --icmp-code &lt;code&gt;               : ICMP code.<br>  --icmp-id &lt;id&gt;                   : <span class="hljs-keyword">Set</span> identifier.<br>  --icmp-seq &lt;<span class="hljs-keyword">n</span>&gt;                   : <span class="hljs-keyword">Set</span> sequence number.<br>  --icmp-redirect-addr &lt;addr&gt;      : <span class="hljs-keyword">Set</span> redirect address.<br>  --icmp-param-pointer &lt;pnt&gt;       : <span class="hljs-keyword">Set</span> parameter problem pointer.<br>  --icmp-advert-lifetime &lt;time&gt;    : <span class="hljs-keyword">Set</span> router advertisement lifetime.<br>  --icmp-advert-entry &lt;IP,pref&gt;    : Add router advertisement entry.<br>  --icmp-orig-time  &lt;timestamp&gt;    : <span class="hljs-keyword">Set</span> originate timestamp.<br>  --icmp-recv-time  &lt;timestamp&gt;    : <span class="hljs-keyword">Set</span> receive timestamp.<br>  --icmp-trans-time &lt;timestamp&gt;    : <span class="hljs-keyword">Set</span> transmit timestamp.<br>ARP/RARP PROBE MODE:<br>  --arp-<span class="hljs-keyword">type</span> &lt;<span class="hljs-keyword">type</span>&gt;                : <span class="hljs-keyword">Type</span>: ARP, ARP-reply, RARP, RARP-reply.<br>  --arp-sender-<span class="hljs-keyword">mac</span> &lt;<span class="hljs-keyword">mac</span>&gt;           : <span class="hljs-keyword">Set</span> sender <span class="hljs-keyword">MAC</span> address.<br>  --arp-sender-ip  &lt;addr&gt;          : <span class="hljs-keyword">Set</span> sender IP address.<br>  --arp-target-<span class="hljs-keyword">mac</span> &lt;<span class="hljs-keyword">mac</span>&gt;           : <span class="hljs-keyword">Set</span> target <span class="hljs-keyword">MAC</span> address.<br>  --arp-target-ip  &lt;addr&gt;          : <span class="hljs-keyword">Set</span> target IP address.<br>IPv4 OPTIONS:<br>  -S, --source-ip                  : <span class="hljs-keyword">Set</span> source IP address.<br>  --dest-ip &lt;addr&gt;                 : <span class="hljs-keyword">Set</span> destination IP address (used <span class="hljs-keyword">as</span> <span class="hljs-keyword">an</span> <br>                                     alternative to &#123;target specification&#125; ). <br>  --tos &lt;tos&gt;                      : <span class="hljs-keyword">Set</span> <span class="hljs-keyword">type</span> of service field (8bits).<br>  --id  &lt;id&gt;                       : <span class="hljs-keyword">Set</span> identification field (16 bits).<br>  --df                             : <span class="hljs-keyword">Set</span> Don&#x27;t Fragment flag.<br>  --mf                             : <span class="hljs-keyword">Set</span> <span class="hljs-keyword">More</span> Fragments flag.<br>  --ttl &lt;hops&gt;                     : <span class="hljs-keyword">Set</span> time to live [0-255].<br>  --badsum-ip                      : <span class="hljs-keyword">Use</span> a random invalid <span class="hljs-keyword">checksum</span>. <br>  --ip-options &lt;S|R [route]|<span class="hljs-keyword">L</span> [route]|T|<span class="hljs-keyword">U</span> ...&gt; : <span class="hljs-keyword">Set</span> IP options<br>  --ip-options &lt;hex string&gt;                    : <span class="hljs-keyword">Set</span> IP options<br>  --mtu &lt;size&gt;                     : <span class="hljs-keyword">Set</span> MTU. Packets get fragmented <span class="hljs-keyword">if</span> MTU is<br>                                     small enough.<br>IPv6 OPTIONS:<br>  -6, --IPv6                       : <span class="hljs-keyword">Use</span> IP <span class="hljs-keyword">version</span> 6.<br>  --dest-ip                        : <span class="hljs-keyword">Set</span> destination IP address (used <span class="hljs-keyword">as</span> <span class="hljs-keyword">an</span><br>                                     alternative to &#123;target specification&#125;).<br>  --hop-limit                      : <span class="hljs-keyword">Set</span> hop limit (same <span class="hljs-keyword">as</span> IPv4 TTL).<br>  --traffic-<span class="hljs-keyword">class</span> &lt;<span class="hljs-keyword">class</span>&gt; :        : <span class="hljs-keyword">Set</span> traffic <span class="hljs-keyword">class</span>.<br>  --flow &lt;<span class="hljs-keyword">label</span>&gt;                   : <span class="hljs-keyword">Set</span> flow <span class="hljs-keyword">label</span>.<br>ETHERNET OPTIONS:<br>  --dest-<span class="hljs-keyword">mac</span> &lt;<span class="hljs-keyword">mac</span>&gt;                 : <span class="hljs-keyword">Set</span> destination <span class="hljs-keyword">mac</span> address. (Disables<br>                                     ARP resolution)<br>  --source-<span class="hljs-keyword">mac</span> &lt;<span class="hljs-keyword">mac</span>&gt;               : <span class="hljs-keyword">Set</span> source <span class="hljs-keyword">MAC</span> address.<br>  --ether-<span class="hljs-keyword">type</span> &lt;<span class="hljs-keyword">type</span>&gt;              : <span class="hljs-keyword">Set</span> EtherType value.<br>PAYLOAD OPTIONS:<br>  --data &lt;hex string&gt;              : <span class="hljs-keyword">Include</span> a custom payload.<br>  --data-string &lt;text&gt;             : <span class="hljs-keyword">Include</span> a custom ASCII text.<br>  --data-length &lt;len&gt;              : <span class="hljs-keyword">Include</span> len random bytes <span class="hljs-keyword">as</span> payload.<br>ECHO CLIENT/SERVER:<br>  --echo-client &lt;passphrase&gt;       : <span class="hljs-keyword">Run</span> Nping <span class="hljs-keyword">in</span> client mode.<br>  --echo-server &lt;passphrase&gt;       : <span class="hljs-keyword">Run</span> Nping <span class="hljs-keyword">in</span> server mode.<br>  --echo-port &lt;port&gt;               : <span class="hljs-keyword">Use</span> custom &lt;port&gt; to listen or connect.<br>  --<span class="hljs-keyword">no</span>-crypto                      : Disable encryption and authentication.<br>  --once                           : Stop the server after <span class="hljs-keyword">one</span> connection.<br>  --safe-payloads                  : <span class="hljs-keyword">Erase</span> application data <span class="hljs-keyword">in</span> echoed packets.<br>TIMING AND PERFORMANCE:<br>  Options <span class="hljs-keyword">which</span> take &lt;time&gt; are <span class="hljs-keyword">in</span> seconds, or <span class="hljs-keyword">append</span> &#x27;ms&#x27; (milliseconds),<br>  &#x27;s&#x27; (seconds), &#x27;<span class="hljs-keyword">m</span>&#x27; (minutes), or &#x27;<span class="hljs-keyword">h</span>&#x27; (hours) to the value (<span class="hljs-keyword">e</span>.<span class="hljs-keyword">g</span>. 30m, 0.25h).<br>  --delay &lt;time&gt;                   : <span class="hljs-keyword">Adjust</span> delay between probes.<br>  --rate  &lt;rate&gt;                   : Send num packets per second.<br>MISC:<br>  -<span class="hljs-keyword">h</span>, --<span class="hljs-keyword">help</span>                       : <span class="hljs-keyword">Display</span> <span class="hljs-keyword">help</span> information.<br>  -V, --<span class="hljs-keyword">version</span>                    : <span class="hljs-keyword">Display</span> current <span class="hljs-keyword">version</span> number. <br>  -c, --<span class="hljs-keyword">count</span> &lt;<span class="hljs-keyword">n</span>&gt;                  : Stop after &lt;<span class="hljs-keyword">n</span>&gt; rounds.<br>  -<span class="hljs-keyword">e</span>, --interface &lt;name&gt;           : <span class="hljs-keyword">Use</span> supplied network interface.<br>  -<span class="hljs-keyword">H</span>, --hide-sent                  : <span class="hljs-keyword">Do</span> not <span class="hljs-keyword">display</span> sent packets.<br>  -<span class="hljs-keyword">N</span>, --<span class="hljs-keyword">no</span>-<span class="hljs-keyword">capture</span>                 : <span class="hljs-keyword">Do</span> not try to <span class="hljs-keyword">capture</span> replies.<br>  --privileged                     : Assume user is fully privileged.<br>  --unprivileged                   : Assume user lacks raw socket privileges.<br>  --send-eth                       : Send packets at the raw Ethernet layer.<br>  --send-ip                        : Send packets using raw IP sockets.<br>  --bpf-filter &lt;filter spec&gt;       : Specify custom BPF filter.<br>OUTPUT:<br>  -v                               : Increment verbosity level <span class="hljs-keyword">by</span> <span class="hljs-keyword">one</span>.<br>  -v[level]                        : <span class="hljs-keyword">Set</span> verbosity level. <span class="hljs-keyword">E</span>.<span class="hljs-keyword">g</span>: -v4<br>  -<span class="hljs-keyword">d</span>                               : Increment debugging level <span class="hljs-keyword">by</span> <span class="hljs-keyword">one</span>.<br>  -<span class="hljs-keyword">d</span>[level]                        : <span class="hljs-keyword">Set</span> debugging level. <span class="hljs-keyword">E</span>.<span class="hljs-keyword">g</span>: -d3<br>  -q                               : Decrease verbosity level <span class="hljs-keyword">by</span> <span class="hljs-keyword">one</span>.<br>  -q[<span class="hljs-keyword">N</span>]                            : Decrease verbosity level <span class="hljs-keyword">N</span> times<br>  --quiet                          : <span class="hljs-keyword">Set</span> verbosity and debug level to minimum.<br>  --debug                          : <span class="hljs-keyword">Set</span> verbosity and debug to the max level.<br>EXAMPLES:<br>  nping scanme.nmap.org<br>  nping --tcp -p 80 --flags rst --ttl 2 192.168.1.1<br>  nping --icmp --icmp-<span class="hljs-keyword">type</span> time --delay 500ms 192.168.254.254<br>  nping --echo-server <span class="hljs-string">&quot;public&quot;</span> -<span class="hljs-keyword">e</span> wlan0 -vvv <br>  nping --echo-client <span class="hljs-string">&quot;public&quot;</span> echo.nmap.org --tcp -p1-1024 --flags ack<br>SEE THE <span class="hljs-keyword">MAN</span> PAGE <span class="hljs-keyword">FOR</span> MANY <span class="hljs-keyword">MORE</span> OPTIONS, DESCRIPTIONS, AND EXAMPLES<br></code></pre></div></td></tr></table></figure>
+<h4 id="tcp扫描"><a class="markdownIt-Anchor" href="#tcp扫描"></a> TCP扫描</h4>
+<figure class="highlight nix"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs nix">&gt; nping  --tcp -c <span class="hljs-number">1</span> <span class="hljs-number">192.168</span>.<span class="hljs-number">1.110</span> <span class="hljs-number">192.168</span>.<span class="hljs-number">1.108</span> -p <span class="hljs-number">22</span>,<span class="hljs-number">3306</span> <span class="hljs-attr">--flags=syn</span><br>Starting Nping <span class="hljs-number">0.7</span>.<span class="hljs-number">60</span> ( https://nmap.org/nping ) at <span class="hljs-number">2018</span>-<span class="hljs-number">04</span>-<span class="hljs-number">05</span> <span class="hljs-number">11</span>:<span class="hljs-number">08</span> CST<br>SENT (<span class="hljs-number">0.0428</span>s) TCP <span class="hljs-number">192.168</span>.<span class="hljs-number">1.108</span>:<span class="hljs-number">39046</span> &gt; <span class="hljs-number">192.168</span>.<span class="hljs-number">1.110</span>:<span class="hljs-number">22</span> S <span class="hljs-attr">ttl=64</span> <span class="hljs-attr">id=19287</span> <span class="hljs-attr">iplen=40</span>  <span class="hljs-attr">seq=1799430370</span> <span class="hljs-attr">win=1480</span> <br>RCVD (<span class="hljs-number">0.0465</span>s) TCP <span class="hljs-number">192.168</span>.<span class="hljs-number">1.110</span>:<span class="hljs-number">22</span> &gt; <span class="hljs-number">192.168</span>.<span class="hljs-number">1.108</span>:<span class="hljs-number">39046</span> SA <span class="hljs-attr">ttl=64</span> <span class="hljs-attr">id=0</span> <span class="hljs-attr">iplen=44</span>  <span class="hljs-attr">seq=2225990095</span> <span class="hljs-attr">win=29200</span> &lt;mss <span class="hljs-number">1460</span>&gt;<br>SENT (<span class="hljs-number">1.0437</span>s) TCP <span class="hljs-number">192.168</span>.<span class="hljs-number">1.108</span>:<span class="hljs-number">39046</span> &gt; <span class="hljs-number">192.168</span>.<span class="hljs-number">1.108</span>:<span class="hljs-number">22</span> S <span class="hljs-attr">ttl=64</span> <span class="hljs-attr">id=19287</span> <span class="hljs-attr">iplen=40</span>  <span class="hljs-attr">seq=1799430370</span> <span class="hljs-attr">win=1480</span> <br>SENT (<span class="hljs-number">2.0449</span>s) TCP <span class="hljs-number">192.168</span>.<span class="hljs-number">1.108</span>:<span class="hljs-number">39046</span> &gt; <span class="hljs-number">192.168</span>.<span class="hljs-number">1.110</span>:<span class="hljs-number">3306</span> S <span class="hljs-attr">ttl=64</span> <span class="hljs-attr">id=19287</span> <span class="hljs-attr">iplen=40</span>  <span class="hljs-attr">seq=1799430370</span> <span class="hljs-attr">win=1480</span> <br>RCVD (<span class="hljs-number">2.0897</span>s) TCP <span class="hljs-number">192.168</span>.<span class="hljs-number">1.110</span>:<span class="hljs-number">3306</span> &gt; <span class="hljs-number">192.168</span>.<span class="hljs-number">1.108</span>:<span class="hljs-number">39046</span> SA <span class="hljs-attr">ttl=64</span> <span class="hljs-attr">id=0</span> <span class="hljs-attr">iplen=44</span>  <span class="hljs-attr">seq=3017639874</span> <span class="hljs-attr">win=29200</span> &lt;mss <span class="hljs-number">1460</span>&gt;<br>SENT (<span class="hljs-number">3.0468</span>s) TCP <span class="hljs-number">192.168</span>.<span class="hljs-number">1.108</span>:<span class="hljs-number">39046</span> &gt; <span class="hljs-number">192.168</span>.<span class="hljs-number">1.108</span>:<span class="hljs-number">3306</span> S <span class="hljs-attr">ttl=64</span> <span class="hljs-attr">id=19287</span> <span class="hljs-attr">iplen=40</span>  <span class="hljs-attr">seq=1799430370</span> <span class="hljs-attr">win=1480</span> <br> <br>Statistics for host <span class="hljs-number">192.168</span>.<span class="hljs-number">1.110</span>:<br> |  Probes Sent: <span class="hljs-number">2</span> | Rcvd: <span class="hljs-number">2</span> | Lost: <span class="hljs-number">0</span>  (<span class="hljs-number">0.00</span>%)<br> |_ Max rtt: <span class="hljs-number">44.817</span>ms | Min rtt: <span class="hljs-number">3.653</span>ms | Avg rtt: <span class="hljs-number">24.235</span>ms<br>Statistics for host <span class="hljs-number">192.168</span>.<span class="hljs-number">1.108</span>:<br> |  Probes Sent: <span class="hljs-number">2</span> | Rcvd: <span class="hljs-number">0</span> | Lost: <span class="hljs-number">2</span>  (<span class="hljs-number">100.00</span>%)<br> |_ Max rtt: N/A | Min rtt: N/A | Avg rtt: N/A<br>Raw packets sent: <span class="hljs-number">4</span> (<span class="hljs-number">160</span>B) | Rcvd: <span class="hljs-number">2</span> (<span class="hljs-number">92</span>B) | Lost: <span class="hljs-number">2</span> (<span class="hljs-number">50.00</span>%)<br>Nping done: <span class="hljs-number">2</span> IP addresses pinged <span class="hljs-keyword">in</span> <span class="hljs-number">4.09</span> seconds<br></code></pre></div></td></tr></table></figure>
+<h3 id="arping"><a class="markdownIt-Anchor" href="#arping"></a> arping</h3>
+<p>arping用在本地局域网中，判断目标主机是否在线</p>
+<figure class="highlight ada"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs ada">Usage: arping [-fqbDUAV] [-c count] [-w timeout] [-I device] [-s source] destination<br>  -f : <span class="hljs-type">quit</span> on first reply<br>  -q : <span class="hljs-type">be</span> quiet<br>  -b : <span class="hljs-type">keep</span> broadcasting, don<span class="hljs-symbol">&#x27;t</span> go unicast<br>  -D : <span class="hljs-type">duplicate</span> address detection mode<br>  -U : <span class="hljs-type">Unsolicited</span> ARP mode, update your neighbours<br>  -A : <span class="hljs-type">ARP</span> answer mode, update your neighbours<br>  -V : <span class="hljs-type">print</span> version <span class="hljs-keyword">and</span> <span class="hljs-keyword">exit</span><br>  -c count : <span class="hljs-type">how</span> many packets to send<br>  -w timeout : <span class="hljs-type">how</span> long to wait <span class="hljs-keyword">for</span> a reply<br>  -I device : <span class="hljs-type">which</span> ethernet device to <span class="hljs-keyword">use</span><br>  -s source : <span class="hljs-type">source</span> ip address<br>  destination : <span class="hljs-type">ask</span> <span class="hljs-keyword">for</span> what ip address<br></code></pre></div></td></tr></table></figure>
+<p>如下判断 192.168.1.110 主机是否在线</p>
+<figure class="highlight css"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs css">&gt; arping -c <span class="hljs-number">2</span> <span class="hljs-number">192.168</span>.<span class="hljs-number">1.110</span>  -w <span class="hljs-number">1</span><br>ARPING <span class="hljs-number">192.168</span>.<span class="hljs-number">1.110</span> <span class="hljs-selector-tag">from</span> <span class="hljs-number">192.168</span>.<span class="hljs-number">1.108</span> eth0<br>Unicast reply <span class="hljs-selector-tag">from</span> <span class="hljs-number">192.168</span>.<span class="hljs-number">1.110</span> <span class="hljs-selector-attr">[24:05:0F:41:E3:87]</span>  <span class="hljs-number">61.513ms</span><br>Unicast reply <span class="hljs-selector-tag">from</span> <span class="hljs-number">192.168</span>.<span class="hljs-number">1.110</span> <span class="hljs-selector-attr">[24:05:0F:41:E3:87]</span>  <span class="hljs-number">1.864ms</span><br>Sent <span class="hljs-number">2</span> probes (<span class="hljs-number">1</span> broadcast(s))<br>Received <span class="hljs-number">2</span> response(s)<br></code></pre></div></td></tr></table></figure>
+<h3 id="netcat"><a class="markdownIt-Anchor" href="#netcat"></a> netcat</h3>
+<p>对于netcat(nc)，我只想介绍其中一个功能——扫描主机端口</p>
+<figure class="highlight less"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs less">&gt; <span class="hljs-selector-tag">nc</span> <span class="hljs-selector-tag">-zvn</span> <span class="hljs-selector-tag">-w</span> <span class="hljs-selector-tag">1</span> <span class="hljs-selector-tag">192</span><span class="hljs-selector-class">.168</span><span class="hljs-selector-class">.1</span><span class="hljs-selector-class">.110</span>  <span class="hljs-selector-tag">1-5555</span><br>(UNKNOWN) <span class="hljs-selector-attr">[192.168.1.110]</span> <span class="hljs-selector-tag">3306</span> (mysql) <span class="hljs-selector-tag">open</span><br>(UNKNOWN) <span class="hljs-selector-attr">[192.168.1.110]</span> <span class="hljs-selector-tag">80</span> (http) <span class="hljs-selector-tag">open</span><br>(UNKNOWN) <span class="hljs-selector-attr">[192.168.1.110]</span> <span class="hljs-selector-tag">22</span> (ssh) <span class="hljs-selector-tag">open</span><br></code></pre></div></td></tr></table></figure>
+<h3 id="结尾"><a class="markdownIt-Anchor" href="#结尾"></a> 结尾</h3>
+<p>以上是一些比较常用ping工具了，当然还有更强的的如nmap 😃</p>
+<p>bye</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Linux/">Linux</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Linux/">Linux</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Ping/">Ping</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/raspberry-wifi-router/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">树莓派搭建简略WiFi无线路由器</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/linux-tinyxml2/">
+                        <span class="hidden-mobile">TinyXML2解析XML文件</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"AzPbImmMjm5nQc1Xm9ulWCoH-gzGzoHsz","appKey":"xJqILn8nSbhYmdkB2VVQm8vI","placeholder":"说点什么","path":"window.location.pathname","avatar":"retro","meta":["nick","mail","link"],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false,"requiredFields":[]},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- KaTeX -->
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.10/dist/katex.min.css" />
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

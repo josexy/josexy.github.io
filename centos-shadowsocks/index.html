@@ -1,0 +1,513 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="在很久之前我用Windows时一直使用 SoftEther VPN 来访问外网，但现在已经转向了SS，而且仅是通过转发流量来科学上网的话，无疑SS是最合适的，因此在 hostwinds 上也买了一台centos7服务器准备搭建shadowsocks。">
+  <meta name="author" content="Joseph XRays">
+  <meta name="keywords" content="">
+  
+  <title>CentOS服务器Shadowsocks - JoXrays&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/monokai.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.joxrays.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>JoXrays's Blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="CentOS服务器Shadowsocks">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2019-08-21 00:00" pubdate>
+        2019年8月21日 凌晨
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      777 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      11
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">CentOS服务器Shadowsocks</h1>
+            
+            <div class="markdown-body">
+              <p>在很久之前我用Windows时一直使用 <strong>SoftEther VPN</strong> 来访问外网，但现在已经转向了SS，而且仅是通过转发流量来科学上网的话，无疑SS是最合适的，因此在 hostwinds 上也买了一台centos7服务器准备搭建shadowsocks。</p>
+<span id="more"></span>
+<p>Shadowsocks官网： <a target="_blank" rel="noopener" href="https://shadowsocks.org/en/index.html">https://shadowsocks.org/en/index.html</a><br />
+Shadowsocks配置介绍： <a target="_blank" rel="noopener" href="https://shadowsocks.org/en/config/quick-guide.html">https://shadowsocks.org/en/config/quick-guide.html</a><br />
+Github：<a target="_blank" rel="noopener" href="https://github.com/shadowsocks/">https://github.com/shadowsocks/</a></p>
+<h2 id="ss配置服务器"><a class="markdownIt-Anchor" href="#ss配置服务器"></a> SS配置服务器</h2>
+<p>查看python版本</p>
+<figure class="highlight autoit"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs autoit">[root<span class="hljs-symbol">@hwsrv</span><span class="hljs-number">-548851</span> ~]<span class="hljs-meta"># python --version</span><br>Python <span class="hljs-number">2.7</span><span class="hljs-number">.5</span><br></code></pre></div></td></tr></table></figure>
+<p>我的centos服务器默认没有安装Python Pip，同时可能还需要更新pip</p>
+<figure class="highlight autoit"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs autoit">[root<span class="hljs-symbol">@hwsrv</span><span class="hljs-number">-548851</span> ~]<span class="hljs-meta"># yum install python-pip</span><br>[root<span class="hljs-symbol">@hwsrv</span><span class="hljs-number">-548851</span> ~]<span class="hljs-meta"># pip install --upgrade pip</span><br></code></pre></div></td></tr></table></figure>
+<p>之后就可以通过pip安装shadowsocks</p>
+<figure class="highlight autoit"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs autoit">[root<span class="hljs-symbol">@hwsrv</span><span class="hljs-number">-548851</span> ~]<span class="hljs-meta"># pip install shadowsocks</span><br></code></pre></div></td></tr></table></figure>
+<p>到此SS服务端安装完成，接下来还需要json格式的配置文件</p>
+<figure class="highlight avrasm"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs avrasm">&#123;<br>    <span class="hljs-string">&quot;server&quot;</span>:<span class="hljs-string">&quot;my_server_ip&quot;</span>,<br>    <span class="hljs-string">&quot;server_port&quot;</span>:<span class="hljs-number">8388</span>,<br>    <span class="hljs-string">&quot;local_address&quot;</span>: <span class="hljs-string">&quot;127.0.0.1&quot;</span>,<br>    <span class="hljs-string">&quot;local_port&quot;</span>:<span class="hljs-number">1080</span>,<br>    <span class="hljs-string">&quot;password&quot;</span>:<span class="hljs-string">&quot;barfoo!&quot;</span>,<br>    <span class="hljs-string">&quot;timeout&quot;</span>:<span class="hljs-number">600</span>,<br>    <span class="hljs-string">&quot;method&quot;</span>:<span class="hljs-string">&quot;chacha20-ietf-poly1305&quot;</span><br>&#125;<br><span class="hljs-symbol">server:</span> 服务器主机IP，默认 <span class="hljs-number">0.0</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span><br><span class="hljs-symbol">server_port:</span> 服务器端口 ，默认 <span class="hljs-number">8388</span><br><span class="hljs-symbol">local_address:</span> 一般为 <span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span><br><span class="hljs-symbol">local_port:</span> 本地端口，一般 <span class="hljs-number">1080</span><br><span class="hljs-symbol">password:</span> 连接SS服务器的密码<br><span class="hljs-symbol">timeout:</span> 连接超时时间/s ，默认 <span class="hljs-number">300</span><br><span class="hljs-symbol">method:</span> 加密方式，默认 aes<span class="hljs-number">-256</span>-cfb<br></code></pre></div></td></tr></table></figure>
+<p>如果要从命令行来启动服务端，则可以</p>
+<figure class="highlight autoit"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs autoit">[root<span class="hljs-symbol">@hwsrv</span><span class="hljs-number">-548851</span> ~]<span class="hljs-meta"># ssserver -p 8998 -k mypassword</span><br></code></pre></div></td></tr></table></figure>
+<p>一般都是从配置文件来启动ss服务端<br />
+类似如下 config.json</p>
+<figure class="highlight json"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs json">&#123;<br>    <span class="hljs-attr">&quot;server&quot;</span>: <span class="hljs-string">&quot;104.168.xxx,xxx&quot;</span>,<br>    <span class="hljs-attr">&quot;server_port&quot;</span>: <span class="hljs-number">8998</span>,<br>    <span class="hljs-attr">&quot;local_address&quot;</span>: <span class="hljs-string">&quot;127.0.0.1&quot;</span>,<br>    <span class="hljs-attr">&quot;local_port&quot;</span>: <span class="hljs-string">&quot;1080&quot;</span>,<br>    <span class="hljs-attr">&quot;password&quot;</span>: <span class="hljs-string">&quot;mypassword&quot;</span>,<br>    <span class="hljs-attr">&quot;timeout&quot;</span>: <span class="hljs-number">60</span>,<br>    <span class="hljs-attr">&quot;method&quot;</span>: <span class="hljs-string">&quot;aes-256-cfb&quot;</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>使用配置文件启动服务端并在后台运行： <code>ssserver -c config.json -d start</code> ，检测是否成功启动</p>
+<figure class="highlight tap"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs tap">[root@hwsrv-548851 ~]<span class="hljs-comment"># netstat -anp|grep -i 8998</span><br>tcp       <span class="hljs-number"> 0 </span>    <span class="hljs-number"> 0 </span>104.168.xxx,xxx:8998    0.0.0.0:*               LISTEN      27701/python2       <br>udp       <span class="hljs-number"> 0 </span>    <span class="hljs-number"> 0 </span>104.168.xxx,xxx:8998    0.0.0.0:*                           27701/python2       <br></code></pre></div></td></tr></table></figure>
+<h2 id="ss配置客户端"><a class="markdownIt-Anchor" href="#ss配置客户端"></a> SS配置客户端</h2>
+<p>SS的客户端分为Windows，MacOS，Linux，Android，iOS和OpenWRT<br />
+这里介绍Windows，Linux</p>
+<h3 id="linux"><a class="markdownIt-Anchor" href="#linux"></a> Linux</h3>
+<p>对于archlinux最直接的方法： <code>sudo pacman -S shadowsocks-qt5</code> 从GUI连接ss服务器<br />
+也可以从pip下载shadowsocks： <code>pip install shadowsocks</code>，然后再创建一个同服务端的config.json配置文件如 <code>sslocal -c config.json -d start</code></p>
+<h3 id="windows"><a class="markdownIt-Anchor" href="#windows"></a> WIndows</h3>
+<p>Windows下的 ss客户端 也可以从Python pip安装 <code>shadowsocks</code> 。也可以从 <a target="_blank" rel="noopener" href="https://github.com/shadowsocks/shadowsocks-windows/releases">https://github.com/shadowsocks/shadowsocks-windows/releases</a> 下载</p>
+<p>不过如果从pip下载 shadowsocks，那么是无法直接启动的，解决方法如下：<br />
+到 <a target="_blank" rel="noopener" href="https://slproweb.com/products/Win32OpenSSL.html">https://slproweb.com/products/Win32OpenSSL.html</a> 下载最新版Windows openssl安装，然后去openssl安装目录 C:\Program Files\OpenSSL-Win64 找到 <code>libcrypto-1_1-x64.dll</code> 复制到 Python <code>Scripts</code>目录并重命名为<code>libcrypto.dll</code> 。否则提示 <code>libcrypto(OpenSSL) not found</code> 错误。</p>
+<p>完成以上时运行 <code>sslocal -c config.json</code> 会提示错误 <code>AttributeError: function 'EVP_CIPHER_CTX_cleanup' not found</code></p>
+<p>原因是 openssl1.1.0版本中，废弃了<code>EVP_CIPHER_CTX_cleanup</code> 函数，可以用 <code>EVP_CIPHER_CTX_reset</code> 函数替代<code>EVP_CIPHER_CTX_cleanup</code> 函数。</p>
+<p>那么我们只需打开 C:\Users\Administrator\AppData\Local\Programs\Python\Python37\Lib\site-packages\shadowsocks\crypto\<a target="_blank" rel="noopener" href="http://openssl.py">openssl.py</a> 文件(路径可能不同)，将 <code>EVP_CIPHER_CTX_cleanup</code> 全部替换为 <code>EVP_CIPHER_CTX_reset</code>，总共两处需要修改，之后保存即可。</p>
+<p>执行 <code>sslocal -c config.json</code> 成功！</p>
+<h2 id="参考"><a class="markdownIt-Anchor" href="#参考"></a> 参考</h2>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://shadowsocks.org/en/download/servers.html">Shadowsocks Server</a></li>
+<li><a target="_blank" rel="noopener" href="https://shadowsocks.org/en/download/clients.html">Shadowsocks Client</a></li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Linux/">Linux</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/CentOS/">CentOS</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Shadowsocks/">Shadowsocks</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/linux-ycm-vim/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Linux Vim YCM配置</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/virtualbox-addrawdisk-err/">
+                        <span class="hidden-mobile">VirtualBox添加raw disk时出现VERR_ACCESS_DENIED</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"AzPbImmMjm5nQc1Xm9ulWCoH-gzGzoHsz","appKey":"xJqILn8nSbhYmdkB2VVQm8vI","placeholder":"说点什么","path":"window.location.pathname","avatar":"retro","meta":["nick","mail","link"],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false,"requiredFields":[]},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- KaTeX -->
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.10/dist/katex.min.css" />
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

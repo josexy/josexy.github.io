@@ -1,0 +1,630 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="计算机内部实现数据的加减乘除运算是通过对二进制位运算来实现的，基本运算&amp;quot; + - × ÷ &amp;quot; 均可转换为位运算。">
+  <meta name="author" content="Joseph XRays">
+  <meta name="keywords" content="">
+  
+  <title>位运算实现加减乘除 - JoXrays&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/monokai.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.joxrays.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>JoXrays's Blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="位运算实现加减乘除">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2019-11-21 00:00" pubdate>
+        2019年11月21日 凌晨
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.9k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      27
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">位运算实现加减乘除</h1>
+            
+            <div class="markdown-body">
+              <p>计算机内部实现数据的加减乘除运算是通过对二进制位运算来实现的，基本运算&quot; + - × ÷ &quot; 均可转换为位运算。</p>
+<span id="more"></span>
+<p>在介绍加减乘除运算前，我们需要了解一些基本的位运算。</p>
+<p>与 &amp;<br />
+1 and 1 = 1<br />
+1 and 0 = 0<br />
+0 and 1 = 0<br />
+0 and 0 = 0</p>
+<p>或 |<br />
+1 or 1 = 1<br />
+1 or 0 = 1<br />
+0 or 1 = 1<br />
+0 or 0 = 0</p>
+<p>异或 ^<br />
+1 xor 1 = 0<br />
+1 xor 0 = 1<br />
+0 xor 1 = 1<br />
+0 xor 0 = 0</p>
+<h2 id="加法运算"><a class="markdownIt-Anchor" href="#加法运算"></a> 加法运算</h2>
+<p>假如右两个32位的int整数：</p>
+<blockquote>
+<p>a=10: 00000000000000000000000000001010<br />
+b=13: 00000000000000000000000000001101</p>
+</blockquote>
+<p>将这两个数10和13相加：<br />
+a=01010 (10)<br />
+b=01101 (13)<br />
+c=10111 (23)</p>
+<p>把上面的二进制分割为每一位后a+b=c</p>
+<table>
+<thead>
+<tr>
+<th>a</th>
+<th>b</th>
+<th>xor ^</th>
+<th style="text-align:left">and &amp;</th>
+<th>c</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td style="text-align:left">0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td style="text-align:left">0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td style="text-align:left">0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td style="text-align:left">1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td style="text-align:left">0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p>我们发现 位异或^ 单纯的将两个数相加，不过并没有考虑 <strong>进位</strong> )，但是 与运算&amp; 能够表示两个二进制相加是否发生了进位（如上表所示）。</p>
+<p>也就是说，利用 xor 将两个数相加，and 判断是否有进位，如果有，那个满2进1位 carry&lt;&lt;=1</p>
+<blockquote>
+<p>sum = a^b<br />
+carry = a&amp;b<br />
+carry &lt;&lt;= 1</p>
+</blockquote>
+<p>假如这样计算会发生什么?</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-built_in">add</span>(a,b)<br>a=<span class="hljs-number">01010</span><br>b=<span class="hljs-number">01101</span><br><br>sum=a^b =&gt; <span class="hljs-number">00111</span> <span class="hljs-comment">// 求和</span><br>carry=a&amp;b =&gt; <span class="hljs-number">01000</span> <span class="hljs-comment">// 求进位: 1&amp;1</span><br>carry=carry&lt;&lt;<span class="hljs-number">1</span> =&gt; <span class="hljs-number">10000</span> <span class="hljs-comment">//满2进1</span><br><br>如果carry进位!=<span class="hljs-number">0</span>,否则就结束<br>假设<br>a=sum=  <span class="hljs-number">00111</span><br>b=carry=<span class="hljs-number">10000</span><br>重复之前的步骤...此时新的a=sum,b=carry<br>sum=a^b =&gt; <span class="hljs-number">10111</span><br>carry=a&amp;b =&gt; <span class="hljs-number">00000</span><br>carry=carry&lt;&lt;<span class="hljs-number">1</span> =&gt; <span class="hljs-number">00000</span><br><br>此时sum=<span class="hljs-number">10111</span> 且 carry=<span class="hljs-number">0</span> <br>结果正确！<br></code></pre></div></td></tr></table></figure>
+<p>sum=a^b 表明对a和b求和（不考虑进位），而 (a&amp;b)&lt;&lt;1 表明求a和b中哪个位发生了进位，并且将该位置于最高位(通过左移一位)</p>
+<p>因此C++代码如下:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-comment">// 迭代1，按照上面的思路来写</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">add</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a,<span class="hljs-keyword">int</span> b)</span></span>&#123;<br>    <span class="hljs-keyword">int</span> sum=<span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">int</span> carry=<span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">do</span><br>    &#123;<br>        sum=a^b;<br>        carry=(a&amp;b)&lt;&lt;<span class="hljs-number">1</span>;<br>        a=sum;<br>        b=carry;<br>    &#125; <span class="hljs-keyword">while</span> (carry); <span class="hljs-comment">//判断是否有进位。如无，则表示没有可以加的值</span><br>    <span class="hljs-keyword">return</span> sum;<br>&#125;<br><span class="hljs-comment">// 迭代2</span><br><span class="hljs-comment">// 还可以修改为以下代码</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">add</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a,<span class="hljs-keyword">int</span> b)</span></span>&#123;<br>    <span class="hljs-keyword">int</span> sum=a; <br>    <span class="hljs-keyword">int</span> carry=b;<br>    <span class="hljs-keyword">while</span> (carry)&#123;<br>        <span class="hljs-keyword">int</span> temp=sum;<br>        sum=temp^carry; <span class="hljs-comment">//a+b</span><br>        carry=(temp&amp;carry)&lt;&lt;<span class="hljs-number">1</span>; <span class="hljs-comment">//进1位</span><br>    &#125;<br>    <span class="hljs-keyword">return</span> sum;<br>&#125;<br><span class="hljs-comment">//递归</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">add</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a,<span class="hljs-keyword">int</span> b)</span></span>&#123;<br>    <span class="hljs-keyword">if</span>(b==<span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> a;<br>    <span class="hljs-keyword">int</span> carry=(a&amp;b)&lt;&lt;<span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">int</span> sum=a^b;<br>    <span class="hljs-comment">// 将a+b转化为sum+carry</span><br>    <span class="hljs-built_in">add</span>(sum,carry);<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h2 id="减法运算"><a class="markdownIt-Anchor" href="#减法运算"></a> 减法运算</h2>
+<p>由于计算机只会进行加法运算，那么减法就可以转变为加法运算，这涉及到计算机的原码反码和补码知识了。这里简单提下</p>
+<ul>
+<li>正数的 <strong>原码=反码=补码</strong></li>
+<li>负数的 原码=正数的原码且最高位置为1。<br />
+如32位-3原码可表示为 10000000000000000000000000000011</li>
+<li>负数的反码为其原码的最高位1不变，其余位取反(~)<br />
+如32位-3反码可表示为 11111111111111111111111111111100</li>
+<li>负数的补码为其反码+1<br />
+如32位-3补码可表示为 11111111111111111111111111111101</li>
+</ul>
+<p><strong>目前补码普遍是计算机内部数值的表示方式，它很好的解决了 +0 和 -0的问题</strong></p>
+<p>因此减法运算就变得十分简单的<br />
+代码如下</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-comment">// a - b = a + (-b) = a + (~b + 1 )</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">subtract</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a,<span class="hljs-keyword">int</span> b)</span></span>&#123;<br>    <span class="hljs-keyword">int</span> negative=<span class="hljs-built_in">add</span>(~b,<span class="hljs-number">1</span>); <span class="hljs-comment">// ~b + 1</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">add</span>(a,negative); <br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>负数和正数转换(设x&gt;0)：</p>
+<blockquote>
+<p>-x=(~x+1)  如 -10=(~10+1)<br />
+x=~(-x-1)  如 10=~(-10-1)<br />
+x=~(-x)+1 如 10=~(-10)+1</p>
+</blockquote>
+<h2 id="乘法运算"><a class="markdownIt-Anchor" href="#乘法运算"></a> 乘法运算</h2>
+<p>其实乘法也就是多个加法的累积求和，在我们小学时，25×5应该是这样计算的</p>
+<figure class="highlight tap"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs tap">   <span class="hljs-number"> 2 </span>5<br> × <span class="hljs-number"> 0 </span>5<br> ————————<br> <span class="hljs-number"> 1 </span>2 5<br>+<span class="hljs-number"> 0 </span>0<br> ————————<br> <span class="hljs-number"> 1 </span>2 5<br></code></pre></div></td></tr></table></figure>
+<p>二进制也可以这样计算，不过就是满2进1。这里还是以25×5=125为例</p>
+<figure class="highlight tap"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs tap">      <span class="hljs-number"> 0 </span>1<span class="hljs-number"> 1 </span>0<span class="hljs-number"> 0 </span>1   = 25<br>     ×      <span class="hljs-number"> 1 </span>0<span class="hljs-number"> 1 </span>  = 5<br>————————————————————<br>      <span class="hljs-number"> 0 </span>1<span class="hljs-number"> 1 </span>0<span class="hljs-number"> 0 </span>1   = 25<br>+   <span class="hljs-number"> 0 </span>0<span class="hljs-number"> 0 </span>0<span class="hljs-number"> 0 </span>0     = 0<br>+ <span class="hljs-number"> 0 </span>1<span class="hljs-number"> 1 </span>0<span class="hljs-number"> 0 </span>1       = 25&lt;&lt;2 = 25*2^2=120<br>——————————————————— <br>  <span class="hljs-number"> 0 </span>1<span class="hljs-number"> 1 </span>1<span class="hljs-number"> 1 </span>1<span class="hljs-number"> 0 </span>1   =<span class="hljs-number"> 125 </span>= 25+120<br></code></pre></div></td></tr></table></figure>
+<p>将乘法分解为加法即可实现位运算，大致思路如下，<br />
+存在一个函数 <code>int multiply(int a,int b);</code><br />
+1.若b&lt;0，则对b求负化为<strong>正数</strong>，同时设置一个标识neagtive_mask记录该b是负数<br />
+2.对除数b不断右移b&gt;&gt;=1并且取得b最低位的值(0或1)，直到b=0<br />
+3.若为1，则add操作得sum<br />
+4.a不断左移1位 a&lt;&lt;=1<br />
+5.结尾判断neagtive_mask来设置sum的正负</p>
+<p>注意，除数如果为负数，假设为 11111111111111111111111111111011 (-5)，那么其右移得不到b=0，至于被除数可以小于0<br />
+具体代码如下</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">multiply</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a,<span class="hljs-keyword">int</span> b)</span></span>&#123;<br>    <span class="hljs-comment">// 判断正负</span><br>    <span class="hljs-keyword">bool</span> neagtive_mask=(b&lt;<span class="hljs-number">0</span>);<br>    <span class="hljs-keyword">if</span>(b&lt;<span class="hljs-number">0</span>)&#123;<span class="hljs-number">2</span><br>        b=~(b<span class="hljs-number">-1</span>); <span class="hljs-comment">// 化为正数: -x=(~x+1) &lt;-&gt; x=-(-x-1) (x&gt;0) </span><br>    &#125;<br>    <span class="hljs-keyword">int</span> sum=<span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">while</span> (b) <br>    &#123;<br>        <span class="hljs-keyword">if</span>(b&amp;<span class="hljs-number">0x1</span>)&#123; <span class="hljs-comment">//取最低位，最低位为1，求和</span><br>            sum=<span class="hljs-built_in">add</span>(sum,a); <span class="hljs-comment">//累加</span><br>        &#125;<br>        b&gt;&gt;=<span class="hljs-number">1</span>; <span class="hljs-comment">// 除数右移将最低位溢出</span><br>        a&lt;&lt;=<span class="hljs-number">1</span>; <span class="hljs-comment">// 被除数左移</span><br>    &#125;<br>    <span class="hljs-keyword">if</span>(neagtive_mask)&#123;<br>        sum=~(sum<span class="hljs-number">-1</span>);<br>    &#125;<br>    <span class="hljs-keyword">return</span> sum;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h2 id="除法运算"><a class="markdownIt-Anchor" href="#除法运算"></a> 除法运算</h2>
+<p>除法就相对来说复杂了，不过除法类似减法，不断地减去除数得到商，最后剩下余数<br />
+这里还是以小学数学除法为例子 37÷3=12…1</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp">     <span class="hljs-number">12</span> <br>  -----<br><span class="hljs-number">3</span> | <span class="hljs-number">37</span><br>  - <span class="hljs-number">3</span><br>   ----	<br>      <span class="hljs-number">7</span><br>    - <span class="hljs-number">6</span>   <br>    ---<br>      <span class="hljs-number">1</span><br></code></pre></div></td></tr></table></figure>
+<p>其中这操作还可以转换为</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp">步骤<span class="hljs-number">1</span><br>     <span class="hljs-number">1</span><br>   -----<br><span class="hljs-number">30</span> | <span class="hljs-number">37</span>    <br>   - <span class="hljs-number">30</span><br>    ----	<br>	  <span class="hljs-number">7</span>  <br>步骤<span class="hljs-number">2</span><br>    <span class="hljs-number">2</span><br>   ----<br> <span class="hljs-number">3</span>| <span class="hljs-number">7</span>   <br>   <span class="hljs-number">-6</span><br>    ---	<br>    <span class="hljs-number">1</span><br>  <br>商: <span class="hljs-number">1</span>*<span class="hljs-number">10</span>^<span class="hljs-number">1</span> + <span class="hljs-number">2</span>*<span class="hljs-number">10</span>^<span class="hljs-number">0</span> = <span class="hljs-number">10</span>+<span class="hljs-number">2</span>=<span class="hljs-number">12</span><br>最后余下<span class="hljs-number">1</span><br></code></pre></div></td></tr></table></figure>
+<p>发现了什么吗？</p>
+<p>现在我们把上面十进制换成二进制</p>
+<blockquote>
+<p>37: 100101<br />
+3:       0011<br />
+7:       1101</p>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp">步骤<span class="hljs-number">1</span><br>         <span class="hljs-number">1</span><br>      --------<br> <span class="hljs-number">11000</span>|	<span class="hljs-number">100101</span> -&gt;a=<span class="hljs-number">37</span>  <br>       - <span class="hljs-number">11000</span> <br>    	-------	<br>	      <span class="hljs-number">1101</span> -&gt;<span class="hljs-number">7</span><br>步骤<span class="hljs-number">2</span><br>       <span class="hljs-number">1</span><br>    ------<br><span class="hljs-number">1100</span>| <span class="hljs-number">1101</span>  -&gt;a=<span class="hljs-number">7</span><br>   -  <span class="hljs-number">1100</span> <br>    ------	<br>        <span class="hljs-number">1</span><br>步骤<span class="hljs-number">3</span><br>         <span class="hljs-number">0</span><br>    ------<br> <span class="hljs-number">110</span>|   <span class="hljs-number">1</span> <br>   -    <span class="hljs-number">0</span> <br>    ------	<br>        <span class="hljs-number">1</span><br>商: <span class="hljs-number">1</span>*<span class="hljs-number">2</span>^<span class="hljs-number">3</span> + <span class="hljs-number">1</span>*<span class="hljs-number">2</span>^<span class="hljs-number">2</span> + <span class="hljs-number">0</span> <br>  = <span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">3</span> + <span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">2</span> + <span class="hljs-number">0</span><br>  = <span class="hljs-number">8</span>+<span class="hljs-number">4</span>+<span class="hljs-number">0</span>=<span class="hljs-number">12</span><br>最后余下<span class="hljs-number">1</span><br></code></pre></div></td></tr></table></figure>
+<p>在上面例子中，除数3<strong>左移3位</strong>变为 11000，接着除数3<strong>左移2位</strong>变为 1100，最后<strong>左移1位</strong>变为 110。<br />
+此时发现 <strong>被除数1</strong> 小于 <strong>除数110</strong>，因此商为0（C++语言中除法运算导致返回一个<strong>整数</strong>）。<br />
+因此如果发现被除数小于除数，那么直接返回0即可。</p>
+<p>于是要先找到除数应该左移的位数，且使得除数是&lt;=除数<br />
+然后利用减法 :a=subtract(a,b&lt;&lt;nMove)</p>
+<p>利用加法 :当前累加值r=add(前一个值累加值r,1&lt;&lt;nMove)</p>
+<p>代码如下</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">divide</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a,<span class="hljs-keyword">int</span> b)</span></span>&#123;<br>    <span class="hljs-keyword">int</span> nMove=<span class="hljs-number">0</span>; <br>    <span class="hljs-keyword">bool</span> negative_mask=<span class="hljs-literal">false</span>;<br>    <span class="hljs-keyword">if</span>(a&lt;<span class="hljs-number">0</span>)&#123;<br>        a=~(a<span class="hljs-number">-1</span>); <span class="hljs-comment">// 化正</span><br>        negative_mask=<span class="hljs-literal">true</span>;<br>    &#125;<br>    <span class="hljs-keyword">if</span>(b&lt;<span class="hljs-number">0</span>)&#123;<br>        b=~(b<span class="hljs-number">-1</span>); <span class="hljs-comment">// 化正</span><br>        <span class="hljs-comment">// 同号得正，异号的负</span><br>        negative_mask=negative_mask==<span class="hljs-literal">false</span>?<span class="hljs-literal">true</span>:<span class="hljs-literal">false</span>;<br>    &#125;<br>    <span class="hljs-keyword">if</span>(a&lt;b)&#123;<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;&#125;<br>    <span class="hljs-comment">// 找到除数应该左移的位数，且使得除数是&lt;=除数</span><br>    <span class="hljs-keyword">for</span> ( nMove = <span class="hljs-number">0</span>; nMove&lt;<span class="hljs-number">32</span>;nMove++)&#123;<br>        <span class="hljs-keyword">if</span>((b&lt;&lt;nMove)&gt;=a)&#123;<br>            <span class="hljs-keyword">break</span>;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">int</span> r=<span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = nMove; i &gt;=<span class="hljs-number">0</span>; i--)&#123;<br>        <span class="hljs-keyword">int</span> t=b&lt;&lt;i;<br>        <span class="hljs-keyword">if</span>(a&lt;t) <span class="hljs-comment">// 被除数小于除数</span><br>            <span class="hljs-keyword">continue</span>;<br>        a=<span class="hljs-built_in">subtract</span>(a,t);<br>        r=<span class="hljs-built_in">add</span>(r,<span class="hljs-number">1</span>&lt;&lt;i);<br>    &#125;<br>    <span class="hljs-keyword">if</span>(negative_mask)&#123;<br>        r=~(r<span class="hljs-number">-1</span>);<br>    &#125;<br>    <span class="hljs-keyword">return</span> r;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h2 id="输出二进制"><a class="markdownIt-Anchor" href="#输出二进制"></a> 输出二进制</h2>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">printBinary</span><span class="hljs-params">(<span class="hljs-keyword">int</span> number)</span></span>&#123;<br>	<span class="hljs-keyword">char</span> strBinary[<span class="hljs-number">33</span>]&#123; <span class="hljs-number">0</span> &#125;;<br>	<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> bitmask = <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">31</span>;<br>	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">32</span>; i++)<br>	&#123;<br>		<span class="hljs-keyword">char</span> k = ((number &amp; bitmask)&gt;&gt;<span class="hljs-number">31</span>)?<span class="hljs-string">&#x27;1&#x27;</span>:<span class="hljs-string">&#x27;0&#x27;</span>;<br>		strBinary[i] = k;<br>		number &lt;&lt;= <span class="hljs-number">1</span>;<br>	&#125;<br>	cout &lt;&lt; strBinary &lt;&lt; endl;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h2 id="简单数据交换"><a class="markdownIt-Anchor" href="#简单数据交换"></a> 简单数据交换</h2>
+<p>利用xor位异或来实现值交换</p>
+<p>原理:</p>
+<blockquote>
+<p>a ^ a = 0<br />
+a ^ 0 = a<br />
+0 ^ a = a</p>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-keyword">int</span> a=<span class="hljs-number">10</span>,b=<span class="hljs-number">20</span>;<br>a=a^b; <span class="hljs-comment">// a=a^b;</span><br>b=a^b; <span class="hljs-comment">// b=(a^b)^b=a^(b^b)=a^0=a;</span><br>a=a^b; <span class="hljs-comment">// a=(a^b)^a=(a^a)^b=0^b=b;</span><br></code></pre></div></td></tr></table></figure>
+<p>bye~</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Programming/">Programming</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/C/">C++</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/cpp-printtable/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">C++简单实现MySQL表格输出功能</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/linux-ycm-vim/">
+                        <span class="hidden-mobile">Linux Vim YCM配置</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"AzPbImmMjm5nQc1Xm9ulWCoH-gzGzoHsz","appKey":"xJqILn8nSbhYmdkB2VVQm8vI","placeholder":"说点什么","path":"window.location.pathname","avatar":"retro","meta":["nick","mail","link"],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false,"requiredFields":[]},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- KaTeX -->
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.10/dist/katex.min.css" />
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

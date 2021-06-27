@@ -1,0 +1,639 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="跳跃表/跳表(SkipList)
+In computer science, a skip list is a data structure that allows O(log⁡n)O(\log n)O(logn) search complexity as well as O(log⁡n)O(\log n)O(logn) insertion complexity within an ordered ">
+  <meta name="author" content="Joseph XRays">
+  <meta name="keywords" content="">
+  
+  <title>数据结构-跳跃表C++实现 - JoXrays&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/monokai.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.joxrays.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>JoXrays's Blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="数据结构-跳跃表C++实现">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-01-15 00:00" pubdate>
+        2020年1月15日 凌晨
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.1k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      45
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">数据结构-跳跃表C++实现</h1>
+            
+            <div class="markdown-body">
+              <p>跳跃表/跳表(SkipList)<br />
+In computer science, a skip list is a data structure that allows <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(\log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span> search complexity as well as <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(\log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span> insertion complexity within an ordered sequence of <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span> elements.  —— 维基百科</p>
+<span id="more"></span>
+<h3 id="概述"><a class="markdownIt-Anchor" href="#概述"></a> 概述</h3>
+<p>由于本人知识有限，对于跳跃表的认识可能不够深入，不过还是想把自己的看法写下来…初学跳跃表时也许无法理解，不过当深入理解了跳跃表的原理时，一切都变得easy。比起手写一个红黑树代码跳跃表要简单得多，而且跳跃表也有很多实现例子的，如 Qt中的 <a target="_blank" rel="noopener" href="https://doc.qt.io/archives/qt-4.8/qmap.html#details">QMap</a> ,MemSQL ,Redis… 虽然我都没有接触过…</p>
+<h3 id="跳跃表"><a class="markdownIt-Anchor" href="#跳跃表"></a> 跳跃表</h3>
+<p>一个简单的跳跃表结构<br />
+<img src="/uploads/images/data_structure/skiplist_cpp/01.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p><img src="/uploads/images/data_structure/skiplist_cpp/03.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>我们都知道，对一个 <code>有序链表</code> 执行查找的复杂度为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span> ,而对数组使用<strong>二分查找</strong>的复杂度则是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(\log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span>，而跳跃表的出现就是为了解决<code>有序链表</code>的查找问题(当然还要其他更重要的作用)，使其复杂度将为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(\log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span> ，不过最坏情况下却仍是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span><br />
+注意: 跳跃表适用于有序链表。</p>
+<p>利用跳跃表之后的查找、插入、删除复杂度如下</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">方法</th>
+<th style="text-align:center">查找</th>
+<th style="text-align:center">插入</th>
+<th style="text-align:center">删除</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">平均情况</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(\log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span></td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(\log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span></td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(\log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span></td>
+</tr>
+<tr>
+<td style="text-align:center">最坏情况</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span></td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span></td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span></td>
+</tr>
+</tbody>
+</table>
+<p>跳跃表是一个空间换时间的数据结构。</p>
+<p>那么跳跃表是如何实现快速查找的呢？跳跃表通过建立 <code>索引节点</code> ，每次查找时，先通过最顶层索引节点一层层的向下寻找满足条件的节点，每次查找都有可能跨越到其他不相邻的节点，直到抵达最底层也就是原始层链表某处节点位置。</p>
+<p>这里的 <strong>索引节点</strong> 其实就是一组节点地址，在new一个新节点时就分配好，然后在对每一层索引节点进行重组，使其前后串联起来，这样就形成了一个 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.65952em;vertical-align:0em;"></span><span class="mord mathdefault">i</span></span></span></span>级链表且 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>i</mi><mo>∈</mo><mo stretchy="false">(</mo><mn>0</mn><mo separator="true">,</mo><mi>M</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">i\in(0,M-1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69862em;vertical-align:-0.0391em;"></span><span class="mord mathdefault">i</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">M</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span></span></span></span> M为跳跃表的最高层级数MaxLevel，这样每一层级均可形成一条链。</p>
+<p>要查找key为5的节点，那么从head开始一层层的查找，此次过程跳过了节点1和节点3，最后找到了节点5。<br />
+<img src="/uploads/images/data_structure/skiplist_cpp/02.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>这里我们设置一个有序链表为带有head和tail节点，其中head节点的next指针就是有序链表的起始，而tail节点一般为<code>nullptr</code>，不过这里我们将tail作为<code>哨兵节点</code>，这样就无需处理<code>nullptr</code>问题了。</p>
+<h4 id="插入删除"><a class="markdownIt-Anchor" href="#插入删除"></a> 插入/删除</h4>
+<p>在一个<code>规则跳表结构</code>中，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.65952em;vertical-align:0em;"></span><span class="mord mathdefault">i</span></span></span></span>级链表有 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mfrac><mi>n</mi><msup><mn>2</mn><mi>i</mi></msup></mfrac></mrow><annotation encoding="application/x-tex">\frac{n}{2^i}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.040392em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.695392em;"><span style="top:-2.6550000000000002em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mtight">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7570857142857143em;"><span style="top:-2.786em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathdefault mtight">i</span></span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span> 个节点，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span>为最底层链表的总节点数。如:<br />
+<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>0</mn><mo>→</mo><mi>i</mi></mrow><annotation encoding="application/x-tex">0 \rightarrow i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.65952em;vertical-align:0em;"></span><span class="mord mathdefault">i</span></span></span></span> 层有 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mo separator="true">,</mo><mfrac><mi>n</mi><mn>2</mn></mfrac><mo separator="true">,</mo><mfrac><mi>n</mi><mn>4</mn></mfrac><mo separator="true">,</mo><mo>⋯</mo><mtext> </mtext><mo separator="true">,</mo><mfrac><mi>n</mi><msup><mn>2</mn><mi>i</mi></msup></mfrac></mrow><annotation encoding="application/x-tex">n,\frac{n}{2},\frac{n}{4},\cdots,\frac{n}{2^{i}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.040392em;vertical-align:-0.345em;"></span><span class="mord mathdefault">n</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.695392em;"><span style="top:-2.6550000000000002em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.695392em;"><span style="top:-2.6550000000000002em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">4</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner">⋯</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.695392em;"><span style="top:-2.6550000000000002em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mtight">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7570857142857143em;"><span style="top:-2.786em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span></span></span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></p>
+<p>也就是说，我们希望在插入时符合这种结构，而插入的节点属于<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.65952em;vertical-align:0em;"></span><span class="mord mathdefault">i</span></span></span></span>级链表的概率为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mfrac><mn>1</mn><msup><mn>2</mn><mi>i</mi></msup></mfrac></mrow><annotation encoding="application/x-tex">\frac{1}{2^i}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.190108em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.845108em;"><span style="top:-2.6550000000000002em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mtight">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7570857142857143em;"><span style="top:-2.786em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathdefault mtight">i</span></span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span> (不难想出，插入节点属于0级链表概率永远为1，而属于1级链表的概率为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mfrac><mn>1</mn><mn>2</mn></mfrac></mrow><annotation encoding="application/x-tex">\frac{1}{2}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.190108em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.845108em;"><span style="top:-2.6550000000000002em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span>，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>⋯</mo></mrow><annotation encoding="application/x-tex">\cdots</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.31em;vertical-align:0em;"></span><span class="minner">⋯</span></span></span></span>，属于<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.65952em;vertical-align:0em;"></span><span class="mord mathdefault">i</span></span></span></span>级链表的为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mfrac><mn>1</mn><msup><mn>2</mn><mi>i</mi></msup></mfrac></mrow><annotation encoding="application/x-tex">\frac{1}{2^i}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.190108em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.845108em;"><span style="top:-2.6550000000000002em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mtight">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7570857142857143em;"><span style="top:-2.786em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathdefault mtight">i</span></span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span>)</p>
+<p>这时来看看这段话，摘自William Pugh(就是他搞出了跳表)写的论文里的一段话。<br />
+文末参考中有他关于跳表的论文</p>
+<blockquote>
+<p>原文<br />
+Skip lists are a data structure that can be used in place of balanced trees.<br />
+Skip lists use probabilistic balancing rather than strictly enforced balancing<br />
+and as a result the algorithms for insertion and deletion in skip lists are<br />
+much simpler and significantly faster than equivalent algorithms for<br />
+balanced trees.<br />
+翻译:<br />
+跳跃表是一种可以用来代替平衡树的数据结构。<strong>跳跃表使用概率平衡而不是严格执行的平衡</strong>。因此，在跳跃表中插入和删除的算法是要比等效算法简单得多，也快得多平衡树。</p>
+</blockquote>
+<p>注意 <code>跳跃表使用概率平衡而不是严格执行的平衡</code> 这告诉我们，插入操作是动态的插入到不同层级的位置。因此，把一个新节点插入到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.65952em;vertical-align:0em;"></span><span class="mord mathdefault">i</span></span></span></span>级链表的概率为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>p</mi><mi>i</mi></msup></mrow><annotation encoding="application/x-tex">p^i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.019104em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.824664em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span></span></span></span></span></span></span></span> (在一个规则跳表结构中，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>p</mi><mo>=</mo><mn>0.5</mn></mrow><annotation encoding="application/x-tex">p=0.5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">p</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mord">.</span><span class="mord">5</span></span></span></span> )。</p>
+<p>而这个动态插入法就利用到 随机数生成函数 来完成，一个好的随机数生成函数，能够使跳表结构达到最优的效果使其复杂度不会太高。</p>
+<p>除此之外每一次插入/删除操作，都必须要维护跳表结构，也就是处理好链表节点的指向关系，避免混乱。</p>
+<h4 id="级的分配"><a class="markdownIt-Anchor" href="#级的分配"></a> 级的分配</h4>
+<p>不说那么多，级的分配可以利用一个随机数生成函数来完成。<br />
+伪码:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-built_in">randomLevel</span>()<br>    lvl := <span class="hljs-number">1</span><br>    -- <span class="hljs-built_in">random</span>() that returns a random value in [<span class="hljs-number">0.</span>.<span class="hljs-number">.1</span>)<br>    <span class="hljs-keyword">while</span> <span class="hljs-built_in">random</span>() &lt; p <span class="hljs-keyword">and</span> lvl &lt; MaxLevel <span class="hljs-keyword">do</span><br>        lvl := lvl + <span class="hljs-number">1</span><br>    <span class="hljs-keyword">return</span> lvl<br></code></pre></div></td></tr></table></figure>
+<p>转化成C++代码</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">random_level</span><span class="hljs-params">()</span></span>&#123;<br>    <span class="hljs-keyword">int</span> level= <span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">while</span> (((<span class="hljs-keyword">double</span>)(<span class="hljs-built_in">rand</span>()%<span class="hljs-number">101</span>)/<span class="hljs-number">101</span>) &lt; (m_prob) <br>    &amp;&amp; level &lt; m_maxLevel) &#123;<br>        level++;<br>    &#125;<br>    <span class="hljs-keyword">return</span> level;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>这里还要一个糟糕的随机数生成函数仅供参考</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">random_level</span><span class="hljs-params">()</span></span>&#123;<br>	<span class="hljs-keyword">int</span> level = <span class="hljs-built_in">rand</span>() % m_maxLevel + <span class="hljs-number">1</span>;<br>	<span class="hljs-keyword">return</span> level;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h3 id="c实现跳跃表"><a class="markdownIt-Anchor" href="#c实现跳跃表"></a> C++实现跳跃表</h3>
+<p>OK，现在开始用C++实现跳跃表<br />
+首先我们定义两个结构体，用于保存节点数据</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-keyword">template</span>&lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">KeyType</span>,<span class="hljs-keyword">class</span> <span class="hljs-title">ValueType</span>&gt;</span><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Element</span>&#123;</span><br>    KeyType key;<br>    ValueType value;<br>    <span class="hljs-built_in">Element</span>()&#123;&#125;<br>    <span class="hljs-built_in">Element</span>(KeyType key,<span class="hljs-keyword">const</span> ValueType&amp; value)&#123;<br>        <span class="hljs-keyword">this</span>-&gt;key=key;<br>        <span class="hljs-keyword">this</span>-&gt;value=value;<br>    &#125;<br>&#125;;<br><br><span class="hljs-keyword">template</span>&lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">KeyType</span>,<span class="hljs-keyword">class</span> <span class="hljs-title">ValueType</span>&gt;</span><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">skipNode</span>&#123;</span><br>    Element&lt;KeyType,ValueType&gt; element;<br>    skipNode**next;<br>    <span class="hljs-built_in">skipNode</span>(<span class="hljs-keyword">const</span> Element&lt;KeyType,ValueType&gt;&amp;theElement,<span class="hljs-keyword">int</span> size)&#123;<br>        <span class="hljs-keyword">this</span>-&gt;element=theElement;<br>        <span class="hljs-keyword">this</span>-&gt;next=<span class="hljs-keyword">new</span> skipNode&lt;KeyType,ValueType&gt;*[size];<br>    &#125;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+<h4 id="确定maxlevel"><a class="markdownIt-Anchor" href="#确定maxlevel"></a> 确定MaxLevel</h4>
+<p>MaxLevel太大，造成空间的浪费，太小又会导致退化成一个冗杂的 ‘单链表’ 结构，两者均会影响跳跃表的性能。因此合适的MaxLevel十分重要。</p>
+<p>从《Skip Lists: A Probabilistic Alternative to<br />
+Balanced Trees》 中我们可以这样定义一个MaxLevel，即<br />
+<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>L</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo><mo>=</mo><mo stretchy="false">⌈</mo><mi>l</mi><mi>o</mi><msub><mi>g</mi><mfrac><mn>1</mn><mi>p</mi></mfrac></msub><mi>n</mi><mo stretchy="false">⌉</mo></mrow><annotation encoding="application/x-tex">L(n)=\lceil log_\frac{1}{p}n \rceil</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">L</span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.3342399999999999em;vertical-align:-0.5842399999999999em;"></span><span class="mopen">⌈</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">o</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.75378em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen nulldelimiter sizing reset-size3 size6"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8443142857142858em;"><span style="top:-2.656em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">p</span></span></span></span><span style="top:-3.2255000000000003em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line mtight" style="border-bottom-width:0.049em;"></span></span><span style="top:-3.384em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.48288571428571425em;"><span></span></span></span></span></span><span class="mclose nulldelimiter sizing reset-size3 size6"></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.5842399999999999em;"><span></span></span></span></span></span></span><span class="mord mathdefault">n</span><span class="mclose">⌉</span></span></span></span><br />
+<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>M</mi><mi>a</mi><mi>x</mi><mi>L</mi><mi>e</mi><mi>v</mi><mi>e</mi><mi>l</mi><mo>=</mo><mi>L</mi><mo stretchy="false">(</mo><mi>N</mi><mo stretchy="false">)</mo><mo separator="true">,</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">MaxLevel=L(N),N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">M</span><span class="mord mathdefault">a</span><span class="mord mathdefault">x</span><span class="mord mathdefault">L</span><span class="mord mathdefault">e</span><span class="mord mathdefault" style="margin-right:0.03588em;">v</span><span class="mord mathdefault">e</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">L</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span></span></span></span>为待插入元素节点总数</p>
+<p>利用换底公式 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mo><mi>log</mi><mo>⁡</mo></mo><mi>a</mi></msub><mi>b</mi><mo>=</mo><mfrac><mrow><msub><mo><mi>log</mi><mo>⁡</mo></mo><mi>c</mi></msub><mi>b</mi></mrow><mrow><msub><mo><mi>log</mi><mo>⁡</mo></mo><mi>c</mi></msub><mi>a</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">\log_ab=\frac{\log_cb}{\log_ca}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.93858em;vertical-align:-0.24414em;"></span><span class="mop"><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.057252em;"><span style="top:-2.4558600000000004em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">a</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.24414em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">b</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.513324em;vertical-align:-0.5311079999999999em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.982216em;"><span style="top:-2.6550000000000002em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mop mtight"><span class="mop mtight">lo<span style="margin-right:0.01389em;">g</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.04167428571428572em;"><span style="top:-2.2341314285714287em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathdefault mtight">c</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.26586857142857145em;"><span></span></span></span></span></span></span><span class="mspace mtight" style="margin-right:0.19516666666666668em;"></span><span class="mord mathdefault mtight">a</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.496108em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mop mtight"><span class="mop mtight">lo<span style="margin-right:0.01389em;">g</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.04167428571428572em;"><span style="top:-2.2341314285714287em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathdefault mtight">c</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.26586857142857145em;"><span></span></span></span></span></span></span><span class="mspace mtight" style="margin-right:0.19516666666666668em;"></span><span class="mord mathdefault mtight">b</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.5311079999999999em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span> 转化为C++代码</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">MaxLevel</span><span class="hljs-params">(<span class="hljs-keyword">int</span> numberOfnode,<span class="hljs-keyword">float</span> prob)</span></span>&#123;<br>    <span class="hljs-keyword">return</span> (<span class="hljs-keyword">int</span>)(<span class="hljs-built_in">ceil</span>(<span class="hljs-built_in">logf</span>((<span class="hljs-keyword">float</span>)numberOfnode)/<span class="hljs-built_in">logf</span>((<span class="hljs-keyword">float</span>)<span class="hljs-number">1</span>/prob)));<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h4 id="skiplist初始化"><a class="markdownIt-Anchor" href="#skiplist初始化"></a> skiplist初始化</h4>
+<p>我们只需在构造函数进行初始化即可。<br />
+这里我们既可以自定义跳跃表的<code>MaxLevel</code>，也可以通过<code>numberOfnode</code>来计算一个<code>MaxLevel</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-keyword">template</span>&lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">KeyType</span>,<span class="hljs-keyword">class</span> <span class="hljs-title">ValueType</span>&gt;</span><br>skiplist&lt;KeyType,ValueType&gt;::<span class="hljs-built_in">skiplist</span>(<span class="hljs-keyword">float</span> prob,KeyType tailLargeKey,<span class="hljs-keyword">int</span> max_level,<span class="hljs-keyword">int</span> numberOfnode) &#123;<br>    <span class="hljs-built_in">srand</span>(<span class="hljs-built_in">time</span>(<span class="hljs-literal">nullptr</span>));<br>    m_prob=prob;<br>    m_size=<span class="hljs-number">0</span>;<br><br>    <span class="hljs-comment">// 计算最大链表层数</span><br>    <span class="hljs-keyword">if</span>(numberOfnode!=<span class="hljs-number">-1</span>)<br>        m_maxLevel=<span class="hljs-built_in">MaxLevel</span>(numberOfnode,prob);<br>    <span class="hljs-keyword">else</span><br>        m_maxLevel=max_level;<br>        <br>    m_curMaxLevel=<span class="hljs-number">0</span>;<br><br>    <span class="hljs-comment">// 初始化尾节点</span><br>    m_tailKey=tailLargeKey;<br>    Element&lt;KeyType,ValueType&gt;tailPair&#123;m_tailKey,<span class="hljs-number">0</span>&#125;;<br>    m_tailNode=<span class="hljs-keyword">new</span> skipNode&lt;KeyType,ValueType&gt;(tailPair,<span class="hljs-number">0</span>);<br><br>    <span class="hljs-comment">// 初始化头结点</span><br>    m_headNode=<span class="hljs-keyword">new</span> skipNode&lt;KeyType,ValueType&gt;(tailPair,m_maxLevel);<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; m_maxLevel; i++)&#123;<br>        m_headNode-&gt;next[i]=m_tailNode;<br>    &#125;<br>    m_forwardNodes=<span class="hljs-keyword">new</span> skipNode&lt;KeyType,ValueType&gt;*[m_maxLevel];<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>尾节点内存分配类似<code>malloc(0)</code>形式</p>
+<h4 id="skiplist查找-find和search"><a class="markdownIt-Anchor" href="#skiplist查找-find和search"></a> skiplist查找 find和search</h4>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-keyword">template</span>&lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">KeyType</span>,<span class="hljs-keyword">class</span> <span class="hljs-title">ValueType</span>&gt;</span><br>skipNode&lt;KeyType,ValueType&gt;* skiplist&lt;KeyType,ValueType&gt;::<span class="hljs-built_in">search</span>(<span class="hljs-keyword">const</span> KeyType&amp;key)&#123;<br>    skipNode&lt;KeyType,ValueType&gt;*forwardNode=m_headNode;<br>    <span class="hljs-comment">// 外层循环: 不断的指向下一层级链表</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = m_curMaxLevel<span class="hljs-number">-1</span>; i &gt;= <span class="hljs-number">0</span>; --i)&#123;<br>        <span class="hljs-comment">// 内层循环: 指向当前层级链表的邻接节点</span><br>        <span class="hljs-keyword">while</span> (forwardNode-&gt;next[i]!=m_tailNode&amp;&amp;forwardNode-&gt;next[i]-&gt;element.key&lt;key)&#123;<br>            forwardNode=forwardNode-&gt;next[i];<br>        &#125;<br>        <span class="hljs-comment">// 保存前驱节点指针</span><br>        <span class="hljs-keyword">this</span>-&gt;m_forwardNodes[i]=forwardNode;<br>    &#125;<br>    <span class="hljs-keyword">return</span> forwardNode-&gt;next[<span class="hljs-number">0</span>];<br>&#125;<br><br><span class="hljs-keyword">template</span>&lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">KeyType</span>,<span class="hljs-keyword">class</span> <span class="hljs-title">ValueType</span>&gt;</span><br>Element&lt;KeyType,ValueType&gt;* skiplist&lt;KeyType,ValueType&gt;::<span class="hljs-built_in">find</span>(<span class="hljs-keyword">const</span> KeyType&amp;key)&#123;<br>    <span class="hljs-keyword">if</span>(key &gt; <span class="hljs-keyword">this</span>-&gt;m_tailKey)<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">nullptr</span>;<br>    skipNode&lt;KeyType,ValueType&gt;*forwardNode=m_headNode;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = m_curMaxLevel<span class="hljs-number">-1</span>; i &gt;=<span class="hljs-number">0</span> ; --i)&#123;<br>        <span class="hljs-keyword">while</span> (forwardNode-&gt;next[i]!=m_tailNode &amp;&amp; forwardNode-&gt;next[i]-&gt;element.key &lt; key)&#123;<br>            forwardNode=forwardNode-&gt;next[i];<br>        &#125;<br>    &#125;<br>    <span class="hljs-comment">// 最终会遍历到第0层-&gt;原始层，只需要在第0层判断即可</span><br>    <span class="hljs-keyword">if</span>(forwardNode-&gt;next[<span class="hljs-number">0</span>]-&gt;element.key==key)&#123;<br>        <span class="hljs-keyword">return</span> &amp;forwardNode-&gt;next[<span class="hljs-number">0</span>]-&gt;element;<br>    &#125;<span class="hljs-keyword">else</span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">nullptr</span>;<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>其中<code>find</code>和<code>search</code>都是从当前最大层级依次向下遍历，不同的是，<code>search</code>在遍历的同时将每次遍历到每一层的<code>前驱节点</code>保存在<code>m_forwardNodes</code>中，目的是为了衔接后面的插入/删除节点</p>
+<p><img src="/uploads/images/data_structure/skiplist_cpp/04.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>其中的 <code>forwardNode-&gt;next[0]</code> 就是下一个要查找的节点(如果存在的话)</p>
+<h4 id="skiplist插入"><a class="markdownIt-Anchor" href="#skiplist插入"></a> skiplist插入</h4>
+<p>每一次插入，需要通过<code>search</code>保存 <code>前驱节点m_forwardNodes</code> 从而将待插入节点连接起来。如下图红色箭头表示前后需要链接的节点。<br />
+需要注意的是，跳跃表是<code>有序链表</code>，下图只是为了解释而已 (其实是当时不小心画错了… 😦)<br />
+<img src="/uploads/images/data_structure/skiplist_cpp/05.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-keyword">template</span>&lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">KeyType</span>,<span class="hljs-keyword">class</span> <span class="hljs-title">ValueType</span>&gt;</span><br><span class="hljs-keyword">void</span> skiplist&lt;KeyType,ValueType&gt;::<span class="hljs-built_in">insert</span>(<span class="hljs-keyword">const</span> Element&lt;KeyType,ValueType&gt;&amp;element)&#123;<br>    <span class="hljs-comment">// 随机生成索引节点层数 1&lt;=level&lt;=m_maxLevel</span><br>    <span class="hljs-keyword">int</span> level=<span class="hljs-built_in">random_level</span>();<br>    <span class="hljs-keyword">if</span>(level &gt; <span class="hljs-keyword">this</span>-&gt;m_curMaxLevel)&#123;<br>        <span class="hljs-keyword">this</span>-&gt;m_curMaxLevel=level;<br>    &#125;<br>    skipNode&lt;KeyType,ValueType&gt;*pNode=<span class="hljs-built_in">search</span>(element.key);<br>    <span class="hljs-comment">// 已经存在</span><br>    <span class="hljs-keyword">if</span>(pNode-&gt;element.key==element.key)&#123;<br>        pNode-&gt;element.value=element.value;<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br>    <span class="hljs-comment">// 此时已经保存了合适的前驱节点m_forwardNodes</span><br>    <span class="hljs-comment">// 创建一个具有level层的节点</span><br>    skipNode&lt;KeyType,ValueType&gt;*pNewNode = <span class="hljs-keyword">new</span> skipNode&lt;KeyType,ValueType&gt;(element,level);<br>    <br>    <span class="hljs-comment">// 建立索引节点</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = level<span class="hljs-number">-1</span>; i &gt;=<span class="hljs-number">0</span>; --i)&#123;<br>        pNewNode-&gt;next[i]=m_forwardNodes[i]-&gt;next[i];<br>        m_forwardNodes[i]-&gt;next[i]=pNewNode;<br>    &#125;<br>    m_size++;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h4 id="skiplist删除"><a class="markdownIt-Anchor" href="#skiplist删除"></a> skiplist删除</h4>
+<p>删除操作类似插入操作，也需要通过<code>search</code>保存 <code>前驱节点m_forwardNodes</code><br />
+<img src="/uploads/images/data_structure/skiplist_cpp/06.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-keyword">template</span>&lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">KeyType</span>,<span class="hljs-keyword">class</span> <span class="hljs-title">ValueType</span>&gt;</span><br><span class="hljs-keyword">bool</span> skiplist&lt;KeyType,ValueType&gt;::<span class="hljs-built_in">erase</span>(<span class="hljs-keyword">const</span> KeyType&amp;key)&#123;<br>    <span class="hljs-comment">// 不符合的key</span><br>    <span class="hljs-keyword">if</span>(key&gt;m_tailKey)<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>    skipNode&lt;KeyType,ValueType&gt;*pNode=<span class="hljs-built_in">search</span>(key);<br>    <span class="hljs-comment">// 不存在 </span><br>    <span class="hljs-keyword">if</span>(pNode-&gt;element.key!=key)<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>    <span class="hljs-comment">// 更新跳表链表结构</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = m_curMaxLevel<span class="hljs-number">-1</span>; i &gt;= <span class="hljs-number">0</span>; --i)&#123;<br>        <span class="hljs-comment">// 此处 m_forwardNodes[i]-&gt;next[i] 可能不是 pNode</span><br>        <span class="hljs-keyword">if</span>(m_forwardNodes[i]-&gt;next[i]==pNode)<br>            m_forwardNodes[i]-&gt;next[i]=pNode-&gt;next[i];<br>    &#125;<br>    <br>    <span class="hljs-comment">// 维护当前最大层级数</span><br>    <span class="hljs-comment">// 当删除一个具有最大层级的节点时，可能会导致 m_headNode-&gt;next[m_maxLevel-1]=m_tailNode，那么此时需要降低层级</span><br>    <span class="hljs-keyword">while</span> (m_curMaxLevel<span class="hljs-number">-1</span> &gt; <span class="hljs-number">0</span>&amp;&amp;m_headNode-&gt;next[m_curMaxLevel<span class="hljs-number">-1</span>]==m_tailNode)&#123;<br>        m_curMaxLevel--;<br>    &#125;<br>    <span class="hljs-keyword">delete</span> pNode;   <br>    m_size--;    <br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>需要注意的是，删除节点后还要维护<code>m_curMaxLevel</code>使其不能太高，这样的话可以减少遍历次数。<br />
+<img src="/uploads/images/data_structure/skiplist_cpp/07.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<h4 id="释放跳跃表"><a class="markdownIt-Anchor" href="#释放跳跃表"></a> 释放跳跃表</h4>
+<p>在析构函数中释放所有内存</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-keyword">template</span>&lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">KeyType</span>,<span class="hljs-keyword">class</span> <span class="hljs-title">ValueType</span>&gt;</span><br>skiplist&lt;KeyType,ValueType&gt;::~<span class="hljs-built_in">skiplist</span>()&#123;<br>    <span class="hljs-keyword">while</span> (m_headNode!=m_tailNode)&#123;<br>        <span class="hljs-keyword">auto</span> x=m_headNode-&gt;next[<span class="hljs-number">0</span>];<br>        <span class="hljs-keyword">delete</span> m_headNode;<br>        m_headNode=x;<br>    &#125;<br>    <span class="hljs-keyword">delete</span> m_tailNode;<br>    <span class="hljs-keyword">delete</span> []m_forwardNodes;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h3 id="测试"><a class="markdownIt-Anchor" href="#测试"></a> 测试</h3>
+<p>用skiplist和STL map测试插入操作，仅供参考</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;map&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;skiplist.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;ClockTest.h&quot;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-comment">// 一个无穷数</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TAIL_INFINITY_KEY 0xffffff</span><br><br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span></span>&#123;<br>    <span class="hljs-keyword">int</span> n=<span class="hljs-number">1000000</span>;<br>    <span class="hljs-built_in">srand</span>(<span class="hljs-built_in">time</span>(<span class="hljs-literal">nullptr</span>));<br>    <span class="hljs-comment">// 测试skiplist insert</span><br>    CClock::<span class="hljs-built_in">start_timeclock</span>();<br>    <span class="hljs-function">skiplist&lt;<span class="hljs-keyword">int</span>,<span class="hljs-keyword">int</span>&gt; <span class="hljs-title">sk</span><span class="hljs-params">(<span class="hljs-number">0.5</span>,TAIL_INFINITY_KEY,<span class="hljs-number">0</span>,n)</span></span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = n; i &gt;= <span class="hljs-number">0</span>; --i)&#123;<br>        sk.<span class="hljs-built_in">insert</span>(Element&lt;<span class="hljs-keyword">int</span>,<span class="hljs-keyword">int</span>&gt;&#123;<span class="hljs-built_in">rand</span>()%n,i&#125;);<br>    &#125;<br>    CClock::<span class="hljs-built_in">stop_timeclock</span>();<br>    <span class="hljs-keyword">auto</span> skiplist_insert_time=CClock::<span class="hljs-built_in">time_duration</span>();<br>    <br>    <span class="hljs-comment">// 测试map insert</span><br>    CClock::<span class="hljs-built_in">start_timeclock</span>();<br>    map&lt;<span class="hljs-keyword">int</span>,<span class="hljs-keyword">int</span>&gt; mp;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = n; i &gt;=<span class="hljs-number">0</span>; --i)&#123;<br>        mp.<span class="hljs-built_in">insert</span>(pair&lt;<span class="hljs-keyword">int</span>,<span class="hljs-keyword">int</span>&gt;(<span class="hljs-built_in">rand</span>()%n,i));<br>    &#125;<br>    CClock::<span class="hljs-built_in">stop_timeclock</span>();<br>    <span class="hljs-keyword">auto</span> map_insert_time=CClock::<span class="hljs-built_in">time_duration</span>();<br>    <br>    <span class="hljs-comment">// 测试skiplist find</span><br>    CClock::<span class="hljs-built_in">start_timeclock</span>();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = n; i &gt;=<span class="hljs-number">0</span>; --i)&#123;<br>        sk.<span class="hljs-built_in">find</span>(<span class="hljs-built_in">rand</span>()%n);<br>    &#125;<br>    CClock::<span class="hljs-built_in">stop_timeclock</span>();<br>    <span class="hljs-keyword">auto</span> skip_find_time=CClock::<span class="hljs-built_in">time_duration</span>();<br><br>    <span class="hljs-comment">// 测试map find</span><br>    CClock::<span class="hljs-built_in">start_timeclock</span>();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = n; i &gt;=<span class="hljs-number">0</span>; --i)&#123;<br>        mp.<span class="hljs-built_in">find</span>(<span class="hljs-built_in">rand</span>()%n);<br>    &#125;<br>    CClock::<span class="hljs-built_in">stop_timeclock</span>();<br>    <span class="hljs-keyword">auto</span> map_find_time=CClock::<span class="hljs-built_in">time_duration</span>();<br>    <br>    <span class="hljs-comment">// 测试skiplist erase</span><br>    CClock::<span class="hljs-built_in">start_timeclock</span>();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = n; i &gt;=<span class="hljs-number">0</span>; --i)&#123;<br>        sk.<span class="hljs-built_in">erase</span>(<span class="hljs-built_in">rand</span>()%n);<br>    &#125;<br>    CClock::<span class="hljs-built_in">stop_timeclock</span>();<br>    <span class="hljs-keyword">auto</span> skip_erase_time=CClock::<span class="hljs-built_in">time_duration</span>();<br><br>    <span class="hljs-comment">// 测试map erase</span><br>    CClock::<span class="hljs-built_in">start_timeclock</span>();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = n; i &gt;=<span class="hljs-number">0</span>; --i)&#123;<br>        mp.<span class="hljs-built_in">erase</span>(<span class="hljs-built_in">rand</span>()%n);<br>    &#125;<br>    CClock::<span class="hljs-built_in">stop_timeclock</span>();<br>    <span class="hljs-keyword">auto</span> map_erase_time=CClock::<span class="hljs-built_in">time_duration</span>();<br><br>    cout&lt;&lt;<span class="hljs-string">&quot;SkipList insert time: &quot;</span>&lt;&lt;skiplist_insert_time&lt;&lt;endl;<br>    cout&lt;&lt;<span class="hljs-string">&quot;SkipList find time: &quot;</span>&lt;&lt;skip_find_time&lt;&lt;endl;<br>    cout&lt;&lt;<span class="hljs-string">&quot;SkipList erase time: &quot;</span>&lt;&lt;skip_erase_time&lt;&lt;endl;<br>    cout&lt;&lt;endl;<br>    cout&lt;&lt;<span class="hljs-string">&quot;Map insert time: &quot;</span>&lt;&lt;map_insert_time&lt;&lt;endl;<br>    cout&lt;&lt;<span class="hljs-string">&quot;Map find time: &quot;</span>&lt;&lt;map_find_time&lt;&lt;endl;<br>    cout&lt;&lt;<span class="hljs-string">&quot;Map erase time: &quot;</span>&lt;&lt;map_erase_time&lt;&lt;endl;<br><br>    cout&lt;&lt;<span class="hljs-string">&quot;SkipList size: &quot;</span>&lt;&lt;sk.<span class="hljs-built_in">size</span>()&lt;&lt;endl;<br>    cout&lt;&lt;<span class="hljs-string">&quot;Map size: &quot;</span>&lt;&lt;mp.<span class="hljs-built_in">size</span>()&lt;&lt;endl;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>我机器上测试 随机插入/查找/删除，结果仅供参考。单位秒</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>insert</th>
+<th>find</th>
+<th>erase</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>skiplist1</td>
+<td>1.44737</td>
+<td>2.03802</td>
+<td>2.158</td>
+</tr>
+<tr>
+<td>skiplist2</td>
+<td>1.34377</td>
+<td>1.61364</td>
+<td>1.52145</td>
+</tr>
+<tr>
+<td>skiplist3</td>
+<td>1.35671</td>
+<td>2.31105</td>
+<td>1.57659</td>
+</tr>
+<tr>
+<td>map1</td>
+<td>1.48519</td>
+<td>1.28156</td>
+<td>1.93228</td>
+</tr>
+<tr>
+<td>map2</td>
+<td>1.00754</td>
+<td>1.099</td>
+<td>1.29245</td>
+</tr>
+<tr>
+<td>map3</td>
+<td>1.23837</td>
+<td>1.28021</td>
+<td>1.35214</td>
+</tr>
+</tbody>
+</table>
+<p>由此可见，跳跃表也是很高效的一种数据结构</p>
+<p>skiplist源码地址: <a target="_blank" rel="noopener" href="https://github.com/josexy/skiplist_c">https://github.com/josexy/skiplist_c</a></p>
+<h3 id="参考"><a class="markdownIt-Anchor" href="#参考"></a> 参考</h3>
+<p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Skip_list">维基百科-skiplist</a><br />
+<a target="_blank" rel="noopener" href="https://www.cl.cam.ac.uk/teaching/0506/Algorithms/skiplists.pdf">Skip Lists: A Probabilistic Alternative toBalanced Trees</a><br />
+<a target="_blank" rel="noopener" href="https://blog.csdn.net/ict2014/article/details/17394259">浅析SkipList跳跃表原理及代码实现</a></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/C/">C++</a>
+                    
+                      <a class="hover-with-bg" href="/tags/DataStructures/">DataStructures</a>
+                    
+                      <a class="hover-with-bg" href="/tags/C/">C</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/bst-cpp/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">数据结构-二叉查找树(BST)</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/queue-cpp/">
+                        <span class="hidden-mobile">数据结构-队列</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"AzPbImmMjm5nQc1Xm9ulWCoH-gzGzoHsz","appKey":"xJqILn8nSbhYmdkB2VVQm8vI","placeholder":"说点什么","path":"window.location.pathname","avatar":"retro","meta":["nick","mail","link"],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false,"requiredFields":[]},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- KaTeX -->
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.10/dist/katex.min.css" />
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

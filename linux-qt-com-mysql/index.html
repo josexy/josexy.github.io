@@ -1,0 +1,585 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="最近安装了新版本的Qt,当连接MySQL数据库时,又出现那个似曾相识的错误 QSqlDatabase: QMYSQL driver not loaded.知道后就赶紧去编译源码.然而你以为真的就那么一帆风顺吗?">
+  <meta name="author" content="Joseph XRays">
+  <meta name="keywords" content="">
+  
+  <title>Qt5.10.0编译MYSQL(Mariadb)驱动 - JoXrays&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/monokai.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.joxrays.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>JoXrays's Blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Qt5.10.0编译MYSQL(Mariadb)驱动">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2018-12-19 00:00" pubdate>
+        2018年12月19日 凌晨
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.1k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      15
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Qt5.10.0编译MYSQL(Mariadb)驱动</h1>
+            
+            <div class="markdown-body">
+              <p>最近安装了新版本的Qt,当连接MySQL数据库时,又出现那个似曾相识的错误 <strong>QSqlDatabase: QMYSQL driver not loaded</strong>.知道后就赶紧去编译源码.然而你以为真的就那么一帆风顺吗?</p>
+<span id="more"></span>
+<h3 id="问题"><a class="markdownIt-Anchor" href="#问题"></a> 问题</h3>
+<p>测试环境:</p>
+<ul>
+<li>Linux</li>
+<li>Qt 5.10.0</li>
+<li>MariaDB 10.1.29</li>
+</ul>
+<p>出现问题:<br />
+我是新换成了MariaDB,比起之前传统MySQL,相应的文件路径也发生了变化.而其结果时导致后面一连串的问题.<br />
+现在网上大部分都是以前的MySQL驱动编译教程,关于MariaDB数据库(本质上也是MySQL)的资料很少,所以这里就总结一下期间遇到的问题……</p>
+<p>终端下输入: <code>$ locate mysql.h</code><br />
+在我这里输出</p>
+<blockquote>
+<p><strong>/usr/include/mariadb/mysql.h</strong><br />
+/usr/include/qt4/Qt/qsql_mysql.h<br />
+/usr/include/qt4/QtSql/qsql_mysql.h</p>
+</blockquote>
+<p>注意了没,就这里注定编译MySQL驱动会失败!因为默认的搜索路径为 <strong>/usr/include/mysql.h</strong></p>
+<p>接下来我们来看看 <strong><a target="_blank" rel="noopener" href="http://libqsqlmysql.so">libqsqlmysql.so</a></strong> 这个库文件<br />
+<code>$ ldd libqsqlmysql.so</code><br />
+<img src="/uploads/images/linux/file_001_qt1.png" srcset="/img/loading.gif" lazyload alt="img" /></p>
+<p>他说 libqsqlmysql.so.18 这个库文件没有找到,那么就只能重新编译了…</p>
+<h3 id="尝试成功"><a class="markdownIt-Anchor" href="#尝试成功"></a> 尝试成功</h3>
+<p>但是这里我还是讲一下我第一次尝试的方法(就是把 <strong>mariadb</strong> 的库链接到 libqsqlmysql.so.18)</p>
+<p><code>$ locate libmariadb|grep so</code> 查看 mariadb库文件的路径</p>
+<blockquote>
+<p>/usr/lib/x86_64-linux-gnu/libmariadb.so<br />
+/usr/lib/x86_64-linux-gnu/libmariadb.so.2<br />
+/usr/lib/x86_64-linux-gnu/libmariadbclient.so.18<br />
+<strong>/usr/lib/x86_64-linux-gnu/libmariadbclient.so.18.0.0</strong></p>
+</blockquote>
+<p>接着我再找下是否还存在之前的 <strong><a target="_blank" rel="noopener" href="http://libmysqlclient.so">libmysqlclient.so</a></strong><br />
+<code>$ locate libmysqlclient.so</code></p>
+<blockquote>
+<p>/usr/lib/libmysqlclient.so</p>
+</blockquote>
+<p><code>$ ls -l /usr/lib/libmysqlclient.so</code> 发现 <a target="_blank" rel="noopener" href="http://libmysqlclient.so">libmysqlclient.so</a> 是个软链接</p>
+<blockquote>
+<p>lrwxrwxrwx 1 root root 43 9月 17 08:01 /usr/lib/libmysqlclient.so -&gt; /usr/lib/x86_64-linux-gnu/libmysqlclient.so</p>
+</blockquote>
+<p>接着 <code>$ ls -l /usr/lib/x86_64-linux-gnu/libmysqlclient.so</code></p>
+<blockquote>
+<p>ls: 无法访问’/usr/lib/x86_64-linux-gnu/libmysqlclient.so’: 没有那个文件或目录</p>
+</blockquote>
+<p>what!居然不存在!?所以赶紧把那链接删了</p>
+<p>那么接下来就是给 <strong><a target="_blank" rel="noopener" href="http://libmariadbclient.so">libmariadbclient.so</a></strong> 设个软链接</p>
+<blockquote>
+<p>ln -s /usr/lib/x86_64-linux-gnu/libmariadbclient.so.18 /usr/lib/libmysqlclient.so<br />
+<strong>ln -s /usr/lib/x86_64-linux-gnu/libmariadbclient.so.18 /usr/lib/libmysqlclient.so.18</strong></p>
+</blockquote>
+<p>最后看看 <code>$ ldd libqsqlmysql.so</code></p>
+<blockquote>
+<p>libmysqlclient.so.18 =&gt; /usr/lib/libmysqlclient.so.18 (0x00007fdf1a1df000)</p>
+</blockquote>
+<p>……居然成功了!!那还用编译个毛啊??然而这不是本文重点蛤……</p>
+<h3 id="重点编译mysql驱动"><a class="markdownIt-Anchor" href="#重点编译mysql驱动"></a> 重点(编译MySQL驱动)</h3>
+<p>这里所说的驱动其实也不过就是一个链接库罢了……</p>
+<p>首先进入该源代码目录下 <code>$ cd $&#123;QTDIR&#125;/5.10.0/Src/qtbase/src/plugins/sqldrivers/mysql</code></p>
+<p>一般正常来讲接下来就是 <code>qmake mysql.pro</code>,<code>make</code><br />
+不过这里会出现一个错误<br />
+<img src="/uploads/images/linux/file_002_qt2.png" srcset="/img/loading.gif" lazyload alt="img" /></p>
+<p>这就要修改 <strong><a target="_blank" rel="noopener" href="http://mysql.pro">mysql.pro</a></strong></p>
+<figure class="highlight stylus"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs stylus">TARGET = qsqlmysql<br>HEADERS += $<span class="hljs-variable">$PWD</span>/qsql_mysql_p<span class="hljs-selector-class">.h</span><br>SOURCES += $<span class="hljs-variable">$PWD</span>/qsql_mysql<span class="hljs-selector-class">.cpp</span> $<span class="hljs-variable">$PWD</span>/<span class="hljs-selector-tag">main</span><span class="hljs-selector-class">.cpp</span><br>QMAKE_USE += mysql<br>OTHER_FILES += mysql<span class="hljs-selector-class">.json</span><br>INCLUDEPATH += /usr/include/mariadb<br>PLUGIN_CLASS_NAME = QMYSQLDriverPlugin<br><span class="hljs-function"><span class="hljs-title">include</span><span class="hljs-params">(../qsqldriverbase.pri)</span></span><br></code></pre></div></td></tr></table></figure>
+<p>注意我添加了 <strong>INCLUDEPATH += /usr/include/mariadb</strong></p>
+<p>接着 <code>qmake;make</code> 恭喜,特么的又出现了个错误.不急找找看那出了问题…</p>
+<blockquote>
+<p>/opt/Qt5.10.0/5.10.0/gcc_64/bin/qmake -o Makefile <a target="_blank" rel="noopener" href="http://mysql.pro">mysql.pro</a><br />
+rm -f <a target="_blank" rel="noopener" href="http://libqsqlmysql.so">libqsqlmysql.so</a><br />
+g++ -Wl,–no-undefined -Wl,-O1 -Wl,–enable-new-dtags -Wl,-z,origin -Wl,-rpath,$ORIGIN/…/…/lib -Wl,-rpath,$ORIGIN/…/…/lib -shared -o <a target="_blank" rel="noopener" href="http://libqsqlmysql.so">libqsqlmysql.so</a> .obj/qsql_mysql.o .obj/main.o .obj/moc_qsql_mysql_p.o -L/opt/Qt5.10.0/5.10.0/gcc_64/lib -lQt5Sql -lQt5Core <strong>-lmariadbclient</strong> -lpthread -lz -lm -ldl<br />
+<strong>/usr/bin/ld: 找不到 -lmariadbclient</strong><br />
+collect2: error: ld returned 1 exit status<br />
+Makefile:80: recipe for target ‘…/plugins/sqldrivers/libqsqlmysql.so’ failed<br />
+make: *** […/plugins/sqldrivers/libqsqlmysql.so] Error 1</p>
+</blockquote>
+<p>其实问题很简单,就是一个链接名字.在链接库时,默认匹配的为 <a target="_blank" rel="noopener" href="http://libxxx.so">libxxx.so</a> ; 而后面的数字,如: <a target="_blank" rel="noopener" href="http://libxxx.so">libxxx.so</a>.<strong>1.1.1</strong> 表示库的版本.</p>
+<p><code>$ locate libmariadbclient.so</code> 看到,少了一个 <a target="_blank" rel="noopener" href="http://libmariadbclient.so">libmariadbclient.so</a></p>
+<blockquote>
+<p>/usr/lib/x86_64-linux-gnu/libmariadbclient.so.18<br />
+/usr/lib/x86_64-linux-gnu/libmariadbclient.so.18.0.0</p>
+</blockquote>
+<p>瞬间问题简单化了,so,直接添加一个软链接就行了</p>
+<blockquote>
+<p>ln -s /usr/lib/x86_64-linux-gnu/libmariadbclient.so.18.0.0 /usr/lib/x86_64-linux-gnu/<strong><a target="_blank" rel="noopener" href="http://libmariadbclient.so">libmariadbclient.so</a></strong></p>
+</blockquote>
+<p>再一次 <code>qmake;make</code>……</p>
+<blockquote>
+<p>rm -f <a target="_blank" rel="noopener" href="http://libqsqlmysql.so">libqsqlmysql.so</a><br />
+g++ -Wl,–no-undefined -Wl,-O1 -Wl,–enable-new-dtags -Wl,-z,origin -Wl,-rpath,$ORIGIN/…/…/lib -Wl,-rpath,$ORIGIN/…/…/lib -shared -o <a target="_blank" rel="noopener" href="http://libqsqlmysql.so">libqsqlmysql.so</a> .obj/qsql_mysql.o .obj/main.o .obj/moc_qsql_mysql_p.o -L/opt/Qt5.10.0/5.10.0/gcc_64/lib -lQt5Sql -lQt5Core -lmariadbclient -lpthread -lz -lm -ldl<br />
+mv -f <a target="_blank" rel="noopener" href="http://libqsqlmysql.so">libqsqlmysql.so</a> <strong>…/plugins/sqldrivers/</strong></p>
+</blockquote>
+<p>成功编译!</p>
+<p>现在 <code>$ ../plugins/sqldrivers</code><br />
+<code>$ ldd libqsqlmysql.so</code></p>
+<blockquote>
+<p><strong>libmariadbclient.so.18</strong> =&gt; /usr/lib/x86_64-linux-gnu/libmariadbclient.so.18 (0x00007f1bf7414000)</p>
+</blockquote>
+<p>现在可以把这个文件复制到 /opt/Qt5.10.0/5.10.0/gcc_64/plugins/sqldrivers 目录下了</p>
+<h3 id="结束语"><a class="markdownIt-Anchor" href="#结束语"></a> 结束语</h3>
+<p>基本上到此为止了吧……顺带提下,用C写的程序链接MySQL数据库时,传统的做法就是</p>
+<blockquote>
+<p>gcc xxx.c -o xxx <strong>-lmysqlclient</strong></p>
+</blockquote>
+<p>换成MariaDB后就成了</p>
+<blockquote>
+<p>gcc xxx.c -o xxx <strong>-lmariadb</strong></p>
+</blockquote>
+<p>这一点要特别注意啊!</p>
+<p>bye</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Programming/">Programming</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Linux/">Linux</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Qt/">Qt</a>
+                    
+                      <a class="hover-with-bg" href="/tags/MySQL/">MySQL</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/cpp-snake1/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Qt实现贪吃蛇1:数组实现</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/windows10-gtk-theme/">
+                        <span class="hidden-mobile">Windows10 GTK Theme</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"AzPbImmMjm5nQc1Xm9ulWCoH-gzGzoHsz","appKey":"xJqILn8nSbhYmdkB2VVQm8vI","placeholder":"说点什么","path":"window.location.pathname","avatar":"retro","meta":["nick","mail","link"],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false,"requiredFields":[]},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- KaTeX -->
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.10/dist/katex.min.css" />
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

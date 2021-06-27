@@ -1,0 +1,778 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="红黑树（Red–Black Tree）是一种自平衡二叉查找树，用于实现关联数组。它在1972年由鲁道夫·贝尔（Rudolf Bayer）发明，被称为&amp;quot;对称二叉B树&amp;quot;。">
+  <meta name="author" content="Joseph XRays">
+  <meta name="keywords" content="">
+  
+  <title>我所理解的红黑树(RBT) - JoXrays&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/monokai.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"www.joxrays.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>JoXrays's Blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="我所理解的红黑树(RBT)">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-02-01 00:00" pubdate>
+        2020年2月1日 凌晨
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      7.4k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      91
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">我所理解的红黑树(RBT)</h1>
+            
+            <div class="markdown-body">
+              <p>红黑树（Red–Black Tree）是一种自平衡二叉查找树，用于实现<strong>关联数组</strong>。它在1972年由鲁道夫·贝尔（Rudolf Bayer）发明，被称为&quot;对称二叉B树&quot;。</p>
+<span id="more"></span>
+<h3 id="2-3树"><a class="markdownIt-Anchor" href="#2-3树"></a> 2-3树</h3>
+<p>由于红黑树过于复杂，因此在讲述之前我们先来大致了解一下<code>2-3树</code>，2-3树类似红黑树，也是平衡树，时间复杂度均为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(\log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span>。<br />
+2–3树早于红黑树出现，由约翰·霍普克洛夫特于1970年发明。2-3树也称为<code>3阶B-树</code>、<code>3叉搜索树</code>。<br />
+2-3树中的一个父节点可以有2个子节点也可以有3个子节点。<br />
+有2个子节点的父节点称为<code>2-</code>节点，该节点有1个key。这类似二叉树的节点<br />
+有3个子节点的父节点称为<code>3-</code>节点，该节点有2个key。假设父节点键为key1和key2且key1 &lt; key2，左子树L、中子树M、右子树R。则左子树L &lt; key1，key1 &lt; 中子树M &lt; key2 ，右子树 &gt; key2。</p>
+<p>2-3树是一棵<code>完全3叉搜索树</code>。每个节点要么是<code>叶子节点</code>，要么是<code>2-节点</code>或<code>3-节点</code>，，而且每个节点的子树一定是<code>等高</code>的。<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/01.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>如上图，关键字为 <code>[f h]</code> 的<code>3-节点</code>有3个子节点<code>e</code>、<code>g</code>、<code>[i j]</code>，且 <code>e&lt;f</code>、<code>f&lt;g&lt;h</code>、<code>[i j]&gt;h</code></p>
+<h4 id="查找"><a class="markdownIt-Anchor" href="#查找"></a> 查找</h4>
+<p>2-3树的查找类似bst，比如查找上图的<code>g</code></p>
+<ol>
+<li>首先g和d比较，g&gt;d，查找右子树</li>
+<li>f&lt;g&lt;h，进入中子树</li>
+<li>g=g，返回节点，查找结束</li>
+</ol>
+<h4 id="插入"><a class="markdownIt-Anchor" href="#插入"></a> 插入</h4>
+<p>插入操作只需在<code>叶子节点</code>处插入一个新节点，不过由于2-3树的定义需要调整树的结构，使其平衡。<br />
+在叶子节点而不是空节点处插入节点的好处是以后维护平衡就简单了，而且树的高度也是尽可能的低。<br />
+插入新节点处的叶子节点可为<code>2-节点</code>或<code>3-节点</code><br />
+<img src="/uploads/images/data_structure/rbtree_cpp/02.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>如上图就是在2-节点位置<code>i</code>直接插入一个新节点<code>j</code>而变成一个3-节点，这种情况下无需调整树结构就已经平衡。</p>
+<p>在3-节点处插入新节点同样也是在叶子节点插入，不过这样会导致形成一个<code>4-节点</code>，在2-3树中这是不允许的，因此需要调整。调整方式为就是将<code>4-节点</code>分裂与合并。</p>
+<p><code>节点分裂</code> 是将一个4-节点的中间值key节点提取处来作为父节点，左边key作为左节点，右边key作为右节点。<br />
+若该4-节点存在子节点，那么将左边key作为最左边两个子节点父节点，将右边key作为最右边两个子节点父节点。</p>
+<p><img src="/uploads/images/data_structure/rbtree_cpp/04.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>节点分裂一般伴随着<code>节点合并</code>，也就是将分裂后的父节点与之前未分裂4-节点的父节点合并成一个新的节点，如果新节点依旧是4-节点，那么继续向上分裂合并直到满足平衡。</p>
+<p>举个例子：<br />
+向这棵2-3树插入<code>k</code>节点后成为4-节点，不符合定义，需要分裂该节点。<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/03.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>将节点<code>[i j k]</code>中的<code>j</code>提取出来与与父节点<code>[f h]</code>合并成<code>[f h j]</code>，发现该节点依然是一个4-节点，因此需要继续分裂+合并。<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/05.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>此时<code>[d h]</code>已经是一个3-节点了，而且整个2-3树也是等高的，调整结束。<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/06.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>插入<code>a-k</code>的整个过程如下<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/07.gif" srcset="/img/loading.gif" lazyload alt="" /></p>
+<h4 id="删除"><a class="markdownIt-Anchor" href="#删除"></a> 删除</h4>
+<p>2-3树的删除虽然较为复杂，但大致可分为两类：删除叶子节点和删除非叶子节点。</p>
+<h5 id="删除叶子节点"><a class="markdownIt-Anchor" href="#删除叶子节点"></a> 删除叶子节点</h5>
+<p>删除叶子节点又可以分为<code>删除2-节点</code>和<code>删除3-节点</code>。<br />
+删除3-节点的情况最简单，直接删除即可。如下删除key为k的情况<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/08.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>删除2-节点不能简单的删除该节点，因为这样一删除后，该位置为空，2-3树是不允许存在这种情况的。此时可分为如下几类情况来处理：</p>
+<ul>
+<li>待删除节点的<code>临近兄弟节点</code>是<code>3-节点</code></li>
+<li>待删除节点的<code>临近兄弟节点</code>是<code>2-节点</code>，但<code>父节点</code>是<code>3-节点</code></li>
+<li>待删除节点的<code>临近兄弟节点</code>和<code>父节点</code>均是<code>2-节点</code></li>
+</ul>
+<p>对于第一种情况，删除该节点后只需向<code>临近兄弟节点</code>“借”<strong>一个key与待删除节点相近</strong>作为新的节点并<code>调整其与父节点</code>，此时树的高度不变。<br />
+如下图，删除<code>i</code>节点，而且兄弟是3-节点，将兄弟节点中key<code>k</code>与删除节点相近的key<code>j</code>而不是<code>l</code>作为已删除节点。由于<code>k&gt;j</code>，因此需要调整父子节点键值<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/09.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>对于第二种情况，首先删除该节点后，发现<code>临近兄弟节点g</code>是一个2-节点且父节点<code>[f h]</code>为3-节点。因此将父节点分解为2-节点，由于<code>e&lt;f&lt;g</code>，于是将<code>f</code>与<code>临近兄弟节点g</code>合并成3-节点，并作为一个新的左孩子<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/10.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>演示过程如下<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/11.gif" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>第三种情况待删除节点的兄弟节点和父节点均是2-节点，删除节点后将<code>父节点b</code>和<code>兄弟节点c</code>合并成3-节点。<br />
+1.若此时<code>兄弟节点f和父节点d又是2-节点</code>，故继续合并d、f直到平衡，最终的结构如下。图中空位置只是直观上表示一棵等高的2-3树且该节点被“删除”了。<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/12.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>2.若此时<code>临近兄弟节点是2-节点、父节点是3-节点</code>，则可看作是上述第二种删除情况。<br />
+如下，删除<code>2-节点a</code>，此时兄弟节点c和父节点b均为2-节点，因此合并成<code>3-节点[b c]</code>，此时仍然未平衡，且<code>临近兄弟节f点是2-节点、父节点[d h]是3-节点</code>，因此分解父节点<code>[d h]</code>，将<code>d</code>与临近兄弟节<code>f</code>合并为3-节点<code>[d-f]</code><br />
+<img src="/uploads/images/data_structure/rbtree_cpp/13.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>演示过程如下<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/14.gif" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>3.若此时<code>临近兄弟节点是3-节点</code>，该过程也可看作是上述第一种删除情况，此处不再叙述。<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/15.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>演示过程如下<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/16.gif" srcset="/img/loading.gif" lazyload alt="" /></p>
+<h5 id="删除非叶子节点"><a class="markdownIt-Anchor" href="#删除非叶子节点"></a> 删除非叶子节点</h5>
+<p>删除非叶子节点首先也需要找到一个<code>前驱/后继节点</code>，有点类似BST。<br />
+总之简单来说，前驱节点就是节点的左子树的最右节点，后继节点就是节点的右子树的最左节点。</p>
+<p>如下删除<code>key=d</code>的节点，该key位于3-节点，不过没关系。找到其<code>前驱节点c</code>，将键值替换后删除<code>前驱节点c</code>，删除操作就转化为上述3种情况之一。<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/17.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>演示过程如下<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/18.gif" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>以上大致是关于2-3树的一些基本操作了。说了这么多，就是为了2-3树和为红黑树之间的转化。<br />
+先来看这张图，将2-3树的<code>3-节点</code>拆解成父子节点，且用红色箭头表明两者父子关系，将子节点染成红色，父节点染成黑色；再将其余<code>2-节点</code>全部染成黑色。经过适当调整树结构后发现这是一棵红黑树！实际上，这是红黑树的变体——<code>左偏红黑树</code>。<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/19.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>实际上向一棵普通的红黑树插入key为<code>a-l</code>应该是这样的：<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/20.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>2-3树一定能转化为红黑树(左偏红黑树)，而红黑树不一定能转化为2-3树！<br />
+由于<code>2-3-4树</code>是红黑树的一种等同，故2-3-4树一定能转化为红黑树，而红黑树也一定能转化为2-3-4树！</p>
+<h3 id="红黑树"><a class="markdownIt-Anchor" href="#红黑树"></a> 红黑树</h3>
+<h4 id="基本概念"><a class="markdownIt-Anchor" href="#基本概念"></a> 基本概念</h4>
+<blockquote>
+<p>红黑树（英语：Red–black tree）是一种自平衡二叉查找树，是在计算机科学中用到的一种数据结构，典型的用途是实现关联数组。它在1972年由鲁道夫·贝尔发明，被称为&quot;对称二叉B树&quot;，它现代的名字源于Leo J. Guibas和Robert Sedgewick于1978年写的一篇论文。红黑树的结构复杂，但它的操作有着良好的最坏情况运行时间，并且在实践中高效：它可以在 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>log</mi><mo>⁡</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">\log N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span></span></span></span> 时间内完成查找，插入和删除，这里的 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span></span></span></span> 是树中元素的数目。</p>
+<p>红黑树相对于AVL树来说，牺牲了部分平衡性以换取插入/删除操作时少量的旋转操作，整体来说性能要优于AVL树。</p>
+</blockquote>
+<p>根据2-3树转化为红黑树可以这样定义红黑树，或者是<code>规则</code>：</p>
+<ul>
+<li>红黑树一定是二叉搜索树，因为2-3树也是二叉搜索树；</li>
+<li>根节点和所有外部节点(Nil)都是<code>黑色</code>，根据2-3树转化为左偏红黑树可看出来；</li>
+<li>在根至外部节点(Nil)路径上，没有连续两个节点是<code>红色</code>的；</li>
+<li>在所有根至外部节点的路径上，<code>黑色</code>节点的数目相同，即<code>黑高</code>相等。</li>
+</ul>
+<p>如果再添加这一规则<code>红色节点位于左侧</code>，那么这个红黑树是一棵左偏红黑树。不过本文主要是介绍普通的红黑树。<br />
+上述规则3和规则4是极其重要的，但凡涉及插入和删除操作都是要使红黑树满足这两条规则。</p>
+<p>本文红黑树C++类</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">RedBlackTree</span>&#123;</span><br><span class="hljs-keyword">private</span>:<br>    RBNodeEntry *m_RB_Root;<br>    RBNodeEntry *m_Nil;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-built_in">RedBlackTree</span>();<br>    <span class="hljs-built_in">RedBlackTree</span>(<span class="hljs-keyword">int</span> key,<span class="hljs-keyword">int</span> data);<br>    ~<span class="hljs-built_in">RedBlackTree</span>();<br>    <span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">Insert</span><span class="hljs-params">(<span class="hljs-keyword">int</span> key,<span class="hljs-keyword">int</span> data)</span></span>;<br>    <span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">Remove</span><span class="hljs-params">(<span class="hljs-keyword">int</span> key)</span></span>;<br>    <span class="hljs-function">RBNodeEntry* <span class="hljs-title">Search</span><span class="hljs-params">(RBNodeEntry* pNode,<span class="hljs-keyword">int</span> key)</span></span>;<br>    <br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">ClearAll</span><span class="hljs-params">(RBNodeEntry*&amp; root)</span></span>;<br>    <span class="hljs-function">RBNodeEntry* <span class="hljs-title">successor</span><span class="hljs-params">(RBNodeEntry* pnode)</span></span>;<br>    <span class="hljs-function">RBNodeEntry* <span class="hljs-title">predecessor</span><span class="hljs-params">(RBNodeEntry* pnode)</span></span>;<br>    <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">Height</span><span class="hljs-params">(RBNodeEntry* pnode)</span></span>&#123;<br>        <span class="hljs-keyword">if</span>(pnode==m_Nil)<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">int</span> hl= <span class="hljs-built_in">Height</span>(pnode-&gt;leftChild);<br>        <span class="hljs-keyword">int</span> hr= <span class="hljs-built_in">Height</span>(pnode-&gt;rightChild);<br>        <span class="hljs-keyword">return</span> std::<span class="hljs-built_in">max</span>(hl,hr)+<span class="hljs-number">1</span>;<br>    &#125;<br>    <span class="hljs-function">RBNodeEntry* &amp;<span class="hljs-title">root</span><span class="hljs-params">()</span></span>&#123;<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>-&gt;m_RB_Root;&#125;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">PreOrder</span><span class="hljs-params">(RBNodeEntry* pnode)</span></span>;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">InOrder</span><span class="hljs-params">(RBNodeEntry* pnode)</span></span>;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">PostOrder</span><span class="hljs-params">(RBNodeEntry* pnode)</span></span>;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">LevelOrder</span><span class="hljs-params">(RBNodeEntry* pnode)</span></span>;<br><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">leftRotate</span><span class="hljs-params">(RBNodeEntry *pnode)</span></span>;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">rightRotate</span><span class="hljs-params">(RBNodeEntry *pnode)</span></span>;<br><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">RedBlack_insertFixup</span><span class="hljs-params">(RBNodeEntry* pnode)</span></span>;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">RedBlack_removeFixup</span><span class="hljs-params">(RBNodeEntry* pnode)</span></span>;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+<h4 id="哨兵节点"><a class="markdownIt-Anchor" href="#哨兵节点"></a> 哨兵节点</h4>
+<p>本文红黑树利用了<code>哨兵节点</code>技巧，省去了判断nullptr的麻烦，不过BST部分代码需要稍微修改。<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/48.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>由于哨兵节点也是<code>RBNodeEntry</code>结构，但哨兵节点无父节点，因此设置为<code>nullptr</code>；同时还需要设置其<code>leftChild</code>和<code>rightChild</code>指向自身。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp">RedBlackTree::<span class="hljs-built_in">RedBlackTree</span>()&#123;<br>    <span class="hljs-keyword">this</span>-&gt;m_RB_Root=<span class="hljs-literal">nullptr</span>;<br>    <span class="hljs-comment">// 哨兵节点</span><br>    <span class="hljs-keyword">this</span>-&gt;m_Nil=<span class="hljs-keyword">new</span> RBNodeEntry;<br>    <span class="hljs-keyword">this</span>-&gt;m_Nil-&gt;color=BLACK;<br>    <span class="hljs-keyword">this</span>-&gt;m_Nil-&gt;key=<span class="hljs-number">-1</span>;<br>    <span class="hljs-keyword">this</span>-&gt;m_Nil-&gt;data=<span class="hljs-number">0xffffff</span>;<br>    <span class="hljs-keyword">this</span>-&gt;m_Nil-&gt;leftChild=<span class="hljs-keyword">this</span>-&gt;m_Nil;<br>    <span class="hljs-keyword">this</span>-&gt;m_Nil-&gt;rightChild=<span class="hljs-keyword">this</span>-&gt;m_Nil;<br>&#125;<br>RedBlackTree::<span class="hljs-built_in">RedBlackTree</span>(<span class="hljs-keyword">int</span> key,<span class="hljs-keyword">int</span> data):RedBlackTree&#123;&#125;&#123;<br>    <span class="hljs-keyword">this</span>-&gt;m_RB_Root=<span class="hljs-keyword">new</span> <span class="hljs-built_in">RBNodeEntry</span>(key,data);<br>    <span class="hljs-keyword">this</span>-&gt;m_RB_Root-&gt;parent=<span class="hljs-literal">nullptr</span>;<br>    <span class="hljs-keyword">this</span>-&gt;m_RB_Root-&gt;leftChild=<span class="hljs-keyword">this</span>-&gt;m_Nil;<br>    <span class="hljs-keyword">this</span>-&gt;m_RB_Root-&gt;rightChild=<span class="hljs-keyword">this</span>-&gt;m_Nil;    <br>    <span class="hljs-keyword">this</span>-&gt;m_RB_Root-&gt;color=BLACK;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h4 id="查找-2"><a class="markdownIt-Anchor" href="#查找-2"></a> 查找</h4>
+<p>由于红黑树也是平衡树，其查找也为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>N</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(\log N)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span>，查找过程与普通的二叉查找树没有太大区别。不过红黑树和AVL树相比，在最坏情况下却是AVL树占优势。这是因为AVL树是严格的自平衡树，在最坏情况下同样多的节点，其高度小于红黑树，这就导致其查找效率高于红黑树。</p>
+<h4 id="旋转"><a class="markdownIt-Anchor" href="#旋转"></a> 旋转</h4>
+<p>红黑树的旋转操作只有左旋和右旋，而且也是核心。<br />
+以这张图为例，插入红色节点42后无需进行任何操作就满足红黑树性质。<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/21.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>下面这个例子就是典型的<code>LLb</code>型，至于什么是LLb，此处简单介绍下。<br />
+图中u表示pu的左孩子、pu表示gu的左孩子、gr表示gu的右孩子，也就是pu的兄弟，u的叔叔。<br />
+而LLb的意思是：pu是gu的左孩子、u是pu的左孩子，且gu的另外一个孩子是黑色的（<code>Nil节点是黑色节点</code>）。</p>
+<p>首先插入节点41后违背<code>规则3</code>，需要对节点45右旋，不过为了直观表示，我将图中的旋转箭头方向位置于42与45之间。旋转操作实质是对节点指针关系的修改。<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/22.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>而这个例子就是<code>LRb</code>型，对节点42<code>左旋</code>后再对节点45<code>右旋</code>。这说明LRb可以转化为LLb类型，也就是说对于插入操作其实也就那几种不平衡类型。<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/23.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">COLOR</span>&#123;</span><br>    RED,<br>    BLACK<br>&#125;;<br><span class="hljs-comment">// 红黑树节点</span><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">RBNodeEntry</span>&#123;</span><br>    <span class="hljs-keyword">int</span> key;<br>    <span class="hljs-keyword">int</span> data;<br>    <span class="hljs-keyword">int</span> color;<br>    RBNodeEntry *parent;<br>    RBNodeEntry *leftChild;<br>    RBNodeEntry *rightChild;<br>    <span class="hljs-built_in">RBNodeEntry</span>()&#123;&#125;<br>    <span class="hljs-built_in">RBNodeEntry</span>(<span class="hljs-keyword">int</span> k,<span class="hljs-keyword">int</span> d)&#123;<br>        <span class="hljs-keyword">this</span>-&gt;key=k;<br>        <span class="hljs-keyword">this</span>-&gt;data=d;<br>        <span class="hljs-keyword">this</span>-&gt;color=RED;<br>    &#125;<br>&#125;;<br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">RedBlackTree::leftRotate</span><span class="hljs-params">(RBNodeEntry *pnode)</span></span>&#123;<br>    RBNodeEntry *right = pnode-&gt;rightChild;<br>    pnode-&gt;rightChild = right-&gt;leftChild;<br><br>    <span class="hljs-keyword">if</span> (right-&gt;leftChild != m_Nil)<br>        right-&gt;leftChild-&gt;parent = pnode;<br>    right-&gt;parent = pnode-&gt;parent;<br>    <br>    <span class="hljs-comment">// 表示根节点</span><br>    <span class="hljs-keyword">if</span> (pnode-&gt;parent == <span class="hljs-literal">NULL</span>)&#123;<br>        root = right;<br>    <span class="hljs-comment">/*</span><br><span class="hljs-comment">          parent                    parent</span><br><span class="hljs-comment">           / \                      /    \</span><br><span class="hljs-comment">       pnode  brother           right  brother</span><br><span class="hljs-comment">        /  \            ---&gt;     / \</span><br><span class="hljs-comment">       l    right           pnode  y</span><br><span class="hljs-comment">           / \                / \</span><br><span class="hljs-comment">           x  y              l  x</span><br><span class="hljs-comment">    */</span><br>    &#125;<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (pnode-&gt;parent-&gt;leftChild == pnode)&#123;<br>        pnode-&gt;parent-&gt;leftChild = right;<br>    <span class="hljs-comment">/*</span><br><span class="hljs-comment">        parent                    parent</span><br><span class="hljs-comment">        / \                       /   \</span><br><span class="hljs-comment">   brother pnode            brother  right</span><br><span class="hljs-comment">           /  \        ---&gt;          /  \</span><br><span class="hljs-comment">           l   right             pnode   y</span><br><span class="hljs-comment">              / \                 / \</span><br><span class="hljs-comment">              x  y                l  x</span><br><span class="hljs-comment">    */</span><br>    &#125;<span class="hljs-keyword">else</span>&#123;<br>        pnode-&gt;parent-&gt;rightChild = right;            <br>    &#125;<br>    right-&gt;leftChild = pnode;<br>    pnode-&gt;parent = right;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">RedBlackTree::rightRotate</span><span class="hljs-params">(RBNodeEntry *pnode)</span></span>&#123;<br>    RBNodeEntry *left = pnode-&gt;leftChild;<br>    pnode-&gt;leftChild=left-&gt;rightChild;<br><br>    <span class="hljs-keyword">if</span>(left-&gt;rightChild!=m_Nil)&#123;<br>        left-&gt;rightChild-&gt;parent=pnode;<br>    &#125;<br>    left-&gt;parent=pnode-&gt;parent;<br>    <span class="hljs-comment">// 根节点</span><br>    <span class="hljs-keyword">if</span>(pnode-&gt;parent==<span class="hljs-literal">nullptr</span>)&#123;<br>        <span class="hljs-keyword">this</span>-&gt;m_RB_Root=left;<br>    <span class="hljs-comment">/*</span><br><span class="hljs-comment">          parent                parent</span><br><span class="hljs-comment">           / \                   / \</span><br><span class="hljs-comment">       pnode  brother        left   brother</span><br><span class="hljs-comment">        /  \          ---&gt;   / \</span><br><span class="hljs-comment">     left   r               x   pnode</span><br><span class="hljs-comment">      / \                        / \</span><br><span class="hljs-comment">     x   y                      y   r</span><br><span class="hljs-comment">    */</span><br>    &#125;<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(pnode-&gt;parent-&gt;leftChild==pnode)&#123;<br>        pnode-&gt;parent-&gt;leftChild=left;<br>    <span class="hljs-comment">/*</span><br><span class="hljs-comment">         parent                  parent</span><br><span class="hljs-comment">          /  \                    /  \</span><br><span class="hljs-comment">    brother   pnode         brother  left   </span><br><span class="hljs-comment">              /  \   ---&gt;             / \</span><br><span class="hljs-comment">            left  r                  x   pnode</span><br><span class="hljs-comment">            / \                          / \</span><br><span class="hljs-comment">           x   y                        y   r</span><br><span class="hljs-comment">    */</span><br>    &#125;<span class="hljs-keyword">else</span>&#123;<br>        pnode-&gt;parent-&gt;rightChild=left;<br>    &#125;<br>    left-&gt;rightChild=pnode;<br>    pnode-&gt;parent=left;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h4 id="插入-2"><a class="markdownIt-Anchor" href="#插入-2"></a> 插入</h4>
+<p>红黑树的插入操作类似BST插入，除此之外还要对节点进行<code>染色</code>。那么问题来了，毕竟是红黑树嘛到底是染成黑色还是红色？<br />
+1.若染成<code>黑色</code>，那么就会一定会违背<code>规则4</code>，即黑色节点数目不相同，之后还需要重新调整红黑树，要知道红黑树调整是很复杂的，若是改写成代码那估计得累死人。<br />
+2.若染成<code>红色</code>，此时一定不会违背<code>规则4</code>，不过这有<code>可能</code>会违背<code>规则3</code>，即有连续两个节点是<code>红色</code>的。虽说还需要进行调整，不过这代码量相比之前就会少很多了…基于此，染成<code>红色</code>是正确的选择。</p>
+<p>插入完成后往往需要<code>修正Fixup</code>树结构，而修正过程需要<code>旋转Rotate</code>。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">RedBlackTree::Insert</span><span class="hljs-params">(<span class="hljs-keyword">int</span> key,<span class="hljs-keyword">int</span> data)</span></span>&#123;<br>    <span class="hljs-keyword">if</span>(<span class="hljs-keyword">this</span>-&gt;m_RB_Root==<span class="hljs-literal">nullptr</span>)&#123;<br>        <span class="hljs-keyword">this</span>-&gt;m_RB_Root=<span class="hljs-keyword">new</span> <span class="hljs-built_in">RBNodeEntry</span>(key,data);<br>        <span class="hljs-keyword">this</span>-&gt;m_RB_Root-&gt;leftChild=m_Nil;<br>        <span class="hljs-keyword">this</span>-&gt;m_RB_Root-&gt;rightChild=m_Nil;<br>        <span class="hljs-keyword">this</span>-&gt;m_RB_Root-&gt;parent=<span class="hljs-literal">nullptr</span>;<br>        <span class="hljs-keyword">this</span>-&gt;m_RB_Root-&gt;color=BLACK;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>    &#125;<br>    RBNodeEntry *x=<span class="hljs-keyword">this</span>-&gt;m_RB_Root;<br>    RBNodeEntry *p=<span class="hljs-literal">nullptr</span>;<br><br>    <span class="hljs-keyword">while</span> (x!=m_Nil)&#123;<br>        <span class="hljs-comment">// 保存父节点p</span><br>        p=x;<br>        <span class="hljs-keyword">if</span>(key &lt; x-&gt;key)<br>            x=x-&gt;leftChild;<br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(key &gt; x-&gt;key)<br>            x=x-&gt;rightChild;<br>        <span class="hljs-comment">// 已经存在</span><br>        <span class="hljs-keyword">else</span>&#123;<br>            x-&gt;data=data;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>        &#125;<br>    &#125;<br><br>    RBNodeEntry *pnode=<span class="hljs-keyword">new</span> <span class="hljs-built_in">RBNodeEntry</span>(key,data);<br>    pnode-&gt;leftChild=m_Nil;<br>    pnode-&gt;rightChild=m_Nil;<br>    pnode-&gt;color=RED;<br>    pnode-&gt;parent=p;<br><br>    <span class="hljs-comment">// 判断插入节点位于父节点的哪边</span><br>    <span class="hljs-keyword">if</span>(key &lt; p-&gt;key)<br>        p-&gt;leftChild=pnode;<br>    <span class="hljs-keyword">else</span> <br>        p-&gt;rightChild=pnode;<br>    <span class="hljs-comment">// 检查是否满足红黑树的平衡条件并重新平衡</span><br>    <span class="hljs-built_in">RedBlack_insertFixup</span>(pnode);<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h4 id="insertfixup"><a class="markdownIt-Anchor" href="#insertfixup"></a> InsertFixup</h4>
+<p>插入操作所引起的不平衡主要是以下8种类型（主要针对插入在红色节点之后）：<br />
+LLr、LRr、RRr、RLr、LLb、LRb、RRb、RLb。<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/24.png" srcset="/img/loading.gif" lazyload alt="" /><br />
+图中u表示pu的左孩子、pu表示gu的左孩子、gr表示gu的右孩子，也就是pu的兄弟，u的叔叔。而LLb的意思是：pu是gu的左孩子、u是pu的左孩子，且gu的另外一个孩子(可以是Nil节点)是黑色的。</p>
+<p>可以总结为下面这两种类型，插入新节点后的平衡主要是对<code>新插入节点u、其父节点pu、祖父节点gu以及叔叔节点gl/gr</code>来操作的。<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/25.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>如果叔叔节点不存在一定是<code>Nil黑色节点</code>！！！</p>
+<p>根据<code>叔叔节点uncle</code>的颜色是红色或黑色，InsertFixup大致可以分为以下两种类型：</p>
+<ul>
+<li>uncle节点是<code>红色</code>，也就是<code>LLr、LRr、RRr、RLr</code>类型，直接<code>换色</code>即可完成红黑树平衡；</li>
+<li>uncle节点是<code>黑色</code>，也就是<code>LLb、LRb、RRb、RLb</code>类型，需要旋转和换色。</li>
+</ul>
+<h5 id="llr-lrr-rrr-rlr"><a class="markdownIt-Anchor" href="#llr-lrr-rrr-rlr"></a> LLr、LRr、RRr、RLr</h5>
+<p>处理这类不平衡问题，只需要换色即可，这是因为<code>父节点和叔叔节点</code>此时一定是<code>红色</code>的，那么<code>祖父节点</code>也一定是<code>黑色</code>的。<br />
+这个过程是这样的：</p>
+<ul>
+<li>若<code>父节点pu/parent存在且为红色</code>，则执行该过程；否则将<code>根节点root</code>染成为<code>黑色</code>并结束；</li>
+<li>将<code>父节点pu/parent和叔叔节点gl/gr/uncle</code>染成黑色；</li>
+<li>将<code>祖父节点gu</code>染成红色；</li>
+<li>移动当前<code>新插入红色节点u</code>到<code>祖父节点gu</code>，重复执行第一步骤。</li>
+</ul>
+<p>第4步的作用是确保整棵红黑树均符合其规则，因此将<code>祖父节点gu</code>染成红色之后，可能<code>祖父节点gu的父节点是红色</code>，那么还需要再次向上修正，直到某个节点的父节点不存在（根节点）或其父节点是黑色节点。</p>
+<p>例子：<br />
+插入节点30，导致形成LLr不平衡，将<code>父节点和叔叔节点</code>与<code>祖父节点</code>换色后移动u到gu，此时再判断其父节点为nullptr表示达到了根节点root，因此修正结束，并将根节点root染成黑色。<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/26.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>其他3种情况处理类似。</p>
+<h5 id="llb-lrb-rrb-rlb"><a class="markdownIt-Anchor" href="#llb-lrb-rrb-rlb"></a> LLb、LRb、RRb、RLb</h5>
+<p>这4种情况只需解释其中一种就能够举一反三了。<br />
+处理过程如下：</p>
+<ul>
+<li>若<code>父节点pu/parent存在且为红色</code>，则执行该过程；否则将<code>根节点root</code>染成为<code>黑色</code>并结束；</li>
+<li>根据<code>插入节点u</code>位于<code>父节点pu</code>的哪一侧对<code>父节点pu</code>旋转：若u在pu左边，对pu右旋；否则左旋；</li>
+<li>旋转完成后对<code>父节点pu/parent和叔叔节点gl/gr/uncle（如果存在）</code>与<code>祖父节点gu</code>交换颜色；（实际上，只需要对父节点和祖父节点换色）</li>
+<li>根据<code>祖父节点gu</code>位于<code>祖父节点gu父节点pgu</code>的哪一侧对<code>祖父节点gu</code>旋转：若gu在pgu左边，对gu右旋；否则左旋。</li>
+</ul>
+<p>注意，这种类型无需向上修正：<code>移动当前新插入红色节点u到祖父节点gu，再重复执行第一步骤</code>，这是因为经过第2步旋转换色后，此时<code>父节点pu</code>一定是<code>黑色</code>的，那么下一次再旋转后，此时<code>新的祖父节点gu</code>也一定是黑色的。</p>
+<p>例子：<br />
+向这棵红黑树插入节点35，可以看出这是LRb型，虽然祖父节点40的右孩子是Nil节点。先是对父节点30左旋后再交换祖父节点40(黑)和父节点35(红)的颜色（此处叔叔节点为Nil，因此没有换色），然后对祖父节点40右旋后完成了修正。<br />
+实际上，LRb型经过<code>左旋</code>转化为LLb型，同样RLb型经过<code>右旋</code>转化为RRb型。</p>
+<p><img src="/uploads/images/data_structure/rbtree_cpp/27.png" srcset="/img/loading.gif" lazyload alt="" /><br />
+<img src="/uploads/images/data_structure/rbtree_cpp/28.gif" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>再看一个例子，其大致过程：插入节点41后形成<code>LLr</code>型，那么交换<code>祖父节点45</code>和<code>父节点44、叔叔节点46</code>的颜色；移动u到gu位置后发现此时u<code>存在父节点且为红色</code>，那么还得继续修正；而此时是<code>LRb</code>型，故先对<code>父节点40</code>左旋后还要交换<code>祖父节点50</code>和<code>父节点45、叔叔节点60</code>的颜色；之后再对<code>祖父节点45</code>右旋；最后还要将<code>根节点root</code>染成黑色，至此红黑树平衡，修正结束。<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/29.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>演示过程<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/30.gif" srcset="/img/loading.gif" lazyload alt="" /></p>
+<h5 id="c代码"><a class="markdownIt-Anchor" href="#c代码"></a> C++代码</h5>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">RedBlackTree::RedBlack_insertFixup</span><span class="hljs-params">(RBNodeEntry *pNode)</span></span>&#123;<br>    <span class="hljs-comment">// 父节点</span><br>    RBNodeEntry *parent=<span class="hljs-literal">nullptr</span>;<br>    <span class="hljs-comment">// 祖父节点</span><br>    RBNodeEntry *gparent=<span class="hljs-literal">nullptr</span>;<br>    <br>    <span class="hljs-comment">// 如果父节点存在且为红色</span><br>    <span class="hljs-keyword">while</span>((parent=pNode-&gt;parent) &amp;&amp; parent-&gt;color==RED)&#123;<br>        gparent=parent-&gt;parent;<br>        <span class="hljs-comment">// L-型</span><br>        <span class="hljs-keyword">if</span>(parent==gparent-&gt;leftChild)&#123;        <br>            RBNodeEntry * uncle=gparent-&gt;rightChild;<br>            <span class="hljs-comment">// LLr/LRr型 叔叔节点是红色，那么直接换色</span><br>            <span class="hljs-keyword">if</span>(uncle!=m_Nil &amp;&amp; uncle-&gt;color==RED)&#123;<br>                parent-&gt;color=BLACK;<br>                uncle-&gt;color=BLACK;<br>                gparent-&gt;color=RED;<br>                <span class="hljs-comment">// 从当前祖父节点开始继续向上调整</span><br>                pNode=gparent;<br>                <span class="hljs-keyword">continue</span>;<br>            <span class="hljs-comment">// LRb，叔叔节点gr是黑色节点(可以Nil)，且当前节点是父节点的右孩子</span><br>            <span class="hljs-comment">// 将LRb转化为LLb型</span><br>            &#125;<span class="hljs-keyword">if</span>(pNode==parent-&gt;rightChild)&#123;<br>                <span class="hljs-comment">// 对父节点左旋</span><br>                <span class="hljs-built_in">leftRotate</span>(parent);<br>            &#125;<br>            <span class="hljs-comment">// 处理LLb的情况</span><br>            <span class="hljs-comment">// 先换色，在旋转</span><br>            parent-&gt;color=BLACK;<br>            gparent-&gt;color=RED;<br>            <span class="hljs-built_in">rightRotate</span>(gparent);<br>        &#125;<br>        <span class="hljs-comment">// R-型</span><br>        <span class="hljs-keyword">else</span>&#123;<br>            RBNodeEntry *uncle=gparent-&gt;leftChild;<br>            <span class="hljs-comment">// RLr/RRr型 叔叔节点是红色</span><br>            <span class="hljs-keyword">if</span> (uncle!=m_Nil &amp;&amp; uncle-&gt;color==RED)&#123;<br>                uncle-&gt;color=BLACK;<br>                parent-&gt;color=BLACK;<br>                gparent-&gt;color=RED;<br>                <span class="hljs-comment">// 继续向上调整</span><br>                pNode=gparent;<br>                <span class="hljs-keyword">continue</span>;<br>             <span class="hljs-comment">// RLb型 叔叔是黑色，且当前节点是左孩子</span><br>             <span class="hljs-comment">// 转化为 RRb</span><br>            &#125; <span class="hljs-keyword">if</span>(pNode==parent-&gt;leftChild)&#123;<br>                <span class="hljs-built_in">rightRotate</span>(parent);<br>            &#125;<br>            <span class="hljs-comment">// RRb型</span><br>            parent-&gt;color=BLACK;<br>            gparent-&gt;color=RED;<br>            <span class="hljs-built_in">leftRotate</span>(gparent);<br>        &#125;<br>    &#125;<br>    <span class="hljs-comment">// 根节点必须为黑色！</span><br>    <span class="hljs-keyword">this</span>-&gt;m_RB_Root-&gt;color=BLACK;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h4 id="删除-2"><a class="markdownIt-Anchor" href="#删除-2"></a> 删除</h4>
+<p>红黑树删除类似BST，删除操作的前半部分代码一样，差别在于删除后红黑树的修正。事实上删除操作的修正要十分复杂，要考虑的情况较多。</p>
+<ul>
+<li>在红黑树中查找该节点是否存在；</li>
+<li>若存在左子树和右子树，寻找<code>前驱/后继节点</code>将其转化为<code>只有一个子树/叶子</code>情况；</li>
+<li>根据<code>child节点</code>、<code>child的兄弟节点</code>、<code>child的父节点</code>修正删除后的红黑树；</li>
+<li>删除该节点。</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">RedBlackTree::Remove</span><span class="hljs-params">(<span class="hljs-keyword">int</span> key)</span> </span>&#123;<br>    RBNodeEntry *node=<span class="hljs-built_in">Search</span>(<span class="hljs-keyword">this</span>-&gt;m_RB_Root,key);<br>    <span class="hljs-keyword">if</span>(!node)<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br><br>    RBNodeEntry *child=m_Nil;<br>    RBNodeEntry *parent=<span class="hljs-literal">nullptr</span>;<br><br>    <span class="hljs-comment">// 存在左子树和右子树，将其转化为只有一个子树/叶子情况</span><br>    <span class="hljs-keyword">if</span> (node-&gt;leftChild!=m_Nil &amp;&amp; node-&gt;rightChild!=m_Nil) &#123;<br>        <span class="hljs-comment">// 后继节点，即将是要被删除的节点</span><br>        RBNodeEntry *successor = <span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">successor</span>(node);<br>        <span class="hljs-comment">// 数据替换</span><br>        node-&gt;key=successor-&gt;key;<br>        node-&gt;data=successor-&gt;data;<br>        <span class="hljs-comment">// 删除后继节点</span><br>        node=successor;<br>    &#125;<br>    <span class="hljs-comment">// 若node是叶子节点那么leftChild=rightChild=m_Nil</span><br>    <span class="hljs-keyword">if</span>(node-&gt;leftChild!=m_Nil)&#123;<br>        child=node-&gt;leftChild;<br>    &#125;<span class="hljs-keyword">else</span>&#123;<br>        child=node-&gt;rightChild;<br>    &#125;<br>    <span class="hljs-comment">// 即使child是Nil也要设置child的parent。因为removeFixup需要parent来修正</span><br>    child-&gt;parent=node-&gt;parent;<br><br>    <span class="hljs-comment">// 删除的是根节点</span><br>    <span class="hljs-keyword">if</span>(node-&gt;parent==<span class="hljs-literal">nullptr</span>)&#123;<br>        <span class="hljs-keyword">this</span>-&gt;m_RB_Root=child;<br>    &#125;<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(node-&gt;parent-&gt;leftChild==node)&#123;<br>        node-&gt;parent-&gt;leftChild=child;<br>    &#125;<span class="hljs-keyword">else</span> &#123;<br>        node-&gt;parent-&gt;rightChild=child;<br>    &#125;<br>    <span class="hljs-keyword">if</span>(node-&gt;color==BLACK)&#123;<br>        <span class="hljs-built_in">RedBlack_removeFixup</span>(child);<br>    &#125;<br>    <span class="hljs-comment">// 直接删除节点即可</span><br>    <span class="hljs-keyword">delete</span> node;<br>    node=<span class="hljs-literal">nullptr</span>;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;<br><br></code></pre></div></td></tr></table></figure>
+<h4 id="removefixup"><a class="markdownIt-Anchor" href="#removefixup"></a> RemoveFixup</h4>
+<p>给出下图的删除操作所引起的不平衡情况模板<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/31.png" srcset="/img/loading.gif" lazyload alt="" /><br />
+其中<code>白色节点</code>处于<code>未定型状态</code>，表示可以为黑/红/节点甚至Nil节点，但根节点一定是黑色节点。<code>节点u</code>表示删除节点的<code>child节点</code>。</p>
+<p>我们首先讨论删除<code>黑色节点</code>的复杂情况。而且是上图的第一个模板，另一个也是类似的（旋转方向相反）。</p>
+<h5 id="删除黑色节点"><a class="markdownIt-Anchor" href="#删除黑色节点"></a> 删除黑色节点</h5>
+<p>删除黑色节点引起的不平衡大致有4种情况：</p>
+<ul>
+<li>Case1：<code>兄弟节点brother</code>为<code>红色</code>；</li>
+<li>Case2：<code>兄弟节点brother</code>为<code>黑色</code>，而且<code>brother</code>的<code>两个child</code>也都是黑色；</li>
+<li>Case3：<code>兄弟节点brother</code>为<code>黑色</code>，而且<code>brother</code>的<code>leftchild</code>是红色，<code>rightchild</code>是黑色；</li>
+<li>Case4：<code>兄弟节点brother</code>为<code>黑色</code>，而且<code>brother</code>的<code>rightchild</code>是红色。</li>
+</ul>
+<p><img src="/uploads/images/data_structure/rbtree_cpp/32.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<h6 id="case1"><a class="markdownIt-Anchor" href="#case1"></a> Case1</h6>
+<p>这种情况下是<code>兄弟节点brother</code>为<code>红色</code>，那么<code>parent节点</code>一定黑色。修正过程为：</p>
+<ul>
+<li>将<code>兄弟节点brother</code>染成<code>黑色</code>；</li>
+<li>将<code>u的父节点parent</code>染成<code>红色</code>；</li>
+<li>对<code>parent</code>进行<code>左旋</code>；</li>
+<li>移动<code>brother</code>到<code>u的父节点parent</code>的<code>右孩子rightchild</code>。</li>
+</ul>
+<p>注意，这种情况下修正还没有结束！<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/33.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>假设存在如下红黑树，删除节点a后为<code>case 1</code>情况，然而经过第一次修正发现并没有完全平衡，不过经过<code>case 1</code>却意外的进入了<code>case 2/3/4</code>，那么就继续修正。<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/34.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<h6 id="case2"><a class="markdownIt-Anchor" href="#case2"></a> Case2</h6>
+<p>这种情况是：<code>brother</code>为<code>黑色</code>，而且<code>brother</code>的<code>两个child</code>也都是黑色。修正的方法如下：</p>
+<ul>
+<li>将<code>brother</code>染成<code>红色</code>；</li>
+<li>移动<code>u</code>到其<code>父节点parent</code>；</li>
+</ul>
+<p>至此，再根据<code>u</code>(图中的<code>B</code>)的颜色可以分两种情况：</p>
+<ul>
+<li><code>u</code>是<code>红色</code>，结束修正同时把<code>u</code>染成<code>黑色</code>；</li>
+<li><code>u</code>是<code>黑色且不是根节点root</code>，则继续下一轮修正过程，再根据不同情况进行修正。</li>
+</ul>
+<p><img src="/uploads/images/data_structure/rbtree_cpp/35.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<h6 id="case3"><a class="markdownIt-Anchor" href="#case3"></a> Case3</h6>
+<p>这种情况是：<code>brother</code>为<code>黑色</code>，而且<code>brother</code>的<code>leftchild</code>是红色，<code>rightchild</code>是黑色。修正的方法如下：</p>
+<ul>
+<li>将<code>brother</code>的<code>左孩子leftchild</code>染成<code>黑色</code>；</li>
+<li>将<code>brother</code>染成<code>红色</code>；</li>
+<li>对<code>brother</code>右旋；</li>
+<li>移动<code>brother</code>到<code>u的父节点parent</code>的<code>右孩子rightchild</code>。</li>
+</ul>
+<p><img src="/uploads/images/data_structure/rbtree_cpp/36.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<h6 id="case4"><a class="markdownIt-Anchor" href="#case4"></a> Case4</h6>
+<p>这是最后一种情况了：<code>brother</code>为<code>黑色</code>，而且<code>brother</code>的<code>rightchild</code>是红色。修正方法：</p>
+<ul>
+<li>将<code>brother</code>染成<code>u的父节点parent</code>的颜色(黑或红)；</li>
+<li>将<code>parent</code>染成黑色；</li>
+<li>将<code>brother</code>的<code>右孩子rightchild</code>染成黑色；</li>
+<li>对<code>parent</code>左旋；</li>
+<li>移动<code>u</code>移至<code>根节点root</code>，用于结束修正循环（图中节点b只是起演示作用，不一定为root）；</li>
+<li>最后修改根节点root颜色为黑色。</li>
+</ul>
+<p><img src="/uploads/images/data_structure/rbtree_cpp/37.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>总结以上4种情况，它们之间的转化关系大概如下：</p>
+<ul>
+<li>Case1-&gt;Case2/3/4</li>
+<li>Case3-&gt;Case4</li>
+<li>Case1-&gt;Case3-&gt;Case4</li>
+</ul>
+<p>修正完Case4就说明红黑树平衡了</p>
+<h6 id="case5"><a class="markdownIt-Anchor" href="#case5"></a> Case5</h6>
+<p>其实这类情况最简单了，也就是删除一个<code>黑色节点p</code>，但其<code>子节点child</code>是一个<code>红色节点</code>，无论黑色节点p的父节点是黑色还是红色。这样的话根本没必要再去考虑上述4种情况了。</p>
+<ul>
+<li>删除黑色节点，如果存在<code>红色child节点</code>，那么将其染成<code>黑色</code>。</li>
+</ul>
+<p><img src="/uploads/images/data_structure/rbtree_cpp/38.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<h5 id="删除红色节点"><a class="markdownIt-Anchor" href="#删除红色节点"></a> 删除红色节点</h5>
+<p>删除红色节点可能是删除叶子节点或者含有子树的节点。前者很容易实现，对于后者需要找到一个<code>前驱/后继节点</code>，而这个前驱/后继节点可能是黑色或红色的。如果是红色，那就删除该红色前驱/后继节点并向上修正直到平衡；如果是黑色，那么就判断不同的情况<code>case1/2/3/4/5</code>并进行修正；</p>
+<p>删除红色节点55，前驱节点53也是红色节点<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/39.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>删除红色节点65，前驱节点60是黑色节点，需要进入<code>case3</code>和<code>case4</code>修正过程；<br />
+删除红色节点65，后继节点67是红色节点。<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/40.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<h5 id="例子"><a class="markdownIt-Anchor" href="#例子"></a> 例子</h5>
+<p>为了说明情况，现在以下面这棵红黑树为例子来说明删除操作。<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/41.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>删除<code>黑色节点55</code>，由于其子节点为<code>Nil</code>，故形成如下的<code>case4</code>：</p>
+<ul>
+<li>将<code>兄弟节点57</code>染成<code>u节点Nil</code>的<code>父节点56</code>的<code>红色</code>；</li>
+<li>将<code>父节点56</code>染成<code>黑色</code>和<code>兄弟节点57</code>的<code>右节点58</code>染成<code>黑色</code>；</li>
+<li>对<code>父节点56</code>左旋；</li>
+<li>移动<code>u</code>移至根节点root，结束修正循环；</li>
+<li>修改<code>根节点root</code>颜色为黑色。</li>
+</ul>
+<p><img src="/uploads/images/data_structure/rbtree_cpp/42.png" srcset="/img/loading.gif" lazyload alt="" /><br />
+最终效果<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/43.png" srcset="/img/loading.gif" lazyload alt="" /><br />
+删除<code>黑色节点58</code>，由于其子节点也为<code>Nil</code>，故形成如下的<code>case2</code>：</p>
+<ul>
+<li>将<code>兄弟节点56</code>染成<code>红色</code>；</li>
+<li>移动<code>u</code>到其<code>父节点57</code>；</li>
+<li>由于<code>u</code>是<code>红色</code>的，因此把<code>父节点57</code>染成<code>黑色</code>；</li>
+<li>结束修正。</li>
+</ul>
+<p><img src="/uploads/images/data_structure/rbtree_cpp/44.png" srcset="/img/loading.gif" lazyload alt="" /><br />
+最终效果<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/45.png" srcset="/img/loading.gif" lazyload alt="" /><br />
+现在删除<code>黑色节点60</code>，由于其存在左右子树，因此需要寻找前驱/后继节点，此处寻找得<code>前驱黑色节点57</code>，替换<code>前驱黑色节点57</code>键值到<code>黑色节点60</code>。此时转化为删除<code>前驱黑色节点57</code>后形成<code>case5</code>，由于其<code>子节点56</code>为红色，故删除了<code>前驱黑色节点57</code>后，将<code>子节点56</code>染成<code>黑色</code>并结束修正。<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/46.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>上述演示过程<br />
+<img src="/uploads/images/data_structure/rbtree_cpp/47.gif" srcset="/img/loading.gif" lazyload alt="" /></p>
+<h5 id="c代码-2"><a class="markdownIt-Anchor" href="#c代码-2"></a> C++代码</h5>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">RedBlackTree::RedBlack_removeFixup</span><span class="hljs-params">(RBNodeEntry*node)</span> </span>&#123;<br>    <span class="hljs-comment">// case5:</span><br>    <span class="hljs-comment">// 若node是红色，那么把子节点node直接染黑</span><br>    <span class="hljs-comment">// 若node是root，那么也把它直接染黑</span><br>    <span class="hljs-keyword">while</span> (node!=m_RB_Root &amp;&amp; node-&gt;color==BLACK) &#123;<br>        <span class="hljs-comment">// node是左节点</span><br>        <span class="hljs-keyword">if</span> (node==node-&gt;parent-&gt;leftChild) &#123;<br>            RBNodeEntry *brother=node-&gt;parent-&gt;rightChild;<br>            <span class="hljs-comment">/*</span><br><span class="hljs-comment">            case1:</span><br><span class="hljs-comment">            case1最终转化为case2/3/4</span><br><span class="hljs-comment">                1.将兄弟节点brother染成黑色；</span><br><span class="hljs-comment">                2.将node的父节点parent染成红色；</span><br><span class="hljs-comment">                3.对parent进行左旋；</span><br><span class="hljs-comment">                4.移动brother到node的父节点parent的右孩子rightchild。</span><br><span class="hljs-comment">            */</span><br>            <span class="hljs-keyword">if</span>(brother-&gt;color==RED)&#123;<br>                brother-&gt;color=BLACK;<br>                node-&gt;parent-&gt;color=RED;<br>                <span class="hljs-built_in">leftRotate</span>(node-&gt;parent);<br>                brother=node-&gt;parent-&gt;rightChild;<br>            &#125;<br>            <br>            <span class="hljs-comment">/*</span><br><span class="hljs-comment">            case2:(单独处理)</span><br><span class="hljs-comment">                1.将brother染成红色；</span><br><span class="hljs-comment">                2.移动node到其父节点parent；</span><br><span class="hljs-comment">            */</span>    <br>            <span class="hljs-keyword">if</span>(brother-&gt;leftChild-&gt;color==BLACK&amp;&amp;brother-&gt;rightChild-&gt;color==BLACK)&#123;<br>                brother-&gt;color=RED;<br>                node=node-&gt;parent;<br>            &#125;<br>            <span class="hljs-comment">// case3-&gt;case4</span><br>            <span class="hljs-keyword">else</span> &#123;   <br>                <span class="hljs-comment">/*</span><br><span class="hljs-comment">                case3:</span><br><span class="hljs-comment">                    1.将brother的左孩子leftchild染成黑色；</span><br><span class="hljs-comment">                    2.将brother染成红色；</span><br><span class="hljs-comment">                    3.对brother右旋；</span><br><span class="hljs-comment">                    4.移动brother到node的父节点parent的右孩子rightchild。</span><br><span class="hljs-comment">                */</span><br>                <span class="hljs-keyword">if</span>(brother-&gt;rightChild-&gt;color==BLACK)&#123;<br>                    brother-&gt;leftChild-&gt;color=BLACK;<br>                    brother-&gt;color=RED;<br>                    <span class="hljs-built_in">rightRotate</span>(brother);<br>                    brother=node-&gt;parent-&gt;rightChild;<br>                &#125;<br>                <span class="hljs-comment">/*</span><br><span class="hljs-comment">                case4:</span><br><span class="hljs-comment">                    1.将brother染成node的父节点parent的颜色(黑或红)；</span><br><span class="hljs-comment">                    2.将parent染成黑色；</span><br><span class="hljs-comment">                    3.将brother的右孩子rightchild染成黑色；</span><br><span class="hljs-comment">                    4.对parent左旋；</span><br><span class="hljs-comment">                    5.移动node移至根节点root，用于结束修正循环。</span><br><span class="hljs-comment">                */</span><br>                brother-&gt;color=node-&gt;parent-&gt;color;<br>                node-&gt;parent-&gt;color=BLACK;<br>                brother-&gt;rightChild-&gt;color=BLACK;<br>                <span class="hljs-built_in">leftRotate</span>(node-&gt;parent);<br>                node=<span class="hljs-keyword">this</span>-&gt;m_RB_Root;<br>            &#125;<br>        <span class="hljs-comment">// node是右节点</span><br>        &#125;<span class="hljs-keyword">else</span>&#123;<br>            RBNodeEntry *brother=node-&gt;parent-&gt;leftChild;<br>            <span class="hljs-comment">// case1-&gt;case2/3/4:</span><br>            <span class="hljs-keyword">if</span> (brother-&gt;color == RED) &#123;<br>                brother-&gt;color = BLACK;<br>                node-&gt;parent-&gt;color = RED;<br>                <span class="hljs-built_in">rightRotate</span>(node-&gt;parent);<br>                brother = node-&gt;parent-&gt;leftChild;<br>            &#125;<br>            <span class="hljs-comment">// case2:</span><br>            <span class="hljs-keyword">if</span> (brother-&gt;leftChild-&gt;color == BLACK&amp;&amp;brother-&gt;rightChild-&gt;color == BLACK) &#123;<br>                brother-&gt;color = RED;<br>                node = node-&gt;parent;<br>            &#125;<span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-comment">// case3:</span><br>                <span class="hljs-keyword">if</span> (brother-&gt;leftChild-&gt;color == BLACK)&#123;<br>                    brother-&gt;rightChild-&gt;color = BLACK;<br>                    brother-&gt;color = RED;<br>                    <span class="hljs-built_in">leftRotate</span>(brother);<br>                    brother = node-&gt;parent-&gt;leftChild;<br>                &#125;<br>                <span class="hljs-comment">// case4: </span><br>                brother-&gt;color = node-&gt;parent-&gt;color;<br>                node-&gt;parent-&gt;color = BLACK;<br>                brother-&gt;leftChild-&gt;color = BLACK;<br>                <span class="hljs-built_in">rightRotate</span>(node-&gt;parent);<br>                node = <span class="hljs-keyword">this</span>-&gt;m_RB_Root;<br>            &#125;<br>        &#125; <br>    &#125;<br>    <span class="hljs-comment">// 即使node是Nil也染黑</span><br>    node-&gt;color=BLACK;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h4 id="结尾"><a class="markdownIt-Anchor" href="#结尾"></a> 结尾</h4>
+<p>红黑树实在是太复杂了，还得慢慢来～关于红黑树和AVL树差别，可以看看 <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/13852870/red-black-tree-over-avl-tree">https://stackoverflow.com/questions/13852870/red-black-tree-over-avl-tree</a><br />
+篇幅有限，红黑树全部源码就不全放出来了，毕竟也参考了别人写的，仅供学习罢了～<br />
+有兴趣的可以去看看本文红黑树大概实现源码：<a target="_blank" rel="noopener" href="https://josephxrays.coding.net/p/rbt_cpp_learn/d/rbt_cpp_learn/git">源码链接</a></p>
+<p>总之，红黑树上红黑果，红黑树下你和我～</p>
+<p>bye~</p>
+<h4 id="参考"><a class="markdownIt-Anchor" href="#参考"></a> 参考</h4>
+<p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/zh-hans/%E7%BA%A2%E9%BB%91%E6%A0%91">红黑树-维基百科</a><br />
+<a target="_blank" rel="noopener" href="http://alrightchiu.github.io/SecondRound/red-black-tree-introjian-jie.html">Red Black Tree: Intro(簡介)</a><br />
+<a target="_blank" rel="noopener" href="https://riteme.site/blog/2016-3-12/2-3-tree-and-red-black-tree.html">2-3树与红黑树</a><br />
+《数据结构、算法与应用 C++语言描述》</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/C/">C++</a>
+                    
+                      <a class="hover-with-bg" href="/tags/DataStructures/">DataStructures</a>
+                    
+                      <a class="hover-with-bg" href="/tags/C/">C</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%BA%A2%E9%BB%91%E6%A0%91/">红黑树</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/binaryheap-cpp/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">二叉堆-堆排序</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/avl-tree-cpp/">
+                        <span class="hidden-mobile">数据结构-AVL树</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"AzPbImmMjm5nQc1Xm9ulWCoH-gzGzoHsz","appKey":"xJqILn8nSbhYmdkB2VVQm8vI","placeholder":"说点什么","path":"window.location.pathname","avatar":"retro","meta":["nick","mail","link"],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false,"requiredFields":[]},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- KaTeX -->
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.10/dist/katex.min.css" />
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
