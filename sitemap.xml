@@ -536,6 +536,13 @@
 
   
   <url>
+    <loc>http://www.joxrays.com/tags/C/</loc>
+    <lastmod>2021-06-27</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://www.joxrays.com/tags/Linux/</loc>
     <lastmod>2021-06-27</lastmod>
     <changefreq>daily</changefreq>
@@ -544,13 +551,6 @@
   
   <url>
     <loc>http://www.joxrays.com/tags/Archlinux/</loc>
-    <lastmod>2021-06-27</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://www.joxrays.com/tags/C/</loc>
     <lastmod>2021-06-27</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -783,14 +783,14 @@
 
   
   <url>
-    <loc>http://www.joxrays.com/categories/Linux/</loc>
+    <loc>http://www.joxrays.com/categories/Programming/</loc>
     <lastmod>2021-06-27</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://www.joxrays.com/categories/Programming/</loc>
+    <loc>http://www.joxrays.com/categories/Linux/</loc>
     <lastmod>2021-06-27</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>

