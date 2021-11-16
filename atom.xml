@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.joxrays.com/"/>
-  <updated>2020-07-13T09:22:11.995Z</updated>
+  <updated>2021-11-16T13:31:26.808Z</updated>
   <id>http://www.joxrays.com/</id>
   
   <author>
@@ -17,11 +17,35 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Golang实现Chip8模拟器</title>
+    <link href="http://www.joxrays.com/golang-chip8-emulator/"/>
+    <id>http://www.joxrays.com/golang-chip8-emulator/</id>
+    <published>2021-11-14T16:00:00.000Z</published>
+    <updated>2021-11-16T13:31:26.808Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;CHIP-8是由 Joseph Weisbecker 编写的解释型语言，使用该语言编写的程序可以在 CHIP-8 虚拟机上运行，因此可以运行一些简单的游戏。本文使用Go语言实现一个简单的CHIP8模拟器，just for fun&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Golang" scheme="http://www.joxrays.com/categories/Golang/"/>
+    
+    
+      <category term="Golang" scheme="http://www.joxrays.com/tags/Golang/"/>
+    
+      <category term="Emulatorm" scheme="http://www.joxrays.com/tags/Emulatorm/"/>
+    
+      <category term="Chip8" scheme="http://www.joxrays.com/tags/Chip8/"/>
+    
+  </entry>
+  
+  <entry>
     <title>v2ray ws tls</title>
     <link href="http://www.joxrays.com/v2ray-ws-tls/"/>
     <id>http://www.joxrays.com/v2ray-ws-tls/</id>
     <published>2020-07-12T16:00:00.000Z</published>
-    <updated>2020-07-13T09:22:11.995Z</updated>
+    <updated>2020-07-13T09:22:11.000Z</updated>
     
     <summary type="html">
     
@@ -43,7 +67,7 @@
     <link href="http://www.joxrays.com/unix-linux-shell/"/>
     <id>http://www.joxrays.com/unix-linux-shell/</id>
     <published>2020-04-23T16:00:00.000Z</published>
-    <updated>2020-04-29T00:16:51.426Z</updated>
+    <updated>2021-06-27T10:42:50.000Z</updated>
     
     <summary type="html">
     
@@ -65,7 +89,7 @@
     <link href="http://www.joxrays.com/kde-panel-transparency/"/>
     <id>http://www.joxrays.com/kde-panel-transparency/</id>
     <published>2020-03-25T16:00:00.000Z</published>
-    <updated>2020-03-26T07:32:44.351Z</updated>
+    <updated>2020-03-26T07:32:44.000Z</updated>
     
     <summary type="html">
     
@@ -89,7 +113,7 @@
     <link href="http://www.joxrays.com/linux-system-proxy/"/>
     <id>http://www.joxrays.com/linux-system-proxy/</id>
     <published>2020-03-20T16:00:00.000Z</published>
-    <updated>2020-06-04T11:47:19.295Z</updated>
+    <updated>2020-06-04T11:47:19.000Z</updated>
     
     <summary type="html">
     
@@ -117,7 +141,7 @@
     <link href="http://www.joxrays.com/linux-rdp-windows/"/>
     <id>http://www.joxrays.com/linux-rdp-windows/</id>
     <published>2020-03-10T16:00:00.000Z</published>
-    <updated>2020-03-20T03:03:20.428Z</updated>
+    <updated>2020-03-20T03:03:20.000Z</updated>
     
     <summary type="html">
     
@@ -191,7 +215,7 @@
     <link href="http://www.joxrays.com/linux-tinyproxy/"/>
     <id>http://www.joxrays.com/linux-tinyproxy/</id>
     <published>2020-02-16T16:00:00.000Z</published>
-    <updated>2020-05-05T16:20:38.391Z</updated>
+    <updated>2020-05-05T16:20:38.000Z</updated>
     
     <summary type="html">
     
@@ -239,7 +263,7 @@
     <link href="http://www.joxrays.com/binaryheap-cpp/"/>
     <id>http://www.joxrays.com/binaryheap-cpp/</id>
     <published>2020-02-04T16:00:00.000Z</published>
-    <updated>2020-05-31T09:26:27.438Z</updated>
+    <updated>2020-05-31T09:26:27.000Z</updated>
     
     <summary type="html">
     
@@ -263,7 +287,7 @@
     <link href="http://www.joxrays.com/rb-tree-cpp/"/>
     <id>http://www.joxrays.com/rb-tree-cpp/</id>
     <published>2020-01-31T16:00:00.000Z</published>
-    <updated>2020-07-14T03:59:24.507Z</updated>
+    <updated>2020-07-14T03:59:24.000Z</updated>
     
     <summary type="html">
     
@@ -289,7 +313,7 @@
     <link href="http://www.joxrays.com/avl-tree-cpp/"/>
     <id>http://www.joxrays.com/avl-tree-cpp/</id>
     <published>2020-01-20T16:00:00.000Z</published>
-    <updated>2020-03-20T02:30:38.220Z</updated>
+    <updated>2020-03-20T02:30:38.000Z</updated>
     
     <summary type="html">
     
@@ -313,7 +337,7 @@
     <link href="http://www.joxrays.com/bst-cpp/"/>
     <id>http://www.joxrays.com/bst-cpp/</id>
     <published>2020-01-14T16:00:00.000Z</published>
-    <updated>2020-01-20T09:45:16.000Z</updated>
+    <updated>2021-06-29T06:12:19.000Z</updated>
     
     <summary type="html">
     
@@ -338,7 +362,7 @@
     <link href="http://www.joxrays.com/skiplist-cpp/"/>
     <id>http://www.joxrays.com/skiplist-cpp/</id>
     <published>2020-01-14T16:00:00.000Z</published>
-    <updated>2020-04-19T04:53:56.982Z</updated>
+    <updated>2021-06-27T10:47:38.000Z</updated>
     
     <summary type="html">
     
@@ -363,7 +387,7 @@ In computer science, a skip list is a data structure that allows &lt;span class=
     <link href="http://www.joxrays.com/queue-cpp/"/>
     <id>http://www.joxrays.com/queue-cpp/</id>
     <published>2020-01-12T16:00:00.000Z</published>
-    <updated>2020-01-13T11:48:08.000Z</updated>
+    <updated>2021-06-27T10:46:07.000Z</updated>
     
     <summary type="html">
     
@@ -468,28 +492,6 @@ In computer science, a skip list is a data structure that allows &lt;span class=
       <category term="Vim" scheme="http://www.joxrays.com/tags/Vim/"/>
     
       <category term="YCM" scheme="http://www.joxrays.com/tags/YCM/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>CentOS服务器Shadowsocks</title>
-    <link href="http://www.joxrays.com/centos-shadowsocks/"/>
-    <id>http://www.joxrays.com/centos-shadowsocks/</id>
-    <published>2019-08-20T16:00:00.000Z</published>
-    <updated>2019-08-21T04:23:10.000Z</updated>
-    
-    <summary type="html">
-    
-      &lt;p&gt;在很久之前我用Windows时一直使用 &lt;strong&gt;SoftEther VPN&lt;/strong&gt; 来访问外网，但现在已经转向了SS，而且仅是通过转发流量来科学上网的话，无疑SS是最合适的，因此在 hostwinds 上也买了一台centos7服务器准备搭建shadowsocks。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Linux" scheme="http://www.joxrays.com/categories/Linux/"/>
-    
-    
-      <category term="CentOS" scheme="http://www.joxrays.com/tags/CentOS/"/>
-    
-      <category term="Shadowsocks" scheme="http://www.joxrays.com/tags/Shadowsocks/"/>
     
   </entry>
   

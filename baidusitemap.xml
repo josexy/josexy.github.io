@@ -1,8 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://www.joxrays.com/golang-chip8-emulator/</loc>
+    <lastmod>2021-11-16</lastmod>
+  </url>
+  <url>
+    <loc>http://www.joxrays.com/bst-cpp/</loc>
+    <lastmod>2021-06-29</lastmod>
+  </url>
+  <url>
     <loc>http://www.joxrays.com/archlinux-configure/</loc>
-    <lastmod>2020-08-20</lastmod>
+    <lastmod>2021-06-27</lastmod>
+  </url>
+  <url>
+    <loc>http://www.joxrays.com/skiplist-cpp/</loc>
+    <lastmod>2021-06-27</lastmod>
+  </url>
+  <url>
+    <loc>http://www.joxrays.com/mongodb-driver-install/</loc>
+    <lastmod>2021-06-27</lastmod>
+  </url>
+  <url>
+    <loc>http://www.joxrays.com/queue-cpp/</loc>
+    <lastmod>2021-06-27</lastmod>
+  </url>
+  <url>
+    <loc>http://www.joxrays.com/linux-dlopen/</loc>
+    <lastmod>2021-06-27</lastmod>
+  </url>
+  <url>
+    <loc>http://www.joxrays.com/python-requests/</loc>
+    <lastmod>2021-06-27</lastmod>
+  </url>
+  <url>
+    <loc>http://www.joxrays.com/unix-linux-shell/</loc>
+    <lastmod>2021-06-27</lastmod>
   </url>
   <url>
     <loc>http://www.joxrays.com/rb-tree-cpp/</loc>
@@ -23,14 +55,6 @@
   <url>
     <loc>http://www.joxrays.com/linux-tinyproxy/</loc>
     <lastmod>2020-05-05</lastmod>
-  </url>
-  <url>
-    <loc>http://www.joxrays.com/unix-linux-shell/</loc>
-    <lastmod>2020-04-29</lastmod>
-  </url>
-  <url>
-    <loc>http://www.joxrays.com/skiplist-cpp/</loc>
-    <lastmod>2020-04-19</lastmod>
   </url>
   <url>
     <loc>http://www.joxrays.com/kde-panel-transparency/</loc>
@@ -55,14 +79,6 @@
   <url>
     <loc>http://www.joxrays.com/linux-ban-nvidia/</loc>
     <lastmod>2020-02-14</lastmod>
-  </url>
-  <url>
-    <loc>http://www.joxrays.com/bst-cpp/</loc>
-    <lastmod>2020-01-20</lastmod>
-  </url>
-  <url>
-    <loc>http://www.joxrays.com/queue-cpp/</loc>
-    <lastmod>2020-01-13</lastmod>
   </url>
   <url>
     <loc>http://www.joxrays.com/linkedlist-cpp/</loc>
@@ -157,10 +173,6 @@
     <lastmod>2019-07-20</lastmod>
   </url>
   <url>
-    <loc>http://www.joxrays.com/mongodb-driver-install/</loc>
-    <lastmod>2019-07-20</lastmod>
-  </url>
-  <url>
     <loc>http://www.joxrays.com/cpp-call-mongodb-c-driver/</loc>
     <lastmod>2019-07-20</lastmod>
   </url>
@@ -186,10 +198,6 @@
   </url>
   <url>
     <loc>http://www.joxrays.com/linux-crunch/</loc>
-    <lastmod>2019-07-20</lastmod>
-  </url>
-  <url>
-    <loc>http://www.joxrays.com/python-requests/</loc>
     <lastmod>2019-07-20</lastmod>
   </url>
   <url>
@@ -226,10 +234,6 @@
   </url>
   <url>
     <loc>http://www.joxrays.com/linux-xxnet/</loc>
-    <lastmod>2019-07-20</lastmod>
-  </url>
-  <url>
-    <loc>http://www.joxrays.com/linux-dlopen/</loc>
     <lastmod>2019-07-20</lastmod>
   </url>
   <url>

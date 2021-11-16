@@ -2,16 +2,72 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://www.joxrays.com/about/index.html</loc>
+    <loc>http://www.joxrays.com/golang-chip8-emulator/</loc>
     
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.joxrays.com/bst-cpp/</loc>
+    
+    <lastmod>2021-06-29</lastmod>
     
   </url>
   
   <url>
     <loc>http://www.joxrays.com/archlinux-configure/</loc>
     
-    <lastmod>2020-08-20</lastmod>
+    <lastmod>2021-06-27</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.joxrays.com/skiplist-cpp/</loc>
+    
+    <lastmod>2021-06-27</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.joxrays.com/mongodb-driver-install/</loc>
+    
+    <lastmod>2021-06-27</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.joxrays.com/queue-cpp/</loc>
+    
+    <lastmod>2021-06-27</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.joxrays.com/linux-dlopen/</loc>
+    
+    <lastmod>2021-06-27</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.joxrays.com/python-requests/</loc>
+    
+    <lastmod>2021-06-27</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.joxrays.com/unix-linux-shell/</loc>
+    
+    <lastmod>2021-06-27</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.joxrays.com/about/index.html</loc>
+    
+    <lastmod>2021-06-27</lastmod>
     
   </url>
   
@@ -47,20 +103,6 @@
     <loc>http://www.joxrays.com/linux-tinyproxy/</loc>
     
     <lastmod>2020-05-05</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.joxrays.com/unix-linux-shell/</loc>
-    
-    <lastmod>2020-04-29</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.joxrays.com/skiplist-cpp/</loc>
-    
-    <lastmod>2020-04-19</lastmod>
     
   </url>
   
@@ -103,20 +145,6 @@
     <loc>http://www.joxrays.com/linux-ban-nvidia/</loc>
     
     <lastmod>2020-02-14</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.joxrays.com/bst-cpp/</loc>
-    
-    <lastmod>2020-01-20</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.joxrays.com/queue-cpp/</loc>
-    
-    <lastmod>2020-01-13</lastmod>
     
   </url>
   
@@ -282,13 +310,6 @@
   </url>
   
   <url>
-    <loc>http://www.joxrays.com/mongodb-driver-install/</loc>
-    
-    <lastmod>2019-07-20</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.joxrays.com/cpp-call-mongodb-c-driver/</loc>
     
     <lastmod>2019-07-20</lastmod>
@@ -332,13 +353,6 @@
   
   <url>
     <loc>http://www.joxrays.com/linux-crunch/</loc>
-    
-    <lastmod>2019-07-20</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.joxrays.com/python-requests/</loc>
     
     <lastmod>2019-07-20</lastmod>
     
@@ -402,13 +416,6 @@
   
   <url>
     <loc>http://www.joxrays.com/linux-xxnet/</loc>
-    
-    <lastmod>2019-07-20</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.joxrays.com/linux-dlopen/</loc>
     
     <lastmod>2019-07-20</lastmod>
     
@@ -529,253 +536,274 @@
 
   <url>
     <loc>http://www.joxrays.com/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
 
   
   <url>
-    <loc>http://www.joxrays.com/tags/C/</loc>
-    <lastmod>2021-06-27</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>http://www.joxrays.com/tags/Linux/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.joxrays.com/tags/Archlinux/</loc>
-    <lastmod>2021-06-27</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://www.joxrays.com/tags/DataStructures/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.joxrays.com/tags/C/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.joxrays.com/tags/CentOS/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.joxrays.com/tags/Shadowsocks/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.joxrays.com/tags/DataStructures/</loc>
+    <lastmod>2021-11-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.joxrays.com/tags/C/</loc>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.joxrays.com/tags/Chrome/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.joxrays.com/tags/Google/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.joxrays.com/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.joxrays.com/tags/Windows/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.joxrays.com/tags/MongoDB/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.joxrays.com/tags/Qt/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.joxrays.com/tags/Github/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.joxrays.com/tags/Hexo/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.joxrays.com/tags/Golang/</loc>
+    <lastmod>2021-11-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.joxrays.com/tags/Emulatorm/</loc>
+    <lastmod>2021-11-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.joxrays.com/tags/Chip8/</loc>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.joxrays.com/tags/Huffman/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.joxrays.com/tags/Manjaro/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.joxrays.com/tags/KDE/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.joxrays.com/tags/GNOME/</loc>
-    <lastmod>2021-06-27</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://www.joxrays.com/tags/Ping/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.joxrays.com/tags/MySQL/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.joxrays.com/tags/Ping/</loc>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.joxrays.com/tags/RDP/</loc>
-    <lastmod>2021-06-27</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://www.joxrays.com/tags/Proxy/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.joxrays.com/tags/TinyProxy/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.joxrays.com/tags/HTTP/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.joxrays.com/tags/HTTPS/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.joxrays.com/tags/Proxy/</loc>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.joxrays.com/tags/Vim/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.joxrays.com/tags/YCM/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.joxrays.com/tags/Python/</loc>
-    <lastmod>2021-06-27</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://www.joxrays.com/tags/%E7%BA%A2%E9%BB%91%E6%A0%91/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.joxrays.com/tags/SDL2/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.joxrays.com/tags/%E7%BA%A2%E9%BB%91%E6%A0%91/</loc>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.joxrays.com/tags/Shell/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.joxrays.com/tags/v2ray/</loc>
-    <lastmod>2021-06-27</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://www.joxrays.com/tags/VirtualBox/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.joxrays.com/tags/vsftpd/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.joxrays.com/tags/VirtualBox/</loc>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
@@ -783,50 +811,57 @@
 
   
   <url>
-    <loc>http://www.joxrays.com/categories/Programming/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <loc>http://www.joxrays.com/categories/Linux/</loc>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://www.joxrays.com/categories/Linux/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <loc>http://www.joxrays.com/categories/Programming/</loc>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.joxrays.com/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.joxrays.com/categories/Others/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.joxrays.com/categories/RaspberryPi/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.joxrays.com/categories/MongoDB/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.joxrays.com/categories/Github/</loc>
-    <lastmod>2021-06-27</lastmod>
+    <lastmod>2021-11-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.joxrays.com/categories/Golang/</loc>
+    <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
